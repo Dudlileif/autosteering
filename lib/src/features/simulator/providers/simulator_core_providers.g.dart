@@ -6,72 +6,232 @@ part of 'simulator_core_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$initializeSimCoreHash() => r'ac5f9c7e44265519f7f31123e887b6ea68242e76';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// A provider for the target simulation update frequency.
 
-/// Sends initial parameters to  the sim core.
-///
-/// Copied from [initializeSimCore].
-@ProviderFor(initializeSimCore)
-final initializeSimCoreProvider = AutoDisposeProvider<void>.internal(
-  initializeSimCore,
-  name: r'initializeSimCoreProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$initializeSimCoreHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(SimulatorUpdateFrequency)
+const simulatorUpdateFrequencyProvider = SimulatorUpdateFrequencyProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef InitializeSimCoreRef = AutoDisposeProviderRef<void>;
-String _$commonSimCoreMessageHandlerHash() =>
-    r'2c49713add585966458e235a78b8ce41b0f480d9';
+/// A provider for the target simulation update frequency.
+final class SimulatorUpdateFrequencyProvider
+    extends $NotifierProvider<SimulatorUpdateFrequency, int> {
+  /// A provider for the target simulation update frequency.
+  const SimulatorUpdateFrequencyProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'simulatorUpdateFrequencyProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
+  @override
+  String debugGetCreateSourceHash() => _$simulatorUpdateFrequencyHash();
 
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
+  @$internal
+  @override
+  SimulatorUpdateFrequency create() => SimulatorUpdateFrequency();
 
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(int value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<int>(value),
+    );
   }
 }
 
+String _$simulatorUpdateFrequencyHash() =>
+    r'243ddb12de06609631629d1655e12c7d0b5816f5';
+
+/// A provider for the target simulation update frequency.
+
+abstract class _$SimulatorUpdateFrequency extends $Notifier<int> {
+  int build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<int, int>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<int, int>,
+              int,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// Sends initial parameters to  the sim core.
+
+@ProviderFor(initializeSimCore)
+const initializeSimCoreProvider = InitializeSimCoreProvider._();
+
+/// Sends initial parameters to  the sim core.
+
+final class InitializeSimCoreProvider
+    extends $FunctionalProvider<void, void, void>
+    with $Provider<void> {
+  /// Sends initial parameters to  the sim core.
+  const InitializeSimCoreProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'initializeSimCoreProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$initializeSimCoreHash();
+
+  @$internal
+  @override
+  $ProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  void create(Ref ref) {
+    return initializeSimCore(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(void value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<void>(value),
+    );
+  }
+}
+
+String _$initializeSimCoreHash() => r'a84ba908eb9e30e7e1c6dd59f769b118fc5cc473';
+
 /// A provider for handling the common sim core messages for the state of the
 /// simulation.
-///
-/// Copied from [commonSimCoreMessageHandler].
+
 @ProviderFor(commonSimCoreMessageHandler)
-const commonSimCoreMessageHandlerProvider = CommonSimCoreMessageHandlerFamily();
+const commonSimCoreMessageHandlerProvider =
+    CommonSimCoreMessageHandlerFamily._();
 
 /// A provider for handling the common sim core messages for the state of the
 /// simulation.
-///
-/// Copied from [commonSimCoreMessageHandler].
-class CommonSimCoreMessageHandlerFamily extends Family<void> {
+
+final class CommonSimCoreMessageHandlerProvider
+    extends $FunctionalProvider<void, void, void>
+    with $Provider<void> {
   /// A provider for handling the common sim core messages for the state of the
   /// simulation.
-  ///
-  /// Copied from [commonSimCoreMessageHandler].
-  const CommonSimCoreMessageHandlerFamily();
+  const CommonSimCoreMessageHandlerProvider._({
+    required CommonSimCoreMessageHandlerFamily super.from,
+    required ({
+      ABTracking? abTracking,
+      AutosteeringState autosteeringState,
+      num bearing,
+      num distance,
+      PathTracking? pathTracking,
+      Vehicle? vehicle,
+      num velocity,
+    })
+    super.argument,
+  }) : super(
+         retry: null,
+         name: r'commonSimCoreMessageHandlerProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$commonSimCoreMessageHandlerHash();
+
+  @override
+  String toString() {
+    return r'commonSimCoreMessageHandlerProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $ProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  void create(Ref ref) {
+    final argument =
+        this.argument
+            as ({
+              ABTracking? abTracking,
+              AutosteeringState autosteeringState,
+              num bearing,
+              num distance,
+              PathTracking? pathTracking,
+              Vehicle? vehicle,
+              num velocity,
+            });
+    return commonSimCoreMessageHandler(ref, argument);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(void value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<void>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is CommonSimCoreMessageHandlerProvider &&
+        other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$commonSimCoreMessageHandlerHash() =>
+    r'2c49713add585966458e235a78b8ce41b0f480d9';
+
+/// A provider for handling the common sim core messages for the state of the
+/// simulation.
+
+final class CommonSimCoreMessageHandlerFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          void,
+          ({
+            ABTracking? abTracking,
+            AutosteeringState autosteeringState,
+            num bearing,
+            num distance,
+            PathTracking? pathTracking,
+            Vehicle? vehicle,
+            num velocity,
+          })
+        > {
+  const CommonSimCoreMessageHandlerFamily._()
+    : super(
+        retry: null,
+        name: r'commonSimCoreMessageHandlerProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
 
   /// A provider for handling the common sim core messages for the state of the
   /// simulation.
-  ///
-  /// Copied from [commonSimCoreMessageHandler].
+
   CommonSimCoreMessageHandlerProvider call(
     ({
       ABTracking? abTracking,
@@ -83,287 +243,336 @@ class CommonSimCoreMessageHandlerFamily extends Family<void> {
       num velocity,
     })
     message,
-  ) {
-    return CommonSimCoreMessageHandlerProvider(message);
-  }
+  ) => CommonSimCoreMessageHandlerProvider._(argument: message, from: this);
 
   @override
-  CommonSimCoreMessageHandlerProvider getProviderOverride(
-    covariant CommonSimCoreMessageHandlerProvider provider,
-  ) {
-    return call(provider.message);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'commonSimCoreMessageHandlerProvider';
+  String toString() => r'commonSimCoreMessageHandlerProvider';
 }
 
-/// A provider for handling the common sim core messages for the state of the
-/// simulation.
-///
-/// Copied from [commonSimCoreMessageHandler].
-class CommonSimCoreMessageHandlerProvider extends AutoDisposeProvider<void> {
-  /// A provider for handling the common sim core messages for the state of the
-  /// simulation.
-  ///
-  /// Copied from [commonSimCoreMessageHandler].
-  CommonSimCoreMessageHandlerProvider(
-    ({
-      ABTracking? abTracking,
-      AutosteeringState autosteeringState,
-      num bearing,
-      num distance,
-      PathTracking? pathTracking,
-      Vehicle? vehicle,
-      num velocity,
-    })
-    message,
-  ) : this._internal(
-        (ref) => commonSimCoreMessageHandler(
-          ref as CommonSimCoreMessageHandlerRef,
-          message,
-        ),
-        from: commonSimCoreMessageHandlerProvider,
-        name: r'commonSimCoreMessageHandlerProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$commonSimCoreMessageHandlerHash,
-        dependencies: CommonSimCoreMessageHandlerFamily._dependencies,
-        allTransitiveDependencies:
-            CommonSimCoreMessageHandlerFamily._allTransitiveDependencies,
-        message: message,
+/// A provider for whether long breaks in the program (i.e. when using
+/// breakpoints) should be allowed and not restart the sim core in
+/// debug mode.
+
+@ProviderFor(SimCoreDebugAllowLongBreaks)
+const simCoreDebugAllowLongBreaksProvider =
+    SimCoreDebugAllowLongBreaksProvider._();
+
+/// A provider for whether long breaks in the program (i.e. when using
+/// breakpoints) should be allowed and not restart the sim core in
+/// debug mode.
+final class SimCoreDebugAllowLongBreaksProvider
+    extends $NotifierProvider<SimCoreDebugAllowLongBreaks, bool> {
+  /// A provider for whether long breaks in the program (i.e. when using
+  /// breakpoints) should be allowed and not restart the sim core in
+  /// debug mode.
+  const SimCoreDebugAllowLongBreaksProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'simCoreDebugAllowLongBreaksProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
       );
 
-  CommonSimCoreMessageHandlerProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.message,
-  }) : super.internal();
-
-  final ({
-    ABTracking? abTracking,
-    AutosteeringState autosteeringState,
-    num bearing,
-    num distance,
-    PathTracking? pathTracking,
-    Vehicle? vehicle,
-    num velocity,
-  })
-  message;
-
   @override
-  Override overrideWith(
-    void Function(CommonSimCoreMessageHandlerRef provider) create,
-  ) {
-    return ProviderOverride(
+  String debugGetCreateSourceHash() => _$simCoreDebugAllowLongBreaksHash();
+
+  @$internal
+  @override
+  SimCoreDebugAllowLongBreaks create() => SimCoreDebugAllowLongBreaks();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
       origin: this,
-      override: CommonSimCoreMessageHandlerProvider._internal(
-        (ref) => create(ref as CommonSimCoreMessageHandlerRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        message: message,
-      ),
+      providerOverride: $SyncValueProvider<bool>(value),
     );
   }
-
-  @override
-  AutoDisposeProviderElement<void> createElement() {
-    return _CommonSimCoreMessageHandlerProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is CommonSimCoreMessageHandlerProvider &&
-        other.message == message;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, message.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin CommonSimCoreMessageHandlerRef on AutoDisposeProviderRef<void> {
-  /// The parameter `message` of this provider.
-  ({
-    ABTracking? abTracking,
-    AutosteeringState autosteeringState,
-    num bearing,
-    num distance,
-    PathTracking? pathTracking,
-    Vehicle? vehicle,
-    num velocity,
-  })
-  get message;
-}
-
-class _CommonSimCoreMessageHandlerProviderElement
-    extends AutoDisposeProviderElement<void>
-    with CommonSimCoreMessageHandlerRef {
-  _CommonSimCoreMessageHandlerProviderElement(super.provider);
-
-  @override
-  ({
-    ABTracking? abTracking,
-    AutosteeringState autosteeringState,
-    num bearing,
-    num distance,
-    PathTracking? pathTracking,
-    Vehicle? vehicle,
-    num velocity,
-  })
-  get message => (origin as CommonSimCoreMessageHandlerProvider).message;
-}
-
-String _$simulatorUpdateFrequencyHash() =>
-    r'243ddb12de06609631629d1655e12c7d0b5816f5';
-
-/// A provider for the target simulation update frequency.
-///
-/// Copied from [SimulatorUpdateFrequency].
-@ProviderFor(SimulatorUpdateFrequency)
-final simulatorUpdateFrequencyProvider =
-    NotifierProvider<SimulatorUpdateFrequency, int>.internal(
-      SimulatorUpdateFrequency.new,
-      name: r'simulatorUpdateFrequencyProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$simulatorUpdateFrequencyHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$SimulatorUpdateFrequency = Notifier<int>;
 String _$simCoreDebugAllowLongBreaksHash() =>
     r'f53980f91f616f7793d52dd2332281cab8661f26';
 
 /// A provider for whether long breaks in the program (i.e. when using
 /// breakpoints) should be allowed and not restart the sim core in
 /// debug mode.
-///
-/// Copied from [SimCoreDebugAllowLongBreaks].
-@ProviderFor(SimCoreDebugAllowLongBreaks)
-final simCoreDebugAllowLongBreaksProvider =
-    NotifierProvider<SimCoreDebugAllowLongBreaks, bool>.internal(
-      SimCoreDebugAllowLongBreaks.new,
-      name: r'simCoreDebugAllowLongBreaksProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$simCoreDebugAllowLongBreaksHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$SimCoreDebugAllowLongBreaks = Notifier<bool>;
+abstract class _$SimCoreDebugAllowLongBreaks extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for whether the sim core should allow manual inputs from the
+/// user, i.e. not only sensors from the vehicle.
+
+@ProviderFor(SimCoreAllowManualInput)
+const simCoreAllowManualInputProvider = SimCoreAllowManualInputProvider._();
+
+/// A provider for whether the sim core should allow manual inputs from the
+/// user, i.e. not only sensors from the vehicle.
+final class SimCoreAllowManualInputProvider
+    extends $NotifierProvider<SimCoreAllowManualInput, bool> {
+  /// A provider for whether the sim core should allow manual inputs from the
+  /// user, i.e. not only sensors from the vehicle.
+  const SimCoreAllowManualInputProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'simCoreAllowManualInputProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$simCoreAllowManualInputHash();
+
+  @$internal
+  @override
+  SimCoreAllowManualInput create() => SimCoreAllowManualInput();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$simCoreAllowManualInputHash() =>
     r'2ee429d37ec0314b613ab9c199e5990a6079793e';
 
 /// A provider for whether the sim core should allow manual inputs from the
 /// user, i.e. not only sensors from the vehicle.
-///
-/// Copied from [SimCoreAllowManualInput].
-@ProviderFor(SimCoreAllowManualInput)
-final simCoreAllowManualInputProvider =
-    NotifierProvider<SimCoreAllowManualInput, bool>.internal(
-      SimCoreAllowManualInput.new,
-      name: r'simCoreAllowManualInputProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$simCoreAllowManualInputHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$SimCoreAllowManualInput = Notifier<bool>;
+abstract class _$SimCoreAllowManualInput extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for whether the sim core should allow interpolation steps
+/// between the hardware GNSS updates.
+
+@ProviderFor(SimCoreAllowInterpolation)
+const simCoreAllowInterpolationProvider = SimCoreAllowInterpolationProvider._();
+
+/// A provider for whether the sim core should allow interpolation steps
+/// between the hardware GNSS updates.
+final class SimCoreAllowInterpolationProvider
+    extends $NotifierProvider<SimCoreAllowInterpolation, bool> {
+  /// A provider for whether the sim core should allow interpolation steps
+  /// between the hardware GNSS updates.
+  const SimCoreAllowInterpolationProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'simCoreAllowInterpolationProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$simCoreAllowInterpolationHash();
+
+  @$internal
+  @override
+  SimCoreAllowInterpolation create() => SimCoreAllowInterpolation();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$simCoreAllowInterpolationHash() =>
     r'a44091c788f2ebfc7487dc11bb8cad2b9a526772';
 
 /// A provider for whether the sim core should allow interpolation steps
 /// between the hardware GNSS updates.
-///
-/// Copied from [SimCoreAllowInterpolation].
-@ProviderFor(SimCoreAllowInterpolation)
-final simCoreAllowInterpolationProvider =
-    NotifierProvider<SimCoreAllowInterpolation, bool>.internal(
-      SimCoreAllowInterpolation.new,
-      name: r'simCoreAllowInterpolationProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$simCoreAllowInterpolationHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$SimCoreAllowInterpolation = Notifier<bool>;
+abstract class _$SimCoreAllowInterpolation extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for whether the steering automatically should recenter when
+/// no input is provided.
+
+@ProviderFor(SimCoreVehicleAutoCenterSteering)
+const simCoreVehicleAutoCenterSteeringProvider =
+    SimCoreVehicleAutoCenterSteeringProvider._();
+
+/// A provider for whether the steering automatically should recenter when
+/// no input is provided.
+final class SimCoreVehicleAutoCenterSteeringProvider
+    extends $NotifierProvider<SimCoreVehicleAutoCenterSteering, bool> {
+  /// A provider for whether the steering automatically should recenter when
+  /// no input is provided.
+  const SimCoreVehicleAutoCenterSteeringProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'simCoreVehicleAutoCenterSteeringProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$simCoreVehicleAutoCenterSteeringHash();
+
+  @$internal
+  @override
+  SimCoreVehicleAutoCenterSteering create() =>
+      SimCoreVehicleAutoCenterSteering();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$simCoreVehicleAutoCenterSteeringHash() =>
     r'4796bcf08585c70c193cf82df4fb693dc16be643';
 
 /// A provider for whether the steering automatically should recenter when
 /// no input is provided.
-///
-/// Copied from [SimCoreVehicleAutoCenterSteering].
-@ProviderFor(SimCoreVehicleAutoCenterSteering)
-final simCoreVehicleAutoCenterSteeringProvider =
-    NotifierProvider<SimCoreVehicleAutoCenterSteering, bool>.internal(
-      SimCoreVehicleAutoCenterSteering.new,
-      name: r'simCoreVehicleAutoCenterSteeringProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$simCoreVehicleAutoCenterSteeringHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$SimCoreVehicleAutoCenterSteering = Notifier<bool>;
+abstract class _$SimCoreVehicleAutoCenterSteering extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for whether the vehicle should slow down when no input is
+/// provided.
+
+@ProviderFor(SimCoreVehicleAutoSlowDown)
+const simCoreVehicleAutoSlowDownProvider =
+    SimCoreVehicleAutoSlowDownProvider._();
+
+/// A provider for whether the vehicle should slow down when no input is
+/// provided.
+final class SimCoreVehicleAutoSlowDownProvider
+    extends $NotifierProvider<SimCoreVehicleAutoSlowDown, bool> {
+  /// A provider for whether the vehicle should slow down when no input is
+  /// provided.
+  const SimCoreVehicleAutoSlowDownProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'simCoreVehicleAutoSlowDownProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$simCoreVehicleAutoSlowDownHash();
+
+  @$internal
+  @override
+  SimCoreVehicleAutoSlowDown create() => SimCoreVehicleAutoSlowDown();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$simCoreVehicleAutoSlowDownHash() =>
     r'183d2cfaf7042551c3c3b097ee622884f3c2cc46';
 
 /// A provider for whether the vehicle should slow down when no input is
 /// provided.
-///
-/// Copied from [SimCoreVehicleAutoSlowDown].
-@ProviderFor(SimCoreVehicleAutoSlowDown)
-final simCoreVehicleAutoSlowDownProvider =
-    NotifierProvider<SimCoreVehicleAutoSlowDown, bool>.internal(
-      SimCoreVehicleAutoSlowDown.new,
-      name: r'simCoreVehicleAutoSlowDownProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$simCoreVehicleAutoSlowDownHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$SimCoreVehicleAutoSlowDown = Notifier<bool>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$SimCoreVehicleAutoSlowDown extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

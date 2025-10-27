@@ -56,26 +56,32 @@ class ActiveWorkSession extends _$ActiveWorkSession {
               equipment.uuid,
             ).select((value) => value != null && value.isNotEmpty),
           )) {
-            setEquipmentLogRecords(
-              equipment.uuid,
-              ref.read(equipmentLogRecordsProvider(equipment.uuid)) ?? [],
+            unawaited(
+              setEquipmentLogRecords(
+                equipment.uuid,
+                ref.read(equipmentLogRecordsProvider(equipment.uuid)) ?? [],
+              ),
             );
           }
         }
       }
 
-      final firstRecords =
-          state!.equipmentLogs.values.map((logs) => logs.firstOrNull).nonNulls;
+      final firstRecords = state!.equipmentLogs.values
+          .map((logs) => logs.firstOrNull)
+          .nonNulls;
       if (firstRecords.isNotEmpty) {
-        _firstPathUpdate =
-            firstRecords.sortedBy((record) => record.time).first.time;
+        _firstPathUpdate = firstRecords
+            .sortedBy((record) => record.time)
+            .first
+            .time;
         if (state!.start == null) {
           state!.start = _firstPathUpdate;
         }
       }
       if (state!.end == null) {
-        final lastRecords =
-            state!.equipmentLogs.values.map((logs) => logs.lastOrNull).nonNulls;
+        final lastRecords = state!.equipmentLogs.values
+            .map((logs) => logs.lastOrNull)
+            .nonNulls;
         if (lastRecords.isNotEmpty) {
           state!.end = lastRecords.sortedBy((record) => record.time).last.time;
         }
@@ -111,12 +117,11 @@ class ActiveWorkSession extends _$ActiveWorkSession {
 
   /// Removes the [ABTracking] with [uuid] from [WorkSession.abTracking].
   void removeABTracking(String uuid) => Future(() {
-    state =
-        state
-          ?..abTracking =
-              (state?.abTracking
-                ?..removeWhere((element) => element.uuid == uuid)) ??
-              [];
+    state = state
+      ?..abTracking =
+          (state?.abTracking
+            ?..removeWhere((element) => element.uuid == uuid)) ??
+          [];
     if (state != null) {
       ref.read(saveWorkSessionProvider(state!));
     }
@@ -124,8 +129,8 @@ class ActiveWorkSession extends _$ActiveWorkSession {
 
   /// Removes the [PathTracking] with [uuid] from [WorkSession.pathTracking].
   void removePathTracking(String uuid) => Future(() {
-    final newState =
-        state?..pathTracking.removeWhere((element) => element.uuid == uuid);
+    final newState = state
+      ?..pathTracking.removeWhere((element) => element.uuid == uuid);
     state = newState;
     if (state != null) {
       ref.read(saveWorkSessionProvider(state!));
@@ -209,13 +214,12 @@ class ActiveWorkSession extends _$ActiveWorkSession {
                 (e) => e.uuid == equipmentUuid,
               ) ??
               false)) {
-            state =
-                state!
-                  ..equipmentSetup = ref.read(
-                    mainVehicleProvider.select(
-                      (value) => value.equipmentSetup('${state!.name} setup'),
-                    ),
-                  );
+            state = state!
+              ..equipmentSetup = ref.read(
+                mainVehicleProvider.select(
+                  (value) => value.equipmentSetup('${state!.name} setup'),
+                ),
+              );
             ref.read(saveWorkSessionProvider(state!));
           }
           if (_firstPathUpdate == null) {
@@ -270,13 +274,12 @@ class ActiveWorkSession extends _$ActiveWorkSession {
     List<EquipmentLogRecord> records,
   ) async => Future(() async {
     if (state != null) {
-      state =
-          state!
-            ..equipmentLogs.update(
-              equipmentUuid,
-              (_) => records,
-              ifAbsent: () => records,
-            );
+      state = state!
+        ..equipmentLogs.update(
+          equipmentUuid,
+          (_) => records,
+          ifAbsent: () => records,
+        );
       if (Device.isNative) {
         await ref.read(
           saveWorkSessionEquipmentLogsProvider(
@@ -389,7 +392,7 @@ FutureOr<WorkSession?> loadWorkSessionFromFile(Ref ref, String path) async {
 /// A provider for saving [workSession] to a file in the user file directory.
 ///
 /// Override the file name with [overrideName].
-@riverpod
+@Riverpod(keepAlive: true)
 FutureOr<void> saveWorkSession(
   Ref ref,
   WorkSession workSession, {
@@ -413,7 +416,7 @@ FutureOr<void> saveWorkSession(
 /// Set the [overwrite] parameter to false to preserve already existing files.
 /// [singleUuid] can be used to specify a single equipment's logs that should
 /// be saved.
-@riverpod
+@Riverpod(keepAlive: true)
 FutureOr<void> saveWorkSessionEquipmentLogs(
   Ref ref,
   WorkSession workSession, {

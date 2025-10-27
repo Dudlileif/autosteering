@@ -47,8 +47,9 @@ class VehicleTypeSelectorPage extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               child: Consumer(
                 builder: (context, ref, child) {
-                  final textStyle =
-                      Theme.of(context).menuButtonWithChildrenText;
+                  final textStyle = Theme.of(
+                    context,
+                  ).menuButtonWithChildrenText;
                   final vehicle = ref.watch(configuredVehicleProvider);
                   return DropdownMenu<ManufacturerColors>(
                     width: 300,
@@ -58,29 +59,27 @@ class VehicleTypeSelectorPage extends StatelessWidget {
                     ),
                     initialSelection: vehicle.manufacturerColors,
                     textStyle: textStyle,
-                    onSelected:
-                        (value) => ref
-                            .read(configuredVehicleProvider.notifier)
-                            .update(
-                              vehicle.copyWith(manufacturerColors: value),
+                    onSelected: (value) => ref
+                        .read(configuredVehicleProvider.notifier)
+                        .update(
+                          vehicle.copyWith(manufacturerColors: value),
+                        ),
+                    dropdownMenuEntries: ManufacturerColors.values
+                        .map(
+                          (scheme) => DropdownMenuEntry<ManufacturerColors>(
+                            label: scheme.name,
+                            value: scheme,
+                            leadingIcon: Icon(
+                              Icons.color_lens,
+                              color: scheme.primary,
                             ),
-                    dropdownMenuEntries:
-                        ManufacturerColors.values
-                            .map(
-                              (scheme) => DropdownMenuEntry<ManufacturerColors>(
-                                label: scheme.name,
-                                value: scheme,
-                                leadingIcon: Icon(
-                                  Icons.color_lens,
-                                  color: scheme.primary,
-                                ),
-                                labelWidget: Text(
-                                  scheme.name,
-                                  style: textStyle,
-                                ),
-                              ),
-                            )
-                            .toList(),
+                            labelWidget: Text(
+                              scheme.name,
+                              style: textStyle,
+                            ),
+                          ),
+                        )
+                        .toList(),
                   );
                 },
               ),
@@ -90,34 +89,31 @@ class VehicleTypeSelectorPage extends StatelessWidget {
               child: SizedBox(
                 width: 300,
                 child: Consumer(
-                  builder:
-                      (context, ref, child) => TextFormField(
-                        decoration: const InputDecoration(
-                          icon: Icon(Icons.label_outline),
-                          labelText: 'Name',
-                        ),
-                        controller: ref.watch(
-                          configuredVehicleNameTextControllerProvider,
-                        ),
-                        keyboardType: TextInputType.text,
-                        autovalidateMode: AutovalidateMode.always,
-                        validator:
-                            (value) =>
-                                isBlank(value) ? 'No name entered!' : null,
-                      ),
+                  builder: (context, ref, child) => TextFormField(
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.label_outline),
+                      labelText: 'Name',
+                    ),
+                    controller: ref.watch(
+                      configuredVehicleNameTextControllerProvider,
+                    ),
+                    keyboardType: TextInputType.text,
+                    autovalidateMode: AutovalidateMode.always,
+                    validator: (value) =>
+                        isBlank(value) ? 'No name entered!' : null,
+                  ),
                 ),
               ),
             ),
             Consumer(
-              builder:
-                  (context, ref, child) => switch (ref.watch(
-                    configuredVehicleProvider.select(
-                      (value) => isBlank(value.name),
-                    ),
-                  )) {
-                    true => child ?? const SizedBox.shrink(),
-                    false => const SizedBox.shrink(),
-                  },
+              builder: (context, ref, child) => switch (ref.watch(
+                configuredVehicleProvider.select(
+                  (value) => isBlank(value.name),
+                ),
+              )) {
+                true => child ?? const SizedBox.shrink(),
+                false => const SizedBox.shrink(),
+              },
               child: Text(
                 'Please enter a name so that the config can be saved!',
                 style: theme.textTheme.bodySmall?.copyWith(
@@ -145,7 +141,7 @@ class _VehicleTypeSelector extends ConsumerWidget {
       builder: (context, constraints) {
         final minDimension = min(constraints.maxWidth, constraints.maxHeight);
         final boxSize = min(200, minDimension).toDouble();
-        return SegmentedButton<Type>(
+        return SegmentedButton<VehicleType>(
           showSelectedIcon: false,
           style: theme.segmentedButtonTheme.style?.copyWith(
             shape: const WidgetStatePropertyAll(
@@ -168,19 +164,20 @@ class _VehicleTypeSelector extends ConsumerWidget {
             ),
           ),
           onSelectionChanged: (values) {
-            ref.read(configuredVehicleProvider.notifier).update(switch (values
-                .first) {
-              const (ArticulatedTractor) =>
-                PreconfiguredVehicles.articulatedTractor,
-              const (Harvester) => PreconfiguredVehicles.harvester,
-              const (Tractor) || _ => PreconfiguredVehicles.tractor,
-            });
+            ref.read(configuredVehicleProvider.notifier).update(
+              switch (values.first) {
+                VehicleType.tractor => PreconfiguredVehicles.tractor,
+                VehicleType.harvester => PreconfiguredVehicles.harvester,
+                VehicleType.articulatedTractor =>
+                  PreconfiguredVehicles.articulatedTractor,
+              },
+            );
             ref.invalidate(configuredVehicleNameTextControllerProvider);
           },
-          selected: {vehicle.runtimeType},
+          selected: {vehicle.type},
           segments: [
             ButtonSegment(
-              value: Tractor,
+              value: VehicleType.tractor,
               label: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -204,7 +201,7 @@ class _VehicleTypeSelector extends ConsumerWidget {
               ),
             ),
             ButtonSegment(
-              value: ArticulatedTractor,
+              value: VehicleType.articulatedTractor,
               label: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -220,7 +217,7 @@ class _VehicleTypeSelector extends ConsumerWidget {
               ),
             ),
             ButtonSegment(
-              value: Harvester,
+              value: VehicleType.harvester,
               label: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

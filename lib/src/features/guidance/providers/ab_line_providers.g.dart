@@ -6,59 +6,167 @@ part of 'ab_line_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// A provider for the AB-line.
+
+@ProviderFor(ABLine)
+const aBLineProvider = ABLineProvider._();
+
+/// A provider for the AB-line.
+final class ABLineProvider
+    extends $AsyncNotifierProvider<ABLine, guidance.ABLine?> {
+  /// A provider for the AB-line.
+  const ABLineProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'aBLineProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$aBLineHash();
+
+  @$internal
+  @override
+  ABLine create() => ABLine();
+}
+
 String _$aBLineHash() => r'89bf16cd284574737b546967390070cb6b1d6d1d';
 
 /// A provider for the AB-line.
-///
-/// Copied from [ABLine].
-@ProviderFor(ABLine)
-final aBLineProvider = AsyncNotifierProvider<ABLine, guidance.ABLine?>.internal(
-  ABLine.new,
-  name: r'aBLineProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$aBLineHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-typedef _$ABLine = AsyncNotifier<guidance.ABLine?>;
+abstract class _$ABLine extends $AsyncNotifier<guidance.ABLine?> {
+  FutureOr<guidance.ABLine?> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref =
+        this.ref as $Ref<AsyncValue<guidance.ABLine?>, guidance.ABLine?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<guidance.ABLine?>, guidance.ABLine?>,
+              AsyncValue<guidance.ABLine?>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for the A+-line bearing.
+
+@ProviderFor(APlusLineBearing)
+const aPlusLineBearingProvider = APlusLineBearingProvider._();
+
+/// A provider for the A+-line bearing.
+final class APlusLineBearingProvider
+    extends $NotifierProvider<APlusLineBearing, double?> {
+  /// A provider for the A+-line bearing.
+  const APlusLineBearingProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'aPlusLineBearingProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$aPlusLineBearingHash();
+
+  @$internal
+  @override
+  APlusLineBearing create() => APlusLineBearing();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(double? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<double?>(value),
+    );
+  }
+}
+
 String _$aPlusLineBearingHash() => r'59b6ab1e4921ed1dacf2103e6613059183d6ebae';
 
 /// A provider for the A+-line bearing.
-///
-/// Copied from [APlusLineBearing].
-@ProviderFor(APlusLineBearing)
-final aPlusLineBearingProvider =
-    NotifierProvider<APlusLineBearing, double?>.internal(
-      APlusLineBearing.new,
-      name: r'aPlusLineBearingProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$aPlusLineBearingHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$APlusLineBearing = Notifier<double?>;
+abstract class _$APlusLineBearing extends $Notifier<double?> {
+  double? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<double?, double?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<double?, double?>,
+              double?,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for the A+-line.
+
+@ProviderFor(APlusLine)
+const aPlusLineProvider = APlusLineProvider._();
+
+/// A provider for the A+-line.
+final class APlusLineProvider
+    extends $AsyncNotifierProvider<APlusLine, guidance.APlusLine?> {
+  /// A provider for the A+-line.
+  const APlusLineProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'aPlusLineProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$aPlusLineHash();
+
+  @$internal
+  @override
+  APlusLine create() => APlusLine();
+}
+
 String _$aPlusLineHash() => r'8c67312daf006935e172b3e4e2d7752b611b3501';
 
 /// A provider for the A+-line.
-///
-/// Copied from [APlusLine].
-@ProviderFor(APlusLine)
-final aPlusLineProvider =
-    AsyncNotifierProvider<APlusLine, guidance.APlusLine?>.internal(
-      APlusLine.new,
-      name: r'aPlusLineProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$aPlusLineHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$APlusLine = AsyncNotifier<guidance.APlusLine?>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$APlusLine extends $AsyncNotifier<guidance.APlusLine?> {
+  FutureOr<guidance.APlusLine?> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref =
+        this.ref as $Ref<AsyncValue<guidance.APlusLine?>, guidance.APlusLine?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<guidance.APlusLine?>, guidance.APlusLine?>,
+              AsyncValue<guidance.APlusLine?>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

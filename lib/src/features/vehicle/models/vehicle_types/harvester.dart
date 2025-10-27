@@ -64,7 +64,7 @@ final class Harvester extends AxleSteeredVehicle {
     super.lastUsed,
     super.manufacturerColors,
     super.manualSimulationMode,
-  });
+  }) : super(type: VehicleType.harvester);
 
   /// Creates a [Harvester] from the [json] object.
   factory Harvester.fromJson(Map<String, dynamic> json) {
@@ -135,16 +135,17 @@ final class Harvester extends AxleSteeredVehicle {
   /// The mirror position of the steering axle around the solidx axle is used
   /// when the harvester is driving forward.
   @override
-  Geographic get stanleyAxlePosition => switch (isReversing) {
-    true => steeringAxlePosition,
-    false => solidAxlePosition.rhumb.destinationPoint(
-      distance: wheelBase,
-      bearing: bearing,
-    ),
-  }.rhumb.destinationPoint(
-    distance: nudgeDistance,
-    bearing: (bearing - 90).wrap360(),
-  );
+  Geographic get stanleyAxlePosition =>
+      switch (isReversing) {
+        true => steeringAxlePosition,
+        false => solidAxlePosition.rhumb.destinationPoint(
+          distance: wheelBase,
+          bearing: bearing,
+        ),
+      }.rhumb.destinationPoint(
+        distance: nudgeDistance,
+        bearing: (bearing - 90).wrap360(),
+      );
 
   /// The angle of the left steering wheel when using Ackermann steering.
   /// The angle is inverted because the vehicle is rear wheel steered.

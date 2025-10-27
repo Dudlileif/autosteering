@@ -24,7 +24,6 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -102,7 +101,7 @@ FutureOr<bool> directoryDelete(Ref ref, String path) async {
 /// in the file drectory.
 ///
 /// Caution: Expects [object] to have a .toJson() method implemented.
-@riverpod
+@Riverpod(keepAlive: true)
 FutureOr<void> saveJsonToFileDirectory(
   Ref ref, {
   required dynamic object,
@@ -127,7 +126,7 @@ FutureOr<void> saveJsonToFileDirectory(
       final filePath = path.joinAll([
         ref.watch(fileDirectoryProvider).requireValue.path,
         folder,
-        if (subFolder != null) subFolder,
+        ?subFolder,
         '$fileName.json',
       ]);
       await Isolate.run<LogEvent>(() async {
@@ -207,10 +206,9 @@ FutureOr<void> exportJsonToFileDirectory(
             ).convert(object);
             var filePath = '';
             if (exportFolder.endsWith('autosteering_export')) {
-              filePath =
-                  folder != null
-                      ? path.join(exportFolder, folder, '$fileName.json')
-                      : path.join(exportFolder, '$fileName.json');
+              filePath = folder != null
+                  ? path.join(exportFolder, folder, '$fileName.json')
+                  : path.join(exportFolder, '$fileName.json');
             } else if (exportFolder.contains('autosteering_export')) {
               filePath = path.joinAll([
                 exportFolder.substring(
@@ -218,14 +216,14 @@ FutureOr<void> exportJsonToFileDirectory(
                   exportFolder.indexOf('autosteering_export') - 1,
                 ),
                 'autosteering_export',
-                if (folder != null) folder,
+                ?folder,
                 '$fileName.json',
               ]);
             } else {
               filePath = path.joinAll([
                 exportFolder,
                 'autosteering_export',
-                if (folder != null) folder,
+                ?folder,
                 '$fileName.json',
               ]);
             }
@@ -502,9 +500,7 @@ FutureOr<void> exportWholeFileDirectory(Ref ref) async {
           exportPath: exportPath,
         );
 
-        await for (final progress in export) {
-          ref.read(exportProgressProvider.notifier).update(progress);
-        }
+        await export.forEach(ref.read(exportProgressProvider.notifier).update);
 
         ref.read(exportProgressProvider.notifier).update(1);
         Logger.instance.i('Exported whole file directory to :$exportPath.');
@@ -552,15 +548,14 @@ FutureOr<void> exportAll(
 
         final dir = Directory(path.join(dirPath, directory));
         if (dir.existsSync()) {
-          final files =
-              dir
-                  .listSync(recursive: true)
-                  .where(
-                    (element) =>
-                        FileSystemEntity.typeSync(element.path) ==
-                        FileSystemEntityType.file,
-                  )
-                  .toList();
+          final files = dir
+              .listSync(recursive: true)
+              .where(
+                (element) =>
+                    FileSystemEntity.typeSync(element.path) ==
+                    FileSystemEntityType.file,
+              )
+              .toList();
           if (files.isNotEmpty) {
             var exportDirPath = '';
             if (exportFolder.endsWith('autosteering_export')) {
@@ -596,9 +591,9 @@ FutureOr<void> exportAll(
                 exportPath: exportPath,
               );
 
-              await for (final progress in export) {
-                ref.read(exportProgressProvider.notifier).update(progress);
-              }
+              await export.forEach(
+                ref.read(exportProgressProvider.notifier).update,
+              );
 
               ref.read(exportProgressProvider.notifier).update(1);
               Logger.instance.i(

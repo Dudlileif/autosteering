@@ -42,6 +42,7 @@ sealed class Vehicle extends Hitchable {
   /// A base class for vehicles that handles all common parameters/variables
   /// and methods.
   Vehicle({
+    required this.type,
     required this.antennaHeight,
     required this.minTurningRadius,
     required this.steeringAngleMax,
@@ -97,38 +98,33 @@ sealed class Vehicle extends Hitchable {
   /// [ArticulatedTractor]
   factory Vehicle.fromJson(Map<String, dynamic> json) {
     final info = Map<String, dynamic>.from(json['info'] as Map);
-    final type = info['vehicle_type'];
+    final type = VehicleType.fromString(info['vehicle_type'] as String);
 
     final vehicle = switch (type) {
-      'Tractor' => Tractor.fromJson(json),
-      'Harvester' => Harvester.fromJson(json),
-      'Articulated tractor' => ArticulatedTractor.fromJson(json),
-      _ => Tractor.fromJson(json),
+      VehicleType.tractor => Tractor.fromJson(json),
+      VehicleType.harvester => Harvester.fromJson(json),
+      VehicleType.articulatedTractor => ArticulatedTractor.fromJson(json),
     };
 
-    final children =
-        json['children'] != null
-            ? Map<String, Map<String, dynamic>?>.from(json['children'] as Map)
-            : null;
+    final children = json['children'] != null
+        ? Map<String, Map<String, dynamic>?>.from(json['children'] as Map)
+        : null;
 
-    final hitchFrontFixedChild =
-        children?['front_fixed'] != null
-            ? Equipment.fromJson(
-              Map<String, dynamic>.from(children!['front_fixed']!),
-            )
-            : null;
-    final hitchRearFixedChild =
-        children?['rear_fixed'] != null
-            ? Equipment.fromJson(
-              Map<String, dynamic>.from(children!['rear_fixed']!),
-            )
-            : null;
-    final hitchRearTowbarChild =
-        children?['rear_towbar'] != null
-            ? Equipment.fromJson(
-              Map<String, dynamic>.from(children!['rear_towbar']!),
-            )
-            : null;
+    final hitchFrontFixedChild = children?['front_fixed'] != null
+        ? Equipment.fromJson(
+            Map<String, dynamic>.from(children!['front_fixed']!),
+          )
+        : null;
+    final hitchRearFixedChild = children?['rear_fixed'] != null
+        ? Equipment.fromJson(
+            Map<String, dynamic>.from(children!['rear_fixed']!),
+          )
+        : null;
+    final hitchRearTowbarChild = children?['rear_towbar'] != null
+        ? Equipment.fromJson(
+            Map<String, dynamic>.from(children!['rear_towbar']!),
+          )
+        : null;
 
     if (hitchFrontFixedChild != null) {
       vehicle.attachChild(hitchFrontFixedChild, Hitch.frontFixed);
@@ -142,52 +138,47 @@ sealed class Vehicle extends Hitchable {
 
     final steering = Map<String, dynamic>.from(json['steering'] as Map);
 
-    final imu =
-        json.containsKey('imu_config')
-            ? Imu(
-              config: ImuConfig.fromJson(
-                Map<String, dynamic>.from(json['imu_config'] as Map),
-              ),
-            )
-            : Imu();
+    final imu = json.containsKey('imu_config')
+        ? Imu(
+            config: ImuConfig.fromJson(
+              Map<String, dynamic>.from(json['imu_config'] as Map),
+            ),
+          )
+        : Imu();
 
-    final was =
-        steering.containsKey('was_config')
-            ? Was(
-              config: WasConfig.fromJson(
-                Map<String, dynamic>.from(steering['was_config'] as Map),
-              ),
-            )
-            : Was();
-    final steeringHardwareConfig =
-        steering.containsKey('hardware_config')
-            ? SteeringHardwareConfig.fromJson(
-              Map<String, dynamic>.from(steering['hardware_config'] as Map),
-            )
-            : const SteeringHardwareConfig();
+    final was = steering.containsKey('was_config')
+        ? Was(
+            config: WasConfig.fromJson(
+              Map<String, dynamic>.from(steering['was_config'] as Map),
+            ),
+          )
+        : Was();
+    final steeringHardwareConfig = steering.containsKey('hardware_config')
+        ? SteeringHardwareConfig.fromJson(
+            Map<String, dynamic>.from(steering['hardware_config'] as Map),
+          )
+        : const SteeringHardwareConfig();
 
     final purePursuitParameters =
         steering.containsKey('pure_pursuit_parameters')
-            ? PurePursuitParameters.fromJson(
-              Map<String, dynamic>.from(
-                steering['pure_pursuit_parameters'] as Map,
-              ),
-            )
-            : null;
+        ? PurePursuitParameters.fromJson(
+            Map<String, dynamic>.from(
+              steering['pure_pursuit_parameters'] as Map,
+            ),
+          )
+        : null;
 
-    final stanleyParameters =
-        steering.containsKey('stanley_parameters')
-            ? StanleyParameters.fromJson(
-              Map<String, dynamic>.from(steering['stanley_parameters'] as Map),
-            )
-            : null;
+    final stanleyParameters = steering.containsKey('stanley_parameters')
+        ? StanleyParameters.fromJson(
+            Map<String, dynamic>.from(steering['stanley_parameters'] as Map),
+          )
+        : null;
 
-    final manufacturerColors =
-        json.containsKey('manufacturer_colors')
-            ? ManufacturerColors.fromJson(
-              Map<String, dynamic>.from(json['manufacturer_colors'] as Map),
-            )
-            : null;
+    final manufacturerColors = json.containsKey('manufacturer_colors')
+        ? ManufacturerColors.fromJson(
+            Map<String, dynamic>.from(json['manufacturer_colors'] as Map),
+          )
+        : null;
 
     return vehicle.copyWith(
       imu: imu,
@@ -200,6 +191,9 @@ sealed class Vehicle extends Hitchable {
       manufacturerColors: manufacturerColors,
     );
   }
+
+  /// Which type of vehicle this is.
+  final VehicleType type;
 
   /// The manufacturer color scheme of the vehicle.
   ManufacturerColors manufacturerColors;
@@ -528,11 +522,11 @@ sealed class Vehicle extends Hitchable {
   static const double minSteeringAngle = 0.01;
 
   /// The [steeringAngleInput] accounted for [minSteeringAngle].
-  double get steeringAngle => switch (steeringAngleInput.abs() >
-      minSteeringAngle) {
-    true => steeringAngleInput,
-    false => 0,
-  };
+  double get steeringAngle =>
+      switch (steeringAngleInput.abs() > minSteeringAngle) {
+        true => steeringAngleInput,
+        false => 0,
+      };
 
   /// The position of the Stanley axle in the vehicle direction. Used when
   /// calculating Stanley path tracking values.
@@ -789,4 +783,25 @@ sealed class Vehicle extends Hitchable {
 
     return map;
   }
+}
+
+/// An enumerator for the supported types of vehicles.
+enum VehicleType {
+  /// Tractor or vehicle with front axle steering.
+  tractor('Tractor'),
+
+  /// Articulated tractor
+  articulatedTractor('Articulated tractor'),
+
+  /// Harvester or vehicle with rear axle steering.
+  harvester('Harvester');
+
+  const VehicleType(this.name);
+
+  /// The name of this.
+  final String name;
+
+  /// Parse a [VehicleType] from [name].
+  static VehicleType fromString(String name) =>
+      values.firstWhere((value) => value.name == name);
 }

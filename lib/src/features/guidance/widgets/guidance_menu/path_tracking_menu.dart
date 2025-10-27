@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:async';
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/map/map.dart';
@@ -45,41 +47,38 @@ class PathTrackingMenu extends ConsumerWidget {
           closeOnActivate: false,
           onPressed:
               ref.watch(
-                    configuredPathTrackingProvider.select(
+                configuredPathTrackingProvider.select(
+                  (value) => value != null,
+                ),
+              )
+              ? () {
+                  if (ref.watch(
+                    displayABTrackingProvider.select(
                       (value) => value != null,
                     ),
-                  )
-                  ? () {
-                    if (ref.watch(
-                      displayABTrackingProvider.select(
-                        (value) => value != null,
-                      ),
-                    )) {
+                  )) {
+                    unawaited(
                       showDialog<void>(
                         context: context,
-                        builder:
-                            (context) => Consumer(
-                              builder:
-                                  (context, ref, child) => ConfirmationDialog(
-                                    title: 'Close active AB tracking?',
-                                    onConfirmation:
-                                        () async =>
-                                            ref
-                                                .read(
-                                                  configuredPathTrackingProvider
-                                                      .notifier,
-                                                )
-                                                .sendToSim(),
-                                  ),
-                            ),
-                      );
-                    } else {
-                      ref
-                          .read(configuredPathTrackingProvider.notifier)
-                          .sendToSim();
-                    }
+                        builder: (context) => Consumer(
+                          builder: (context, ref, child) => ConfirmationDialog(
+                            title: 'Close active AB tracking?',
+                            onConfirmation: () async => ref
+                                .read(
+                                  configuredPathTrackingProvider.notifier,
+                                )
+                                .sendToSim(),
+                          ),
+                        ),
+                      ),
+                    );
+                  } else {
+                    ref
+                        .read(configuredPathTrackingProvider.notifier)
+                        .sendToSim();
                   }
-                  : null,
+                }
+              : null,
           leadingIcon: const Padding(
             padding: EdgeInsets.only(left: 8),
             child: Icon(Icons.check),
@@ -157,13 +156,11 @@ class PathTrackingMenu extends ConsumerWidget {
                 },
                 title: child,
                 value: ref.watch(showPathTrackingProvider),
-                onChanged:
-                    (value) =>
-                        value != null
-                            ? ref
-                                .read(showPathTrackingProvider.notifier)
-                                .update(value: value)
-                            : null,
+                onChanged: (value) => value != null
+                    ? ref
+                          .read(showPathTrackingProvider.notifier)
+                          .update(value: value)
+                    : null,
               );
             },
           ),
@@ -179,19 +176,17 @@ class PathTrackingMenu extends ConsumerWidget {
                 ),
                 showSelectedIcon: false,
                 selected: {loopMode},
-                onSelectionChanged:
-                    (values) => ref
-                        .read(pathTrackingLoopProvider.notifier)
-                        .update(values.first),
-                segments:
-                    PathTrackingLoopMode.values
-                        .map(
-                          (mode) => ButtonSegment(
-                            value: mode,
-                            label: Text(mode.name.capitalize),
-                          ),
-                        )
-                        .toList(),
+                onSelectionChanged: (values) => ref
+                    .read(pathTrackingLoopProvider.notifier)
+                    .update(values.first),
+                segments: PathTrackingLoopMode.values
+                    .map(
+                      (mode) => ButtonSegment(
+                        value: mode,
+                        label: Text(mode.name.capitalize),
+                      ),
+                    )
+                    .toList(),
               );
             },
           ),
@@ -207,10 +202,9 @@ class PathTrackingMenu extends ConsumerWidget {
                   Text('Interpolation distance: $distance m', style: textStyle),
                   Slider(
                     value: distance,
-                    onChanged:
-                        ref
-                            .read(pathInterpolationDistanceProvider.notifier)
-                            .update,
+                    onChanged: ref
+                        .read(pathInterpolationDistanceProvider.notifier)
+                        .update,
                     max: 20,
                     min: 1,
                     divisions: 19,
@@ -222,19 +216,16 @@ class PathTrackingMenu extends ConsumerWidget {
         ),
         if (ref.watch(enableDebugModeProvider))
           Consumer(
-            builder:
-                (context, ref, child) => CheckboxListTile(
-                  secondary: const Icon(Icons.bug_report),
-                  title: Text('Debug', style: textStyle),
-                  value: ref.watch(debugPathTrackingProvider),
-                  onChanged:
-                      (value) =>
-                          value != null
-                              ? ref
-                                  .read(debugPathTrackingProvider.notifier)
-                                  .update(value: value)
-                              : null,
-                ),
+            builder: (context, ref, child) => CheckboxListTile(
+              secondary: const Icon(Icons.bug_report),
+              title: Text('Debug', style: textStyle),
+              value: ref.watch(debugPathTrackingProvider),
+              onChanged: (value) => value != null
+                  ? ref
+                        .read(debugPathTrackingProvider.notifier)
+                        .update(value: value)
+                  : null,
+            ),
           ),
       ],
     );

@@ -6,147 +6,411 @@ part of 'dubins_path_debug_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$debugDubinsPathHash() => r'068a0465a7cf1281bb525158fa27f300d88c13f5';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// Whether the Dubins path feature should be debugged.
 
-/// The current [DubinsPath] object that we can debug.
-///
-/// Copied from [debugDubinsPath].
-@ProviderFor(debugDubinsPath)
-final debugDubinsPathProvider = AutoDisposeProvider<DubinsPath?>.internal(
-  debugDubinsPath,
-  name: r'debugDubinsPathProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$debugDubinsPathHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(EnableDubinsPathDebug)
+const enableDubinsPathDebugProvider = EnableDubinsPathDebugProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef DebugDubinsPathRef = AutoDisposeProviderRef<DubinsPath?>;
+/// Whether the Dubins path feature should be debugged.
+final class EnableDubinsPathDebugProvider
+    extends $NotifierProvider<EnableDubinsPathDebug, bool> {
+  /// Whether the Dubins path feature should be debugged.
+  const EnableDubinsPathDebugProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'enableDubinsPathDebugProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$enableDubinsPathDebugHash();
+
+  @$internal
+  @override
+  EnableDubinsPathDebug create() => EnableDubinsPathDebug();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$enableDubinsPathDebugHash() =>
     r'5bc798c25e032544f6aba25dc9bc2da90f22ec44';
 
 /// Whether the Dubins path feature should be debugged.
-///
-/// Copied from [EnableDubinsPathDebug].
-@ProviderFor(EnableDubinsPathDebug)
-final enableDubinsPathDebugProvider =
-    NotifierProvider<EnableDubinsPathDebug, bool>.internal(
-      EnableDubinsPathDebug.new,
-      name: r'enableDubinsPathDebugProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$enableDubinsPathDebugHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$EnableDubinsPathDebug = Notifier<bool>;
+abstract class _$EnableDubinsPathDebug extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// Whether to show the turning circles for the Dubins path.
+
+@ProviderFor(ShowDubinsPathDebugCircles)
+const showDubinsPathDebugCirclesProvider =
+    ShowDubinsPathDebugCirclesProvider._();
+
+/// Whether to show the turning circles for the Dubins path.
+final class ShowDubinsPathDebugCirclesProvider
+    extends $NotifierProvider<ShowDubinsPathDebugCircles, bool> {
+  /// Whether to show the turning circles for the Dubins path.
+  const ShowDubinsPathDebugCirclesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'showDubinsPathDebugCirclesProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$showDubinsPathDebugCirclesHash();
+
+  @$internal
+  @override
+  ShowDubinsPathDebugCircles create() => ShowDubinsPathDebugCircles();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$showDubinsPathDebugCirclesHash() =>
     r'5891960f3c944dd42c4a29e4db13361c8c6ff8eb';
 
 /// Whether to show the turning circles for the Dubins path.
-///
-/// Copied from [ShowDubinsPathDebugCircles].
-@ProviderFor(ShowDubinsPathDebugCircles)
-final showDubinsPathDebugCirclesProvider =
-    NotifierProvider<ShowDubinsPathDebugCircles, bool>.internal(
-      ShowDubinsPathDebugCircles.new,
-      name: r'showDubinsPathDebugCirclesProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$showDubinsPathDebugCirclesHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$ShowDubinsPathDebugCircles = Notifier<bool>;
+abstract class _$ShowDubinsPathDebugCircles extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// The starting point for the Dubins path.
+
+@ProviderFor(DubinsPathDebugStartPoint)
+const dubinsPathDebugStartPointProvider = DubinsPathDebugStartPointProvider._();
+
+/// The starting point for the Dubins path.
+final class DubinsPathDebugStartPointProvider
+    extends $NotifierProvider<DubinsPathDebugStartPoint, WayPoint?> {
+  /// The starting point for the Dubins path.
+  const DubinsPathDebugStartPointProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'dubinsPathDebugStartPointProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$dubinsPathDebugStartPointHash();
+
+  @$internal
+  @override
+  DubinsPathDebugStartPoint create() => DubinsPathDebugStartPoint();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(WayPoint? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<WayPoint?>(value),
+    );
+  }
+}
+
 String _$dubinsPathDebugStartPointHash() =>
     r'34396034575b2993bec1dee396873357438c20e4';
 
 /// The starting point for the Dubins path.
-///
-/// Copied from [DubinsPathDebugStartPoint].
-@ProviderFor(DubinsPathDebugStartPoint)
-final dubinsPathDebugStartPointProvider =
-    NotifierProvider<DubinsPathDebugStartPoint, WayPoint?>.internal(
-      DubinsPathDebugStartPoint.new,
-      name: r'dubinsPathDebugStartPointProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$dubinsPathDebugStartPointHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$DubinsPathDebugStartPoint = Notifier<WayPoint?>;
+abstract class _$DubinsPathDebugStartPoint extends $Notifier<WayPoint?> {
+  WayPoint? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<WayPoint?, WayPoint?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<WayPoint?, WayPoint?>,
+              WayPoint?,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// The ending point for the Dubins path.
+
+@ProviderFor(DubinsPathDebugEndPoint)
+const dubinsPathDebugEndPointProvider = DubinsPathDebugEndPointProvider._();
+
+/// The ending point for the Dubins path.
+final class DubinsPathDebugEndPointProvider
+    extends $NotifierProvider<DubinsPathDebugEndPoint, WayPoint?> {
+  /// The ending point for the Dubins path.
+  const DubinsPathDebugEndPointProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'dubinsPathDebugEndPointProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$dubinsPathDebugEndPointHash();
+
+  @$internal
+  @override
+  DubinsPathDebugEndPoint create() => DubinsPathDebugEndPoint();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(WayPoint? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<WayPoint?>(value),
+    );
+  }
+}
+
 String _$dubinsPathDebugEndPointHash() =>
     r'5bec54f99573dc734b5b531dde2edeb623f9a2b8';
 
 /// The ending point for the Dubins path.
-///
-/// Copied from [DubinsPathDebugEndPoint].
-@ProviderFor(DubinsPathDebugEndPoint)
-final dubinsPathDebugEndPointProvider =
-    NotifierProvider<DubinsPathDebugEndPoint, WayPoint?>.internal(
-      DubinsPathDebugEndPoint.new,
-      name: r'dubinsPathDebugEndPointProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$dubinsPathDebugEndPointHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$DubinsPathDebugEndPoint = Notifier<WayPoint?>;
+abstract class _$DubinsPathDebugEndPoint extends $Notifier<WayPoint?> {
+  WayPoint? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<WayPoint?, WayPoint?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<WayPoint?, WayPoint?>,
+              WayPoint?,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// Which type of Dubins path to debug/draw.
+
+@ProviderFor(DubinsPathDebugPathType)
+const dubinsPathDebugPathTypeProvider = DubinsPathDebugPathTypeProvider._();
+
+/// Which type of Dubins path to debug/draw.
+final class DubinsPathDebugPathTypeProvider
+    extends $NotifierProvider<DubinsPathDebugPathType, DubinsPathType?> {
+  /// Which type of Dubins path to debug/draw.
+  const DubinsPathDebugPathTypeProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'dubinsPathDebugPathTypeProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$dubinsPathDebugPathTypeHash();
+
+  @$internal
+  @override
+  DubinsPathDebugPathType create() => DubinsPathDebugPathType();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(DubinsPathType? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<DubinsPathType?>(value),
+    );
+  }
+}
+
 String _$dubinsPathDebugPathTypeHash() =>
     r'db8f582506c21d252bfd7b448432d055327147f8';
 
 /// Which type of Dubins path to debug/draw.
-///
-/// Copied from [DubinsPathDebugPathType].
-@ProviderFor(DubinsPathDebugPathType)
-final dubinsPathDebugPathTypeProvider = AutoDisposeNotifierProvider<
-  DubinsPathDebugPathType,
-  DubinsPathType?
->.internal(
-  DubinsPathDebugPathType.new,
-  name: r'dubinsPathDebugPathTypeProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$dubinsPathDebugPathTypeHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-typedef _$DubinsPathDebugPathType = AutoDisposeNotifier<DubinsPathType?>;
+abstract class _$DubinsPathDebugPathType extends $Notifier<DubinsPathType?> {
+  DubinsPathType? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<DubinsPathType?, DubinsPathType?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<DubinsPathType?, DubinsPathType?>,
+              DubinsPathType?,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// The current [DubinsPath] object that we can debug.
+
+@ProviderFor(debugDubinsPath)
+const debugDubinsPathProvider = DebugDubinsPathProvider._();
+
+/// The current [DubinsPath] object that we can debug.
+
+final class DebugDubinsPathProvider
+    extends $FunctionalProvider<DubinsPath?, DubinsPath?, DubinsPath?>
+    with $Provider<DubinsPath?> {
+  /// The current [DubinsPath] object that we can debug.
+  const DebugDubinsPathProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'debugDubinsPathProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$debugDubinsPathHash();
+
+  @$internal
+  @override
+  $ProviderElement<DubinsPath?> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  DubinsPath? create(Ref ref) {
+    return debugDubinsPath(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(DubinsPath? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<DubinsPath?>(value),
+    );
+  }
+}
+
+String _$debugDubinsPathHash() => r'068a0465a7cf1281bb525158fa27f300d88c13f5';
+
+/// Which type of Dubins path to debug/draw.
+
+@ProviderFor(DubinsPathDebugStepSize)
+const dubinsPathDebugStepSizeProvider = DubinsPathDebugStepSizeProvider._();
+
+/// Which type of Dubins path to debug/draw.
+final class DubinsPathDebugStepSizeProvider
+    extends $NotifierProvider<DubinsPathDebugStepSize, double> {
+  /// Which type of Dubins path to debug/draw.
+  const DubinsPathDebugStepSizeProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'dubinsPathDebugStepSizeProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$dubinsPathDebugStepSizeHash();
+
+  @$internal
+  @override
+  DubinsPathDebugStepSize create() => DubinsPathDebugStepSize();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(double value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<double>(value),
+    );
+  }
+}
+
 String _$dubinsPathDebugStepSizeHash() =>
     r'9452d5770fd368ba784818c8866414e8e8dd3155';
 
 /// Which type of Dubins path to debug/draw.
-///
-/// Copied from [DubinsPathDebugStepSize].
-@ProviderFor(DubinsPathDebugStepSize)
-final dubinsPathDebugStepSizeProvider =
-    NotifierProvider<DubinsPathDebugStepSize, double>.internal(
-      DubinsPathDebugStepSize.new,
-      name: r'dubinsPathDebugStepSizeProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$dubinsPathDebugStepSizeHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$DubinsPathDebugStepSize = Notifier<double>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$DubinsPathDebugStepSize extends $Notifier<double> {
+  double build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<double, double>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<double, double>,
+              double,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

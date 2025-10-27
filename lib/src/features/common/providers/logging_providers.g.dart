@@ -6,214 +6,228 @@ part of 'logging_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loggingFileHash() => r'6003cea7133df2cf0f96fd49d6ff65983dad336d';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// A provider for the number of log files to keep in the logs directory.
 
-/// A provider for creating a logging file for the session.
-///
-/// Copied from [loggingFile].
-@ProviderFor(loggingFile)
-final loggingFileProvider = FutureProvider<File?>.internal(
-  loggingFile,
-  name: r'loggingFileProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$loggingFileHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(DaysToKeepLogFiles)
+const daysToKeepLogFilesProvider = DaysToKeepLogFilesProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef LoggingFileRef = FutureProviderRef<File?>;
-String _$loggingHash() => r'e7501a1b838141081caeb41f09ad98c3119e6a52';
-
-/// A provider for the [Logger] that prints the logs to console and a file
-/// if on native platforms.
-///
-/// Copied from [logging].
-@ProviderFor(logging)
-final loggingProvider = Provider<Logger>.internal(
-  logging,
-  name: r'loggingProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$loggingHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef LoggingRef = ProviderRef<Logger>;
-String _$exportLogsHash() => r'1a0452517f5ccf79309ad6c8e13cce8434e22cc5';
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// A provider for exporting all log files.
-///
-/// Copied from [exportLogs].
-@ProviderFor(exportLogs)
-const exportLogsProvider = ExportLogsFamily();
-
-/// A provider for exporting all log files.
-///
-/// Copied from [exportLogs].
-class ExportLogsFamily extends Family<AsyncValue<void>> {
-  /// A provider for exporting all log files.
-  ///
-  /// Copied from [exportLogs].
-  const ExportLogsFamily();
-
-  /// A provider for exporting all log files.
-  ///
-  /// Copied from [exportLogs].
-  ExportLogsProvider call({bool zip = true}) {
-    return ExportLogsProvider(zip: zip);
-  }
-
-  @override
-  ExportLogsProvider getProviderOverride(
-    covariant ExportLogsProvider provider,
-  ) {
-    return call(zip: provider.zip);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'exportLogsProvider';
-}
-
-/// A provider for exporting all log files.
-///
-/// Copied from [exportLogs].
-class ExportLogsProvider extends AutoDisposeFutureProvider<void> {
-  /// A provider for exporting all log files.
-  ///
-  /// Copied from [exportLogs].
-  ExportLogsProvider({bool zip = true})
-    : this._internal(
-        (ref) => exportLogs(ref as ExportLogsRef, zip: zip),
-        from: exportLogsProvider,
-        name: r'exportLogsProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$exportLogsHash,
-        dependencies: ExportLogsFamily._dependencies,
-        allTransitiveDependencies: ExportLogsFamily._allTransitiveDependencies,
-        zip: zip,
+/// A provider for the number of log files to keep in the logs directory.
+final class DaysToKeepLogFilesProvider
+    extends $NotifierProvider<DaysToKeepLogFiles, int> {
+  /// A provider for the number of log files to keep in the logs directory.
+  const DaysToKeepLogFilesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'daysToKeepLogFilesProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
       );
 
-  ExportLogsProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.zip,
-  }) : super.internal();
-
-  final bool zip;
-
   @override
-  Override overrideWith(
-    FutureOr<void> Function(ExportLogsRef provider) create,
-  ) {
-    return ProviderOverride(
+  String debugGetCreateSourceHash() => _$daysToKeepLogFilesHash();
+
+  @$internal
+  @override
+  DaysToKeepLogFiles create() => DaysToKeepLogFiles();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(int value) {
+    return $ProviderOverride(
       origin: this,
-      override: ExportLogsProvider._internal(
-        (ref) => create(ref as ExportLogsRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        zip: zip,
-      ),
+      providerOverride: $SyncValueProvider<int>(value),
     );
   }
-
-  @override
-  AutoDisposeFutureProviderElement<void> createElement() {
-    return _ExportLogsProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is ExportLogsProvider && other.zip == zip;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, zip.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin ExportLogsRef on AutoDisposeFutureProviderRef<void> {
-  /// The parameter `zip` of this provider.
-  bool get zip;
-}
-
-class _ExportLogsProviderElement extends AutoDisposeFutureProviderElement<void>
-    with ExportLogsRef {
-  _ExportLogsProviderElement(super.provider);
-
-  @override
-  bool get zip => (origin as ExportLogsProvider).zip;
 }
 
 String _$daysToKeepLogFilesHash() =>
     r'f45016703c854b34f58586a7e5ab8cb8c7562617';
 
 /// A provider for the number of log files to keep in the logs directory.
-///
-/// Copied from [DaysToKeepLogFiles].
-@ProviderFor(DaysToKeepLogFiles)
-final daysToKeepLogFilesProvider =
-    NotifierProvider<DaysToKeepLogFiles, int>.internal(
-      DaysToKeepLogFiles.new,
-      name: r'daysToKeepLogFilesProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$daysToKeepLogFilesHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$DaysToKeepLogFiles = Notifier<int>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$DaysToKeepLogFiles extends $Notifier<int> {
+  int build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<int, int>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<int, int>,
+              int,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for creating a logging file for the session.
+
+@ProviderFor(loggingFile)
+const loggingFileProvider = LoggingFileProvider._();
+
+/// A provider for creating a logging file for the session.
+
+final class LoggingFileProvider
+    extends $FunctionalProvider<AsyncValue<File?>, File?, FutureOr<File?>>
+    with $FutureModifier<File?>, $FutureProvider<File?> {
+  /// A provider for creating a logging file for the session.
+  const LoggingFileProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'loggingFileProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$loggingFileHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<File?> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<File?> create(Ref ref) {
+    return loggingFile(ref);
+  }
+}
+
+String _$loggingFileHash() => r'6003cea7133df2cf0f96fd49d6ff65983dad336d';
+
+/// A provider for the [Logger] that prints the logs to console and a file
+/// if on native platforms.
+
+@ProviderFor(logging)
+const loggingProvider = LoggingProvider._();
+
+/// A provider for the [Logger] that prints the logs to console and a file
+/// if on native platforms.
+
+final class LoggingProvider extends $FunctionalProvider<Logger, Logger, Logger>
+    with $Provider<Logger> {
+  /// A provider for the [Logger] that prints the logs to console and a file
+  /// if on native platforms.
+  const LoggingProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'loggingProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$loggingHash();
+
+  @$internal
+  @override
+  $ProviderElement<Logger> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  Logger create(Ref ref) {
+    return logging(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Logger value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Logger>(value),
+    );
+  }
+}
+
+String _$loggingHash() => r'e7501a1b838141081caeb41f09ad98c3119e6a52';
+
+/// A provider for exporting all log files.
+
+@ProviderFor(exportLogs)
+const exportLogsProvider = ExportLogsFamily._();
+
+/// A provider for exporting all log files.
+
+final class ExportLogsProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+    with $FutureModifier<void>, $FutureProvider<void> {
+  /// A provider for exporting all log files.
+  const ExportLogsProvider._({
+    required ExportLogsFamily super.from,
+    required bool super.argument,
+  }) : super(
+         retry: null,
+         name: r'exportLogsProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$exportLogsHash();
+
+  @override
+  String toString() {
+    return r'exportLogsProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<void> create(Ref ref) {
+    final argument = this.argument as bool;
+    return exportLogs(ref, zip: argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ExportLogsProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$exportLogsHash() => r'1a0452517f5ccf79309ad6c8e13cce8434e22cc5';
+
+/// A provider for exporting all log files.
+
+final class ExportLogsFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<void>, bool> {
+  const ExportLogsFamily._()
+    : super(
+        retry: null,
+        name: r'exportLogsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// A provider for exporting all log files.
+
+  ExportLogsProvider call({bool zip = true}) =>
+      ExportLogsProvider._(argument: zip, from: this);
+
+  @override
+  String toString() => r'exportLogsProvider';
+}

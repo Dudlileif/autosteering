@@ -34,7 +34,7 @@ extension PolygonCopyWith on Polygon {
     StrokeJoin? strokeJoin,
     String? label,
     TextStyle? labelStyle,
-    PolygonLabelPlacement? labelPlacement,
+    PolygonLabelPlacementCalculator? labelPlacementCalculator,
     bool? rotateLabel,
     Object? hitValue,
   }) => Polygon(
@@ -49,7 +49,8 @@ extension PolygonCopyWith on Polygon {
     strokeJoin: strokeJoin ?? this.strokeJoin,
     label: label ?? this.label,
     labelStyle: labelStyle ?? this.labelStyle,
-    labelPlacement: labelPlacement ?? this.labelPlacement,
+    labelPlacementCalculator:
+        labelPlacementCalculator ?? this.labelPlacementCalculator,
     rotateLabel: rotateLabel ?? this.rotateLabel,
     hitValue: hitValue ?? this.hitValue,
   );

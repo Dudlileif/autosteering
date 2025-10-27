@@ -6,90 +6,198 @@ part of 'combined_communication_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$combinedNativeNetworkHash() =>
-    r'bcb3ac5ff347c9c6946613c487bd5ee05121c5ae';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// A provider for combining the native network providers that need to be
+/// watched.
+
+@ProviderFor(_combinedNativeNetwork)
+const _combinedNativeNetworkProvider = _CombinedNativeNetworkProvider._();
 
 /// A provider for combining the native network providers that need to be
 /// watched.
-///
-/// Copied from [_combinedNativeNetwork].
-@ProviderFor(_combinedNativeNetwork)
-final _combinedNativeNetworkProvider = AutoDisposeProvider<void>.internal(
-  _combinedNativeNetwork,
-  name: r'_combinedNativeNetworkProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$combinedNativeNetworkHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef _CombinedNativeNetworkRef = AutoDisposeProviderRef<void>;
-String _$combinedSerialHash() => r'6ec5620fc4b903429782dd75665f56b4584cac2c';
+final class _CombinedNativeNetworkProvider
+    extends $FunctionalProvider<void, void, void>
+    with $Provider<void> {
+  /// A provider for combining the native network providers that need to be
+  /// watched.
+  const _CombinedNativeNetworkProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'_combinedNativeNetworkProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$_combinedNativeNetworkHash();
+
+  @$internal
+  @override
+  $ProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  void create(Ref ref) {
+    return _combinedNativeNetwork(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(void value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<void>(value),
+    );
+  }
+}
+
+String _$_combinedNativeNetworkHash() =>
+    r'bcb3ac5ff347c9c6946613c487bd5ee05121c5ae';
 
 /// A provider for combining the serial providers that need to be watched.
-///
-/// Copied from [_combinedSerial].
-@ProviderFor(_combinedSerial)
-final _combinedSerialProvider = AutoDisposeProvider<void>.internal(
-  _combinedSerial,
-  name: r'_combinedSerialProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$combinedSerialHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef _CombinedSerialRef = AutoDisposeProviderRef<void>;
-String _$combinedCommunicationHash() =>
-    r'3674c86e1684f5a867aa5868875ecc87dae318fc';
+@ProviderFor(_combinedSerial)
+const _combinedSerialProvider = _CombinedSerialProvider._();
+
+/// A provider for combining the serial providers that need to be watched.
+
+final class _CombinedSerialProvider
+    extends $FunctionalProvider<void, void, void>
+    with $Provider<void> {
+  /// A provider for combining the serial providers that need to be watched.
+  const _CombinedSerialProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'_combinedSerialProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$_combinedSerialHash();
+
+  @$internal
+  @override
+  $ProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  void create(Ref ref) {
+    return _combinedSerial(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(void value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<void>(value),
+    );
+  }
+}
+
+String _$_combinedSerialHash() => r'6ec5620fc4b903429782dd75665f56b4584cac2c';
 
 /// A provider for combining all the network and hardware communication
 /// providers that need to be watched.
-///
-/// Copied from [combinedCommunication].
-@ProviderFor(combinedCommunication)
-final combinedCommunicationProvider = AutoDisposeProvider<void>.internal(
-  combinedCommunication,
-  name: r'combinedCommunicationProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$combinedCommunicationHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef CombinedCommunicationRef = AutoDisposeProviderRef<void>;
-String _$hardwareAliveHash() => r'50658d49b282388b8f604df97b9aeedf910341f7';
+@ProviderFor(combinedCommunication)
+const combinedCommunicationProvider = CombinedCommunicationProvider._();
+
+/// A provider for combining all the network and hardware communication
+/// providers that need to be watched.
+
+final class CombinedCommunicationProvider
+    extends $FunctionalProvider<void, void, void>
+    with $Provider<void> {
+  /// A provider for combining all the network and hardware communication
+  /// providers that need to be watched.
+  const CombinedCommunicationProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'combinedCommunicationProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$combinedCommunicationHash();
+
+  @$internal
+  @override
+  $ProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  void create(Ref ref) {
+    return combinedCommunication(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(void value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<void>(value),
+    );
+  }
+}
+
+String _$combinedCommunicationHash() =>
+    r'3674c86e1684f5a867aa5868875ecc87dae318fc';
 
 /// A provider for whether any hardware is connected and communicating with
 /// us.
-///
-/// Copied from [hardwareAlive].
-@ProviderFor(hardwareAlive)
-final hardwareAliveProvider = AutoDisposeProvider<bool>.internal(
-  hardwareAlive,
-  name: r'hardwareAliveProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$hardwareAliveHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef HardwareAliveRef = AutoDisposeProviderRef<bool>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+@ProviderFor(hardwareAlive)
+const hardwareAliveProvider = HardwareAliveProvider._();
+
+/// A provider for whether any hardware is connected and communicating with
+/// us.
+
+final class HardwareAliveProvider extends $FunctionalProvider<bool, bool, bool>
+    with $Provider<bool> {
+  /// A provider for whether any hardware is connected and communicating with
+  /// us.
+  const HardwareAliveProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'hardwareAliveProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$hardwareAliveHash();
+
+  @$internal
+  @override
+  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  bool create(Ref ref) {
+    return hardwareAlive(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$hardwareAliveHash() => r'50658d49b282388b8f604df97b9aeedf910341f7';

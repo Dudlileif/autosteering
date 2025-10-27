@@ -6,216 +6,241 @@ part of 'equipment_setup_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$saveEquipmentSetupHash() =>
-    r'6e0dc61ad3693807604e4b8314aab2ba3ffe4375';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// A provider or holding the configured/loaded [EquipmentSetup] in memory.
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
+@ProviderFor(ConfiguredEquipmentSetup)
+const configuredEquipmentSetupProvider = ConfiguredEquipmentSetupProvider._();
 
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
+/// A provider or holding the configured/loaded [EquipmentSetup] in memory.
+final class ConfiguredEquipmentSetupProvider
+    extends $NotifierProvider<ConfiguredEquipmentSetup, EquipmentSetup?> {
+  /// A provider or holding the configured/loaded [EquipmentSetup] in memory.
+  const ConfiguredEquipmentSetupProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'configuredEquipmentSetupProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$configuredEquipmentSetupHash();
+
+  @$internal
+  @override
+  ConfiguredEquipmentSetup create() => ConfiguredEquipmentSetup();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(EquipmentSetup? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<EquipmentSetup?>(value),
+    );
   }
+}
 
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+String _$configuredEquipmentSetupHash() =>
+    r'b39fe174ad64a3c80c6fbf2fdecc6db9da6bbfea';
+
+/// A provider or holding the configured/loaded [EquipmentSetup] in memory.
+
+abstract class _$ConfiguredEquipmentSetup extends $Notifier<EquipmentSetup?> {
+  EquipmentSetup? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<EquipmentSetup?, EquipmentSetup?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<EquipmentSetup?, EquipmentSetup?>,
+              EquipmentSetup?,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
   }
 }
 
 /// A provider for saving [setup] to a file in the user file directory.
 ///
 /// Override the file name with [overrideName].
-///
-/// Copied from [saveEquipmentSetup].
+
 @ProviderFor(saveEquipmentSetup)
-const saveEquipmentSetupProvider = SaveEquipmentSetupFamily();
+const saveEquipmentSetupProvider = SaveEquipmentSetupFamily._();
 
 /// A provider for saving [setup] to a file in the user file directory.
 ///
 /// Override the file name with [overrideName].
-///
-/// Copied from [saveEquipmentSetup].
-class SaveEquipmentSetupFamily extends Family<AsyncValue<void>> {
+
+final class SaveEquipmentSetupProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+    with $FutureModifier<void>, $FutureProvider<void> {
   /// A provider for saving [setup] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
-  ///
-  /// Copied from [saveEquipmentSetup].
-  const SaveEquipmentSetupFamily();
-
-  /// A provider for saving [setup] to a file in the user file directory.
-  ///
-  /// Override the file name with [overrideName].
-  ///
-  /// Copied from [saveEquipmentSetup].
-  SaveEquipmentSetupProvider call(
-    EquipmentSetup setup, {
-    String? overrideName,
-    bool downloadIfWeb = false,
-  }) {
-    return SaveEquipmentSetupProvider(
-      setup,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
-  }
-
-  @override
-  SaveEquipmentSetupProvider getProviderOverride(
-    covariant SaveEquipmentSetupProvider provider,
-  ) {
-    return call(
-      provider.setup,
-      overrideName: provider.overrideName,
-      downloadIfWeb: provider.downloadIfWeb,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'saveEquipmentSetupProvider';
-}
-
-/// A provider for saving [setup] to a file in the user file directory.
-///
-/// Override the file name with [overrideName].
-///
-/// Copied from [saveEquipmentSetup].
-class SaveEquipmentSetupProvider extends AutoDisposeFutureProvider<void> {
-  /// A provider for saving [setup] to a file in the user file directory.
-  ///
-  /// Override the file name with [overrideName].
-  ///
-  /// Copied from [saveEquipmentSetup].
-  SaveEquipmentSetupProvider(
-    EquipmentSetup setup, {
-    String? overrideName,
-    bool downloadIfWeb = false,
-  }) : this._internal(
-         (ref) => saveEquipmentSetup(
-           ref as SaveEquipmentSetupRef,
-           setup,
-           overrideName: overrideName,
-           downloadIfWeb: downloadIfWeb,
-         ),
-         from: saveEquipmentSetupProvider,
+  const SaveEquipmentSetupProvider._({
+    required SaveEquipmentSetupFamily super.from,
+    required (EquipmentSetup, {String? overrideName, bool downloadIfWeb})
+    super.argument,
+  }) : super(
+         retry: null,
          name: r'saveEquipmentSetupProvider',
-         debugGetCreateSourceHash:
-             const bool.fromEnvironment('dart.vm.product')
-                 ? null
-                 : _$saveEquipmentSetupHash,
-         dependencies: SaveEquipmentSetupFamily._dependencies,
-         allTransitiveDependencies:
-             SaveEquipmentSetupFamily._allTransitiveDependencies,
-         setup: setup,
-         overrideName: overrideName,
-         downloadIfWeb: downloadIfWeb,
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
        );
 
-  SaveEquipmentSetupProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.setup,
-    required this.overrideName,
-    required this.downloadIfWeb,
-  }) : super.internal();
-
-  final EquipmentSetup setup;
-  final String? overrideName;
-  final bool downloadIfWeb;
+  @override
+  String debugGetCreateSourceHash() => _$saveEquipmentSetupHash();
 
   @override
-  Override overrideWith(
-    FutureOr<void> Function(SaveEquipmentSetupRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: SaveEquipmentSetupProvider._internal(
-        (ref) => create(ref as SaveEquipmentSetupRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        setup: setup,
-        overrideName: overrideName,
-        downloadIfWeb: downloadIfWeb,
-      ),
-    );
+  String toString() {
+    return r'saveEquipmentSetupProvider'
+        ''
+        '$argument';
   }
 
+  @$internal
   @override
-  AutoDisposeFutureProviderElement<void> createElement() {
-    return _SaveEquipmentSetupProviderElement(this);
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<void> create(Ref ref) {
+    final argument =
+        this.argument
+            as (EquipmentSetup, {String? overrideName, bool downloadIfWeb});
+    return saveEquipmentSetup(
+      ref,
+      argument.$1,
+      overrideName: argument.overrideName,
+      downloadIfWeb: argument.downloadIfWeb,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return other is SaveEquipmentSetupProvider &&
-        other.setup == setup &&
-        other.overrideName == overrideName &&
-        other.downloadIfWeb == downloadIfWeb;
+    return other is SaveEquipmentSetupProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, setup.hashCode);
-    hash = _SystemHash.combine(hash, overrideName.hashCode);
-    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin SaveEquipmentSetupRef on AutoDisposeFutureProviderRef<void> {
-  /// The parameter `setup` of this provider.
-  EquipmentSetup get setup;
+String _$saveEquipmentSetupHash() =>
+    r'd84a6da001ac7c469cf7fbae0dea619e6f55aeaf';
 
-  /// The parameter `overrideName` of this provider.
-  String? get overrideName;
+/// A provider for saving [setup] to a file in the user file directory.
+///
+/// Override the file name with [overrideName].
 
-  /// The parameter `downloadIfWeb` of this provider.
-  bool get downloadIfWeb;
+final class SaveEquipmentSetupFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<void>,
+          (EquipmentSetup, {String? overrideName, bool downloadIfWeb})
+        > {
+  const SaveEquipmentSetupFamily._()
+    : super(
+        retry: null,
+        name: r'saveEquipmentSetupProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  /// A provider for saving [setup] to a file in the user file directory.
+  ///
+  /// Override the file name with [overrideName].
+
+  SaveEquipmentSetupProvider call(
+    EquipmentSetup setup, {
+    String? overrideName,
+    bool downloadIfWeb = false,
+  }) => SaveEquipmentSetupProvider._(
+    argument: (setup, overrideName: overrideName, downloadIfWeb: downloadIfWeb),
+    from: this,
+  );
+
+  @override
+  String toString() => r'saveEquipmentSetupProvider';
 }
 
-class _SaveEquipmentSetupProviderElement
-    extends AutoDisposeFutureProviderElement<void>
-    with SaveEquipmentSetupRef {
-  _SaveEquipmentSetupProviderElement(super.provider);
+/// A provider for exporting [setup] to a file.
+///
+/// Override the file name with [overrideName].
+
+@ProviderFor(exportEquipmentSetup)
+const exportEquipmentSetupProvider = ExportEquipmentSetupFamily._();
+
+/// A provider for exporting [setup] to a file.
+///
+/// Override the file name with [overrideName].
+
+final class ExportEquipmentSetupProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+    with $FutureModifier<void>, $FutureProvider<void> {
+  /// A provider for exporting [setup] to a file.
+  ///
+  /// Override the file name with [overrideName].
+  const ExportEquipmentSetupProvider._({
+    required ExportEquipmentSetupFamily super.from,
+    required (EquipmentSetup, {String? overrideName, bool downloadIfWeb})
+    super.argument,
+  }) : super(
+         retry: null,
+         name: r'exportEquipmentSetupProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
-  EquipmentSetup get setup => (origin as SaveEquipmentSetupProvider).setup;
+  String debugGetCreateSourceHash() => _$exportEquipmentSetupHash();
+
   @override
-  String? get overrideName =>
-      (origin as SaveEquipmentSetupProvider).overrideName;
+  String toString() {
+    return r'exportEquipmentSetupProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
   @override
-  bool get downloadIfWeb =>
-      (origin as SaveEquipmentSetupProvider).downloadIfWeb;
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<void> create(Ref ref) {
+    final argument =
+        this.argument
+            as (EquipmentSetup, {String? overrideName, bool downloadIfWeb});
+    return exportEquipmentSetup(
+      ref,
+      argument.$1,
+      overrideName: argument.overrideName,
+      downloadIfWeb: argument.downloadIfWeb,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ExportEquipmentSetupProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
 }
 
 String _$exportEquipmentSetupHash() =>
@@ -224,403 +249,258 @@ String _$exportEquipmentSetupHash() =>
 /// A provider for exporting [setup] to a file.
 ///
 /// Override the file name with [overrideName].
-///
-/// Copied from [exportEquipmentSetup].
-@ProviderFor(exportEquipmentSetup)
-const exportEquipmentSetupProvider = ExportEquipmentSetupFamily();
 
-/// A provider for exporting [setup] to a file.
-///
-/// Override the file name with [overrideName].
-///
-/// Copied from [exportEquipmentSetup].
-class ExportEquipmentSetupFamily extends Family<AsyncValue<void>> {
-  /// A provider for exporting [setup] to a file.
-  ///
-  /// Override the file name with [overrideName].
-  ///
-  /// Copied from [exportEquipmentSetup].
-  const ExportEquipmentSetupFamily();
+final class ExportEquipmentSetupFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<void>,
+          (EquipmentSetup, {String? overrideName, bool downloadIfWeb})
+        > {
+  const ExportEquipmentSetupFamily._()
+    : super(
+        retry: null,
+        name: r'exportEquipmentSetupProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
 
   /// A provider for exporting [setup] to a file.
   ///
   /// Override the file name with [overrideName].
-  ///
-  /// Copied from [exportEquipmentSetup].
+
   ExportEquipmentSetupProvider call(
     EquipmentSetup setup, {
     String? overrideName,
     bool downloadIfWeb = false,
-  }) {
-    return ExportEquipmentSetupProvider(
-      setup,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
-  }
+  }) => ExportEquipmentSetupProvider._(
+    argument: (setup, overrideName: overrideName, downloadIfWeb: downloadIfWeb),
+    from: this,
+  );
 
   @override
-  ExportEquipmentSetupProvider getProviderOverride(
-    covariant ExportEquipmentSetupProvider provider,
-  ) {
-    return call(
-      provider.setup,
-      overrideName: provider.overrideName,
-      downloadIfWeb: provider.downloadIfWeb,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'exportEquipmentSetupProvider';
+  String toString() => r'exportEquipmentSetupProvider';
 }
 
-/// A provider for exporting [setup] to a file.
-///
-/// Override the file name with [overrideName].
-///
-/// Copied from [exportEquipmentSetup].
-class ExportEquipmentSetupProvider extends AutoDisposeFutureProvider<void> {
-  /// A provider for exporting [setup] to a file.
-  ///
-  /// Override the file name with [overrideName].
-  ///
-  /// Copied from [exportEquipmentSetup].
-  ExportEquipmentSetupProvider(
-    EquipmentSetup setup, {
-    String? overrideName,
-    bool downloadIfWeb = false,
-  }) : this._internal(
-         (ref) => exportEquipmentSetup(
-           ref as ExportEquipmentSetupRef,
-           setup,
-           overrideName: overrideName,
-           downloadIfWeb: downloadIfWeb,
-         ),
-         from: exportEquipmentSetupProvider,
-         name: r'exportEquipmentSetupProvider',
-         debugGetCreateSourceHash:
-             const bool.fromEnvironment('dart.vm.product')
-                 ? null
-                 : _$exportEquipmentSetupHash,
-         dependencies: ExportEquipmentSetupFamily._dependencies,
-         allTransitiveDependencies:
-             ExportEquipmentSetupFamily._allTransitiveDependencies,
-         setup: setup,
-         overrideName: overrideName,
-         downloadIfWeb: downloadIfWeb,
-       );
+/// A provider for reading and holding all the saved [EquipmentSetup]s in the
+/// user file directory.
 
-  ExportEquipmentSetupProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.setup,
-    required this.overrideName,
-    required this.downloadIfWeb,
-  }) : super.internal();
+@ProviderFor(savedEquipmentSetups)
+const savedEquipmentSetupsProvider = SavedEquipmentSetupsProvider._();
 
-  final EquipmentSetup setup;
-  final String? overrideName;
-  final bool downloadIfWeb;
+/// A provider for reading and holding all the saved [EquipmentSetup]s in the
+/// user file directory.
 
-  @override
-  Override overrideWith(
-    FutureOr<void> Function(ExportEquipmentSetupRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: ExportEquipmentSetupProvider._internal(
-        (ref) => create(ref as ExportEquipmentSetupRef),
-        from: from,
-        name: null,
+final class SavedEquipmentSetupsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<EquipmentSetup>>,
+          List<EquipmentSetup>,
+          FutureOr<List<EquipmentSetup>>
+        >
+    with
+        $FutureModifier<List<EquipmentSetup>>,
+        $FutureProvider<List<EquipmentSetup>> {
+  /// A provider for reading and holding all the saved [EquipmentSetup]s in the
+  /// user file directory.
+  const SavedEquipmentSetupsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'savedEquipmentSetupsProvider',
+        isAutoDispose: false,
         dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        setup: setup,
-        overrideName: overrideName,
-        downloadIfWeb: downloadIfWeb,
-      ),
-    );
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$savedEquipmentSetupsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<EquipmentSetup>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<EquipmentSetup>> create(Ref ref) {
+    return savedEquipmentSetups(ref);
   }
-
-  @override
-  AutoDisposeFutureProviderElement<void> createElement() {
-    return _ExportEquipmentSetupProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is ExportEquipmentSetupProvider &&
-        other.setup == setup &&
-        other.overrideName == overrideName &&
-        other.downloadIfWeb == downloadIfWeb;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, setup.hashCode);
-    hash = _SystemHash.combine(hash, overrideName.hashCode);
-    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin ExportEquipmentSetupRef on AutoDisposeFutureProviderRef<void> {
-  /// The parameter `setup` of this provider.
-  EquipmentSetup get setup;
-
-  /// The parameter `overrideName` of this provider.
-  String? get overrideName;
-
-  /// The parameter `downloadIfWeb` of this provider.
-  bool get downloadIfWeb;
-}
-
-class _ExportEquipmentSetupProviderElement
-    extends AutoDisposeFutureProviderElement<void>
-    with ExportEquipmentSetupRef {
-  _ExportEquipmentSetupProviderElement(super.provider);
-
-  @override
-  EquipmentSetup get setup => (origin as ExportEquipmentSetupProvider).setup;
-  @override
-  String? get overrideName =>
-      (origin as ExportEquipmentSetupProvider).overrideName;
-  @override
-  bool get downloadIfWeb =>
-      (origin as ExportEquipmentSetupProvider).downloadIfWeb;
 }
 
 String _$savedEquipmentSetupsHash() =>
     r'0d6e509cbec5d1f6b1e1bcfdc68053bb39a0fd5e';
 
-/// A provider for reading and holding all the saved [EquipmentSetup]s in the
-/// user file directory.
+/// A provider for deleting [setup] form the user file system.
 ///
-/// Copied from [savedEquipmentSetups].
-@ProviderFor(savedEquipmentSetups)
-final savedEquipmentSetupsProvider =
-    FutureProvider<List<EquipmentSetup>>.internal(
-      savedEquipmentSetups,
-      name: r'savedEquipmentSetupsProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$savedEquipmentSetupsHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+/// Override the file name with [overrideName].
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef SavedEquipmentSetupsRef = FutureProviderRef<List<EquipmentSetup>>;
+@ProviderFor(deleteEquipmentSetup)
+const deleteEquipmentSetupProvider = DeleteEquipmentSetupFamily._();
+
+/// A provider for deleting [setup] form the user file system.
+///
+/// Override the file name with [overrideName].
+
+final class DeleteEquipmentSetupProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+    with $FutureModifier<void>, $FutureProvider<void> {
+  /// A provider for deleting [setup] form the user file system.
+  ///
+  /// Override the file name with [overrideName].
+  const DeleteEquipmentSetupProvider._({
+    required DeleteEquipmentSetupFamily super.from,
+    required (EquipmentSetup, {String? overrideName, bool downloadIfWeb})
+    super.argument,
+  }) : super(
+         retry: null,
+         name: r'deleteEquipmentSetupProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$deleteEquipmentSetupHash();
+
+  @override
+  String toString() {
+    return r'deleteEquipmentSetupProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<void> create(Ref ref) {
+    final argument =
+        this.argument
+            as (EquipmentSetup, {String? overrideName, bool downloadIfWeb});
+    return deleteEquipmentSetup(
+      ref,
+      argument.$1,
+      overrideName: argument.overrideName,
+      downloadIfWeb: argument.downloadIfWeb,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DeleteEquipmentSetupProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
 String _$deleteEquipmentSetupHash() =>
     r'02bf2c93100e497d02165324200e0d189ba1f67e';
 
 /// A provider for deleting [setup] form the user file system.
 ///
 /// Override the file name with [overrideName].
-///
-/// Copied from [deleteEquipmentSetup].
-@ProviderFor(deleteEquipmentSetup)
-const deleteEquipmentSetupProvider = DeleteEquipmentSetupFamily();
 
-/// A provider for deleting [setup] form the user file system.
-///
-/// Override the file name with [overrideName].
-///
-/// Copied from [deleteEquipmentSetup].
-class DeleteEquipmentSetupFamily extends Family<AsyncValue<void>> {
-  /// A provider for deleting [setup] form the user file system.
-  ///
-  /// Override the file name with [overrideName].
-  ///
-  /// Copied from [deleteEquipmentSetup].
-  const DeleteEquipmentSetupFamily();
+final class DeleteEquipmentSetupFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<void>,
+          (EquipmentSetup, {String? overrideName, bool downloadIfWeb})
+        > {
+  const DeleteEquipmentSetupFamily._()
+    : super(
+        retry: null,
+        name: r'deleteEquipmentSetupProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
 
   /// A provider for deleting [setup] form the user file system.
   ///
   /// Override the file name with [overrideName].
-  ///
-  /// Copied from [deleteEquipmentSetup].
+
   DeleteEquipmentSetupProvider call(
     EquipmentSetup setup, {
     String? overrideName,
     bool downloadIfWeb = false,
-  }) {
-    return DeleteEquipmentSetupProvider(
-      setup,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
-  }
+  }) => DeleteEquipmentSetupProvider._(
+    argument: (setup, overrideName: overrideName, downloadIfWeb: downloadIfWeb),
+    from: this,
+  );
 
   @override
-  DeleteEquipmentSetupProvider getProviderOverride(
-    covariant DeleteEquipmentSetupProvider provider,
-  ) {
-    return call(
-      provider.setup,
-      overrideName: provider.overrideName,
-      downloadIfWeb: provider.downloadIfWeb,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'deleteEquipmentSetupProvider';
+  String toString() => r'deleteEquipmentSetupProvider';
 }
 
-/// A provider for deleting [setup] form the user file system.
-///
-/// Override the file name with [overrideName].
-///
-/// Copied from [deleteEquipmentSetup].
-class DeleteEquipmentSetupProvider extends AutoDisposeFutureProvider<void> {
-  /// A provider for deleting [setup] form the user file system.
-  ///
-  /// Override the file name with [overrideName].
-  ///
-  /// Copied from [deleteEquipmentSetup].
-  DeleteEquipmentSetupProvider(
-    EquipmentSetup setup, {
-    String? overrideName,
-    bool downloadIfWeb = false,
-  }) : this._internal(
-         (ref) => deleteEquipmentSetup(
-           ref as DeleteEquipmentSetupRef,
-           setup,
-           overrideName: overrideName,
-           downloadIfWeb: downloadIfWeb,
-         ),
-         from: deleteEquipmentSetupProvider,
-         name: r'deleteEquipmentSetupProvider',
-         debugGetCreateSourceHash:
-             const bool.fromEnvironment('dart.vm.product')
-                 ? null
-                 : _$deleteEquipmentSetupHash,
-         dependencies: DeleteEquipmentSetupFamily._dependencies,
-         allTransitiveDependencies:
-             DeleteEquipmentSetupFamily._allTransitiveDependencies,
-         setup: setup,
-         overrideName: overrideName,
-         downloadIfWeb: downloadIfWeb,
+/// A provider for loading an [EquipmentSetup] from a file at [path], if it's
+/// valid.
+
+@ProviderFor(loadEquipmentSetupFromFile)
+const loadEquipmentSetupFromFileProvider = LoadEquipmentSetupFromFileFamily._();
+
+/// A provider for loading an [EquipmentSetup] from a file at [path], if it's
+/// valid.
+
+final class LoadEquipmentSetupFromFileProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<EquipmentSetup?>,
+          EquipmentSetup?,
+          FutureOr<EquipmentSetup?>
+        >
+    with $FutureModifier<EquipmentSetup?>, $FutureProvider<EquipmentSetup?> {
+  /// A provider for loading an [EquipmentSetup] from a file at [path], if it's
+  /// valid.
+  const LoadEquipmentSetupFromFileProvider._({
+    required LoadEquipmentSetupFromFileFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'loadEquipmentSetupFromFileProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
        );
 
-  DeleteEquipmentSetupProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.setup,
-    required this.overrideName,
-    required this.downloadIfWeb,
-  }) : super.internal();
-
-  final EquipmentSetup setup;
-  final String? overrideName;
-  final bool downloadIfWeb;
+  @override
+  String debugGetCreateSourceHash() => _$loadEquipmentSetupFromFileHash();
 
   @override
-  Override overrideWith(
-    FutureOr<void> Function(DeleteEquipmentSetupRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: DeleteEquipmentSetupProvider._internal(
-        (ref) => create(ref as DeleteEquipmentSetupRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        setup: setup,
-        overrideName: overrideName,
-        downloadIfWeb: downloadIfWeb,
-      ),
-    );
+  String toString() {
+    return r'loadEquipmentSetupFromFileProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  AutoDisposeFutureProviderElement<void> createElement() {
-    return _DeleteEquipmentSetupProviderElement(this);
+  $FutureProviderElement<EquipmentSetup?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<EquipmentSetup?> create(Ref ref) {
+    final argument = this.argument as String;
+    return loadEquipmentSetupFromFile(ref, argument);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is DeleteEquipmentSetupProvider &&
-        other.setup == setup &&
-        other.overrideName == overrideName &&
-        other.downloadIfWeb == downloadIfWeb;
+    return other is LoadEquipmentSetupFromFileProvider &&
+        other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, setup.hashCode);
-    hash = _SystemHash.combine(hash, overrideName.hashCode);
-    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
-}
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin DeleteEquipmentSetupRef on AutoDisposeFutureProviderRef<void> {
-  /// The parameter `setup` of this provider.
-  EquipmentSetup get setup;
-
-  /// The parameter `overrideName` of this provider.
-  String? get overrideName;
-
-  /// The parameter `downloadIfWeb` of this provider.
-  bool get downloadIfWeb;
-}
-
-class _DeleteEquipmentSetupProviderElement
-    extends AutoDisposeFutureProviderElement<void>
-    with DeleteEquipmentSetupRef {
-  _DeleteEquipmentSetupProviderElement(super.provider);
-
-  @override
-  EquipmentSetup get setup => (origin as DeleteEquipmentSetupProvider).setup;
-  @override
-  String? get overrideName =>
-      (origin as DeleteEquipmentSetupProvider).overrideName;
-  @override
-  bool get downloadIfWeb =>
-      (origin as DeleteEquipmentSetupProvider).downloadIfWeb;
 }
 
 String _$loadEquipmentSetupFromFileHash() =>
@@ -628,190 +508,72 @@ String _$loadEquipmentSetupFromFileHash() =>
 
 /// A provider for loading an [EquipmentSetup] from a file at [path], if it's
 /// valid.
-///
-/// Copied from [loadEquipmentSetupFromFile].
-@ProviderFor(loadEquipmentSetupFromFile)
-const loadEquipmentSetupFromFileProvider = LoadEquipmentSetupFromFileFamily();
 
-/// A provider for loading an [EquipmentSetup] from a file at [path], if it's
-/// valid.
-///
-/// Copied from [loadEquipmentSetupFromFile].
-class LoadEquipmentSetupFromFileFamily
-    extends Family<AsyncValue<EquipmentSetup?>> {
-  /// A provider for loading an [EquipmentSetup] from a file at [path], if it's
-  /// valid.
-  ///
-  /// Copied from [loadEquipmentSetupFromFile].
-  const LoadEquipmentSetupFromFileFamily();
-
-  /// A provider for loading an [EquipmentSetup] from a file at [path], if it's
-  /// valid.
-  ///
-  /// Copied from [loadEquipmentSetupFromFile].
-  LoadEquipmentSetupFromFileProvider call(String path) {
-    return LoadEquipmentSetupFromFileProvider(path);
-  }
-
-  @override
-  LoadEquipmentSetupFromFileProvider getProviderOverride(
-    covariant LoadEquipmentSetupFromFileProvider provider,
-  ) {
-    return call(provider.path);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'loadEquipmentSetupFromFileProvider';
-}
-
-/// A provider for loading an [EquipmentSetup] from a file at [path], if it's
-/// valid.
-///
-/// Copied from [loadEquipmentSetupFromFile].
-class LoadEquipmentSetupFromFileProvider
-    extends AutoDisposeFutureProvider<EquipmentSetup?> {
-  /// A provider for loading an [EquipmentSetup] from a file at [path], if it's
-  /// valid.
-  ///
-  /// Copied from [loadEquipmentSetupFromFile].
-  LoadEquipmentSetupFromFileProvider(String path)
-    : this._internal(
-        (ref) => loadEquipmentSetupFromFile(
-          ref as LoadEquipmentSetupFromFileRef,
-          path,
-        ),
-        from: loadEquipmentSetupFromFileProvider,
+final class LoadEquipmentSetupFromFileFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<EquipmentSetup?>, String> {
+  const LoadEquipmentSetupFromFileFamily._()
+    : super(
+        retry: null,
         name: r'loadEquipmentSetupFromFileProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$loadEquipmentSetupFromFileHash,
-        dependencies: LoadEquipmentSetupFromFileFamily._dependencies,
-        allTransitiveDependencies:
-            LoadEquipmentSetupFromFileFamily._allTransitiveDependencies,
-        path: path,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
       );
 
-  LoadEquipmentSetupFromFileProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.path,
-  }) : super.internal();
+  /// A provider for loading an [EquipmentSetup] from a file at [path], if it's
+  /// valid.
 
-  final String path;
+  LoadEquipmentSetupFromFileProvider call(String path) =>
+      LoadEquipmentSetupFromFileProvider._(argument: path, from: this);
 
   @override
-  Override overrideWith(
-    FutureOr<EquipmentSetup?> Function(LoadEquipmentSetupFromFileRef provider)
-    create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: LoadEquipmentSetupFromFileProvider._internal(
-        (ref) => create(ref as LoadEquipmentSetupFromFileRef),
-        from: from,
-        name: null,
+  String toString() => r'loadEquipmentSetupFromFileProvider';
+}
+
+/// A provider for importing a equipment setup configuration from the user file
+/// directory and applying it to the [ConfiguredEquipmentSetup] provider.
+
+@ProviderFor(importEquipmentSetup)
+const importEquipmentSetupProvider = ImportEquipmentSetupProvider._();
+
+/// A provider for importing a equipment setup configuration from the user file
+/// directory and applying it to the [ConfiguredEquipmentSetup] provider.
+
+final class ImportEquipmentSetupProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<EquipmentSetup?>,
+          EquipmentSetup?,
+          FutureOr<EquipmentSetup?>
+        >
+    with $FutureModifier<EquipmentSetup?>, $FutureProvider<EquipmentSetup?> {
+  /// A provider for importing a equipment setup configuration from the user file
+  /// directory and applying it to the [ConfiguredEquipmentSetup] provider.
+  const ImportEquipmentSetupProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'importEquipmentSetupProvider',
+        isAutoDispose: true,
         dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        path: path,
-      ),
-    );
-  }
+        $allTransitiveDependencies: null,
+      );
 
   @override
-  AutoDisposeFutureProviderElement<EquipmentSetup?> createElement() {
-    return _LoadEquipmentSetupFromFileProviderElement(this);
-  }
+  String debugGetCreateSourceHash() => _$importEquipmentSetupHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<EquipmentSetup?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
 
   @override
-  bool operator ==(Object other) {
-    return other is LoadEquipmentSetupFromFileProvider && other.path == path;
+  FutureOr<EquipmentSetup?> create(Ref ref) {
+    return importEquipmentSetup(ref);
   }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, path.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin LoadEquipmentSetupFromFileRef
-    on AutoDisposeFutureProviderRef<EquipmentSetup?> {
-  /// The parameter `path` of this provider.
-  String get path;
-}
-
-class _LoadEquipmentSetupFromFileProviderElement
-    extends AutoDisposeFutureProviderElement<EquipmentSetup?>
-    with LoadEquipmentSetupFromFileRef {
-  _LoadEquipmentSetupFromFileProviderElement(super.provider);
-
-  @override
-  String get path => (origin as LoadEquipmentSetupFromFileProvider).path;
 }
 
 String _$importEquipmentSetupHash() =>
     r'3c597120b06e5aab721193e82cc1e592443e628f';
-
-/// A provider for importing a equipment setup configuration from the user file
-/// directory and applying it to the [ConfiguredEquipmentSetup] provider.
-///
-/// Copied from [importEquipmentSetup].
-@ProviderFor(importEquipmentSetup)
-final importEquipmentSetupProvider =
-    AutoDisposeFutureProvider<EquipmentSetup?>.internal(
-      importEquipmentSetup,
-      name: r'importEquipmentSetupProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$importEquipmentSetupHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ImportEquipmentSetupRef = AutoDisposeFutureProviderRef<EquipmentSetup?>;
-String _$configuredEquipmentSetupHash() =>
-    r'b39fe174ad64a3c80c6fbf2fdecc6db9da6bbfea';
-
-/// A provider or holding the configured/loaded [EquipmentSetup] in memory.
-///
-/// Copied from [ConfiguredEquipmentSetup].
-@ProviderFor(ConfiguredEquipmentSetup)
-final configuredEquipmentSetupProvider =
-    NotifierProvider<ConfiguredEquipmentSetup, EquipmentSetup?>.internal(
-      ConfiguredEquipmentSetup.new,
-      name: r'configuredEquipmentSetupProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$configuredEquipmentSetupHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$ConfiguredEquipmentSetup = Notifier<EquipmentSetup?>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

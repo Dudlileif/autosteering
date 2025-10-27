@@ -64,7 +64,7 @@ final class Tractor extends AxleSteeredVehicle {
     super.lastUsed,
     super.manufacturerColors,
     super.manualSimulationMode,
-  });
+  }) : super(type: VehicleType.tractor);
 
   /// Creates a [Tractor] from the [json] object.
   factory Tractor.fromJson(Map<String, dynamic> json) {
@@ -135,16 +135,17 @@ final class Tractor extends AxleSteeredVehicle {
   /// The mirror position of the steering axle around the solid axle is used
   /// when the tractor is reversing.
   @override
-  Geographic get stanleyAxlePosition => switch (isReversing) {
-    true => solidAxlePosition.rhumb.destinationPoint(
-      distance: wheelBase,
-      bearing: bearing + 180,
-    ),
-    false => steeringAxlePosition,
-  }.rhumb.destinationPoint(
-    distance: nudgeDistance,
-    bearing: (bearing - 90).wrap360(),
-  );
+  Geographic get stanleyAxlePosition =>
+      switch (isReversing) {
+        true => solidAxlePosition.rhumb.destinationPoint(
+          distance: wheelBase,
+          bearing: bearing + 180,
+        ),
+        false => steeringAxlePosition,
+      }.rhumb.destinationPoint(
+        distance: nudgeDistance,
+        bearing: (bearing - 90).wrap360(),
+      );
 
   /// The angle of the left steering wheel when using Ackermann steering.
   @override

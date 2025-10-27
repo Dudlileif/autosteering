@@ -6,52 +6,54 @@
 name: Build and deploy web
 
 on:
-    push:
-        branches: ["main"]
+  push:
+    branches: ["main"]
 
 permissions:
-    contents: write
-    pages: write
-    id-token: write
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-            - name: Setup Pages
-              uses: actions/configure-pages@v3
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
 
-            - name: Flutter action
-              uses: subosito/flutter-action@v2
-              with:
-                  channel: stable
-                  flutter-version-file: pubspec.yaml
+      - uses: kuhnroyal/flutter-fvm-config-action/config@v3
+        id: fvm-config-action
 
-            - name: Install dependencies
-              run: flutter pub get
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
+          channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
 
-            - name: Build web app
-              run: flutter build web --release --web-renderer canvaskit --base-href /autosteering/
+      - name: Install dependencies
+        run: flutter pub get
 
-            - name: Upload artifact
-              uses: actions/upload-pages-artifact@v2
-              with:
-                  path: "build/web"
+      - name: Build web app
+        run: flutter build web --release --web-renderer canvaskit --base-href /autosteering/
 
-    deploy:
-        runs-on: ubuntu-latest
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: "build/web"
 
-        needs: build
+  deploy:
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Deploy to GitHub Pages
-              id: deployment
-              uses: actions/deploy-pages@v2
+    needs: build
 
-        environment:
-            name: github-pages
-            url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}

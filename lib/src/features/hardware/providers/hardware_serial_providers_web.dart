@@ -20,7 +20,6 @@ import 'dart:typed_data';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'hardware_serial_providers_web.g.dart';

@@ -24,7 +24,6 @@ import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as path;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_html/html.dart' show Storage, window;
@@ -105,9 +104,7 @@ class Settings extends _$Settings {
       }
     }
     if (settingsToRemove.isNotEmpty) {
-      for (final setting in settingsToRemove) {
-        settings.remove(setting);
-      }
+      settingsToRemove.forEach(settings.remove);
       _saveToRemoveDeprecated = true;
       Logger.instance.i(
         '''Removed ${settingsToRemove.length} deprecated settings: $settingsToRemove.''',
@@ -148,10 +145,9 @@ class Settings extends _$Settings {
       state.containsKey(key.name) ? state[key.name] as bool? : null;
 
   /// Get the value of type [double] for the setting [key], if it exists.
-  double? getDouble(SettingsKey key) =>
-      state.containsKey(key.name)
-          ? (state[key.name] as num?)?.toDouble()
-          : null;
+  double? getDouble(SettingsKey key) => state.containsKey(key.name)
+      ? (state[key.name] as num?)?.toDouble()
+      : null;
 
   /// Get the value of type [int] for the setting [key], if it exists.
   int? getInt(SettingsKey key) =>
@@ -164,14 +160,14 @@ class Settings extends _$Settings {
   /// Get the value of type [Map] for the setting [key], if it exists.
   Map<String, Object?>? getMap(SettingsKey key) =>
       state.containsKey(key.name) && state[key.name] is Map
-          ? Map<String, Object?>.from(state[key.name] as Map)
-          : null;
+      ? Map<String, Object?>.from(state[key.name] as Map)
+      : null;
 
   /// Get the value of type [List] for the setting [key], if it exists.
   List<dynamic>? getList(SettingsKey key) =>
       state.containsKey(key.name) && state[key.name] is List
-          ? List<dynamic>.from(state[key.name] as List)
-          : null;
+      ? List<dynamic>.from(state[key.name] as List)
+      : null;
 
   @override
   bool updateShouldNotify(

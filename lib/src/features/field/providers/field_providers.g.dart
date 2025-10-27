@@ -6,227 +6,1135 @@ part of 'field_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$bufferedFieldHash() => r'b656a524caa62cc5ce4277030d42447c39bbf122';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// A provider for whether the active field should be shown.
+
+@ProviderFor(ShowField)
+const showFieldProvider = ShowFieldProvider._();
+
+/// A provider for whether the active field should be shown.
+final class ShowFieldProvider extends $NotifierProvider<ShowField, bool> {
+  /// A provider for whether the active field should be shown.
+  const ShowFieldProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'showFieldProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$showFieldHash();
+
+  @$internal
+  @override
+  ShowField create() => ShowField();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$showFieldHash() => r'ebab742cb524d06aa00b5ac6dfa2ee9419256ec8';
+
+/// A provider for whether the active field should be shown.
+
+abstract class _$ShowField extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for the active field.
+
+@ProviderFor(ActiveField)
+const activeFieldProvider = ActiveFieldProvider._();
+
+/// A provider for the active field.
+final class ActiveFieldProvider extends $NotifierProvider<ActiveField, Field?> {
+  /// A provider for the active field.
+  const ActiveFieldProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'activeFieldProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$activeFieldHash();
+
+  @$internal
+  @override
+  ActiveField create() => ActiveField();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Field? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Field?>(value),
+    );
+  }
+}
+
+String _$activeFieldHash() => r'6b464dec170f5960fb38979160138d08b78346f2';
+
+/// A provider for the active field.
+
+abstract class _$ActiveField extends $Notifier<Field?> {
+  Field? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<Field?, Field?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Field?, Field?>,
+              Field?,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for whether the active field's border's points should be shown.
+
+@ProviderFor(ShowFieldBorderPoints)
+const showFieldBorderPointsProvider = ShowFieldBorderPointsProvider._();
+
+/// A provider for whether the active field's border's points should be shown.
+final class ShowFieldBorderPointsProvider
+    extends $NotifierProvider<ShowFieldBorderPoints, bool> {
+  /// A provider for whether the active field's border's points should be shown.
+  const ShowFieldBorderPointsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'showFieldBorderPointsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$showFieldBorderPointsHash();
+
+  @$internal
+  @override
+  ShowFieldBorderPoints create() => ShowFieldBorderPoints();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$showFieldBorderPointsHash() =>
+    r'11acdacf420ead33ce1cc33abb7d1c74df1252ca';
+
+/// A provider for whether the active field's border's points should be shown.
+
+abstract class _$ShowFieldBorderPoints extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for whether bounding box of the active field should be shown.
+
+@ProviderFor(ShowFieldBoundingBox)
+const showFieldBoundingBoxProvider = ShowFieldBoundingBoxProvider._();
+
+/// A provider for whether bounding box of the active field should be shown.
+final class ShowFieldBoundingBoxProvider
+    extends $NotifierProvider<ShowFieldBoundingBox, bool> {
+  /// A provider for whether bounding box of the active field should be shown.
+  const ShowFieldBoundingBoxProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'showFieldBoundingBoxProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$showFieldBoundingBoxHash();
+
+  @$internal
+  @override
+  ShowFieldBoundingBox create() => ShowFieldBoundingBox();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$showFieldBoundingBoxHash() =>
+    r'3e70292800ffeea15d7e02ed37cf1b40622e7b69';
+
+/// A provider for whether bounding box of the active field should be shown.
+
+abstract class _$ShowFieldBoundingBox extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for which type of join should be used when buffering the
+/// exterior.
+
+@ProviderFor(FieldExteriorBufferJoin)
+const fieldExteriorBufferJoinProvider = FieldExteriorBufferJoinProvider._();
+
+/// A provider for which type of join should be used when buffering the
+/// exterior.
+final class FieldExteriorBufferJoinProvider
+    extends $NotifierProvider<FieldExteriorBufferJoin, BufferJoin> {
+  /// A provider for which type of join should be used when buffering the
+  /// exterior.
+  const FieldExteriorBufferJoinProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'fieldExteriorBufferJoinProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$fieldExteriorBufferJoinHash();
+
+  @$internal
+  @override
+  FieldExteriorBufferJoin create() => FieldExteriorBufferJoin();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(BufferJoin value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<BufferJoin>(value),
+    );
+  }
+}
+
+String _$fieldExteriorBufferJoinHash() =>
+    r'796c3ea0136fee705c8d8110d559a4fb988d1c32';
+
+/// A provider for which type of join should be used when buffering the
+/// exterior.
+
+abstract class _$FieldExteriorBufferJoin extends $Notifier<BufferJoin> {
+  BufferJoin build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<BufferJoin, BufferJoin>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<BufferJoin, BufferJoin>,
+              BufferJoin,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for which type of join should be used when buffering the
+/// interior holes.
+
+@ProviderFor(FieldInteriorBufferJoin)
+const fieldInteriorBufferJoinProvider = FieldInteriorBufferJoinProvider._();
+
+/// A provider for which type of join should be used when buffering the
+/// interior holes.
+final class FieldInteriorBufferJoinProvider
+    extends $NotifierProvider<FieldInteriorBufferJoin, BufferJoin> {
+  /// A provider for which type of join should be used when buffering the
+  /// interior holes.
+  const FieldInteriorBufferJoinProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'fieldInteriorBufferJoinProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$fieldInteriorBufferJoinHash();
+
+  @$internal
+  @override
+  FieldInteriorBufferJoin create() => FieldInteriorBufferJoin();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(BufferJoin value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<BufferJoin>(value),
+    );
+  }
+}
+
+String _$fieldInteriorBufferJoinHash() =>
+    r'871e2407321b8aa38922a125be5f6d4cb692a302';
+
+/// A provider for which type of join should be used when buffering the
+/// interior holes.
+
+abstract class _$FieldInteriorBufferJoin extends $Notifier<BufferJoin> {
+  BufferJoin build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<BufferJoin, BufferJoin>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<BufferJoin, BufferJoin>,
+              BufferJoin,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// Whether the field buffer functionality should be enabled.
+
+@ProviderFor(FieldBufferEnabled)
+const fieldBufferEnabledProvider = FieldBufferEnabledProvider._();
+
+/// Whether the field buffer functionality should be enabled.
+final class FieldBufferEnabledProvider
+    extends $NotifierProvider<FieldBufferEnabled, bool> {
+  /// Whether the field buffer functionality should be enabled.
+  const FieldBufferEnabledProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'fieldBufferEnabledProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$fieldBufferEnabledHash();
+
+  @$internal
+  @override
+  FieldBufferEnabled create() => FieldBufferEnabled();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$fieldBufferEnabledHash() =>
+    r'b63d6f348ec45ee7d6ba061321dd2608225b0685';
+
+/// Whether the field buffer functionality should be enabled.
+
+abstract class _$FieldBufferEnabled extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for which type of field buffer distance should be used.
+
+@ProviderFor(ActiveFieldBufferDistanceType)
+const activeFieldBufferDistanceTypeProvider =
+    ActiveFieldBufferDistanceTypeProvider._();
+
+/// A provider for which type of field buffer distance should be used.
+final class ActiveFieldBufferDistanceTypeProvider
+    extends
+        $NotifierProvider<
+          ActiveFieldBufferDistanceType,
+          FieldBufferDistanceType
+        > {
+  /// A provider for which type of field buffer distance should be used.
+  const ActiveFieldBufferDistanceTypeProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'activeFieldBufferDistanceTypeProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$activeFieldBufferDistanceTypeHash();
+
+  @$internal
+  @override
+  ActiveFieldBufferDistanceType create() => ActiveFieldBufferDistanceType();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(FieldBufferDistanceType value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<FieldBufferDistanceType>(value),
+    );
+  }
+}
+
+String _$activeFieldBufferDistanceTypeHash() =>
+    r'7bf041a894a1e891c19465ab9dbfe6f732975280';
+
+/// A provider for which type of field buffer distance should be used.
+
+abstract class _$ActiveFieldBufferDistanceType
+    extends $Notifier<FieldBufferDistanceType> {
+  FieldBufferDistanceType build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref =
+        this.ref as $Ref<FieldBufferDistanceType, FieldBufferDistanceType>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<FieldBufferDistanceType, FieldBufferDistanceType>,
+              FieldBufferDistanceType,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for the distance that the [Field.polygon] exterior should
+/// be buffered.
+
+@ProviderFor(FieldExteriorBufferDistance)
+const fieldExteriorBufferDistanceProvider =
+    FieldExteriorBufferDistanceProvider._();
+
+/// A provider for the distance that the [Field.polygon] exterior should
+/// be buffered.
+final class FieldExteriorBufferDistanceProvider
+    extends $NotifierProvider<FieldExteriorBufferDistance, double> {
+  /// A provider for the distance that the [Field.polygon] exterior should
+  /// be buffered.
+  const FieldExteriorBufferDistanceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'fieldExteriorBufferDistanceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$fieldExteriorBufferDistanceHash();
+
+  @$internal
+  @override
+  FieldExteriorBufferDistance create() => FieldExteriorBufferDistance();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(double value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<double>(value),
+    );
+  }
+}
+
+String _$fieldExteriorBufferDistanceHash() =>
+    r'4693f24b08d8dd156481241f95cecbe3b0dfbeb3';
+
+/// A provider for the distance that the [Field.polygon] exterior should
+/// be buffered.
+
+abstract class _$FieldExteriorBufferDistance extends $Notifier<double> {
+  double build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<double, double>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<double, double>,
+              double,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for the distance that the [Field.polygon] interior should
+/// be buffered.
+
+@ProviderFor(FieldInteriorBufferDistance)
+const fieldInteriorBufferDistanceProvider =
+    FieldInteriorBufferDistanceProvider._();
+
+/// A provider for the distance that the [Field.polygon] interior should
+/// be buffered.
+final class FieldInteriorBufferDistanceProvider
+    extends $NotifierProvider<FieldInteriorBufferDistance, double> {
+  /// A provider for the distance that the [Field.polygon] interior should
+  /// be buffered.
+  const FieldInteriorBufferDistanceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'fieldInteriorBufferDistanceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$fieldInteriorBufferDistanceHash();
+
+  @$internal
+  @override
+  FieldInteriorBufferDistance create() => FieldInteriorBufferDistance();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(double value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<double>(value),
+    );
+  }
+}
+
+String _$fieldInteriorBufferDistanceHash() =>
+    r'78534523499709892325c399ff3f435a25455f4e';
+
+/// A provider for the distance that the [Field.polygon] interior should
+/// be buffered.
+
+abstract class _$FieldInteriorBufferDistance extends $Notifier<double> {
+  double build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<double, double>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<double, double>,
+              double,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for whether the buffered field should be shown.
+
+@ProviderFor(ShowBufferedField)
+const showBufferedFieldProvider = ShowBufferedFieldProvider._();
+
+/// A provider for whether the buffered field should be shown.
+final class ShowBufferedFieldProvider
+    extends $NotifierProvider<ShowBufferedField, bool> {
+  /// A provider for whether the buffered field should be shown.
+  const ShowBufferedFieldProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'showBufferedFieldProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$showBufferedFieldHash();
+
+  @$internal
+  @override
+  ShowBufferedField create() => ShowBufferedField();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$showBufferedFieldHash() => r'8557480be302964bd7b38ea41bbd394f51362e80';
+
+/// A provider for whether the buffered field should be shown.
+
+abstract class _$ShowBufferedField extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
 /// A provider for creating and updating the buffered test field.
-///
-/// Copied from [bufferedField].
+
 @ProviderFor(bufferedField)
-final bufferedFieldProvider = FutureProvider<Field?>.internal(
-  bufferedField,
-  name: r'bufferedFieldProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$bufferedFieldHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const bufferedFieldProvider = BufferedFieldProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef BufferedFieldRef = FutureProviderRef<Field?>;
-String _$saveFieldHash() => r'92a779027968bd65be9b235e7e65fee303c85f9c';
+/// A provider for creating and updating the buffered test field.
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
+final class BufferedFieldProvider
+    extends $FunctionalProvider<AsyncValue<Field?>, Field?, FutureOr<Field?>>
+    with $FutureModifier<Field?>, $FutureProvider<Field?> {
+  /// A provider for creating and updating the buffered test field.
+  const BufferedFieldProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'bufferedFieldProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
+  @override
+  String debugGetCreateSourceHash() => _$bufferedFieldHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<Field?> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<Field?> create(Ref ref) {
+    return bufferedField(ref);
   }
+}
 
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+String _$bufferedFieldHash() => r'b656a524caa62cc5ce4277030d42447c39bbf122';
+
+/// A provider for whether bounding box of the test field should be shown.
+
+@ProviderFor(ShowBufferedFieldBoundingBox)
+const showBufferedFieldBoundingBoxProvider =
+    ShowBufferedFieldBoundingBoxProvider._();
+
+/// A provider for whether bounding box of the test field should be shown.
+final class ShowBufferedFieldBoundingBoxProvider
+    extends $NotifierProvider<ShowBufferedFieldBoundingBox, bool> {
+  /// A provider for whether bounding box of the test field should be shown.
+  const ShowBufferedFieldBoundingBoxProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'showBufferedFieldBoundingBoxProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$showBufferedFieldBoundingBoxHash();
+
+  @$internal
+  @override
+  ShowBufferedFieldBoundingBox create() => ShowBufferedFieldBoundingBox();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$showBufferedFieldBoundingBoxHash() =>
+    r'4c34d79c7b64b263a6fa54134b1153740c2709eb';
+
+/// A provider for whether bounding box of the test field should be shown.
+
+abstract class _$ShowBufferedFieldBoundingBox extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for whether bounding box of the field should be shown.
+
+@ProviderFor(FieldBufferGetRawPoints)
+const fieldBufferGetRawPointsProvider = FieldBufferGetRawPointsProvider._();
+
+/// A provider for whether bounding box of the field should be shown.
+final class FieldBufferGetRawPointsProvider
+    extends $NotifierProvider<FieldBufferGetRawPoints, bool> {
+  /// A provider for whether bounding box of the field should be shown.
+  const FieldBufferGetRawPointsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'fieldBufferGetRawPointsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$fieldBufferGetRawPointsHash();
+
+  @$internal
+  @override
+  FieldBufferGetRawPoints create() => FieldBufferGetRawPoints();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$fieldBufferGetRawPointsHash() =>
+    r'a4474508c937cec9e5a205b8aab69445bdb419af';
+
+/// A provider for whether bounding box of the field should be shown.
+
+abstract class _$FieldBufferGetRawPoints extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for the recorded exterior ring of a field.
+
+@ProviderFor(FieldExteriorRing)
+const fieldExteriorRingProvider = FieldExteriorRingProvider._();
+
+/// A provider for the recorded exterior ring of a field.
+final class FieldExteriorRingProvider
+    extends $NotifierProvider<FieldExteriorRing, List<Geographic>?> {
+  /// A provider for the recorded exterior ring of a field.
+  const FieldExteriorRingProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'fieldExteriorRingProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$fieldExteriorRingHash();
+
+  @$internal
+  @override
+  FieldExteriorRing create() => FieldExteriorRing();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<Geographic>? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<Geographic>?>(value),
+    );
+  }
+}
+
+String _$fieldExteriorRingHash() => r'fa5543b11982dc3d28fcd1fed939870033c3c355';
+
+/// A provider for the recorded exterior ring of a field.
+
+abstract class _$FieldExteriorRing extends $Notifier<List<Geographic>?> {
+  List<Geographic>? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<List<Geographic>?, List<Geographic>?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<List<Geographic>?, List<Geographic>?>,
+              List<Geographic>?,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for the recorded interior rings of a field.
+
+@ProviderFor(FieldInteriorRings)
+const fieldInteriorRingsProvider = FieldInteriorRingsProvider._();
+
+/// A provider for the recorded interior rings of a field.
+final class FieldInteriorRingsProvider
+    extends $NotifierProvider<FieldInteriorRings, List<List<Geographic>>?> {
+  /// A provider for the recorded interior rings of a field.
+  const FieldInteriorRingsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'fieldInteriorRingsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$fieldInteriorRingsHash();
+
+  @$internal
+  @override
+  FieldInteriorRings create() => FieldInteriorRings();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<List<Geographic>>? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<List<Geographic>>?>(value),
+    );
+  }
+}
+
+String _$fieldInteriorRingsHash() =>
+    r'f14e02bd6765947a51d6866fd90d8f1a33ba785a';
+
+/// A provider for the recorded interior rings of a field.
+
+abstract class _$FieldInteriorRings extends $Notifier<List<List<Geographic>>?> {
+  List<List<Geographic>>? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref =
+        this.ref as $Ref<List<List<Geographic>>?, List<List<Geographic>>?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<List<List<Geographic>>?, List<List<Geographic>>?>,
+              List<List<Geographic>>?,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
   }
 }
 
 /// A provider for saving [field] to a file in the user file directory.
 ///
 /// Override the file name with [overrideName].
-///
-/// Copied from [saveField].
+
 @ProviderFor(saveField)
-const saveFieldProvider = SaveFieldFamily();
+const saveFieldProvider = SaveFieldFamily._();
 
 /// A provider for saving [field] to a file in the user file directory.
 ///
 /// Override the file name with [overrideName].
-///
-/// Copied from [saveField].
-class SaveFieldFamily extends Family<AsyncValue<void>> {
+
+final class SaveFieldProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+    with $FutureModifier<void>, $FutureProvider<void> {
   /// A provider for saving [field] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
-  ///
-  /// Copied from [saveField].
-  const SaveFieldFamily();
-
-  /// A provider for saving [field] to a file in the user file directory.
-  ///
-  /// Override the file name with [overrideName].
-  ///
-  /// Copied from [saveField].
-  SaveFieldProvider call(
-    Field field, {
-    String? overrideName,
-    bool downloadIfWeb = false,
-  }) {
-    return SaveFieldProvider(
-      field,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
-  }
-
-  @override
-  SaveFieldProvider getProviderOverride(covariant SaveFieldProvider provider) {
-    return call(
-      provider.field,
-      overrideName: provider.overrideName,
-      downloadIfWeb: provider.downloadIfWeb,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'saveFieldProvider';
-}
-
-/// A provider for saving [field] to a file in the user file directory.
-///
-/// Override the file name with [overrideName].
-///
-/// Copied from [saveField].
-class SaveFieldProvider extends AutoDisposeFutureProvider<void> {
-  /// A provider for saving [field] to a file in the user file directory.
-  ///
-  /// Override the file name with [overrideName].
-  ///
-  /// Copied from [saveField].
-  SaveFieldProvider(
-    Field field, {
-    String? overrideName,
-    bool downloadIfWeb = false,
-  }) : this._internal(
-         (ref) => saveField(
-           ref as SaveFieldRef,
-           field,
-           overrideName: overrideName,
-           downloadIfWeb: downloadIfWeb,
-         ),
-         from: saveFieldProvider,
+  const SaveFieldProvider._({
+    required SaveFieldFamily super.from,
+    required (Field, {String? overrideName, bool downloadIfWeb}) super.argument,
+  }) : super(
+         retry: null,
          name: r'saveFieldProvider',
-         debugGetCreateSourceHash:
-             const bool.fromEnvironment('dart.vm.product')
-                 ? null
-                 : _$saveFieldHash,
-         dependencies: SaveFieldFamily._dependencies,
-         allTransitiveDependencies: SaveFieldFamily._allTransitiveDependencies,
-         field: field,
-         overrideName: overrideName,
-         downloadIfWeb: downloadIfWeb,
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
        );
 
-  SaveFieldProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.field,
-    required this.overrideName,
-    required this.downloadIfWeb,
-  }) : super.internal();
-
-  final Field field;
-  final String? overrideName;
-  final bool downloadIfWeb;
+  @override
+  String debugGetCreateSourceHash() => _$saveFieldHash();
 
   @override
-  Override overrideWith(FutureOr<void> Function(SaveFieldRef provider) create) {
-    return ProviderOverride(
-      origin: this,
-      override: SaveFieldProvider._internal(
-        (ref) => create(ref as SaveFieldRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        field: field,
-        overrideName: overrideName,
-        downloadIfWeb: downloadIfWeb,
-      ),
-    );
+  String toString() {
+    return r'saveFieldProvider'
+        ''
+        '$argument';
   }
 
+  @$internal
   @override
-  AutoDisposeFutureProviderElement<void> createElement() {
-    return _SaveFieldProviderElement(this);
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<void> create(Ref ref) {
+    final argument =
+        this.argument as (Field, {String? overrideName, bool downloadIfWeb});
+    return saveField(
+      ref,
+      argument.$1,
+      overrideName: argument.overrideName,
+      downloadIfWeb: argument.downloadIfWeb,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return other is SaveFieldProvider &&
-        other.field == field &&
-        other.overrideName == overrideName &&
-        other.downloadIfWeb == downloadIfWeb;
+    return other is SaveFieldProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, field.hashCode);
-    hash = _SystemHash.combine(hash, overrideName.hashCode);
-    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin SaveFieldRef on AutoDisposeFutureProviderRef<void> {
-  /// The parameter `field` of this provider.
-  Field get field;
+String _$saveFieldHash() => r'8ad4d55d826dda65ac1bd7623da255d18431bead';
 
-  /// The parameter `overrideName` of this provider.
-  String? get overrideName;
+/// A provider for saving [field] to a file in the user file directory.
+///
+/// Override the file name with [overrideName].
 
-  /// The parameter `downloadIfWeb` of this provider.
-  bool get downloadIfWeb;
+final class SaveFieldFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<void>,
+          (Field, {String? overrideName, bool downloadIfWeb})
+        > {
+  const SaveFieldFamily._()
+    : super(
+        retry: null,
+        name: r'saveFieldProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  /// A provider for saving [field] to a file in the user file directory.
+  ///
+  /// Override the file name with [overrideName].
+
+  SaveFieldProvider call(
+    Field field, {
+    String? overrideName,
+    bool downloadIfWeb = false,
+  }) => SaveFieldProvider._(
+    argument: (field, overrideName: overrideName, downloadIfWeb: downloadIfWeb),
+    from: this,
+  );
+
+  @override
+  String toString() => r'saveFieldProvider';
 }
 
-class _SaveFieldProviderElement extends AutoDisposeFutureProviderElement<void>
-    with SaveFieldRef {
-  _SaveFieldProviderElement(super.provider);
+/// A provider for exporting [field] to a file.
+///
+/// Override the file name with [overrideName].
+
+@ProviderFor(exportField)
+const exportFieldProvider = ExportFieldFamily._();
+
+/// A provider for exporting [field] to a file.
+///
+/// Override the file name with [overrideName].
+
+final class ExportFieldProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+    with $FutureModifier<void>, $FutureProvider<void> {
+  /// A provider for exporting [field] to a file.
+  ///
+  /// Override the file name with [overrideName].
+  const ExportFieldProvider._({
+    required ExportFieldFamily super.from,
+    required (Field, {String? overrideName, bool downloadIfWeb}) super.argument,
+  }) : super(
+         retry: null,
+         name: r'exportFieldProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
-  Field get field => (origin as SaveFieldProvider).field;
+  String debugGetCreateSourceHash() => _$exportFieldHash();
+
   @override
-  String? get overrideName => (origin as SaveFieldProvider).overrideName;
+  String toString() {
+    return r'exportFieldProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
   @override
-  bool get downloadIfWeb => (origin as SaveFieldProvider).downloadIfWeb;
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<void> create(Ref ref) {
+    final argument =
+        this.argument as (Field, {String? overrideName, bool downloadIfWeb});
+    return exportField(
+      ref,
+      argument.$1,
+      overrideName: argument.overrideName,
+      downloadIfWeb: argument.downloadIfWeb,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ExportFieldProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
 }
 
 String _$exportFieldHash() => r'4c9db7fb3ea45483588c2578e42142f7ca6d8c16';
@@ -234,946 +1142,374 @@ String _$exportFieldHash() => r'4c9db7fb3ea45483588c2578e42142f7ca6d8c16';
 /// A provider for exporting [field] to a file.
 ///
 /// Override the file name with [overrideName].
-///
-/// Copied from [exportField].
-@ProviderFor(exportField)
-const exportFieldProvider = ExportFieldFamily();
 
-/// A provider for exporting [field] to a file.
-///
-/// Override the file name with [overrideName].
-///
-/// Copied from [exportField].
-class ExportFieldFamily extends Family<AsyncValue<void>> {
-  /// A provider for exporting [field] to a file.
-  ///
-  /// Override the file name with [overrideName].
-  ///
-  /// Copied from [exportField].
-  const ExportFieldFamily();
+final class ExportFieldFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<void>,
+          (Field, {String? overrideName, bool downloadIfWeb})
+        > {
+  const ExportFieldFamily._()
+    : super(
+        retry: null,
+        name: r'exportFieldProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
 
   /// A provider for exporting [field] to a file.
   ///
   /// Override the file name with [overrideName].
-  ///
-  /// Copied from [exportField].
+
   ExportFieldProvider call(
     Field field, {
     String? overrideName,
     bool downloadIfWeb = true,
-  }) {
-    return ExportFieldProvider(
-      field,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
-  }
+  }) => ExportFieldProvider._(
+    argument: (field, overrideName: overrideName, downloadIfWeb: downloadIfWeb),
+    from: this,
+  );
 
   @override
-  ExportFieldProvider getProviderOverride(
-    covariant ExportFieldProvider provider,
-  ) {
-    return call(
-      provider.field,
-      overrideName: provider.overrideName,
-      downloadIfWeb: provider.downloadIfWeb,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'exportFieldProvider';
+  String toString() => r'exportFieldProvider';
 }
 
-/// A provider for exporting [field] to a file.
-///
-/// Override the file name with [overrideName].
-///
-/// Copied from [exportField].
-class ExportFieldProvider extends AutoDisposeFutureProvider<void> {
-  /// A provider for exporting [field] to a file.
-  ///
-  /// Override the file name with [overrideName].
-  ///
-  /// Copied from [exportField].
-  ExportFieldProvider(
-    Field field, {
-    String? overrideName,
-    bool downloadIfWeb = true,
-  }) : this._internal(
-         (ref) => exportField(
-           ref as ExportFieldRef,
-           field,
-           overrideName: overrideName,
-           downloadIfWeb: downloadIfWeb,
-         ),
-         from: exportFieldProvider,
-         name: r'exportFieldProvider',
-         debugGetCreateSourceHash:
-             const bool.fromEnvironment('dart.vm.product')
-                 ? null
-                 : _$exportFieldHash,
-         dependencies: ExportFieldFamily._dependencies,
-         allTransitiveDependencies:
-             ExportFieldFamily._allTransitiveDependencies,
-         field: field,
-         overrideName: overrideName,
-         downloadIfWeb: downloadIfWeb,
-       );
+/// A provider for reading and holding all the saved [Field]s in the
+/// user file directory.
 
-  ExportFieldProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.field,
-    required this.overrideName,
-    required this.downloadIfWeb,
-  }) : super.internal();
+@ProviderFor(savedFields)
+const savedFieldsProvider = SavedFieldsProvider._();
 
-  final Field field;
-  final String? overrideName;
-  final bool downloadIfWeb;
+/// A provider for reading and holding all the saved [Field]s in the
+/// user file directory.
 
-  @override
-  Override overrideWith(
-    FutureOr<void> Function(ExportFieldRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: ExportFieldProvider._internal(
-        (ref) => create(ref as ExportFieldRef),
-        from: from,
-        name: null,
+final class SavedFieldsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Field>>,
+          List<Field>,
+          FutureOr<List<Field>>
+        >
+    with $FutureModifier<List<Field>>, $FutureProvider<List<Field>> {
+  /// A provider for reading and holding all the saved [Field]s in the
+  /// user file directory.
+  const SavedFieldsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'savedFieldsProvider',
+        isAutoDispose: false,
         dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        field: field,
-        overrideName: overrideName,
-        downloadIfWeb: downloadIfWeb,
-      ),
-    );
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$savedFieldsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Field>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Field>> create(Ref ref) {
+    return savedFields(ref);
   }
-
-  @override
-  AutoDisposeFutureProviderElement<void> createElement() {
-    return _ExportFieldProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is ExportFieldProvider &&
-        other.field == field &&
-        other.overrideName == overrideName &&
-        other.downloadIfWeb == downloadIfWeb;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, field.hashCode);
-    hash = _SystemHash.combine(hash, overrideName.hashCode);
-    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin ExportFieldRef on AutoDisposeFutureProviderRef<void> {
-  /// The parameter `field` of this provider.
-  Field get field;
-
-  /// The parameter `overrideName` of this provider.
-  String? get overrideName;
-
-  /// The parameter `downloadIfWeb` of this provider.
-  bool get downloadIfWeb;
-}
-
-class _ExportFieldProviderElement extends AutoDisposeFutureProviderElement<void>
-    with ExportFieldRef {
-  _ExportFieldProviderElement(super.provider);
-
-  @override
-  Field get field => (origin as ExportFieldProvider).field;
-  @override
-  String? get overrideName => (origin as ExportFieldProvider).overrideName;
-  @override
-  bool get downloadIfWeb => (origin as ExportFieldProvider).downloadIfWeb;
 }
 
 String _$savedFieldsHash() => r'f7493e6ecfac6850213e6f0ce78c1e88e5a4d40b';
 
-/// A provider for reading and holding all the saved [Field]s in the
-/// user file directory.
+/// A provider for deleting [field] from the user file system.
 ///
-/// Copied from [savedFields].
-@ProviderFor(savedFields)
-final savedFieldsProvider = FutureProvider<List<Field>>.internal(
-  savedFields,
-  name: r'savedFieldsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$savedFieldsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+/// Override the file name with [overrideName].
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef SavedFieldsRef = FutureProviderRef<List<Field>>;
+@ProviderFor(deleteField)
+const deleteFieldProvider = DeleteFieldFamily._();
+
+/// A provider for deleting [field] from the user file system.
+///
+/// Override the file name with [overrideName].
+
+final class DeleteFieldProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+    with $FutureModifier<void>, $FutureProvider<void> {
+  /// A provider for deleting [field] from the user file system.
+  ///
+  /// Override the file name with [overrideName].
+  const DeleteFieldProvider._({
+    required DeleteFieldFamily super.from,
+    required (Field, {String? overrideName}) super.argument,
+  }) : super(
+         retry: null,
+         name: r'deleteFieldProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$deleteFieldHash();
+
+  @override
+  String toString() {
+    return r'deleteFieldProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<void> create(Ref ref) {
+    final argument = this.argument as (Field, {String? overrideName});
+    return deleteField(ref, argument.$1, overrideName: argument.overrideName);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DeleteFieldProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
 String _$deleteFieldHash() => r'8902ddd80ed51caa11ba5927c4d3aa1d10cc3b0f';
 
 /// A provider for deleting [field] from the user file system.
 ///
 /// Override the file name with [overrideName].
-///
-/// Copied from [deleteField].
-@ProviderFor(deleteField)
-const deleteFieldProvider = DeleteFieldFamily();
 
-/// A provider for deleting [field] from the user file system.
-///
-/// Override the file name with [overrideName].
-///
-/// Copied from [deleteField].
-class DeleteFieldFamily extends Family<AsyncValue<void>> {
-  /// A provider for deleting [field] from the user file system.
-  ///
-  /// Override the file name with [overrideName].
-  ///
-  /// Copied from [deleteField].
-  const DeleteFieldFamily();
-
-  /// A provider for deleting [field] from the user file system.
-  ///
-  /// Override the file name with [overrideName].
-  ///
-  /// Copied from [deleteField].
-  DeleteFieldProvider call(Field field, {String? overrideName}) {
-    return DeleteFieldProvider(field, overrideName: overrideName);
-  }
-
-  @override
-  DeleteFieldProvider getProviderOverride(
-    covariant DeleteFieldProvider provider,
-  ) {
-    return call(provider.field, overrideName: provider.overrideName);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'deleteFieldProvider';
-}
-
-/// A provider for deleting [field] from the user file system.
-///
-/// Override the file name with [overrideName].
-///
-/// Copied from [deleteField].
-class DeleteFieldProvider extends AutoDisposeFutureProvider<void> {
-  /// A provider for deleting [field] from the user file system.
-  ///
-  /// Override the file name with [overrideName].
-  ///
-  /// Copied from [deleteField].
-  DeleteFieldProvider(Field field, {String? overrideName})
-    : this._internal(
-        (ref) => deleteField(
-          ref as DeleteFieldRef,
-          field,
-          overrideName: overrideName,
-        ),
-        from: deleteFieldProvider,
+final class DeleteFieldFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<void>,
+          (Field, {String? overrideName})
+        > {
+  const DeleteFieldFamily._()
+    : super(
+        retry: null,
         name: r'deleteFieldProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$deleteFieldHash,
-        dependencies: DeleteFieldFamily._dependencies,
-        allTransitiveDependencies: DeleteFieldFamily._allTransitiveDependencies,
-        field: field,
-        overrideName: overrideName,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
       );
 
-  DeleteFieldProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.field,
-    required this.overrideName,
-  }) : super.internal();
+  /// A provider for deleting [field] from the user file system.
+  ///
+  /// Override the file name with [overrideName].
 
-  final Field field;
-  final String? overrideName;
+  DeleteFieldProvider call(Field field, {String? overrideName}) =>
+      DeleteFieldProvider._(
+        argument: (field, overrideName: overrideName),
+        from: this,
+      );
 
   @override
-  Override overrideWith(
-    FutureOr<void> Function(DeleteFieldRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: DeleteFieldProvider._internal(
-        (ref) => create(ref as DeleteFieldRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        field: field,
-        overrideName: overrideName,
-      ),
-    );
+  String toString() => r'deleteFieldProvider';
+}
+
+/// A provider for loading a [Field] from a file at [path], if it's valid.
+
+@ProviderFor(loadFieldFromFile)
+const loadFieldFromFileProvider = LoadFieldFromFileFamily._();
+
+/// A provider for loading a [Field] from a file at [path], if it's valid.
+
+final class LoadFieldFromFileProvider
+    extends $FunctionalProvider<AsyncValue<Field?>, Field?, FutureOr<Field?>>
+    with $FutureModifier<Field?>, $FutureProvider<Field?> {
+  /// A provider for loading a [Field] from a file at [path], if it's valid.
+  const LoadFieldFromFileProvider._({
+    required LoadFieldFromFileFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'loadFieldFromFileProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$loadFieldFromFileHash();
+
+  @override
+  String toString() {
+    return r'loadFieldFromFileProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  AutoDisposeFutureProviderElement<void> createElement() {
-    return _DeleteFieldProviderElement(this);
+  $FutureProviderElement<Field?> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<Field?> create(Ref ref) {
+    final argument = this.argument as String;
+    return loadFieldFromFile(ref, argument);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is DeleteFieldProvider &&
-        other.field == field &&
-        other.overrideName == overrideName;
+    return other is LoadFieldFromFileProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, field.hashCode);
-    hash = _SystemHash.combine(hash, overrideName.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
-}
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin DeleteFieldRef on AutoDisposeFutureProviderRef<void> {
-  /// The parameter `field` of this provider.
-  Field get field;
-
-  /// The parameter `overrideName` of this provider.
-  String? get overrideName;
-}
-
-class _DeleteFieldProviderElement extends AutoDisposeFutureProviderElement<void>
-    with DeleteFieldRef {
-  _DeleteFieldProviderElement(super.provider);
-
-  @override
-  Field get field => (origin as DeleteFieldProvider).field;
-  @override
-  String? get overrideName => (origin as DeleteFieldProvider).overrideName;
 }
 
 String _$loadFieldFromFileHash() => r'defdf4eda3e6aa375860ecaddb0a99bc3fb1ae46';
 
 /// A provider for loading a [Field] from a file at [path], if it's valid.
-///
-/// Copied from [loadFieldFromFile].
-@ProviderFor(loadFieldFromFile)
-const loadFieldFromFileProvider = LoadFieldFromFileFamily();
 
-/// A provider for loading a [Field] from a file at [path], if it's valid.
-///
-/// Copied from [loadFieldFromFile].
-class LoadFieldFromFileFamily extends Family<AsyncValue<Field?>> {
-  /// A provider for loading a [Field] from a file at [path], if it's valid.
-  ///
-  /// Copied from [loadFieldFromFile].
-  const LoadFieldFromFileFamily();
-
-  /// A provider for loading a [Field] from a file at [path], if it's valid.
-  ///
-  /// Copied from [loadFieldFromFile].
-  LoadFieldFromFileProvider call(String path) {
-    return LoadFieldFromFileProvider(path);
-  }
-
-  @override
-  LoadFieldFromFileProvider getProviderOverride(
-    covariant LoadFieldFromFileProvider provider,
-  ) {
-    return call(provider.path);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'loadFieldFromFileProvider';
-}
-
-/// A provider for loading a [Field] from a file at [path], if it's valid.
-///
-/// Copied from [loadFieldFromFile].
-class LoadFieldFromFileProvider extends AutoDisposeFutureProvider<Field?> {
-  /// A provider for loading a [Field] from a file at [path], if it's valid.
-  ///
-  /// Copied from [loadFieldFromFile].
-  LoadFieldFromFileProvider(String path)
-    : this._internal(
-        (ref) => loadFieldFromFile(ref as LoadFieldFromFileRef, path),
-        from: loadFieldFromFileProvider,
+final class LoadFieldFromFileFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<Field?>, String> {
+  const LoadFieldFromFileFamily._()
+    : super(
+        retry: null,
         name: r'loadFieldFromFileProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$loadFieldFromFileHash,
-        dependencies: LoadFieldFromFileFamily._dependencies,
-        allTransitiveDependencies:
-            LoadFieldFromFileFamily._allTransitiveDependencies,
-        path: path,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
       );
 
-  LoadFieldFromFileProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.path,
-  }) : super.internal();
+  /// A provider for loading a [Field] from a file at [path], if it's valid.
 
-  final String path;
+  LoadFieldFromFileProvider call(String path) =>
+      LoadFieldFromFileProvider._(argument: path, from: this);
 
   @override
-  Override overrideWith(
-    FutureOr<Field?> Function(LoadFieldFromFileRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: LoadFieldFromFileProvider._internal(
-        (ref) => create(ref as LoadFieldFromFileRef),
-        from: from,
-        name: null,
+  String toString() => r'loadFieldFromFileProvider';
+}
+
+/// A provider for importing a field from a file and applying
+/// [ActiveField] provider.
+
+@ProviderFor(importField)
+const importFieldProvider = ImportFieldProvider._();
+
+/// A provider for importing a field from a file and applying
+/// [ActiveField] provider.
+
+final class ImportFieldProvider
+    extends $FunctionalProvider<AsyncValue<Field?>, Field?, FutureOr<Field?>>
+    with $FutureModifier<Field?>, $FutureProvider<Field?> {
+  /// A provider for importing a field from a file and applying
+  /// [ActiveField] provider.
+  const ImportFieldProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'importFieldProvider',
+        isAutoDispose: true,
         dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        path: path,
-      ),
-    );
-  }
+        $allTransitiveDependencies: null,
+      );
 
   @override
-  AutoDisposeFutureProviderElement<Field?> createElement() {
-    return _LoadFieldFromFileProviderElement(this);
-  }
+  String debugGetCreateSourceHash() => _$importFieldHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<Field?> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
 
   @override
-  bool operator ==(Object other) {
-    return other is LoadFieldFromFileProvider && other.path == path;
+  FutureOr<Field?> create(Ref ref) {
+    return importField(ref);
   }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, path.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin LoadFieldFromFileRef on AutoDisposeFutureProviderRef<Field?> {
-  /// The parameter `path` of this provider.
-  String get path;
-}
-
-class _LoadFieldFromFileProviderElement
-    extends AutoDisposeFutureProviderElement<Field?>
-    with LoadFieldFromFileRef {
-  _LoadFieldFromFileProviderElement(super.provider);
-
-  @override
-  String get path => (origin as LoadFieldFromFileProvider).path;
 }
 
 String _$importFieldHash() => r'9ade62a28510a92e2f6cadd5f48fe28ed07d913b';
 
-/// A provider for importing a field from a file and applying
-/// [ActiveField] provider.
-///
-/// Copied from [importField].
-@ProviderFor(importField)
-final importFieldProvider = AutoDisposeFutureProvider<Field?>.internal(
-  importField,
-  name: r'importFieldProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$importFieldHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ImportFieldRef = AutoDisposeFutureProviderRef<Field?>;
-String _$exportFieldsHash() => r'c1d87b9901f7a889082e21769769226e46e4fcd8';
-
 /// A provider for exporting all field files.
-///
-/// Copied from [exportFields].
+
 @ProviderFor(exportFields)
-const exportFieldsProvider = ExportFieldsFamily();
+const exportFieldsProvider = ExportFieldsFamily._();
 
 /// A provider for exporting all field files.
-///
-/// Copied from [exportFields].
-class ExportFieldsFamily extends Family<AsyncValue<void>> {
-  /// A provider for exporting all field files.
-  ///
-  /// Copied from [exportFields].
-  const ExportFieldsFamily();
 
+final class ExportFieldsProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+    with $FutureModifier<void>, $FutureProvider<void> {
   /// A provider for exporting all field files.
-  ///
-  /// Copied from [exportFields].
-  ExportFieldsProvider call({bool zip = true}) {
-    return ExportFieldsProvider(zip: zip);
+  const ExportFieldsProvider._({
+    required ExportFieldsFamily super.from,
+    required bool super.argument,
+  }) : super(
+         retry: null,
+         name: r'exportFieldsProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$exportFieldsHash();
+
+  @override
+  String toString() {
+    return r'exportFieldsProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  ExportFieldsProvider getProviderOverride(
-    covariant ExportFieldsProvider provider,
-  ) {
-    return call(zip: provider.zip);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'exportFieldsProvider';
-}
-
-/// A provider for exporting all field files.
-///
-/// Copied from [exportFields].
-class ExportFieldsProvider extends AutoDisposeFutureProvider<void> {
-  /// A provider for exporting all field files.
-  ///
-  /// Copied from [exportFields].
-  ExportFieldsProvider({bool zip = true})
-    : this._internal(
-        (ref) => exportFields(ref as ExportFieldsRef, zip: zip),
-        from: exportFieldsProvider,
-        name: r'exportFieldsProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$exportFieldsHash,
-        dependencies: ExportFieldsFamily._dependencies,
-        allTransitiveDependencies:
-            ExportFieldsFamily._allTransitiveDependencies,
-        zip: zip,
-      );
-
-  ExportFieldsProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.zip,
-  }) : super.internal();
-
-  final bool zip;
-
-  @override
-  Override overrideWith(
-    FutureOr<void> Function(ExportFieldsRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: ExportFieldsProvider._internal(
-        (ref) => create(ref as ExportFieldsRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        zip: zip,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeFutureProviderElement<void> createElement() {
-    return _ExportFieldsProviderElement(this);
+  FutureOr<void> create(Ref ref) {
+    final argument = this.argument as bool;
+    return exportFields(ref, zip: argument);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is ExportFieldsProvider && other.zip == zip;
+    return other is ExportFieldsProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, zip.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin ExportFieldsRef on AutoDisposeFutureProviderRef<void> {
-  /// The parameter `zip` of this provider.
-  bool get zip;
-}
+String _$exportFieldsHash() => r'c1d87b9901f7a889082e21769769226e46e4fcd8';
 
-class _ExportFieldsProviderElement
-    extends AutoDisposeFutureProviderElement<void>
-    with ExportFieldsRef {
-  _ExportFieldsProviderElement(super.provider);
+/// A provider for exporting all field files.
+
+final class ExportFieldsFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<void>, bool> {
+  const ExportFieldsFamily._()
+    : super(
+        retry: null,
+        name: r'exportFieldsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// A provider for exporting all field files.
+
+  ExportFieldsProvider call({bool zip = true}) =>
+      ExportFieldsProvider._(argument: zip, from: this);
 
   @override
-  bool get zip => (origin as ExportFieldsProvider).zip;
+  String toString() => r'exportFieldsProvider';
 }
-
-String _$showFieldHash() => r'ebab742cb524d06aa00b5ac6dfa2ee9419256ec8';
-
-/// A provider for whether the active field should be shown.
-///
-/// Copied from [ShowField].
-@ProviderFor(ShowField)
-final showFieldProvider = NotifierProvider<ShowField, bool>.internal(
-  ShowField.new,
-  name: r'showFieldProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$showFieldHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$ShowField = Notifier<bool>;
-String _$activeFieldHash() => r'6b464dec170f5960fb38979160138d08b78346f2';
-
-/// A provider for the active field.
-///
-/// Copied from [ActiveField].
-@ProviderFor(ActiveField)
-final activeFieldProvider = NotifierProvider<ActiveField, Field?>.internal(
-  ActiveField.new,
-  name: r'activeFieldProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$activeFieldHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$ActiveField = Notifier<Field?>;
-String _$showFieldBorderPointsHash() =>
-    r'11acdacf420ead33ce1cc33abb7d1c74df1252ca';
-
-/// A provider for whether the active field's border's points should be shown.
-///
-/// Copied from [ShowFieldBorderPoints].
-@ProviderFor(ShowFieldBorderPoints)
-final showFieldBorderPointsProvider =
-    NotifierProvider<ShowFieldBorderPoints, bool>.internal(
-      ShowFieldBorderPoints.new,
-      name: r'showFieldBorderPointsProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$showFieldBorderPointsHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$ShowFieldBorderPoints = Notifier<bool>;
-String _$showFieldBoundingBoxHash() =>
-    r'3e70292800ffeea15d7e02ed37cf1b40622e7b69';
-
-/// A provider for whether bounding box of the active field should be shown.
-///
-/// Copied from [ShowFieldBoundingBox].
-@ProviderFor(ShowFieldBoundingBox)
-final showFieldBoundingBoxProvider =
-    NotifierProvider<ShowFieldBoundingBox, bool>.internal(
-      ShowFieldBoundingBox.new,
-      name: r'showFieldBoundingBoxProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$showFieldBoundingBoxHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$ShowFieldBoundingBox = Notifier<bool>;
-String _$fieldExteriorBufferJoinHash() =>
-    r'796c3ea0136fee705c8d8110d559a4fb988d1c32';
-
-/// A provider for which type of join should be used when buffering the
-/// exterior.
-///
-/// Copied from [FieldExteriorBufferJoin].
-@ProviderFor(FieldExteriorBufferJoin)
-final fieldExteriorBufferJoinProvider =
-    NotifierProvider<FieldExteriorBufferJoin, BufferJoin>.internal(
-      FieldExteriorBufferJoin.new,
-      name: r'fieldExteriorBufferJoinProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$fieldExteriorBufferJoinHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$FieldExteriorBufferJoin = Notifier<BufferJoin>;
-String _$fieldInteriorBufferJoinHash() =>
-    r'871e2407321b8aa38922a125be5f6d4cb692a302';
-
-/// A provider for which type of join should be used when buffering the
-/// interior holes.
-///
-/// Copied from [FieldInteriorBufferJoin].
-@ProviderFor(FieldInteriorBufferJoin)
-final fieldInteriorBufferJoinProvider =
-    NotifierProvider<FieldInteriorBufferJoin, BufferJoin>.internal(
-      FieldInteriorBufferJoin.new,
-      name: r'fieldInteriorBufferJoinProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$fieldInteriorBufferJoinHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$FieldInteriorBufferJoin = Notifier<BufferJoin>;
-String _$fieldBufferEnabledHash() =>
-    r'b63d6f348ec45ee7d6ba061321dd2608225b0685';
-
-/// Whether the field buffer functionality should be enabled.
-///
-/// Copied from [FieldBufferEnabled].
-@ProviderFor(FieldBufferEnabled)
-final fieldBufferEnabledProvider =
-    NotifierProvider<FieldBufferEnabled, bool>.internal(
-      FieldBufferEnabled.new,
-      name: r'fieldBufferEnabledProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$fieldBufferEnabledHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$FieldBufferEnabled = Notifier<bool>;
-String _$activeFieldBufferDistanceTypeHash() =>
-    r'7bf041a894a1e891c19465ab9dbfe6f732975280';
-
-/// A provider for which type of field buffer distance should be used.
-///
-/// Copied from [ActiveFieldBufferDistanceType].
-@ProviderFor(ActiveFieldBufferDistanceType)
-final activeFieldBufferDistanceTypeProvider = NotifierProvider<
-  ActiveFieldBufferDistanceType,
-  FieldBufferDistanceType
->.internal(
-  ActiveFieldBufferDistanceType.new,
-  name: r'activeFieldBufferDistanceTypeProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$activeFieldBufferDistanceTypeHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$ActiveFieldBufferDistanceType = Notifier<FieldBufferDistanceType>;
-String _$fieldExteriorBufferDistanceHash() =>
-    r'4693f24b08d8dd156481241f95cecbe3b0dfbeb3';
-
-/// A provider for the distance that the [Field.polygon] exterior should
-/// be buffered.
-///
-/// Copied from [FieldExteriorBufferDistance].
-@ProviderFor(FieldExteriorBufferDistance)
-final fieldExteriorBufferDistanceProvider =
-    NotifierProvider<FieldExteriorBufferDistance, double>.internal(
-      FieldExteriorBufferDistance.new,
-      name: r'fieldExteriorBufferDistanceProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$fieldExteriorBufferDistanceHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$FieldExteriorBufferDistance = Notifier<double>;
-String _$fieldInteriorBufferDistanceHash() =>
-    r'78534523499709892325c399ff3f435a25455f4e';
-
-/// A provider for the distance that the [Field.polygon] interior should
-/// be buffered.
-///
-/// Copied from [FieldInteriorBufferDistance].
-@ProviderFor(FieldInteriorBufferDistance)
-final fieldInteriorBufferDistanceProvider =
-    NotifierProvider<FieldInteriorBufferDistance, double>.internal(
-      FieldInteriorBufferDistance.new,
-      name: r'fieldInteriorBufferDistanceProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$fieldInteriorBufferDistanceHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$FieldInteriorBufferDistance = Notifier<double>;
-String _$showBufferedFieldHash() => r'8557480be302964bd7b38ea41bbd394f51362e80';
-
-/// A provider for whether the buffered field should be shown.
-///
-/// Copied from [ShowBufferedField].
-@ProviderFor(ShowBufferedField)
-final showBufferedFieldProvider =
-    NotifierProvider<ShowBufferedField, bool>.internal(
-      ShowBufferedField.new,
-      name: r'showBufferedFieldProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$showBufferedFieldHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$ShowBufferedField = Notifier<bool>;
-String _$showBufferedFieldBoundingBoxHash() =>
-    r'4c34d79c7b64b263a6fa54134b1153740c2709eb';
-
-/// A provider for whether bounding box of the test field should be shown.
-///
-/// Copied from [ShowBufferedFieldBoundingBox].
-@ProviderFor(ShowBufferedFieldBoundingBox)
-final showBufferedFieldBoundingBoxProvider =
-    NotifierProvider<ShowBufferedFieldBoundingBox, bool>.internal(
-      ShowBufferedFieldBoundingBox.new,
-      name: r'showBufferedFieldBoundingBoxProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$showBufferedFieldBoundingBoxHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$ShowBufferedFieldBoundingBox = Notifier<bool>;
-String _$fieldBufferGetRawPointsHash() =>
-    r'a4474508c937cec9e5a205b8aab69445bdb419af';
-
-/// A provider for whether bounding box of the field should be shown.
-///
-/// Copied from [FieldBufferGetRawPoints].
-@ProviderFor(FieldBufferGetRawPoints)
-final fieldBufferGetRawPointsProvider =
-    NotifierProvider<FieldBufferGetRawPoints, bool>.internal(
-      FieldBufferGetRawPoints.new,
-      name: r'fieldBufferGetRawPointsProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$fieldBufferGetRawPointsHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$FieldBufferGetRawPoints = Notifier<bool>;
-String _$fieldExteriorRingHash() => r'fa5543b11982dc3d28fcd1fed939870033c3c355';
-
-/// A provider for the recorded exterior ring of a field.
-///
-/// Copied from [FieldExteriorRing].
-@ProviderFor(FieldExteriorRing)
-final fieldExteriorRingProvider =
-    NotifierProvider<FieldExteriorRing, List<Geographic>?>.internal(
-      FieldExteriorRing.new,
-      name: r'fieldExteriorRingProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$fieldExteriorRingHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$FieldExteriorRing = Notifier<List<Geographic>?>;
-String _$fieldInteriorRingsHash() =>
-    r'f14e02bd6765947a51d6866fd90d8f1a33ba785a';
-
-/// A provider for the recorded interior rings of a field.
-///
-/// Copied from [FieldInteriorRings].
-@ProviderFor(FieldInteriorRings)
-final fieldInteriorRingsProvider =
-    NotifierProvider<FieldInteriorRings, List<List<Geographic>>?>.internal(
-      FieldInteriorRings.new,
-      name: r'fieldInteriorRingsProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$fieldInteriorRingsHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$FieldInteriorRings = Notifier<List<List<Geographic>>?>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

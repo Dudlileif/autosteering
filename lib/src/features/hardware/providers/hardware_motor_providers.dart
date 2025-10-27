@@ -99,7 +99,7 @@ class SteeringMotorStatus extends _$SteeringMotorStatus {
         return;
       }
     }
-    Future(() => state = value);
+    unawaited(Future(() => state = value));
   }
 }
 
@@ -350,14 +350,15 @@ FutureOr<void> sendSteeringHardwareConfig(Ref ref) async {
       mainVehicleProvider.select((value) => value.steeringHardwareConfig),
     );
 
-    final response = await Dio(
-      BaseOptions(
-        connectTimeout: const Duration(seconds: 5),
-        receiveTimeout: const Duration(seconds: 5),
-      ),
-    ).get<String>(
-      '''http://${ref.watch(steeringHardwareAddressProvider)}/update_motor_config?${steeringHardwareConfig.httpHeader}''',
-    );
+    final response =
+        await Dio(
+          BaseOptions(
+            connectTimeout: const Duration(seconds: 5),
+            receiveTimeout: const Duration(seconds: 5),
+          ),
+        ).get<String>(
+          '''http://${ref.watch(steeringHardwareAddressProvider)}/update_motor_config?${steeringHardwareConfig.httpHeader}''',
+        );
     if (response.statusCode == 200) {
       Logger.instance.i('Successfully sent motor config to hardware.');
     } else {

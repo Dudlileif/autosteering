@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';
 
@@ -90,9 +91,8 @@ Stream<Vehicle> simCoreIsolateStream(Ref ref) async* {
 
   final simCoreReceiveStream = StreamQueue<dynamic>(receivePort);
 
-  final sendPort =
-      (await simCoreReceiveStream.next as SendPort)
-        ..send(ServicesBinding.rootIsolateToken);
+  final sendPort = (await simCoreReceiveStream.next as SendPort)
+    ..send(ServicesBinding.rootIsolateToken);
 
   ref.read(_simCoreIsolatePortProvider.notifier).update(sendPort);
 
@@ -125,7 +125,7 @@ Stream<Vehicle> simCoreIsolateStream(Ref ref) async* {
   // Exit isolate when provider is disposed.
   ref.onDispose(() {
     sendPort.send(null);
-    simCoreReceiveStream.cancel();
+    unawaited(simCoreReceiveStream.cancel());
     restartTimer?.cancel();
     ref.read(_simCoreIsolatePortProvider.notifier).update(null);
     Logger.instance.w('Simulator Core shut down.');

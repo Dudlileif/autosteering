@@ -16,7 +16,9 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 // Some colors are not overidden at the moment.
-// ignore_for_file: unused_element, unused_element_parameter
+// ignore_for_file: unused_element_parameter
+
+import 'dart:async';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
@@ -51,140 +53,133 @@ class EquipmentSectionButtons extends ConsumerWidget {
     return equipments.isEmpty
         ? const SizedBox.shrink()
         : Column(
-          mainAxisSize: MainAxisSize.min,
-          children:
-              equipments
-                  .map(
-                    (equipment) => Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: switch (equipment.sections.length == 1) {
-                        true => _SectionButton(
-                          section: equipment.sections.first,
-                          onTap:
-                              () => ref.read(simInputProvider.notifier).send((
-                                uuid: equipment.uuid,
-                                activeSections:
-                                    (equipment..toggleSection(0))
-                                        .sectionActivationStatus,
-                              )),
-                          overrideOnText: 'ON',
-                          overrideOffText: 'OFF',
-                        ),
-                        false => Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              alignment: WrapAlignment.center,
-                              children: [
-                                Material(
-                                  type: MaterialType.button,
-                                  clipBehavior: Clip.antiAlias,
-                                  color: switch (theme.brightness) {
-                                    Brightness.light => Colors.red.shade200,
-                                    Brightness.dark => Colors.red.darken(45),
-                                  },
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: InkWell(
-                                    splashFactory: theme.splashFactory,
-                                    splashColor: Colors.red,
-                                    onTap:
-                                        () => ref
-                                            .read(simInputProvider.notifier)
-                                            .send((
-                                              uuid: equipment.uuid,
-                                              activeSections:
-                                                  (equipment..deactivateAll())
-                                                      .sectionActivationStatus,
-                                            )),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const Padding(
-                                            padding: EdgeInsets.only(left: 4),
-                                            child: CustomPaint(
-                                              painter: _CrossPainter(),
-                                              size: Size.square(10),
-                                            ),
+            mainAxisSize: MainAxisSize.min,
+            children: equipments
+                .map(
+                  (equipment) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: switch (equipment.sections.length == 1) {
+                      true => _SectionButton(
+                        section: equipment.sections.first,
+                        onTap: () => ref.read(simInputProvider.notifier).send((
+                          uuid: equipment.uuid,
+                          activeSections: (equipment..toggleSection(0))
+                              .sectionActivationStatus,
+                        )),
+                        overrideOnText: 'ON',
+                        overrideOffText: 'OFF',
+                      ),
+                      false => Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            alignment: WrapAlignment.center,
+                            children: [
+                              Material(
+                                type: MaterialType.button,
+                                clipBehavior: Clip.antiAlias,
+                                color: switch (theme.brightness) {
+                                  Brightness.light => Colors.red.shade200,
+                                  Brightness.dark => Colors.red.darken(45),
+                                },
+                                borderRadius: BorderRadius.circular(8),
+                                child: InkWell(
+                                  splashFactory: theme.splashFactory,
+                                  splashColor: Colors.red,
+                                  onTap: () =>
+                                      ref.read(simInputProvider.notifier).send((
+                                        uuid: equipment.uuid,
+                                        activeSections:
+                                            (equipment..deactivateAll())
+                                                .sectionActivationStatus,
+                                      )),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.only(left: 4),
+                                          child: CustomPaint(
+                                            painter: _CrossPainter(),
+                                            size: Size.square(10),
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                              left: 12,
-                                            ),
-                                            child: TextWithStroke(
-                                              'Deactivate all',
-                                              style: textStyle,
-                                              strokeWidth: 3.5,
-                                            ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 12,
                                           ),
-                                        ],
-                                      ),
+                                          child: TextWithStroke(
+                                            'Deactivate all',
+                                            style: textStyle,
+                                            strokeWidth: 3.5,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                                Material(
-                                  type: MaterialType.button,
-                                  clipBehavior: Clip.antiAlias,
-                                  color: switch (theme.brightness) {
-                                    Brightness.light => Colors.green.shade200,
-                                    Brightness.dark => Colors.green.darken(30),
-                                  },
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: InkWell(
-                                    splashFactory: theme.splashFactory,
-                                    splashColor: Colors.green,
-                                    onTap:
-                                        () => ref
-                                            .read(simInputProvider.notifier)
-                                            .send((
-                                              uuid: equipment.uuid,
-                                              activeSections:
-                                                  (equipment..activateAll())
-                                                      .sectionActivationStatus,
-                                            )),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const Padding(
-                                            padding: EdgeInsets.only(left: 4),
-                                            child: CustomPaint(
-                                              painter: _CheckmarkPainter(),
-                                              size: Size.square(12),
-                                            ),
+                              ),
+                              Material(
+                                type: MaterialType.button,
+                                clipBehavior: Clip.antiAlias,
+                                color: switch (theme.brightness) {
+                                  Brightness.light => Colors.green.shade200,
+                                  Brightness.dark => Colors.green.darken(30),
+                                },
+                                borderRadius: BorderRadius.circular(8),
+                                child: InkWell(
+                                  splashFactory: theme.splashFactory,
+                                  splashColor: Colors.green,
+                                  onTap: () =>
+                                      ref.read(simInputProvider.notifier).send((
+                                        uuid: equipment.uuid,
+                                        activeSections:
+                                            (equipment..activateAll())
+                                                .sectionActivationStatus,
+                                      )),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.only(left: 4),
+                                          child: CustomPaint(
+                                            painter: _CheckmarkPainter(),
+                                            size: Size.square(12),
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                              left: 8,
-                                            ),
-                                            child: TextWithStroke(
-                                              'Activate all',
-                                              style: textStyle,
-                                              strokeWidth: 3.5,
-                                            ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 8,
                                           ),
-                                        ],
-                                      ),
+                                          child: TextWithStroke(
+                                            'Activate all',
+                                            style: textStyle,
+                                            strokeWidth: 3.5,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8),
-                              child: _SectionButtons(equipment: equipment),
-                            ),
-                          ],
-                        ),
-                      },
-                    ),
-                  )
-                  .toList(),
-        );
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: _SectionButtons(equipment: equipment),
+                          ),
+                        ],
+                      ),
+                    },
+                  ),
+                )
+                .toList(),
+          );
   }
 }
 
@@ -197,22 +192,19 @@ class _SectionButtons extends ConsumerWidget {
     return Wrap(
       spacing: 8,
       runSpacing: 8,
-      children:
-          equipment.sections
-              .where((section) => section.workingWidth > 0)
-              .map(
-                (section) => _SectionButton(
-                  section: section,
-                  onTap:
-                      () => ref.read(simInputProvider.notifier).send((
-                        uuid: equipment.uuid,
-                        activeSections:
-                            (equipment..toggleSection(section.index))
-                                .sectionActivationStatus,
-                      )),
-                ),
-              )
-              .toList(),
+      children: equipment.sections
+          .where((section) => section.workingWidth > 0)
+          .map(
+            (section) => _SectionButton(
+              section: section,
+              onTap: () => ref.read(simInputProvider.notifier).send((
+                uuid: equipment.uuid,
+                activeSections: (equipment..toggleSection(section.index))
+                    .sectionActivationStatus,
+              )),
+            ),
+          )
+          .toList(),
     );
   }
 }
@@ -305,9 +297,8 @@ class __SectionButtonState extends ConsumerState<_SectionButton>
           ),
         ]);
       }
-      controller
-        ..reset()
-        ..forward();
+      controller.reset();
+      unawaited(controller.forward());
     }
     prevActive = widget.section.active;
     return AnimatedBuilder(
@@ -333,15 +324,14 @@ class __SectionButtonState extends ConsumerState<_SectionButton>
         type: MaterialType.transparency,
         child: InkWell(
           splashFactory: theme.splashFactory,
-          splashColor:
-              widget.section.active
-                  ? Colors.red
-                  : (widget.section.color ?? Colors.green).getShadeColor(
-                    lighten: switch (theme.brightness) {
-                      Brightness.light => true,
-                      Brightness.dark => false,
-                    },
-                  ),
+          splashColor: widget.section.active
+              ? Colors.red
+              : (widget.section.color ?? Colors.green).getShadeColor(
+                  lighten: switch (theme.brightness) {
+                    Brightness.light => true,
+                    Brightness.dark => false,
+                  },
+                ),
           onTap: widget.onTap,
           child: Center(
             child: TextWithStroke(
@@ -375,18 +365,16 @@ class _CrossPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final strokePaint =
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..color = strokeColor
-          ..strokeWidth = strokeWidth
-          ..strokeCap = StrokeCap.round;
+    final strokePaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..color = strokeColor
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
 
-    final fillPaint =
-        Paint()
-          ..color = fillColor
-          ..strokeWidth = strokeWidth / 3
-          ..strokeCap = StrokeCap.round;
+    final fillPaint = Paint()
+      ..color = fillColor
+      ..strokeWidth = strokeWidth / 3
+      ..strokeCap = StrokeCap.round;
     canvas
       ..drawLine(Offset.zero, Offset(size.width, size.height), strokePaint)
       ..drawLine(Offset(0, size.height), Offset(size.width, 0), strokePaint)
@@ -414,18 +402,16 @@ class _CheckmarkPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final strokePaint =
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..color = strokeColor
-          ..strokeWidth = strokeWidth
-          ..strokeCap = StrokeCap.round;
+    final strokePaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..color = strokeColor
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
 
-    final fillPaint =
-        Paint()
-          ..color = fillColor
-          ..strokeWidth = strokeWidth / 3
-          ..strokeCap = StrokeCap.round;
+    final fillPaint = Paint()
+      ..color = fillColor
+      ..strokeWidth = strokeWidth / 3
+      ..strokeCap = StrokeCap.round;
     canvas
       ..drawLine(
         Offset(0, size.height * 0.4),

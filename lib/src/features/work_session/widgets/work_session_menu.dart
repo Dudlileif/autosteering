@@ -254,23 +254,26 @@ class _CloseDialog extends ConsumerWidget {
                         ),
                         ElevatedButton.icon(
                           onPressed: () {
-                            showDatePicker(
-                              context: context,
-                              firstDate: DateTime(2024),
-                              initialDate: workSession.start ?? DateTime.now(),
-                              lastDate: DateTime.now(),
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                    decimal: true,
-                                  ),
-                            ).then(
-                              (time) => time != null
-                                  ? ref
-                                        .read(
-                                          activeWorkSessionProvider.notifier,
-                                        )
-                                        .updateStartTime(time)
-                                  : null,
+                            unawaited(
+                              showDatePicker(
+                                context: context,
+                                firstDate: DateTime(2024),
+                                initialDate:
+                                    workSession.start ?? DateTime.now(),
+                                lastDate: DateTime.now(),
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
+                              ).then(
+                                (time) => time != null
+                                    ? ref
+                                          .read(
+                                            activeWorkSessionProvider.notifier,
+                                          )
+                                          .updateStartTime(time)
+                                    : null,
+                              ),
                             );
                           },
                           icon: const Icon(Icons.calendar_today),
@@ -279,25 +282,27 @@ class _CloseDialog extends ConsumerWidget {
                         ElevatedButton.icon(
                           onPressed: () {
                             final date = workSession.start ?? DateTime.now();
-                            showTimePicker(
-                              context: context,
-                              initialTime: TimeOfDay.now(),
-                            ).then(
-                              (time) => time != null
-                                  ? ref
-                                        .read(
-                                          activeWorkSessionProvider.notifier,
-                                        )
-                                        .updateStartTime(
-                                          DateTime(
-                                            date.year,
-                                            date.month,
-                                            date.day,
-                                            time.hour,
-                                            time.minute,
-                                          ),
-                                        )
-                                  : null,
+                            unawaited(
+                              showTimePicker(
+                                context: context,
+                                initialTime: TimeOfDay.now(),
+                              ).then(
+                                (time) => time != null
+                                    ? ref
+                                          .read(
+                                            activeWorkSessionProvider.notifier,
+                                          )
+                                          .updateStartTime(
+                                            DateTime(
+                                              date.year,
+                                              date.month,
+                                              date.day,
+                                              time.hour,
+                                              time.minute,
+                                            ),
+                                          )
+                                    : null,
+                              ),
                             );
                           },
                           icon: const Icon(Icons.schedule),
@@ -323,23 +328,25 @@ class _CloseDialog extends ConsumerWidget {
                         ),
                         ElevatedButton.icon(
                           onPressed: () {
-                            showDatePicker(
-                              context: context,
-                              firstDate: workSession.start ?? DateTime(2024),
-                              initialDate: workSession.end ?? DateTime.now(),
-                              lastDate: DateTime.now(),
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                    decimal: true,
-                                  ),
-                            ).then(
-                              (time) => time != null
-                                  ? ref
-                                        .read(
-                                          activeWorkSessionProvider.notifier,
-                                        )
-                                        .updateEndTime(time)
-                                  : null,
+                            unawaited(
+                              showDatePicker(
+                                context: context,
+                                firstDate: workSession.start ?? DateTime(2024),
+                                initialDate: workSession.end ?? DateTime.now(),
+                                lastDate: DateTime.now(),
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
+                              ).then(
+                                (time) => time != null
+                                    ? ref
+                                          .read(
+                                            activeWorkSessionProvider.notifier,
+                                          )
+                                          .updateEndTime(time)
+                                    : null,
+                              ),
                             );
                           },
                           icon: const Icon(Icons.calendar_today),
@@ -348,25 +355,27 @@ class _CloseDialog extends ConsumerWidget {
                         ElevatedButton.icon(
                           onPressed: () {
                             final date = workSession.end ?? DateTime.now();
-                            showTimePicker(
-                              context: context,
-                              initialTime: TimeOfDay.now(),
-                            ).then(
-                              (time) => time != null
-                                  ? ref
-                                        .read(
-                                          activeWorkSessionProvider.notifier,
-                                        )
-                                        .updateEndTime(
-                                          DateTime(
-                                            date.year,
-                                            date.month,
-                                            date.day,
-                                            time.hour,
-                                            time.minute,
-                                          ),
-                                        )
-                                  : null,
+                            unawaited(
+                              showTimePicker(
+                                context: context,
+                                initialTime: TimeOfDay.now(),
+                              ).then(
+                                (time) => time != null
+                                    ? ref
+                                          .read(
+                                            activeWorkSessionProvider.notifier,
+                                          )
+                                          .updateEndTime(
+                                            DateTime(
+                                              date.year,
+                                              date.month,
+                                              date.day,
+                                              time.hour,
+                                              time.minute,
+                                            ),
+                                          )
+                                    : null,
+                              ),
                             );
                           },
                           icon: const Icon(Icons.schedule),
@@ -439,7 +448,7 @@ class _CloseDialog extends ConsumerWidget {
         ],
       );
     }
-    Navigator.of(context).maybePop();
+    unawaited(Navigator.of(context).maybePop());
     return const SizedBox.shrink();
   }
 }

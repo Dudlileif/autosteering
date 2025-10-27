@@ -23,6 +23,7 @@ import 'package:autosteering/src/features/guidance/guidance.dart' as guidance;
 import 'package:autosteering/src/features/guidance/guidance.dart' hide ABCurve;
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ab_curve_providers.g.dart';
@@ -97,10 +98,8 @@ class ABCurve extends _$ABCurve {
             ref
                 .watch(bufferedFieldProvider)
                 .maybeWhen(
-                  data:
-                      (data) =>
-                          data?.polygon ??
-                          ref.watch(activeFieldProvider)?.polygon,
+                  data: (data) =>
+                      data?.polygon ?? ref.watch(activeFieldProvider)?.polygon,
                   orElse: () => null,
                 );
         final width = ref.watch(aBWidthProvider);

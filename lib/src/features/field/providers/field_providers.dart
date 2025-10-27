@@ -111,10 +111,9 @@ class FieldExteriorBufferJoin extends _$FieldExteriorBufferJoin {
 
   /// Go to the next value of [BufferJoin.values].
   void toggle() => Future(
-    () =>
-        state =
-            BufferJoin.values[(BufferJoin.values.indexOf(state) + 1) %
-                BufferJoin.values.length],
+    () => state =
+        BufferJoin.values[(BufferJoin.values.indexOf(state) + 1) %
+            BufferJoin.values.length],
   );
 }
 
@@ -130,10 +129,9 @@ class FieldInteriorBufferJoin extends _$FieldInteriorBufferJoin {
 
   /// Go to the next value of [BufferJoin.values].
   void toggle() => Future(
-    () =>
-        state =
-            BufferJoin.values[(BufferJoin.values.indexOf(state) + 1) %
-                BufferJoin.values.length],
+    () => state =
+        BufferJoin.values[(BufferJoin.values.indexOf(state) + 1) %
+            BufferJoin.values.length],
   );
 }
 
@@ -169,10 +167,9 @@ class FieldExteriorBufferDistance extends _$FieldExteriorBufferDistance {
       -0.5 *
       (ref.read(
             allEquipmentsProvider.select(
-              (value) =>
-                  value.values
-                      .firstWhereOrNull((element) => element.width > 0)
-                      ?.width,
+              (value) => value.values
+                  .firstWhereOrNull((element) => element.width > 0)
+                  ?.width,
             ),
           ) ??
           10);
@@ -190,10 +187,9 @@ class FieldInteriorBufferDistance extends _$FieldInteriorBufferDistance {
       0.5 *
       (ref.read(
             allEquipmentsProvider.select(
-              (value) =>
-                  value.values
-                      .firstWhereOrNull((element) => element.width > 0)
-                      ?.width,
+              (value) => value.values
+                  .firstWhereOrNull((element) => element.width > 0)
+                  ?.width,
             ),
           ) ??
           10);
@@ -275,9 +271,9 @@ Future<Field?> bufferedField(Ref ref) async {
           polygon: bufferedPolygon,
           boundingBox:
               bufferedPolygon.exterior != null &&
-                      (!bufferedPolygon.exterior!.isEmptyByGeometry)
-                  ? GeoBox.from(bufferedPolygon.exterior!.toGeographicPositions)
-                  : null,
+                  (!bufferedPolygon.exterior!.isEmptyByGeometry)
+              ? GeoBox.from(bufferedPolygon.exterior!.toGeographicPositions)
+              : null,
           uuid: const Uuid().v4(),
         );
       } on Exception catch (error, stackTrace) {
@@ -362,7 +358,7 @@ class FieldInteriorRings extends _$FieldInteriorRings {
 /// A provider for saving [field] to a file in the user file directory.
 ///
 /// Override the file name with [overrideName].
-@riverpod
+@Riverpod(keepAlive: true)
 Future<void> saveField(
   Ref ref,
   Field field, {

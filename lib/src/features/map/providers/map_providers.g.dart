@@ -6,499 +6,1091 @@ part of 'map_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$mapOffsetHash() => r'b8bbceca43463ca497cded9989ed80bc93c1fc98';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// Whether the map is ready to be shown or not.
 
-/// How much the map center should be offset from the vehicle.
-///
-/// Copied from [mapOffset].
-@ProviderFor(mapOffset)
-final mapOffsetProvider = AutoDisposeProvider<MapCenterOffset>.internal(
-  mapOffset,
-  name: r'mapOffsetProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$mapOffsetHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(MapReady)
+const mapReadyProvider = MapReadyProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef MapOffsetRef = AutoDisposeProviderRef<MapCenterOffset>;
-String _$offsetVehiclePositionHash() =>
-    r'581e0cf4438c8f86b9067529dec3b7df56afe008';
-
-/// The map center offset applied to the vehicle position, contains the
-/// actual center position of the map.
-///
-/// Copied from [offsetVehiclePosition].
-@ProviderFor(offsetVehiclePosition)
-final offsetVehiclePositionProvider = AutoDisposeProvider<LatLng>.internal(
-  offsetVehiclePosition,
-  name: r'offsetVehiclePositionProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$offsetVehiclePositionHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef OffsetVehiclePositionRef = AutoDisposeProviderRef<LatLng>;
-String _$mapCacheDateHash() => r'18cbbbeec7b58f48dcd447634fc9cffd0dcbd75a';
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// A provider for finding the first cache date of the map layer cache
-/// at the given [path].
-///
-/// Copied from [mapCacheDate].
-@ProviderFor(mapCacheDate)
-const mapCacheDateProvider = MapCacheDateFamily();
-
-/// A provider for finding the first cache date of the map layer cache
-/// at the given [path].
-///
-/// Copied from [mapCacheDate].
-class MapCacheDateFamily extends Family<AsyncValue<DateTime?>> {
-  /// A provider for finding the first cache date of the map layer cache
-  /// at the given [path].
-  ///
-  /// Copied from [mapCacheDate].
-  const MapCacheDateFamily();
-
-  /// A provider for finding the first cache date of the map layer cache
-  /// at the given [path].
-  ///
-  /// Copied from [mapCacheDate].
-  MapCacheDateProvider call(String filePath) {
-    return MapCacheDateProvider(filePath);
-  }
-
-  @override
-  MapCacheDateProvider getProviderOverride(
-    covariant MapCacheDateProvider provider,
-  ) {
-    return call(provider.filePath);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'mapCacheDateProvider';
-}
-
-/// A provider for finding the first cache date of the map layer cache
-/// at the given [path].
-///
-/// Copied from [mapCacheDate].
-class MapCacheDateProvider extends AutoDisposeFutureProvider<DateTime?> {
-  /// A provider for finding the first cache date of the map layer cache
-  /// at the given [path].
-  ///
-  /// Copied from [mapCacheDate].
-  MapCacheDateProvider(String filePath)
-    : this._internal(
-        (ref) => mapCacheDate(ref as MapCacheDateRef, filePath),
-        from: mapCacheDateProvider,
-        name: r'mapCacheDateProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$mapCacheDateHash,
-        dependencies: MapCacheDateFamily._dependencies,
-        allTransitiveDependencies:
-            MapCacheDateFamily._allTransitiveDependencies,
-        filePath: filePath,
+/// Whether the map is ready to be shown or not.
+final class MapReadyProvider extends $NotifierProvider<MapReady, bool> {
+  /// Whether the map is ready to be shown or not.
+  const MapReadyProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'mapReadyProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
       );
 
-  MapCacheDateProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.filePath,
-  }) : super.internal();
-
-  final String filePath;
-
   @override
-  Override overrideWith(
-    FutureOr<DateTime?> Function(MapCacheDateRef provider) create,
-  ) {
-    return ProviderOverride(
+  String debugGetCreateSourceHash() => _$mapReadyHash();
+
+  @$internal
+  @override
+  MapReady create() => MapReady();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
       origin: this,
-      override: MapCacheDateProvider._internal(
-        (ref) => create(ref as MapCacheDateRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        filePath: filePath,
-      ),
+      providerOverride: $SyncValueProvider<bool>(value),
     );
   }
-
-  @override
-  AutoDisposeFutureProviderElement<DateTime?> createElement() {
-    return _MapCacheDateProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is MapCacheDateProvider && other.filePath == filePath;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, filePath.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin MapCacheDateRef on AutoDisposeFutureProviderRef<DateTime?> {
-  /// The parameter `filePath` of this provider.
-  String get filePath;
-}
-
-class _MapCacheDateProviderElement
-    extends AutoDisposeFutureProviderElement<DateTime?>
-    with MapCacheDateRef {
-  _MapCacheDateProviderElement(super.provider);
-
-  @override
-  String get filePath => (origin as MapCacheDateProvider).filePath;
-}
-
-String _$mapCacheDirectoriesHash() =>
-    r'c6af4beb4c54652d190a0bf89d94f79fb6834e1a';
-
-/// A provider for listing all the map layer cache folders.
-///
-/// Copied from [mapCacheDirectories].
-@ProviderFor(mapCacheDirectories)
-final mapCacheDirectoriesProvider =
-    AutoDisposeFutureProvider<List<String>>.internal(
-      mapCacheDirectories,
-      name: r'mapCacheDirectoriesProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$mapCacheDirectoriesHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef MapCacheDirectoriesRef = AutoDisposeFutureProviderRef<List<String>>;
 String _$mapReadyHash() => r'36f729a428a7b1c5015737d8834d2c0b15df71ab';
 
 /// Whether the map is ready to be shown or not.
-///
-/// Copied from [MapReady].
-@ProviderFor(MapReady)
-final mapReadyProvider = AutoDisposeNotifierProvider<MapReady, bool>.internal(
-  MapReady.new,
-  name: r'mapReadyProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$mapReadyHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-typedef _$MapReady = AutoDisposeNotifier<bool>;
+abstract class _$MapReady extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// The main [MapController] provider, which allows controlling the map from
+/// outside the widget code itself.
+
+@ProviderFor(MainMapController)
+const mainMapControllerProvider = MainMapControllerProvider._();
+
+/// The main [MapController] provider, which allows controlling the map from
+/// outside the widget code itself.
+final class MainMapControllerProvider
+    extends $NotifierProvider<MainMapController, MapController> {
+  /// The main [MapController] provider, which allows controlling the map from
+  /// outside the widget code itself.
+  const MainMapControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'mainMapControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$mainMapControllerHash();
+
+  @$internal
+  @override
+  MainMapController create() => MainMapController();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(MapController value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<MapController>(value),
+    );
+  }
+}
+
 String _$mainMapControllerHash() => r'd86c68d7c52e5619b02fb085cedf0d871848bdb8';
 
 /// The main [MapController] provider, which allows controlling the map from
 /// outside the widget code itself.
-///
-/// Copied from [MainMapController].
-@ProviderFor(MainMapController)
-final mainMapControllerProvider =
-    AutoDisposeNotifierProvider<MainMapController, MapController>.internal(
-      MainMapController.new,
-      name: r'mainMapControllerProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$mainMapControllerHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$MainMapController = AutoDisposeNotifier<MapController>;
-String _$homePositionHash() => r'dc5c6a2620e680e82f5ee31284bcb1fe5da601ef';
+abstract class _$MainMapController extends $Notifier<MapController> {
+  MapController build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<MapController, MapController>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<MapController, MapController>,
+              MapController,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
 /// The home position of the vehicle, i.e. where the vehicle will reset to.
-///
-/// Copied from [HomePosition].
-@ProviderFor(HomePosition)
-final homePositionProvider =
-    AutoDisposeNotifierProvider<HomePosition, LatLng>.internal(
-      HomePosition.new,
-      name: r'homePositionProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$homePositionHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$HomePosition = AutoDisposeNotifier<LatLng>;
-String _$centerMapOnVehicleHash() =>
-    r'6e42a9a720ede68c1e54bd256046430361849173';
+@ProviderFor(HomePosition)
+const homePositionProvider = HomePositionProvider._();
+
+/// The home position of the vehicle, i.e. where the vehicle will reset to.
+final class HomePositionProvider
+    extends $NotifierProvider<HomePosition, LatLng> {
+  /// The home position of the vehicle, i.e. where the vehicle will reset to.
+  const HomePositionProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'homePositionProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$homePositionHash();
+
+  @$internal
+  @override
+  HomePosition create() => HomePosition();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(LatLng value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<LatLng>(value),
+    );
+  }
+}
+
+String _$homePositionHash() => r'19f063a826dfa7c035b97e4a86031bf7361eb1e8';
+
+/// The home position of the vehicle, i.e. where the vehicle will reset to.
+
+abstract class _$HomePosition extends $Notifier<LatLng> {
+  LatLng build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<LatLng, LatLng>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<LatLng, LatLng>,
+              LatLng,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
 /// Whether the map should center on the vehicle or if it could be moved freely.
-///
-/// Copied from [CenterMapOnVehicle].
-@ProviderFor(CenterMapOnVehicle)
-final centerMapOnVehicleProvider =
-    AutoDisposeNotifierProvider<CenterMapOnVehicle, bool>.internal(
-      CenterMapOnVehicle.new,
-      name: r'centerMapOnVehicleProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$centerMapOnVehicleHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$CenterMapOnVehicle = AutoDisposeNotifier<bool>;
-String _$zoomTimerControllerHash() =>
-    r'd9243c1dd58f6f89846247a2c1ad48684a5bf5eb';
+@ProviderFor(CenterMapOnVehicle)
+const centerMapOnVehicleProvider = CenterMapOnVehicleProvider._();
+
+/// Whether the map should center on the vehicle or if it could be moved freely.
+final class CenterMapOnVehicleProvider
+    extends $NotifierProvider<CenterMapOnVehicle, bool> {
+  /// Whether the map should center on the vehicle or if it could be moved freely.
+  const CenterMapOnVehicleProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'centerMapOnVehicleProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$centerMapOnVehicleHash();
+
+  @$internal
+  @override
+  CenterMapOnVehicle create() => CenterMapOnVehicle();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$centerMapOnVehicleHash() =>
+    r'35ca7b7367e2181e085fe54d8ebb539dfccf2ca6';
+
+/// Whether the map should center on the vehicle or if it could be moved freely.
+
+abstract class _$CenterMapOnVehicle extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
 /// A provider for controlling the zoom when a gamepad button is held down.
 ///
 /// The map will keep zooming in/out while the button is held down.
-///
-/// Copied from [ZoomTimerController].
-@ProviderFor(ZoomTimerController)
-final zoomTimerControllerProvider =
-    AutoDisposeNotifierProvider<ZoomTimerController, Timer?>.internal(
-      ZoomTimerController.new,
-      name: r'zoomTimerControllerProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$zoomTimerControllerHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$ZoomTimerController = AutoDisposeNotifier<Timer?>;
+@ProviderFor(ZoomTimerController)
+const zoomTimerControllerProvider = ZoomTimerControllerProvider._();
+
+/// A provider for controlling the zoom when a gamepad button is held down.
+///
+/// The map will keep zooming in/out while the button is held down.
+final class ZoomTimerControllerProvider
+    extends $NotifierProvider<ZoomTimerController, Timer?> {
+  /// A provider for controlling the zoom when a gamepad button is held down.
+  ///
+  /// The map will keep zooming in/out while the button is held down.
+  const ZoomTimerControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'zoomTimerControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$zoomTimerControllerHash();
+
+  @$internal
+  @override
+  ZoomTimerController create() => ZoomTimerController();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Timer? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Timer?>(value),
+    );
+  }
+}
+
+String _$zoomTimerControllerHash() =>
+    r'2ef50dd41405ce24faea17e0204176f15925134d';
+
+/// A provider for controlling the zoom when a gamepad button is held down.
+///
+/// The map will keep zooming in/out while the button is held down.
+
+abstract class _$ZoomTimerController extends $Notifier<Timer?> {
+  Timer? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<Timer?, Timer?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Timer?, Timer?>,
+              Timer?,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// How much the map center should be offset from the vehicle.
+
+@ProviderFor(mapOffset)
+const mapOffsetProvider = MapOffsetProvider._();
+
+/// How much the map center should be offset from the vehicle.
+
+final class MapOffsetProvider
+    extends
+        $FunctionalProvider<MapCenterOffset, MapCenterOffset, MapCenterOffset>
+    with $Provider<MapCenterOffset> {
+  /// How much the map center should be offset from the vehicle.
+  const MapOffsetProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'mapOffsetProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$mapOffsetHash();
+
+  @$internal
+  @override
+  $ProviderElement<MapCenterOffset> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  MapCenterOffset create(Ref ref) {
+    return mapOffset(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(MapCenterOffset value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<MapCenterOffset>(value),
+    );
+  }
+}
+
+String _$mapOffsetHash() => r'b8bbceca43463ca497cded9989ed80bc93c1fc98';
+
+/// How much the map center should be offset from the vehicle when using
+/// 2D view.
+
+@ProviderFor(MapOffset2D)
+const mapOffset2DProvider = MapOffset2DProvider._();
+
+/// How much the map center should be offset from the vehicle when using
+/// 2D view.
+final class MapOffset2DProvider
+    extends $NotifierProvider<MapOffset2D, MapCenterOffset> {
+  /// How much the map center should be offset from the vehicle when using
+  /// 2D view.
+  const MapOffset2DProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'mapOffset2DProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$mapOffset2DHash();
+
+  @$internal
+  @override
+  MapOffset2D create() => MapOffset2D();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(MapCenterOffset value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<MapCenterOffset>(value),
+    );
+  }
+}
+
 String _$mapOffset2DHash() => r'61edf217771e62a642a6839ef2f09369edcb5054';
 
 /// How much the map center should be offset from the vehicle when using
 /// 2D view.
-///
-/// Copied from [MapOffset2D].
-@ProviderFor(MapOffset2D)
-final mapOffset2DProvider =
-    AutoDisposeNotifierProvider<MapOffset2D, MapCenterOffset>.internal(
-      MapOffset2D.new,
-      name: r'mapOffset2DProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$mapOffset2DHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$MapOffset2D = AutoDisposeNotifier<MapCenterOffset>;
+abstract class _$MapOffset2D extends $Notifier<MapCenterOffset> {
+  MapCenterOffset build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<MapCenterOffset, MapCenterOffset>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<MapCenterOffset, MapCenterOffset>,
+              MapCenterOffset,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// How much the map center should be offset from the vehicle when using
+/// 3D view.
+
+@ProviderFor(MapOffset3D)
+const mapOffset3DProvider = MapOffset3DProvider._();
+
+/// How much the map center should be offset from the vehicle when using
+/// 3D view.
+final class MapOffset3DProvider
+    extends $NotifierProvider<MapOffset3D, MapCenterOffset> {
+  /// How much the map center should be offset from the vehicle when using
+  /// 3D view.
+  const MapOffset3DProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'mapOffset3DProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$mapOffset3DHash();
+
+  @$internal
+  @override
+  MapOffset3D create() => MapOffset3D();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(MapCenterOffset value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<MapCenterOffset>(value),
+    );
+  }
+}
+
 String _$mapOffset3DHash() => r'5cf6b59d77109e1b658a050688c679d4195c212a';
 
 /// How much the map center should be offset from the vehicle when using
 /// 3D view.
-///
-/// Copied from [MapOffset3D].
-@ProviderFor(MapOffset3D)
-final mapOffset3DProvider =
-    AutoDisposeNotifierProvider<MapOffset3D, MapCenterOffset>.internal(
-      MapOffset3D.new,
-      name: r'mapOffset3DProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$mapOffset3DHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$MapOffset3D = AutoDisposeNotifier<MapCenterOffset>;
+abstract class _$MapOffset3D extends $Notifier<MapCenterOffset> {
+  MapCenterOffset build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<MapCenterOffset, MapCenterOffset>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<MapCenterOffset, MapCenterOffset>,
+              MapCenterOffset,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// The map center offset applied to the vehicle position, contains the
+/// actual center position of the map.
+
+@ProviderFor(offsetVehiclePosition)
+const offsetVehiclePositionProvider = OffsetVehiclePositionProvider._();
+
+/// The map center offset applied to the vehicle position, contains the
+/// actual center position of the map.
+
+final class OffsetVehiclePositionProvider
+    extends $FunctionalProvider<LatLng, LatLng, LatLng>
+    with $Provider<LatLng> {
+  /// The map center offset applied to the vehicle position, contains the
+  /// actual center position of the map.
+  const OffsetVehiclePositionProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'offsetVehiclePositionProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$offsetVehiclePositionHash();
+
+  @$internal
+  @override
+  $ProviderElement<LatLng> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  LatLng create(Ref ref) {
+    return offsetVehiclePosition(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(LatLng value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<LatLng>(value),
+    );
+  }
+}
+
+String _$offsetVehiclePositionHash() =>
+    r'581e0cf4438c8f86b9067529dec3b7df56afe008';
+
+/// Whether the map always should point to the north and not rotate.
+
+@ProviderFor(AlwaysPointNorth)
+const alwaysPointNorthProvider = AlwaysPointNorthProvider._();
+
+/// Whether the map always should point to the north and not rotate.
+final class AlwaysPointNorthProvider
+    extends $NotifierProvider<AlwaysPointNorth, bool> {
+  /// Whether the map always should point to the north and not rotate.
+  const AlwaysPointNorthProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'alwaysPointNorthProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$alwaysPointNorthHash();
+
+  @$internal
+  @override
+  AlwaysPointNorth create() => AlwaysPointNorth();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$alwaysPointNorthHash() => r'34219ed8614164321d8799ffdd299d8f460ff0ad';
 
 /// Whether the map always should point to the north and not rotate.
-///
-/// Copied from [AlwaysPointNorth].
-@ProviderFor(AlwaysPointNorth)
-final alwaysPointNorthProvider =
-    AutoDisposeNotifierProvider<AlwaysPointNorth, bool>.internal(
-      AlwaysPointNorth.new,
-      name: r'alwaysPointNorthProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$alwaysPointNorthHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$AlwaysPointNorth = AutoDisposeNotifier<bool>;
+abstract class _$AlwaysPointNorth extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// Whether to enable a 3D perspective for the map, otherwise an orthogonal
+/// view is used.
+
+@ProviderFor(MapUse3DPerspective)
+const mapUse3DPerspectiveProvider = MapUse3DPerspectiveProvider._();
+
+/// Whether to enable a 3D perspective for the map, otherwise an orthogonal
+/// view is used.
+final class MapUse3DPerspectiveProvider
+    extends $NotifierProvider<MapUse3DPerspective, bool> {
+  /// Whether to enable a 3D perspective for the map, otherwise an orthogonal
+  /// view is used.
+  const MapUse3DPerspectiveProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'mapUse3DPerspectiveProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$mapUse3DPerspectiveHash();
+
+  @$internal
+  @override
+  MapUse3DPerspective create() => MapUse3DPerspective();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$mapUse3DPerspectiveHash() =>
     r'78fc37044a94d5afe2ac1e2e317d7e1bfd575303';
 
 /// Whether to enable a 3D perspective for the map, otherwise an orthogonal
 /// view is used.
-///
-/// Copied from [MapUse3DPerspective].
-@ProviderFor(MapUse3DPerspective)
-final mapUse3DPerspectiveProvider =
-    AutoDisposeNotifierProvider<MapUse3DPerspective, bool>.internal(
-      MapUse3DPerspective.new,
-      name: r'mapUse3DPerspectiveProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$mapUse3DPerspectiveHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$MapUse3DPerspective = AutoDisposeNotifier<bool>;
+abstract class _$MapUse3DPerspective extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// The angle that the 3D perspective should be seen from, as in radians
+/// from the orthogonal view.
+
+@ProviderFor(Map3DPerspectiveAngle)
+const map3DPerspectiveAngleProvider = Map3DPerspectiveAngleProvider._();
+
+/// The angle that the 3D perspective should be seen from, as in radians
+/// from the orthogonal view.
+final class Map3DPerspectiveAngleProvider
+    extends $NotifierProvider<Map3DPerspectiveAngle, double> {
+  /// The angle that the 3D perspective should be seen from, as in radians
+  /// from the orthogonal view.
+  const Map3DPerspectiveAngleProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'map3DPerspectiveAngleProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$map3DPerspectiveAngleHash();
+
+  @$internal
+  @override
+  Map3DPerspectiveAngle create() => Map3DPerspectiveAngle();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(double value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<double>(value),
+    );
+  }
+}
+
 String _$map3DPerspectiveAngleHash() =>
     r'eb242d22c74963558ad446fdf18a4ca6fb8d3b3b';
 
 /// The angle that the 3D perspective should be seen from, as in radians
 /// from the orthogonal view.
-///
-/// Copied from [Map3DPerspectiveAngle].
-@ProviderFor(Map3DPerspectiveAngle)
-final map3DPerspectiveAngleProvider =
-    AutoDisposeNotifierProvider<Map3DPerspectiveAngle, double>.internal(
-      Map3DPerspectiveAngle.new,
-      name: r'map3DPerspectiveAngleProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$map3DPerspectiveAngleHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$Map3DPerspectiveAngle = AutoDisposeNotifier<double>;
+abstract class _$Map3DPerspectiveAngle extends $Notifier<double> {
+  double build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<double, double>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<double, double>,
+              double,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// The zoom value that the map should use when being created.
+
+@ProviderFor(MapZoom)
+const mapZoomProvider = MapZoomProvider._();
+
+/// The zoom value that the map should use when being created.
+final class MapZoomProvider extends $NotifierProvider<MapZoom, double> {
+  /// The zoom value that the map should use when being created.
+  const MapZoomProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'mapZoomProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$mapZoomHash();
+
+  @$internal
+  @override
+  MapZoom create() => MapZoom();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(double value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<double>(value),
+    );
+  }
+}
+
 String _$mapZoomHash() => r'9b86aaf1b7c0bb8e07ed467ebfb892e0336f0514';
 
 /// The zoom value that the map should use when being created.
-///
-/// Copied from [MapZoom].
-@ProviderFor(MapZoom)
-final mapZoomProvider = AutoDisposeNotifierProvider<MapZoom, double>.internal(
-  MapZoom.new,
-  name: r'mapZoomProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$mapZoomHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-typedef _$MapZoom = AutoDisposeNotifier<double>;
+abstract class _$MapZoom extends $Notifier<double> {
+  double build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<double, double>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<double, double>,
+              double,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for finding the first cache date of the map layer cache
+/// at the given [path].
+
+@ProviderFor(mapCacheDate)
+const mapCacheDateProvider = MapCacheDateFamily._();
+
+/// A provider for finding the first cache date of the map layer cache
+/// at the given [path].
+
+final class MapCacheDateProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<DateTime?>,
+          DateTime?,
+          FutureOr<DateTime?>
+        >
+    with $FutureModifier<DateTime?>, $FutureProvider<DateTime?> {
+  /// A provider for finding the first cache date of the map layer cache
+  /// at the given [path].
+  const MapCacheDateProvider._({
+    required MapCacheDateFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'mapCacheDateProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$mapCacheDateHash();
+
+  @override
+  String toString() {
+    return r'mapCacheDateProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<DateTime?> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<DateTime?> create(Ref ref) {
+    final argument = this.argument as String;
+    return mapCacheDate(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is MapCacheDateProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$mapCacheDateHash() => r'18cbbbeec7b58f48dcd447634fc9cffd0dcbd75a';
+
+/// A provider for finding the first cache date of the map layer cache
+/// at the given [path].
+
+final class MapCacheDateFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<DateTime?>, String> {
+  const MapCacheDateFamily._()
+    : super(
+        retry: null,
+        name: r'mapCacheDateProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// A provider for finding the first cache date of the map layer cache
+  /// at the given [path].
+
+  MapCacheDateProvider call(String filePath) =>
+      MapCacheDateProvider._(argument: filePath, from: this);
+
+  @override
+  String toString() => r'mapCacheDateProvider';
+}
+
+/// A provider for listing all the map layer cache folders.
+
+@ProviderFor(mapCacheDirectories)
+const mapCacheDirectoriesProvider = MapCacheDirectoriesProvider._();
+
+/// A provider for listing all the map layer cache folders.
+
+final class MapCacheDirectoriesProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<String>>,
+          List<String>,
+          FutureOr<List<String>>
+        >
+    with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
+  /// A provider for listing all the map layer cache folders.
+  const MapCacheDirectoriesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'mapCacheDirectoriesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$mapCacheDirectoriesHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<String>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<String>> create(Ref ref) {
+    return mapCacheDirectories(ref);
+  }
+}
+
+String _$mapCacheDirectoriesHash() =>
+    r'c6af4beb4c54652d190a0bf89d94f79fb6834e1a';
+
+/// Whether the map should be allowed to download tiles over the internet.
+
+@ProviderFor(MapAllowDownload)
+const mapAllowDownloadProvider = MapAllowDownloadProvider._();
+
+/// Whether the map should be allowed to download tiles over the internet.
+final class MapAllowDownloadProvider
+    extends $NotifierProvider<MapAllowDownload, bool> {
+  /// Whether the map should be allowed to download tiles over the internet.
+  const MapAllowDownloadProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'mapAllowDownloadProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$mapAllowDownloadHash();
+
+  @$internal
+  @override
+  MapAllowDownload create() => MapAllowDownload();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$mapAllowDownloadHash() => r'1ced70a153678e5415176206bf4f38a06024352d';
 
 /// Whether the map should be allowed to download tiles over the internet.
-///
-/// Copied from [MapAllowDownload].
-@ProviderFor(MapAllowDownload)
-final mapAllowDownloadProvider =
-    AutoDisposeNotifierProvider<MapAllowDownload, bool>.internal(
-      MapAllowDownload.new,
-      name: r'mapAllowDownloadProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$mapAllowDownloadHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$MapAllowDownload = AutoDisposeNotifier<bool>;
+abstract class _$MapAllowDownload extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// The size of the currently displayed map grid.
+
+@ProviderFor(MapGridSize)
+const mapGridSizeProvider = MapGridSizeProvider._();
+
+/// The size of the currently displayed map grid.
+final class MapGridSizeProvider
+    extends $NotifierProvider<MapGridSize, double?> {
+  /// The size of the currently displayed map grid.
+  const MapGridSizeProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'mapGridSizeProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$mapGridSizeHash();
+
+  @$internal
+  @override
+  MapGridSize create() => MapGridSize();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(double? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<double?>(value),
+    );
+  }
+}
+
 String _$mapGridSizeHash() => r'724dc6e828b687e501539db9f96fdf664cc54683';
 
 /// The size of the currently displayed map grid.
-///
-/// Copied from [MapGridSize].
-@ProviderFor(MapGridSize)
-final mapGridSizeProvider =
-    AutoDisposeNotifierProvider<MapGridSize, double?>.internal(
-      MapGridSize.new,
-      name: r'mapGridSizeProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$mapGridSizeHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$MapGridSize = AutoDisposeNotifier<double?>;
+abstract class _$MapGridSize extends $Notifier<double?> {
+  double? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<double?, double?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<double?, double?>,
+              double?,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// Whether the grid size indicator should be shown.
+
+@ProviderFor(ShowGridSizeIndicator)
+const showGridSizeIndicatorProvider = ShowGridSizeIndicatorProvider._();
+
+/// Whether the grid size indicator should be shown.
+final class ShowGridSizeIndicatorProvider
+    extends $NotifierProvider<ShowGridSizeIndicator, bool> {
+  /// Whether the grid size indicator should be shown.
+  const ShowGridSizeIndicatorProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'showGridSizeIndicatorProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$showGridSizeIndicatorHash();
+
+  @$internal
+  @override
+  ShowGridSizeIndicator create() => ShowGridSizeIndicator();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$showGridSizeIndicatorHash() =>
     r'd900954a852121d822ea4b7f4729e96d33e0b2c7';
 
 /// Whether the grid size indicator should be shown.
-///
-/// Copied from [ShowGridSizeIndicator].
-@ProviderFor(ShowGridSizeIndicator)
-final showGridSizeIndicatorProvider =
-    AutoDisposeNotifierProvider<ShowGridSizeIndicator, bool>.internal(
-      ShowGridSizeIndicator.new,
-      name: r'showGridSizeIndicatorProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$showGridSizeIndicatorHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$ShowGridSizeIndicator = AutoDisposeNotifier<bool>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$ShowGridSizeIndicator extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

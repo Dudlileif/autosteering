@@ -37,10 +37,9 @@ class EnableAutosteeringButton extends StatelessWidget {
         final state = ref.watch(activeAutosteeringStateProvider);
 
         return FloatingActionButton(
-          onPressed:
-              () => ref.read(simInputProvider.notifier).send((
-                enableAutoSteer: state == AutosteeringState.disabled,
-              )),
+          onPressed: () => ref.read(simInputProvider.notifier).send((
+            enableAutoSteer: state == AutosteeringState.disabled,
+          )),
           backgroundColor: switch (state) {
             AutosteeringState.disabled => Colors.grey.shade700,
             AutosteeringState.standby => Colors.blue,
@@ -56,28 +55,27 @@ class EnableAutosteeringButton extends StatelessWidget {
               Align(
                 heightFactor: 1.1,
                 child: Consumer(
-                  builder:
-                      (context, ref, child) => Transform.rotate(
-                        angle: switch (state) {
-                          AutosteeringState.disabled => 0,
-                          _ =>
-                            ref.watch(
-                                  mainVehicleProvider.select(
-                                    (value) =>
-                                        value.steeringAngle /
-                                        value.steeringAngleMax,
-                                  ),
-                                ) *
-                                3.5 *
-                                pi,
-                        },
-                        child: const Icon(
-                          Symbols.search_hands_free,
-                          size: 36,
-                          color: Colors.white,
-                          weight: 1000,
-                        ),
-                      ),
+                  builder: (context, ref, child) => Transform.rotate(
+                    angle: switch (state) {
+                      AutosteeringState.disabled => 0,
+                      _ =>
+                        ref.watch(
+                              mainVehicleProvider.select(
+                                (value) =>
+                                    value.steeringAngle /
+                                    value.steeringAngleMax,
+                              ),
+                            ) *
+                            3.5 *
+                            pi,
+                    },
+                    child: const Icon(
+                      Symbols.search_hands_free,
+                      size: 36,
+                      color: Colors.white,
+                      weight: 1000,
+                    ),
+                  ),
                 ),
               ),
               Align(

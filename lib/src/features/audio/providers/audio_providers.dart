@@ -15,11 +15,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:async';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:autosteering/src/features/audio/audio.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'audio_providers.g.dart';
@@ -34,13 +37,12 @@ class AudioQueue extends _$AudioQueue {
     listenSelf((previous, next) async {
       if (next.isNotEmpty) {
         if (_player?.state != PlayerState.playing) {
-          _player =
-              AudioPlayer()
-                ..onPlayerComplete.listen((event) {
-                  _player?.dispose();
-                  _player = null;
-                  removeFirst();
-                });
+          _player = AudioPlayer()
+            ..onPlayerComplete.listen((event) {
+              unawaited(_player?.dispose());
+              _player = null;
+              removeFirst();
+            });
           final asset = next.first;
           final volume =
               ref.read(audioVolumeProvider.select((value) => value[asset])) ??
@@ -101,13 +103,12 @@ class AudioVolume extends _$AudioVolume {
 
   /// Update the [volume] of the [source].
   void update(AudioAsset source, double volume) => Future(
-    () =>
-        state =
-            state..update(
-              source,
-              (value) => clampDouble(volume, 0, 1),
-              ifAbsent: () => clampDouble(volume, 0, 1),
-            ),
+    () => state = state
+      ..update(
+        source,
+        (value) => clampDouble(volume, 0, 1),
+        ifAbsent: () => clampDouble(volume, 0, 1),
+      ),
   );
 
   @override

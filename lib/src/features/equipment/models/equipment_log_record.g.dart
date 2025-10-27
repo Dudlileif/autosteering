@@ -9,10 +9,9 @@ part of 'equipment_log_record.dart';
 _EquipmentLogRecord _$EquipmentLogRecordFromJson(Map<String, dynamic> json) =>
     _EquipmentLogRecord(
       time: const DateTimeSerializer().fromJson(json['time'] as String),
-      activeSections:
-          (json['activeSections'] as List<dynamic>)
-              .map((e) => (e as num).toInt())
-              .toList(),
+      activeSections: (json['activeSections'] as List<dynamic>)
+          .map((e) => (e as num).toInt())
+          .toList(),
       wayPoint: WayPoint.fromJson(json['wayPoint'] as Map<String, dynamic>),
     );
 

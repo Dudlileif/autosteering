@@ -6,68 +6,159 @@ part of 'gamepad_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$gamepadInputEventsHash() =>
-    r'd6d8c4d413d36229f7abf9df2180a9f7c61eeb00';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// The currently active configuration of the gamepad.
 
-/// A stream of the input events from the gamepad mapped to a more friendly
-/// input interface.
-///
-/// Copied from [gamepadInputEvents].
-@ProviderFor(gamepadInputEvents)
-final gamepadInputEventsProvider = StreamProvider<GamepadInput>.internal(
-  gamepadInputEvents,
-  name: r'gamepadInputEventsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$gamepadInputEventsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(ActiveGamepadConfig)
+const activeGamepadConfigProvider = ActiveGamepadConfigProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef GamepadInputEventsRef = StreamProviderRef<GamepadInput>;
-String _$handleGamepadInputHash() =>
-    r'cf25de09f5847baac06904baf347acd9be578b60';
+/// The currently active configuration of the gamepad.
+final class ActiveGamepadConfigProvider
+    extends $NotifierProvider<ActiveGamepadConfig, GamepadConfig> {
+  /// The currently active configuration of the gamepad.
+  const ActiveGamepadConfigProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'activeGamepadConfigProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
-/// A provider for handling the inputs from the gamepad.
-///
-/// Copied from [handleGamepadInput].
-@ProviderFor(handleGamepadInput)
-final handleGamepadInputProvider = Provider<void>.internal(
-  handleGamepadInput,
-  name: r'handleGamepadInputProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$handleGamepadInputHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+  @override
+  String debugGetCreateSourceHash() => _$activeGamepadConfigHash();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef HandleGamepadInputRef = ProviderRef<void>;
+  @$internal
+  @override
+  ActiveGamepadConfig create() => ActiveGamepadConfig();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GamepadConfig value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GamepadConfig>(value),
+    );
+  }
+}
+
 String _$activeGamepadConfigHash() =>
     r'4e232a598d135b75cf202d6d8b9475241f4b89f2';
 
 /// The currently active configuration of the gamepad.
-///
-/// Copied from [ActiveGamepadConfig].
-@ProviderFor(ActiveGamepadConfig)
-final activeGamepadConfigProvider =
-    NotifierProvider<ActiveGamepadConfig, GamepadConfig>.internal(
-      ActiveGamepadConfig.new,
-      name: r'activeGamepadConfigProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$activeGamepadConfigHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$ActiveGamepadConfig = Notifier<GamepadConfig>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$ActiveGamepadConfig extends $Notifier<GamepadConfig> {
+  GamepadConfig build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<GamepadConfig, GamepadConfig>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<GamepadConfig, GamepadConfig>,
+              GamepadConfig,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A stream of the input events from the gamepad mapped to a more friendly
+/// input interface.
+
+@ProviderFor(gamepadInputEvents)
+const gamepadInputEventsProvider = GamepadInputEventsProvider._();
+
+/// A stream of the input events from the gamepad mapped to a more friendly
+/// input interface.
+
+final class GamepadInputEventsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<GamepadInput>,
+          GamepadInput,
+          Stream<GamepadInput>
+        >
+    with $FutureModifier<GamepadInput>, $StreamProvider<GamepadInput> {
+  /// A stream of the input events from the gamepad mapped to a more friendly
+  /// input interface.
+  const GamepadInputEventsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'gamepadInputEventsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$gamepadInputEventsHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<GamepadInput> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<GamepadInput> create(Ref ref) {
+    return gamepadInputEvents(ref);
+  }
+}
+
+String _$gamepadInputEventsHash() =>
+    r'd6d8c4d413d36229f7abf9df2180a9f7c61eeb00';
+
+/// A provider for handling the inputs from the gamepad.
+
+@ProviderFor(handleGamepadInput)
+const handleGamepadInputProvider = HandleGamepadInputProvider._();
+
+/// A provider for handling the inputs from the gamepad.
+
+final class HandleGamepadInputProvider
+    extends $FunctionalProvider<void, void, void>
+    with $Provider<void> {
+  /// A provider for handling the inputs from the gamepad.
+  const HandleGamepadInputProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'handleGamepadInputProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$handleGamepadInputHash();
+
+  @$internal
+  @override
+  $ProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  void create(Ref ref) {
+    return handleGamepadInput(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(void value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<void>(value),
+    );
+  }
+}
+
+String _$handleGamepadInputHash() =>
+    r'cf25de09f5847baac06904baf347acd9be578b60';

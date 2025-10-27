@@ -36,10 +36,9 @@ part 'vehicle_providers.g.dart';
 class MainVehicle extends _$MainVehicle {
   @override
   Vehicle build() {
-    final vehicle =
-        ref.read(lastUsedVehicleProvider).requireValue
-          ..position = ref.read(homePositionProvider).geoPosition
-          ..lastUsed = DateTime.now();
+    final vehicle = ref.read(lastUsedVehicleProvider).requireValue
+      ..position = ref.read(homePositionProvider).geoPosition
+      ..lastUsed = DateTime.now();
 
     ref.read(saveVehicleProvider(vehicle));
 
@@ -64,11 +63,10 @@ class MainVehicle extends _$MainVehicle {
   /// Update the [state] to a new [vehicle] configuration, but keep the
   /// position and bearing.
   void updateConfig(Vehicle vehicle) => Future(
-    () =>
-        state = vehicle.copyWith(
-          antennaPosition: state.position,
-          bearing: state.bearing,
-        )..lastUsed = DateTime.now(),
+    () => state = vehicle.copyWith(
+      antennaPosition: state.position,
+      bearing: state.bearing,
+    )..lastUsed = DateTime.now(),
   );
 
   /// Reset the [state] to the initial value by recreating the [state].
@@ -99,7 +97,7 @@ class ActiveAutosteeringState extends _$ActiveAutosteeringState {
 /// A provider for saving [vehicle] to a file in the user file directory.
 ///
 /// Override the file name with [overrideName].
-@riverpod
+@Riverpod(keepAlive: true)
 FutureOr<void> saveVehicle(
   Ref ref,
   Vehicle vehicle, {

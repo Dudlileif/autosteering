@@ -23,7 +23,6 @@ import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:flutter_libserialport/flutter_libserialport.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -32,7 +31,7 @@ part 'hardware_serial_providers.g.dart';
 /// A provider for the available serial ports.
 @riverpod
 Future<List<SerialPort>> availableSerialPorts(Ref ref) async =>
-    (await SerialPort.availablePorts).map(SerialPort.new).toList();
+    SerialPort.availablePorts.map(SerialPort.new).toList();
 
 /// A provider for the baud rate for the [HardwareSerial] connection.
 @Riverpod(keepAlive: true)
@@ -66,9 +65,8 @@ class HardwareSerialBaudRate extends _$HardwareSerialBaudRate {
 class HardwareSerial extends _$HardwareSerial {
   @override
   SerialPort? build() {
-    final config =
-        SerialPortConfig()
-          ..baudRate = ref.watch(hardwareSerialBaudRateProvider);
+    final config = SerialPortConfig()
+      ..baudRate = ref.watch(hardwareSerialBaudRateProvider);
 
     ref.onDispose(() async {
       ref.invalidate(hardwareSerialAliveProvider);
@@ -112,9 +110,9 @@ Stream<String?> hardwareSerialStream(Ref ref) {
 
   final controller = StreamController<String?>();
 
-  ref.onDispose(() {
+  ref.onDispose(() async {
     timer?.cancel();
-    controller.close();
+    await controller.close();
   });
 
   final serial = ref.watch(hardwareSerialProvider);
@@ -129,7 +127,7 @@ Stream<String?> hardwareSerialStream(Ref ref) {
       if (bytesSize > 0) {
         ref.read(hardwareSerialAliveProvider.notifier).update(value: true);
 
-        final bytes = await serial.read(bytesSize);
+        final bytes = serial.read(bytesSize);
         final messages = decoder.decode(bytes);
 
         for (final message in messages) {

@@ -22,7 +22,6 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
 
@@ -348,12 +347,11 @@ class TcpServer extends _$TcpServer {
             },
           );
         },
-        error:
-            (error, stackTrace) => Logger.instance.e(
-              'Failed to create TCP client socket.',
-              error: error,
-              stackTrace: stackTrace,
-            ),
+        error: (error, stackTrace) => Logger.instance.e(
+          'Failed to create TCP client socket.',
+          error: error,
+          stackTrace: stackTrace,
+        ),
         loading: () {},
       );
     });
@@ -372,7 +370,7 @@ class TcpServer extends _$TcpServer {
   ///
   /// It will send a message to the hardware to create a new connection.
   void send(Uint8List data) {
-    Future(() => _socket?.add(data));
+    unawaited(Future(() => _socket?.add(data)));
   }
 }
 

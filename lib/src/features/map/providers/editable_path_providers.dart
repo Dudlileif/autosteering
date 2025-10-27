@@ -20,7 +20,6 @@ import 'dart:collection';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/map/map.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -44,7 +43,7 @@ class ActiveEditablePathType extends _$ActiveEditablePathType {
 }
 
 /// A provider for the editable path points.
-@riverpod
+@Riverpod(keepAlive: true)
 class EditablePathPoints extends _$EditablePathPoints {
   @override
   List<Geographic>? build() => null;
@@ -54,11 +53,9 @@ class EditablePathPoints extends _$EditablePathPoints {
 
   /// Move the point at [index] by replacing it with [point].
   void movePoint(int index, Geographic point) => Future(
-    () =>
-        state =
-            state
-              ?..insert(index, point)
-              ..removeAt(index + 1),
+    () => state = state
+      ?..insert(index, point)
+      ..removeAt(index + 1),
   );
 
   /// Insert [point] at [index].
@@ -77,7 +74,7 @@ class EditablePathPoints extends _$EditablePathPoints {
 }
 
 /// A provider with [EditablePathPoints] converted to [WayPoint]s.
-@riverpod
+@Riverpod(keepAlive: true)
 List<WayPoint>? editablePathAsWayPoints(Ref ref) {
   final points = ref.watch(editablePathPointsProvider);
   if (points != null && points.length >= 2) {

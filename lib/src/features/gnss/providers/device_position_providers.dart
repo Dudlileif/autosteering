@@ -16,7 +16,6 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/simulator/simulator.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geobase/geobase.dart' show Geographic;
 import 'package:geolocator/geolocator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -87,10 +86,9 @@ class DevicePositionAsVehiclePosition
 @riverpod
 Stream<Position> rawDevicePositionStream(Ref ref) =>
     Geolocator.getPositionStream(
-      locationSettings:
-          Platform.isAndroid
-              ? AndroidSettings(intervalDuration: const Duration(seconds: 1))
-              : null,
+      locationSettings: Platform.isAndroid
+          ? AndroidSettings(intervalDuration: const Duration(seconds: 1))
+          : null,
     );
 
 /// A provider that sends device position updates to the simulation core

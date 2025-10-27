@@ -6,44 +6,127 @@ part of 'audio_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$audioQueueHash() => r'1cbc8b68a1e886f70b4c47785970712715c55a1b';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// A provider for a set queue of [AudioAsset]s, which also automatically plays
+/// and removes them after they are added.
+
+@ProviderFor(AudioQueue)
+const audioQueueProvider = AudioQueueProvider._();
 
 /// A provider for a set queue of [AudioAsset]s, which also automatically plays
 /// and removes them after they are added.
-///
-/// Copied from [AudioQueue].
-@ProviderFor(AudioQueue)
-final audioQueueProvider =
-    NotifierProvider<AudioQueue, Set<AudioAsset>>.internal(
-      AudioQueue.new,
-      name: r'audioQueueProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$audioQueueHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+final class AudioQueueProvider
+    extends $NotifierProvider<AudioQueue, Set<AudioAsset>> {
+  /// A provider for a set queue of [AudioAsset]s, which also automatically plays
+  /// and removes them after they are added.
+  const AudioQueueProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'audioQueueProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
-typedef _$AudioQueue = Notifier<Set<AudioAsset>>;
+  @override
+  String debugGetCreateSourceHash() => _$audioQueueHash();
+
+  @$internal
+  @override
+  AudioQueue create() => AudioQueue();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Set<AudioAsset> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Set<AudioAsset>>(value),
+    );
+  }
+}
+
+String _$audioQueueHash() => r'32b88a8ab5ee5134ffd17f220659c137d02d3bd9';
+
+/// A provider for a set queue of [AudioAsset]s, which also automatically plays
+/// and removes them after they are added.
+
+abstract class _$AudioQueue extends $Notifier<Set<AudioAsset>> {
+  Set<AudioAsset> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<Set<AudioAsset>, Set<AudioAsset>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Set<AudioAsset>, Set<AudioAsset>>,
+              Set<AudioAsset>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for all the audio volume levels.
+
+@ProviderFor(AudioVolume)
+const audioVolumeProvider = AudioVolumeProvider._();
+
+/// A provider for all the audio volume levels.
+final class AudioVolumeProvider
+    extends $NotifierProvider<AudioVolume, Map<AudioAsset, double>> {
+  /// A provider for all the audio volume levels.
+  const AudioVolumeProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'audioVolumeProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$audioVolumeHash();
+
+  @$internal
+  @override
+  AudioVolume create() => AudioVolume();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Map<AudioAsset, double> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Map<AudioAsset, double>>(value),
+    );
+  }
+}
+
 String _$audioVolumeHash() => r'd91f9400ee21decaf12f8656f5be02f60a65e87f';
 
 /// A provider for all the audio volume levels.
-///
-/// Copied from [AudioVolume].
-@ProviderFor(AudioVolume)
-final audioVolumeProvider =
-    NotifierProvider<AudioVolume, Map<AudioAsset, double>>.internal(
-      AudioVolume.new,
-      name: r'audioVolumeProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$audioVolumeHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$AudioVolume = Notifier<Map<AudioAsset, double>>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$AudioVolume extends $Notifier<Map<AudioAsset, double>> {
+  Map<AudioAsset, double> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref =
+        this.ref as $Ref<Map<AudioAsset, double>, Map<AudioAsset, double>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Map<AudioAsset, double>, Map<AudioAsset, double>>,
+              Map<AudioAsset, double>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

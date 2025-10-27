@@ -17,6 +17,7 @@
 
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'equipment_configurator_providers.g.dart';
@@ -55,12 +56,10 @@ class ConfiguredEquipment extends _$ConfiguredEquipment {
 
   /// Updates the equipment's [section].
   void updateSection(Section section) => Future(
-    () =>
-        state = state.copyWith(
-          sections:
-              state.sections
-                ..replaceRange(section.index, section.index + 1, [section]),
-        ),
+    () => state = state.copyWith(
+      sections: state.sections
+        ..replaceRange(section.index, section.index + 1, [section]),
+    ),
   );
 }
 
@@ -77,14 +76,13 @@ class ConfiguredEquipmentEqualWidths extends _$ConfiguredEquipmentEqualWidths {
             .read(configuredEquipmentProvider.notifier)
             .update(
               equipment.copyWith(
-                sections:
-                    equipment.sections
-                        .map(
-                          (section) => section.copyWith(
-                            width: equipment.sections.first.width,
-                          ),
-                        )
-                        .toList(),
+                sections: equipment.sections
+                    .map(
+                      (section) => section.copyWith(
+                        width: equipment.sections.first.width,
+                      ),
+                    )
+                    .toList(),
               ),
             );
       }
@@ -119,14 +117,13 @@ class ConfiguredEquipmentEqualWorkingWidths
             .read(configuredEquipmentProvider.notifier)
             .update(
               equipment.copyWith(
-                sections:
-                    equipment.sections
-                        .map(
-                          (section) => section.copyWith(
-                            workingWidth: equipment.sections.first.workingWidth,
-                          ),
-                        )
-                        .toList(),
+                sections: equipment.sections
+                    .map(
+                      (section) => section.copyWith(
+                        workingWidth: equipment.sections.first.workingWidth,
+                      ),
+                    )
+                    .toList(),
               ),
             );
       }

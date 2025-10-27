@@ -6,226 +6,649 @@ part of 'path_recording_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$automaticPathRecordingHash() =>
-    r'3ef9ec5da00b86b8695da396650741aa19994cc7';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// Whether the path recording menu should be shown.
 
-/// A provider for watching to keep the automatic path recording going.
-///
-/// Copied from [automaticPathRecording].
-@ProviderFor(automaticPathRecording)
-final automaticPathRecordingProvider = AutoDisposeFutureProvider<void>.internal(
-  automaticPathRecording,
-  name: r'automaticPathRecordingProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$automaticPathRecordingHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(ShowPathRecordingMenu)
+const showPathRecordingMenuProvider = ShowPathRecordingMenuProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef AutomaticPathRecordingRef = AutoDisposeFutureProviderRef<void>;
+/// Whether the path recording menu should be shown.
+final class ShowPathRecordingMenuProvider
+    extends $NotifierProvider<ShowPathRecordingMenu, bool> {
+  /// Whether the path recording menu should be shown.
+  const ShowPathRecordingMenuProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'showPathRecordingMenuProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$showPathRecordingMenuHash();
+
+  @$internal
+  @override
+  ShowPathRecordingMenu create() => ShowPathRecordingMenu();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$showPathRecordingMenuHash() =>
     r'8945b9d595d1413c9decaa11e548adcc0d2acf9f';
 
 /// Whether the path recording menu should be shown.
-///
-/// Copied from [ShowPathRecordingMenu].
-@ProviderFor(ShowPathRecordingMenu)
-final showPathRecordingMenuProvider =
-    AutoDisposeNotifierProvider<ShowPathRecordingMenu, bool>.internal(
-      ShowPathRecordingMenu.new,
-      name: r'showPathRecordingMenuProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$showPathRecordingMenuHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$ShowPathRecordingMenu = AutoDisposeNotifier<bool>;
+abstract class _$ShowPathRecordingMenu extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// Whether the path recorder is enabled.
+
+@ProviderFor(EnablePathRecorder)
+const enablePathRecorderProvider = EnablePathRecorderProvider._();
+
+/// Whether the path recorder is enabled.
+final class EnablePathRecorderProvider
+    extends $NotifierProvider<EnablePathRecorder, bool> {
+  /// Whether the path recorder is enabled.
+  const EnablePathRecorderProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'enablePathRecorderProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$enablePathRecorderHash();
+
+  @$internal
+  @override
+  EnablePathRecorder create() => EnablePathRecorder();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$enablePathRecorderHash() =>
     r'10810689b6ebb98e9a000c21e244d67ed9bbd079';
 
 /// Whether the path recorder is enabled.
-///
-/// Copied from [EnablePathRecorder].
-@ProviderFor(EnablePathRecorder)
-final enablePathRecorderProvider =
-    NotifierProvider<EnablePathRecorder, bool>.internal(
-      EnablePathRecorder.new,
-      name: r'enablePathRecorderProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$enablePathRecorderHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$EnablePathRecorder = Notifier<bool>;
-String _$enableAutomaticPathRecorderHash() =>
-    r'33d164d9ff8c908f6884498ecd7200c800e686c8';
+abstract class _$EnablePathRecorder extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
 /// Whether the automatic path recorder is enabled.
-///
-/// Copied from [EnableAutomaticPathRecorder].
-@ProviderFor(EnableAutomaticPathRecorder)
-final enableAutomaticPathRecorderProvider =
-    NotifierProvider<EnableAutomaticPathRecorder, bool>.internal(
-      EnableAutomaticPathRecorder.new,
-      name: r'enableAutomaticPathRecorderProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$enableAutomaticPathRecorderHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$EnableAutomaticPathRecorder = Notifier<bool>;
+@ProviderFor(EnableAutomaticPathRecorder)
+const enableAutomaticPathRecorderProvider =
+    EnableAutomaticPathRecorderProvider._();
+
+/// Whether the automatic path recorder is enabled.
+final class EnableAutomaticPathRecorderProvider
+    extends $NotifierProvider<EnableAutomaticPathRecorder, bool> {
+  /// Whether the automatic path recorder is enabled.
+  const EnableAutomaticPathRecorderProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'enableAutomaticPathRecorderProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$enableAutomaticPathRecorderHash();
+
+  @$internal
+  @override
+  EnableAutomaticPathRecorder create() => EnableAutomaticPathRecorder();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$enableAutomaticPathRecorderHash() =>
+    r'32c914ddd6268e9dd88e8d0ed13b5c71cff1ff22';
+
+/// Whether the automatic path recorder is enabled.
+
+abstract class _$EnableAutomaticPathRecorder extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for the [PathRecordingSettings] which configures how paths
+/// should be recorded.
+
+@ProviderFor(ActivePathRecordingSettings)
+const activePathRecordingSettingsProvider =
+    ActivePathRecordingSettingsProvider._();
+
+/// A provider for the [PathRecordingSettings] which configures how paths
+/// should be recorded.
+final class ActivePathRecordingSettingsProvider
+    extends
+        $NotifierProvider<ActivePathRecordingSettings, PathRecordingSettings> {
+  /// A provider for the [PathRecordingSettings] which configures how paths
+  /// should be recorded.
+  const ActivePathRecordingSettingsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'activePathRecordingSettingsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$activePathRecordingSettingsHash();
+
+  @$internal
+  @override
+  ActivePathRecordingSettings create() => ActivePathRecordingSettings();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(PathRecordingSettings value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<PathRecordingSettings>(value),
+    );
+  }
+}
+
 String _$activePathRecordingSettingsHash() =>
     r'2695f3505634ee6c903cf851aadd35e978841e2c';
 
 /// A provider for the [PathRecordingSettings] which configures how paths
 /// should be recorded.
-///
-/// Copied from [ActivePathRecordingSettings].
-@ProviderFor(ActivePathRecordingSettings)
-final activePathRecordingSettingsProvider = NotifierProvider<
-  ActivePathRecordingSettings,
-  PathRecordingSettings
->.internal(
-  ActivePathRecordingSettings.new,
-  name: r'activePathRecordingSettingsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$activePathRecordingSettingsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-typedef _$ActivePathRecordingSettings = Notifier<PathRecordingSettings>;
+abstract class _$ActivePathRecordingSettings
+    extends $Notifier<PathRecordingSettings> {
+  PathRecordingSettings build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<PathRecordingSettings, PathRecordingSettings>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<PathRecordingSettings, PathRecordingSettings>,
+              PathRecordingSettings,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// Whether the path recording menu should be shown.
+
+@ProviderFor(ActivePathRecordingTarget)
+const activePathRecordingTargetProvider = ActivePathRecordingTargetProvider._();
+
+/// Whether the path recording menu should be shown.
+final class ActivePathRecordingTargetProvider
+    extends $NotifierProvider<ActivePathRecordingTarget, PathRecordingTarget> {
+  /// Whether the path recording menu should be shown.
+  const ActivePathRecordingTargetProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'activePathRecordingTargetProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$activePathRecordingTargetHash();
+
+  @$internal
+  @override
+  ActivePathRecordingTarget create() => ActivePathRecordingTarget();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(PathRecordingTarget value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<PathRecordingTarget>(value),
+    );
+  }
+}
+
 String _$activePathRecordingTargetHash() =>
     r'fe77111b8f0263c125936437870e8c0b88266f0e';
 
 /// Whether the path recording menu should be shown.
-///
-/// Copied from [ActivePathRecordingTarget].
-@ProviderFor(ActivePathRecordingTarget)
-final activePathRecordingTargetProvider =
-    NotifierProvider<ActivePathRecordingTarget, PathRecordingTarget>.internal(
-      ActivePathRecordingTarget.new,
-      name: r'activePathRecordingTargetProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$activePathRecordingTargetHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$ActivePathRecordingTarget = Notifier<PathRecordingTarget>;
+abstract class _$ActivePathRecordingTarget
+    extends $Notifier<PathRecordingTarget> {
+  PathRecordingTarget build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<PathRecordingTarget, PathRecordingTarget>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<PathRecordingTarget, PathRecordingTarget>,
+              PathRecordingTarget,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for watching to keep the automatic path recording going.
+
+@ProviderFor(automaticPathRecording)
+const automaticPathRecordingProvider = AutomaticPathRecordingProvider._();
+
+/// A provider for watching to keep the automatic path recording going.
+
+final class AutomaticPathRecordingProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+    with $FutureModifier<void>, $FutureProvider<void> {
+  /// A provider for watching to keep the automatic path recording going.
+  const AutomaticPathRecordingProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'automaticPathRecordingProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$automaticPathRecordingHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<void> create(Ref ref) {
+    return automaticPathRecording(ref);
+  }
+}
+
+String _$automaticPathRecordingHash() =>
+    r'3ef9ec5da00b86b8695da396650741aa19994cc7';
+
+/// A list of the currently recording points.
+
+@ProviderFor(PathRecordingList)
+const pathRecordingListProvider = PathRecordingListProvider._();
+
+/// A list of the currently recording points.
+final class PathRecordingListProvider
+    extends $NotifierProvider<PathRecordingList, List<WayPoint>> {
+  /// A list of the currently recording points.
+  const PathRecordingListProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'pathRecordingListProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$pathRecordingListHash();
+
+  @$internal
+  @override
+  PathRecordingList create() => PathRecordingList();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<WayPoint> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<WayPoint>>(value),
+    );
+  }
+}
+
 String _$pathRecordingListHash() => r'df9f9af6fa8e3a554a985bb5c6eada577019814e';
 
 /// A list of the currently recording points.
-///
-/// Copied from [PathRecordingList].
-@ProviderFor(PathRecordingList)
-final pathRecordingListProvider =
-    NotifierProvider<PathRecordingList, List<WayPoint>>.internal(
-      PathRecordingList.new,
-      name: r'pathRecordingListProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$pathRecordingListHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$PathRecordingList = Notifier<List<WayPoint>>;
+abstract class _$PathRecordingList extends $Notifier<List<WayPoint>> {
+  List<WayPoint> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<List<WayPoint>, List<WayPoint>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<List<WayPoint>, List<WayPoint>>,
+              List<WayPoint>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A list of path points for the last finished recording.
+
+@ProviderFor(FinishedPathRecordingList)
+const finishedPathRecordingListProvider = FinishedPathRecordingListProvider._();
+
+/// A list of path points for the last finished recording.
+final class FinishedPathRecordingListProvider
+    extends $NotifierProvider<FinishedPathRecordingList, List<WayPoint>?> {
+  /// A list of path points for the last finished recording.
+  const FinishedPathRecordingListProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'finishedPathRecordingListProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$finishedPathRecordingListHash();
+
+  @$internal
+  @override
+  FinishedPathRecordingList create() => FinishedPathRecordingList();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<WayPoint>? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<WayPoint>?>(value),
+    );
+  }
+}
+
 String _$finishedPathRecordingListHash() =>
     r'fe9c4252f89dad4acdc8445b9fa58217b43dde89';
 
 /// A list of path points for the last finished recording.
-///
-/// Copied from [FinishedPathRecordingList].
-@ProviderFor(FinishedPathRecordingList)
-final finishedPathRecordingListProvider =
-    NotifierProvider<FinishedPathRecordingList, List<WayPoint>?>.internal(
-      FinishedPathRecordingList.new,
-      name: r'finishedPathRecordingListProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$finishedPathRecordingListHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$FinishedPathRecordingList = Notifier<List<WayPoint>?>;
+abstract class _$FinishedPathRecordingList extends $Notifier<List<WayPoint>?> {
+  List<WayPoint>? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<List<WayPoint>?, List<WayPoint>?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<List<WayPoint>?, List<WayPoint>?>,
+              List<WayPoint>?,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// Whether to show the last fininshed path recording.
+
+@ProviderFor(ShowFinishedPath)
+const showFinishedPathProvider = ShowFinishedPathProvider._();
+
+/// Whether to show the last fininshed path recording.
+final class ShowFinishedPathProvider
+    extends $NotifierProvider<ShowFinishedPath, bool> {
+  /// Whether to show the last fininshed path recording.
+  const ShowFinishedPathProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'showFinishedPathProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$showFinishedPathHash();
+
+  @$internal
+  @override
+  ShowFinishedPath create() => ShowFinishedPath();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$showFinishedPathHash() => r'7053947b87b868ba73bc65e72d1e9d50f768d58a';
 
 /// Whether to show the last fininshed path recording.
-///
-/// Copied from [ShowFinishedPath].
-@ProviderFor(ShowFinishedPath)
-final showFinishedPathProvider =
-    NotifierProvider<ShowFinishedPath, bool>.internal(
-      ShowFinishedPath.new,
-      name: r'showFinishedPathProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$showFinishedPathHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$ShowFinishedPath = Notifier<bool>;
+abstract class _$ShowFinishedPath extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// Whether to activate editing of the last finished path recording.
+
+@ProviderFor(EditFinishedPath)
+const editFinishedPathProvider = EditFinishedPathProvider._();
+
+/// Whether to activate editing of the last finished path recording.
+final class EditFinishedPathProvider
+    extends $NotifierProvider<EditFinishedPath, bool> {
+  /// Whether to activate editing of the last finished path recording.
+  const EditFinishedPathProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'editFinishedPathProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$editFinishedPathHash();
+
+  @$internal
+  @override
+  EditFinishedPath create() => EditFinishedPath();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$editFinishedPathHash() => r'3689d55169c82198e9bd0b1768dbb7046e357f3f';
 
 /// Whether to activate editing of the last finished path recording.
-///
-/// Copied from [EditFinishedPath].
-@ProviderFor(EditFinishedPath)
-final editFinishedPathProvider =
-    NotifierProvider<EditFinishedPath, bool>.internal(
-      EditFinishedPath.new,
-      name: r'editFinishedPathProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$editFinishedPathHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$EditFinishedPath = Notifier<bool>;
+abstract class _$EditFinishedPath extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for the UI [Offset] for the path recording configurator.
+
+@ProviderFor(PathRecordingMenuUiOffset)
+const pathRecordingMenuUiOffsetProvider = PathRecordingMenuUiOffsetProvider._();
+
+/// A provider for the UI [Offset] for the path recording configurator.
+final class PathRecordingMenuUiOffsetProvider
+    extends $NotifierProvider<PathRecordingMenuUiOffset, Offset> {
+  /// A provider for the UI [Offset] for the path recording configurator.
+  const PathRecordingMenuUiOffsetProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'pathRecordingMenuUiOffsetProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$pathRecordingMenuUiOffsetHash();
+
+  @$internal
+  @override
+  PathRecordingMenuUiOffset create() => PathRecordingMenuUiOffset();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Offset value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Offset>(value),
+    );
+  }
+}
+
 String _$pathRecordingMenuUiOffsetHash() =>
     r'1b09707f740e7c957697ffea0bdaf37a129fd9a1';
 
 /// A provider for the UI [Offset] for the path recording configurator.
-///
-/// Copied from [PathRecordingMenuUiOffset].
-@ProviderFor(PathRecordingMenuUiOffset)
-final pathRecordingMenuUiOffsetProvider =
-    AutoDisposeNotifierProvider<PathRecordingMenuUiOffset, Offset>.internal(
-      PathRecordingMenuUiOffset.new,
-      name: r'pathRecordingMenuUiOffsetProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$pathRecordingMenuUiOffsetHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$PathRecordingMenuUiOffset = AutoDisposeNotifier<Offset>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$PathRecordingMenuUiOffset extends $Notifier<Offset> {
+  Offset build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<Offset, Offset>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Offset, Offset>,
+              Offset,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

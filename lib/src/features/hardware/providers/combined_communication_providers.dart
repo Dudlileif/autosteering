@@ -18,7 +18,6 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'combined_communication_providers.g.dart';
@@ -26,16 +25,15 @@ part 'combined_communication_providers.g.dart';
 /// A provider for combining the native network providers that need to be
 /// watched.
 @riverpod
-void _combinedNativeNetwork(Ref ref) =>
-    ref
-      ..watch(hardwareCommunicationConfigProvider)
-      ..watch(deviceIPAddressWlanProvider)
-      ..watch(deviceIPAddressAPProvider)
-      ..watch(deviceIPAddressEthernetProvider)
-      ..watch(ntripClientProvider)
-      ..watch(tcpServerProvider)
-      ..watch(ntripDataUsageSessionProvider)
-      ..watch(ntripDataUsageByMonthProvider);
+void _combinedNativeNetwork(Ref ref) => ref
+  ..watch(hardwareCommunicationConfigProvider)
+  ..watch(deviceIPAddressWlanProvider)
+  ..watch(deviceIPAddressAPProvider)
+  ..watch(deviceIPAddressEthernetProvider)
+  ..watch(ntripClientProvider)
+  ..watch(tcpServerProvider)
+  ..watch(ntripDataUsageSessionProvider)
+  ..watch(ntripDataUsageByMonthProvider);
 
 /// A provider for combining the serial providers that need to be watched.
 @riverpod

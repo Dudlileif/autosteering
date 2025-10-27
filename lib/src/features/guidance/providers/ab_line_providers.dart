@@ -24,6 +24,7 @@ import 'package:autosteering/src/features/guidance/guidance.dart'
 import 'package:autosteering/src/features/guidance/guidance.dart' as guidance;
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ab_line_providers.g.dart';
@@ -46,12 +47,11 @@ class ABLine extends _$ABLine {
             Logger.instance.i('ABLine deleted.');
           }
         },
-        error:
-            (error, stackTrace) => Logger.instance.e(
-              'Failed to create ABLine.',
-              error: error,
-              stackTrace: stackTrace,
-            ),
+        error: (error, stackTrace) => Logger.instance.e(
+          'Failed to create ABLine.',
+          error: error,
+          stackTrace: stackTrace,
+        ),
         loading: () {},
       );
     });
@@ -71,10 +71,8 @@ class ABLine extends _$ABLine {
           ref
               .watch(bufferedFieldProvider)
               .maybeWhen(
-                data:
-                    (data) =>
-                        data?.polygon ??
-                        ref.watch(activeFieldProvider)?.polygon,
+                data: (data) =>
+                    data?.polygon ?? ref.watch(activeFieldProvider)?.polygon,
                 orElse: () => null,
               );
       final width = ref.watch(aBWidthProvider);
@@ -154,12 +152,11 @@ class APlusLine extends _$APlusLine {
             Logger.instance.i('APlusLine deleted.');
           }
         },
-        error:
-            (error, stackTrace) => Logger.instance.e(
-              'Failed to create ABLine.',
-              error: error,
-              stackTrace: stackTrace,
-            ),
+        error: (error, stackTrace) => Logger.instance.e(
+          'Failed to create ABLine.',
+          error: error,
+          stackTrace: stackTrace,
+        ),
         loading: () {},
       );
     });
@@ -177,10 +174,8 @@ class APlusLine extends _$APlusLine {
           ref
               .watch(bufferedFieldProvider)
               .maybeWhen(
-                data:
-                    (data) =>
-                        data?.polygon ??
-                        ref.watch(activeFieldProvider)?.polygon,
+                data: (data) =>
+                    data?.polygon ?? ref.watch(activeFieldProvider)?.polygon,
                 orElse: () => null,
               );
       final width = ref.watch(aBWidthProvider);

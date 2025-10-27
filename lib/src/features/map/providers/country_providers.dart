@@ -47,8 +47,9 @@ class CurrentCountry extends _$CurrentCountry {
     if (ref
         .read(settingsProvider.notifier)
         .containsKey(SettingsKey.mapCurrentCountry)) {
-      final name =
-          ref.read(settingsProvider)[SettingsKey.mapCurrentCountry.name];
+      final name = ref.read(
+        settingsProvider,
+      )[SettingsKey.mapCurrentCountry.name];
       if (name != null) {
         final country = Countries.current(name as String);
         if (country != null) {
@@ -56,7 +57,7 @@ class CurrentCountry extends _$CurrentCountry {
         }
       }
     }
-    update();
+    unawaited(update());
     return null;
   }
 
@@ -133,10 +134,9 @@ class AvailableCountryLayers extends _$AvailableCountryLayers {
       if (ref
           .read(settingsProvider.notifier)
           .containsKey(SettingsKey.mapLayersCountrySorted)) {
-        final layerList =
-            ref
-                .read(settingsProvider.notifier)
-                .getList(SettingsKey.mapLayersCountrySorted)!;
+        final layerList = ref
+            .read(settingsProvider.notifier)
+            .getList(SettingsKey.mapLayersCountrySorted)!;
 
         return List<String>.from(layerList)
             .map(
@@ -193,10 +193,9 @@ class EnabledCountryLayers extends _$EnabledCountryLayers {
       if (ref
           .read(settingsProvider.notifier)
           .containsKey(SettingsKey.mapLayersCountryEnabled)) {
-        final countryList =
-            ref
-                .read(settingsProvider.notifier)
-                .getList(SettingsKey.mapLayersCountryEnabled)!;
+        final countryList = ref
+            .read(settingsProvider.notifier)
+            .getList(SettingsKey.mapLayersCountryEnabled)!;
 
         for (final name in List<String>.from(countryList)) {
           final layer = country.layer(name);
@@ -293,10 +292,9 @@ class CountryLayerOpacities extends _$CountryLayerOpacities {
       if (ref
           .read(settingsProvider.notifier)
           .containsKey(SettingsKey.mapLayersCountryOpacities)) {
-        final countryMap =
-            ref
-                .read(settingsProvider.notifier)
-                .getMap(SettingsKey.mapLayersCountryOpacities)!;
+        final countryMap = ref
+            .read(settingsProvider.notifier)
+            .getMap(SettingsKey.mapLayersCountryOpacities)!;
 
         Map<String, double>.from(countryMap).forEach((name, opacity) {
           final layer = country.layer(name);

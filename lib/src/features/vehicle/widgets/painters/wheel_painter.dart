@@ -16,7 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 // Some colors are currently not overridden.
-// ignore_for_file: unused_element, unused_element_parameter
+// ignore_for_file: unused_element_parameter
 
 import 'dart:math';
 
@@ -202,10 +202,9 @@ class _WheelPainterImplementation extends CustomPainter {
   void paintWheel(Canvas canvas, Size size, [int index = 0]) {
     final basePaint = Paint()..color = baseColor;
 
-    final ribPaint =
-        Paint()
-          ..color = ribColor
-          ..strokeWidth = tyreWidth / 5;
+    final ribPaint = Paint()
+      ..color = ribColor
+      ..strokeWidth = tyreWidth / 5;
 
     final innerCenterPosition = Offset(
       tyreWidth / 2 - index * (wheelSpacing + tyreWidth),

@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:async';
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
@@ -47,94 +49,96 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
       ..listen(exportProgressProvider, (previous, next) {
         if (next != null && !exportInProgress && !importInProgress) {
           exportInProgress = true;
-          showDialog<void>(
-            barrierDismissible: false,
-            context: context,
-            builder:
-                (context) => SimpleDialog(
-                  title: Consumer(
+          unawaited(
+            showDialog<void>(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => SimpleDialog(
+                title: Consumer(
+                  builder: (context, ref, child) {
+                    final value = ref.watch(exportProgressProvider);
+                    return Text(
+                      value == 0 ? 'Preparing export...' : 'Exporting...',
+                    );
+                  },
+                ),
+                contentPadding: const EdgeInsets.only(
+                  left: 24,
+                  top: 12,
+                  right: 24,
+                  bottom: 16,
+                ),
+                children: [
+                  Consumer(
                     builder: (context, ref, child) {
                       final value = ref.watch(exportProgressProvider);
-                      return Text(
-                        value == 0 ? 'Preparing export...' : 'Exporting...',
+                      if (value == null) {
+                        exportInProgress = false;
+                        Navigator.of(context).pop();
+                      }
+                      return Column(
+                        children: [
+                          SizedBox.square(
+                            dimension: 50,
+                            child: CircularProgressIndicator(
+                              value: value == 0 ? null : value,
+                            ),
+                          ),
+                        ],
                       );
                     },
                   ),
-                  contentPadding: const EdgeInsets.only(
-                    left: 24,
-                    top: 12,
-                    right: 24,
-                    bottom: 16,
-                  ),
-                  children: [
-                    Consumer(
-                      builder: (context, ref, child) {
-                        final value = ref.watch(exportProgressProvider);
-                        if (value == null) {
-                          exportInProgress = false;
-                          Navigator.of(context).pop();
-                        }
-                        return Column(
-                          children: [
-                            SizedBox.square(
-                              dimension: 50,
-                              child: CircularProgressIndicator(
-                                value: value == 0 ? null : value,
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                ],
+              ),
+            ),
           );
         }
       })
       ..listen(importProgressProvider, (previous, next) {
         if (next != null && !exportInProgress && !importInProgress) {
           importInProgress = true;
-          showDialog<void>(
-            barrierDismissible: false,
-            context: context,
-            builder:
-                (context) => SimpleDialog(
-                  title: Consumer(
+          unawaited(
+            showDialog<void>(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => SimpleDialog(
+                title: Consumer(
+                  builder: (context, ref, child) {
+                    final value = ref.watch(importProgressProvider);
+                    return Text(
+                      value == 0 ? 'Preparing import...' : 'Importing...',
+                    );
+                  },
+                ),
+                contentPadding: const EdgeInsets.only(
+                  left: 24,
+                  top: 12,
+                  right: 24,
+                  bottom: 16,
+                ),
+                children: [
+                  Consumer(
                     builder: (context, ref, child) {
                       final value = ref.watch(importProgressProvider);
-                      return Text(
-                        value == 0 ? 'Preparing import...' : 'Importing...',
+                      if (value == null) {
+                        importInProgress = false;
+                        Navigator.of(context).pop();
+                      }
+                      return Column(
+                        children: [
+                          SizedBox.square(
+                            dimension: 50,
+                            child: CircularProgressIndicator(
+                              value: value == 0 ? null : value,
+                            ),
+                          ),
+                        ],
                       );
                     },
                   ),
-                  contentPadding: const EdgeInsets.only(
-                    left: 24,
-                    top: 12,
-                    right: 24,
-                    bottom: 16,
-                  ),
-                  children: [
-                    Consumer(
-                      builder: (context, ref, child) {
-                        final value = ref.watch(importProgressProvider);
-                        if (value == null) {
-                          importInProgress = false;
-                          Navigator.of(context).pop();
-                        }
-                        return Column(
-                          children: [
-                            SizedBox.square(
-                              dimension: 50,
-                              child: CircularProgressIndicator(
-                                value: value == 0 ? null : value,
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                ],
+              ),
+            ),
           );
         }
       });
@@ -143,8 +147,8 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
         elevation: 20,
         scrolledUnderElevation: 20,
         title: LayoutBuilder(
-          builder:
-              (context, constraints) => switch (constraints.maxWidth < 300) {
+          builder: (context, constraints) =>
+              switch (constraints.maxWidth < 300) {
                 true => MenuBar(
                   children: [
                     MenuButtonWithChildren(

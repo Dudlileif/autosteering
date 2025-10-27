@@ -21,7 +21,6 @@ import 'dart:convert';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as path;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
@@ -55,7 +54,7 @@ class ConfiguredEquipmentSetup extends _$ConfiguredEquipmentSetup {
 /// A provider for saving [setup] to a file in the user file directory.
 ///
 /// Override the file name with [overrideName].
-@riverpod
+@Riverpod(keepAlive: true)
 FutureOr<void> saveEquipmentSetup(
   Ref ref,
   EquipmentSetup setup, {

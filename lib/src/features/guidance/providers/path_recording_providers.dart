@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:autosteering/src/features/common/common.dart';
@@ -74,12 +75,16 @@ class EnableAutomaticPathRecorder extends _$EnableAutomaticPathRecorder {
     listenSelf((previous, next) {
       if (!next && (previous != null && previous)) {
         if (ref.read(pathRecordingListProvider).isNotEmpty) {
-          ref
-              .read(pathRecordingListProvider.notifier)
-              .add(
-                ref.read(mainVehicleProvider.select((value) => value.wayPoint)),
-                applySettings: true,
-              );
+          unawaited(
+            ref
+                .read(pathRecordingListProvider.notifier)
+                .add(
+                  ref.read(
+                    mainVehicleProvider.select((value) => value.wayPoint),
+                  ),
+                  applySettings: true,
+                ),
+          );
         }
       }
       if (next || previous != null) {
@@ -267,10 +272,9 @@ class FinishedPathRecordingList extends _$FinishedPathRecordingList {
       bearing = state![index - 1].finalBearingToRhumb(point);
     }
 
-    return state =
-        state
-          ?..insert(index, point.copyWith(bearing: bearing))
-          ..removeAt(index + 1);
+    return state = state
+      ?..insert(index, point.copyWith(bearing: bearing))
+      ..removeAt(index + 1);
   });
 
   /// Insert [point] at [index].

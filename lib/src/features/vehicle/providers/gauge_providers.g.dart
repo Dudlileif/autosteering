@@ -6,63 +6,182 @@ part of 'gauge_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// A provider for the distance travelled by the vehicle.
+
+@ProviderFor(GaugeTravelledDistance)
+const gaugeTravelledDistanceProvider = GaugeTravelledDistanceProvider._();
+
+/// A provider for the distance travelled by the vehicle.
+final class GaugeTravelledDistanceProvider
+    extends $NotifierProvider<GaugeTravelledDistance, double> {
+  /// A provider for the distance travelled by the vehicle.
+  const GaugeTravelledDistanceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'gaugeTravelledDistanceProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$gaugeTravelledDistanceHash();
+
+  @$internal
+  @override
+  GaugeTravelledDistance create() => GaugeTravelledDistance();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(double value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<double>(value),
+    );
+  }
+}
+
 String _$gaugeTravelledDistanceHash() =>
     r'22e1975ceb6cfe8953845751975f1fd6c6ecab37';
 
 /// A provider for the distance travelled by the vehicle.
-///
-/// Copied from [GaugeTravelledDistance].
-@ProviderFor(GaugeTravelledDistance)
-final gaugeTravelledDistanceProvider =
-    AutoDisposeNotifierProvider<GaugeTravelledDistance, double>.internal(
-      GaugeTravelledDistance.new,
-      name: r'gaugeTravelledDistanceProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$gaugeTravelledDistanceHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$GaugeTravelledDistance = AutoDisposeNotifier<double>;
+abstract class _$GaugeTravelledDistance extends $Notifier<double> {
+  double build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<double, double>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<double, double>,
+              double,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for the vehicle's velocity gauge.
+
+@ProviderFor(GaugeVelocity)
+const gaugeVelocityProvider = GaugeVelocityProvider._();
+
+/// A provider for the vehicle's velocity gauge.
+final class GaugeVelocityProvider
+    extends $NotifierProvider<GaugeVelocity, double> {
+  /// A provider for the vehicle's velocity gauge.
+  const GaugeVelocityProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'gaugeVelocityProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$gaugeVelocityHash();
+
+  @$internal
+  @override
+  GaugeVelocity create() => GaugeVelocity();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(double value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<double>(value),
+    );
+  }
+}
+
 String _$gaugeVelocityHash() => r'fc356f6d1b5f3e0bee2eff50319b6b478a02317f';
 
 /// A provider for the vehicle's velocity gauge.
-///
-/// Copied from [GaugeVelocity].
-@ProviderFor(GaugeVelocity)
-final gaugeVelocityProvider =
-    AutoDisposeNotifierProvider<GaugeVelocity, double>.internal(
-      GaugeVelocity.new,
-      name: r'gaugeVelocityProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$gaugeVelocityHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$GaugeVelocity = AutoDisposeNotifier<double>;
+abstract class _$GaugeVelocity extends $Notifier<double> {
+  double build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<double, double>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<double, double>,
+              double,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for the vehicle's bearing gauge.
+
+@ProviderFor(GaugeBearing)
+const gaugeBearingProvider = GaugeBearingProvider._();
+
+/// A provider for the vehicle's bearing gauge.
+final class GaugeBearingProvider
+    extends $NotifierProvider<GaugeBearing, double> {
+  /// A provider for the vehicle's bearing gauge.
+  const GaugeBearingProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'gaugeBearingProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$gaugeBearingHash();
+
+  @$internal
+  @override
+  GaugeBearing create() => GaugeBearing();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(double value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<double>(value),
+    );
+  }
+}
+
 String _$gaugeBearingHash() => r'f7dc6a96a1d98593d3f7ab36603e999f5089917a';
 
 /// A provider for the vehicle's bearing gauge.
-///
-/// Copied from [GaugeBearing].
-@ProviderFor(GaugeBearing)
-final gaugeBearingProvider =
-    AutoDisposeNotifierProvider<GaugeBearing, double>.internal(
-      GaugeBearing.new,
-      name: r'gaugeBearingProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$gaugeBearingHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$GaugeBearing = AutoDisposeNotifier<double>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$GaugeBearing extends $Notifier<double> {
+  double build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<double, double>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<double, double>,
+              double,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

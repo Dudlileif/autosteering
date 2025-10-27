@@ -6,208 +6,613 @@ part of 'vehicle_debug_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// Whether to show vehicle debug polygons.
+
+@ProviderFor(DebugVehiclePolygons)
+const debugVehiclePolygonsProvider = DebugVehiclePolygonsProvider._();
+
+/// Whether to show vehicle debug polygons.
+final class DebugVehiclePolygonsProvider
+    extends $NotifierProvider<DebugVehiclePolygons, bool> {
+  /// Whether to show vehicle debug polygons.
+  const DebugVehiclePolygonsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'debugVehiclePolygonsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$debugVehiclePolygonsHash();
+
+  @$internal
+  @override
+  DebugVehiclePolygons create() => DebugVehiclePolygons();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$debugVehiclePolygonsHash() =>
     r'acc0b0707ae4e0313df97a61646cdc4c3857f9e7';
 
 /// Whether to show vehicle debug polygons.
-///
-/// Copied from [DebugVehiclePolygons].
-@ProviderFor(DebugVehiclePolygons)
-final debugVehiclePolygonsProvider =
-    AutoDisposeNotifierProvider<DebugVehiclePolygons, bool>.internal(
-      DebugVehiclePolygons.new,
-      name: r'debugVehiclePolygonsProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$debugVehiclePolygonsHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$DebugVehiclePolygons = AutoDisposeNotifier<bool>;
+abstract class _$DebugVehiclePolygons extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// Whether to show vehicle steering debug features.
+
+@ProviderFor(DebugVehicleSteering)
+const debugVehicleSteeringProvider = DebugVehicleSteeringProvider._();
+
+/// Whether to show vehicle steering debug features.
+final class DebugVehicleSteeringProvider
+    extends $NotifierProvider<DebugVehicleSteering, bool> {
+  /// Whether to show vehicle steering debug features.
+  const DebugVehicleSteeringProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'debugVehicleSteeringProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$debugVehicleSteeringHash();
+
+  @$internal
+  @override
+  DebugVehicleSteering create() => DebugVehicleSteering();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$debugVehicleSteeringHash() =>
     r'4458d087618cc15a63acdbfd34c17ad16a3ae058';
 
 /// Whether to show vehicle steering debug features.
-///
-/// Copied from [DebugVehicleSteering].
-@ProviderFor(DebugVehicleSteering)
-final debugVehicleSteeringProvider =
-    AutoDisposeNotifierProvider<DebugVehicleSteering, bool>.internal(
-      DebugVehicleSteering.new,
-      name: r'debugVehicleSteeringProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$debugVehicleSteeringHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$DebugVehicleSteering = AutoDisposeNotifier<bool>;
+abstract class _$DebugVehicleSteering extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// Whether to show vehicle trajectory debug features.
+
+@ProviderFor(DebugVehicleTrajectory)
+const debugVehicleTrajectoryProvider = DebugVehicleTrajectoryProvider._();
+
+/// Whether to show vehicle trajectory debug features.
+final class DebugVehicleTrajectoryProvider
+    extends $NotifierProvider<DebugVehicleTrajectory, bool> {
+  /// Whether to show vehicle trajectory debug features.
+  const DebugVehicleTrajectoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'debugVehicleTrajectoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$debugVehicleTrajectoryHash();
+
+  @$internal
+  @override
+  DebugVehicleTrajectory create() => DebugVehicleTrajectory();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$debugVehicleTrajectoryHash() =>
     r'3bab08fa7115fff0ae81c6c4c0cebf284cc2d6fd';
 
 /// Whether to show vehicle trajectory debug features.
-///
-/// Copied from [DebugVehicleTrajectory].
-@ProviderFor(DebugVehicleTrajectory)
-final debugVehicleTrajectoryProvider =
-    AutoDisposeNotifierProvider<DebugVehicleTrajectory, bool>.internal(
-      DebugVehicleTrajectory.new,
-      name: r'debugVehicleTrajectoryProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$debugVehicleTrajectoryHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$DebugVehicleTrajectory = AutoDisposeNotifier<bool>;
+abstract class _$DebugVehicleTrajectory extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// Whether to show vehicle travelled path debug.
+
+@ProviderFor(DebugVehicleTravelledPath)
+const debugVehicleTravelledPathProvider = DebugVehicleTravelledPathProvider._();
+
+/// Whether to show vehicle travelled path debug.
+final class DebugVehicleTravelledPathProvider
+    extends $NotifierProvider<DebugVehicleTravelledPath, bool> {
+  /// Whether to show vehicle travelled path debug.
+  const DebugVehicleTravelledPathProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'debugVehicleTravelledPathProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$debugVehicleTravelledPathHash();
+
+  @$internal
+  @override
+  DebugVehicleTravelledPath create() => DebugVehicleTravelledPath();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$debugVehicleTravelledPathHash() =>
     r'9ea4976502f010a6e12f6a6c5b54cf05de4906f9';
 
 /// Whether to show vehicle travelled path debug.
-///
-/// Copied from [DebugVehicleTravelledPath].
-@ProviderFor(DebugVehicleTravelledPath)
-final debugVehicleTravelledPathProvider =
-    AutoDisposeNotifierProvider<DebugVehicleTravelledPath, bool>.internal(
-      DebugVehicleTravelledPath.new,
-      name: r'debugVehicleTravelledPathProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$debugVehicleTravelledPathHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$DebugVehicleTravelledPath = AutoDisposeNotifier<bool>;
+abstract class _$DebugVehicleTravelledPath extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// The amount of points [DebugVehicleTravelledPathList] should hold.
+
+@ProviderFor(DebugVehicleTravelledPathSize)
+const debugVehicleTravelledPathSizeProvider =
+    DebugVehicleTravelledPathSizeProvider._();
+
+/// The amount of points [DebugVehicleTravelledPathList] should hold.
+final class DebugVehicleTravelledPathSizeProvider
+    extends $NotifierProvider<DebugVehicleTravelledPathSize, int> {
+  /// The amount of points [DebugVehicleTravelledPathList] should hold.
+  const DebugVehicleTravelledPathSizeProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'debugVehicleTravelledPathSizeProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$debugVehicleTravelledPathSizeHash();
+
+  @$internal
+  @override
+  DebugVehicleTravelledPathSize create() => DebugVehicleTravelledPathSize();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(int value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<int>(value),
+    );
+  }
+}
+
 String _$debugVehicleTravelledPathSizeHash() =>
     r'5f05e91b3ba1249e41a79944bfad86c33079981c';
 
 /// The amount of points [DebugVehicleTravelledPathList] should hold.
-///
-/// Copied from [DebugVehicleTravelledPathSize].
-@ProviderFor(DebugVehicleTravelledPathSize)
-final debugVehicleTravelledPathSizeProvider =
-    NotifierProvider<DebugVehicleTravelledPathSize, int>.internal(
-      DebugVehicleTravelledPathSize.new,
-      name: r'debugVehicleTravelledPathSizeProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$debugVehicleTravelledPathSizeHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$DebugVehicleTravelledPathSize = Notifier<int>;
+abstract class _$DebugVehicleTravelledPathSize extends $Notifier<int> {
+  int build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<int, int>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<int, int>,
+              int,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A list of the last [DebugVehicleTravelledPathSize] position points for the
+/// vehicle.
+
+@ProviderFor(DebugVehicleTravelledPathList)
+const debugVehicleTravelledPathListProvider =
+    DebugVehicleTravelledPathListProvider._();
+
+/// A list of the last [DebugVehicleTravelledPathSize] position points for the
+/// vehicle.
+final class DebugVehicleTravelledPathListProvider
+    extends $NotifierProvider<DebugVehicleTravelledPathList, List<LatLng>> {
+  /// A list of the last [DebugVehicleTravelledPathSize] position points for the
+  /// vehicle.
+  const DebugVehicleTravelledPathListProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'debugVehicleTravelledPathListProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$debugVehicleTravelledPathListHash();
+
+  @$internal
+  @override
+  DebugVehicleTravelledPathList create() => DebugVehicleTravelledPathList();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<LatLng> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<LatLng>>(value),
+    );
+  }
+}
+
 String _$debugVehicleTravelledPathListHash() =>
     r'df4fef6baa60f8ad7a71b3d9225706e473d20acc';
 
 /// A list of the last [DebugVehicleTravelledPathSize] position points for the
 /// vehicle.
-///
-/// Copied from [DebugVehicleTravelledPathList].
-@ProviderFor(DebugVehicleTravelledPathList)
-final debugVehicleTravelledPathListProvider = AutoDisposeNotifierProvider<
-  DebugVehicleTravelledPathList,
-  List<LatLng>
->.internal(
-  DebugVehicleTravelledPathList.new,
-  name: r'debugVehicleTravelledPathListProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$debugVehicleTravelledPathListHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-typedef _$DebugVehicleTravelledPathList = AutoDisposeNotifier<List<LatLng>>;
+abstract class _$DebugVehicleTravelledPathList extends $Notifier<List<LatLng>> {
+  List<LatLng> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<List<LatLng>, List<LatLng>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<List<LatLng>, List<LatLng>>,
+              List<LatLng>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// Whether to show vehicle hitches debug.
+
+@ProviderFor(DebugVehicleHitches)
+const debugVehicleHitchesProvider = DebugVehicleHitchesProvider._();
+
+/// Whether to show vehicle hitches debug.
+final class DebugVehicleHitchesProvider
+    extends $NotifierProvider<DebugVehicleHitches, bool> {
+  /// Whether to show vehicle hitches debug.
+  const DebugVehicleHitchesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'debugVehicleHitchesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$debugVehicleHitchesHash();
+
+  @$internal
+  @override
+  DebugVehicleHitches create() => DebugVehicleHitches();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$debugVehicleHitchesHash() =>
     r'293313a9a159879d25fe0542230531ffecd74196';
 
 /// Whether to show vehicle hitches debug.
-///
-/// Copied from [DebugVehicleHitches].
-@ProviderFor(DebugVehicleHitches)
-final debugVehicleHitchesProvider =
-    AutoDisposeNotifierProvider<DebugVehicleHitches, bool>.internal(
-      DebugVehicleHitches.new,
-      name: r'debugVehicleHitchesProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$debugVehicleHitchesHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$DebugVehicleHitches = AutoDisposeNotifier<bool>;
+abstract class _$DebugVehicleHitches extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// Whether to show vehicle antenna position debug.
+
+@ProviderFor(DebugVehicleAntennaPosition)
+const debugVehicleAntennaPositionProvider =
+    DebugVehicleAntennaPositionProvider._();
+
+/// Whether to show vehicle antenna position debug.
+final class DebugVehicleAntennaPositionProvider
+    extends $NotifierProvider<DebugVehicleAntennaPosition, bool> {
+  /// Whether to show vehicle antenna position debug.
+  const DebugVehicleAntennaPositionProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'debugVehicleAntennaPositionProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$debugVehicleAntennaPositionHash();
+
+  @$internal
+  @override
+  DebugVehicleAntennaPosition create() => DebugVehicleAntennaPosition();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$debugVehicleAntennaPositionHash() =>
     r'1f59d840f6a00a2874bf3264454da1fa4250e709';
 
 /// Whether to show vehicle antenna position debug.
-///
-/// Copied from [DebugVehicleAntennaPosition].
-@ProviderFor(DebugVehicleAntennaPosition)
-final debugVehicleAntennaPositionProvider =
-    AutoDisposeNotifierProvider<DebugVehicleAntennaPosition, bool>.internal(
-      DebugVehicleAntennaPosition.new,
-      name: r'debugVehicleAntennaPositionProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$debugVehicleAntennaPositionHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$DebugVehicleAntennaPosition = AutoDisposeNotifier<bool>;
+abstract class _$DebugVehicleAntennaPosition extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// The amount of seconds vehicle trajectories should predict.
+
+@ProviderFor(DebugVehicleTrajectorySeconds)
+const debugVehicleTrajectorySecondsProvider =
+    DebugVehicleTrajectorySecondsProvider._();
+
+/// The amount of seconds vehicle trajectories should predict.
+final class DebugVehicleTrajectorySecondsProvider
+    extends $NotifierProvider<DebugVehicleTrajectorySeconds, double> {
+  /// The amount of seconds vehicle trajectories should predict.
+  const DebugVehicleTrajectorySecondsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'debugVehicleTrajectorySecondsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$debugVehicleTrajectorySecondsHash();
+
+  @$internal
+  @override
+  DebugVehicleTrajectorySeconds create() => DebugVehicleTrajectorySeconds();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(double value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<double>(value),
+    );
+  }
+}
+
 String _$debugVehicleTrajectorySecondsHash() =>
     r'499ca284d123e27d1e80bd21582c136c7c6f04bc';
 
 /// The amount of seconds vehicle trajectories should predict.
-///
-/// Copied from [DebugVehicleTrajectorySeconds].
-@ProviderFor(DebugVehicleTrajectorySeconds)
-final debugVehicleTrajectorySecondsProvider =
-    NotifierProvider<DebugVehicleTrajectorySeconds, double>.internal(
-      DebugVehicleTrajectorySeconds.new,
-      name: r'debugVehicleTrajectorySecondsProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$debugVehicleTrajectorySecondsHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$DebugVehicleTrajectorySeconds = Notifier<double>;
+abstract class _$DebugVehicleTrajectorySeconds extends $Notifier<double> {
+  double build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<double, double>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<double, double>,
+              double,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// The minimum length vehicle trajectories should predict.
+
+@ProviderFor(DebugVehicleTrajectoryMinLength)
+const debugVehicleTrajectoryMinLengthProvider =
+    DebugVehicleTrajectoryMinLengthProvider._();
+
+/// The minimum length vehicle trajectories should predict.
+final class DebugVehicleTrajectoryMinLengthProvider
+    extends $NotifierProvider<DebugVehicleTrajectoryMinLength, double> {
+  /// The minimum length vehicle trajectories should predict.
+  const DebugVehicleTrajectoryMinLengthProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'debugVehicleTrajectoryMinLengthProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$debugVehicleTrajectoryMinLengthHash();
+
+  @$internal
+  @override
+  DebugVehicleTrajectoryMinLength create() => DebugVehicleTrajectoryMinLength();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(double value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<double>(value),
+    );
+  }
+}
+
 String _$debugVehicleTrajectoryMinLengthHash() =>
     r'79f75755809547a3a397aac505582704ee65f5e3';
 
 /// The minimum length vehicle trajectories should predict.
-///
-/// Copied from [DebugVehicleTrajectoryMinLength].
-@ProviderFor(DebugVehicleTrajectoryMinLength)
-final debugVehicleTrajectoryMinLengthProvider =
-    NotifierProvider<DebugVehicleTrajectoryMinLength, double>.internal(
-      DebugVehicleTrajectoryMinLength.new,
-      name: r'debugVehicleTrajectoryMinLengthProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$debugVehicleTrajectoryMinLengthHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$DebugVehicleTrajectoryMinLength = Notifier<double>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$DebugVehicleTrajectoryMinLength extends $Notifier<double> {
+  double build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<double, double>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<double, double>,
+              double,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

@@ -26,7 +26,6 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
@@ -87,12 +86,12 @@ class AllEquipments extends _$AllEquipments {
 
   /// Update the [equipment] in the [state].
   void update(Hitchable equipment) => Future(
-    () =>
-        state = Map.of(state)..update(
-          equipment.uuid,
-          (value) => equipment as Equipment,
-          ifAbsent: () => equipment as Equipment,
-        ),
+    () => state = Map.of(state)
+      ..update(
+        equipment.uuid,
+        (value) => equipment as Equipment,
+        ifAbsent: () => equipment as Equipment,
+      ),
   );
 
   /// Remove all the equipment.
@@ -125,13 +124,12 @@ class EquipmentWorkedArea extends _$EquipmentWorkedArea {
 
   /// Increments the value of the [state] with key [uuid] by [increment].
   void increment(String uuid, double increment) => Future(
-    () =>
-        state =
-            state..update(
-              uuid,
-              (prev) => prev + increment,
-              ifAbsent: () => increment,
-            ),
+    () => state = state
+      ..update(
+        uuid,
+        (prev) => prev + increment,
+        ifAbsent: () => increment,
+      ),
   );
 
   /// Updates the value of the [state] with key [uuid] to [value].
@@ -185,17 +183,17 @@ class EquipmentPaths extends _$EquipmentPaths {
         final sectionLines = equipment.sectionActivationStatus.map(
           (section, active) =>
               active && (_prevSectionActivationStatus[section] ?? false)
-                  ? MapEntry(section, [
-                    state.lastOrNull?[section]?.lastOrNull ??
-                        equipment.sectionEdgePositions(
-                          section,
-                          fraction: recordFraction,
-                        )!,
-                  ])
-                  : MapEntry(
-                    section,
-                    positions[section] != null ? [positions[section]!] : null,
-                  ),
+              ? MapEntry(section, [
+                  state.lastOrNull?[section]?.lastOrNull ??
+                      equipment.sectionEdgePositions(
+                        section,
+                        fraction: recordFraction,
+                      )!,
+                ])
+              : MapEntry(
+                  section,
+                  positions[section] != null ? [positions[section]!] : null,
+                ),
         )..removeWhere((key, value) => value == null);
         if (sectionLines.isNotEmpty) {
           state = state..add(sectionLines);
@@ -217,14 +215,13 @@ class EquipmentPaths extends _$EquipmentPaths {
               .reduce((value, element) => value || element);
 
           if (addNext) {
-            state =
-                state
-                  ..last.updateAll((section, value) {
-                    if (positions[section] != null) {
-                      return value?..add(positions[section]!);
-                    }
-                    return null;
-                  });
+            state = state
+              ..last.updateAll((section, value) {
+                if (positions[section] != null) {
+                  return value?..add(positions[section]!);
+                }
+                return null;
+              });
             ref
                 .read(equipmentLogRecordsProvider(uuid).notifier)
                 .add(equipment.logRecord);
@@ -235,15 +232,14 @@ class EquipmentPaths extends _$EquipmentPaths {
       if (_lastActivePositions.values.any((element) => element != null)) {
         _lastActivePositions.forEach((section, prevPos) {
           if (prevPos != null && positions[section] != null) {
-            _coveredArea +=
-                Polygon.from([
-                  [
-                    prevPos.left,
-                    prevPos.right,
-                    positions[section]!.right,
-                    positions[section]!.left,
-                  ],
-                ]).area;
+            _coveredArea += Polygon.from([
+              [
+                prevPos.left,
+                prevPos.right,
+                positions[section]!.right,
+                positions[section]!.left,
+              ],
+            ]).area;
           }
         });
         ref
@@ -260,29 +256,28 @@ class EquipmentPaths extends _$EquipmentPaths {
     if (state.isNotEmpty) {
       final prevActive = _prevSectionActivationStatus.values.fold(
         0,
-        (previousValue, element) =>
-            element == true ? previousValue + 1 : previousValue,
+        (previousValue, isActive) =>
+            isActive ? previousValue + 1 : previousValue,
       );
       final nextActive = equipment.sectionActivationStatus.values.fold(
         0,
-        (previousValue, element) =>
-            element == true ? previousValue + 1 : previousValue,
+        (previousValue, isActive) =>
+            isActive ? previousValue + 1 : previousValue,
       );
       final recordFraction = ref.read(equipmentRecordPositionFractionProvider);
       if (nextActive < prevActive) {
-        state =
-            state
-              ..last.updateAll((key, value) {
-                if (value != null) {
-                  return value..add(
-                    equipment.sectionEdgePositions(
-                      key,
-                      fraction: recordFraction,
-                    )!,
-                  );
-                }
-                return null;
-              });
+        state = state
+          ..last.updateAll((key, value) {
+            if (value != null) {
+              return value..add(
+                equipment.sectionEdgePositions(
+                  key,
+                  fraction: recordFraction,
+                )!,
+              );
+            }
+            return null;
+          });
         ref
             .read(equipmentLogRecordsProvider(uuid).notifier)
             .add(equipment.logRecord);
@@ -299,11 +294,10 @@ class EquipmentPaths extends _$EquipmentPaths {
     final prev = state.last[section]?.last;
 
     if (state.isNotEmpty && prev != null) {
-      final distance =
-          [
-            prev.left.rhumb.distanceTo(next.left),
-            prev.right.rhumb.distanceTo(next.right),
-          ].max;
+      final distance = [
+        prev.left.rhumb.distanceTo(next.left),
+        prev.right.rhumb.distanceTo(next.right),
+      ].max;
 
       if (distance > 20) {
         return true;
@@ -345,10 +339,9 @@ class EquipmentPaths extends _$EquipmentPaths {
           _coveredArea += path.fold(0, (previousValue, pos) {
             var increment = 0.0;
             if (prevPos != null) {
-              increment =
-                  Polygon.from([
-                    [prevPos!.left, prevPos!.right, pos.right, pos.left],
-                  ]).area;
+              increment = Polygon.from([
+                [prevPos!.left, prevPos!.right, pos.right, pos.left],
+              ]).area;
             }
             prevPos = pos;
             return previousValue + increment;
@@ -372,10 +365,9 @@ class EquipmentPaths extends _$EquipmentPaths {
           _coveredArea += path.fold(0, (previousValue, pos) {
             var increment = 0.0;
             if (prevPos != null) {
-              increment =
-                  Polygon.from([
-                    [prevPos!.left, prevPos!.right, pos.right, pos.left],
-                  ]).area;
+              increment = Polygon.from([
+                [prevPos!.left, prevPos!.right, pos.right, pos.left],
+              ]).area;
             }
             prevPos = pos;
             return previousValue + increment;
@@ -404,10 +396,9 @@ class EquipmentPaths extends _$EquipmentPaths {
     for (final record in records) {
       equipment.updateByLogRecord(record);
       final positions = equipment.activeEdgePositions(
-        forceIndices:
-            prevStatus
-                .where((section) => !record.activeSections.contains(section))
-                .toList(),
+        forceIndices: prevStatus
+            .where((section) => !record.activeSections.contains(section))
+            .toList(),
         overrideHitch: overrideHitch,
         overrideTime: record.time,
         forceOwnPositionAndBearing: true,
@@ -431,22 +422,21 @@ class EquipmentPaths extends _$EquipmentPaths {
         if (record.activeSections.isNotEmpty) {
           /// New lines (activation points)
           final sectionLines = equipment.sectionActivationStatus.map(
-            (section, active) =>
-                active && (prevStatus.contains(section))
-                    ? MapEntry(section, [
-                      workedPaths.lastOrNull?[section]?.lastOrNull ??
-                          equipment.sectionEdgePositions(
-                            section,
-                            fraction: equipment.recordingPositionFraction,
-                            overrideHitch: overrideHitch,
-                            overrideTime: record.time,
-                            forceOwnPositionAndBearing: true,
-                          )!,
-                    ])
-                    : MapEntry(
-                      section,
-                      positions[section] != null ? [positions[section]!] : null,
-                    ),
+            (section, active) => active && (prevStatus.contains(section))
+                ? MapEntry(section, [
+                    workedPaths.lastOrNull?[section]?.lastOrNull ??
+                        equipment.sectionEdgePositions(
+                          section,
+                          fraction: equipment.recordingPositionFraction,
+                          overrideHitch: overrideHitch,
+                          overrideTime: record.time,
+                          forceOwnPositionAndBearing: true,
+                        )!,
+                  ])
+                : MapEntry(
+                    section,
+                    positions[section] != null ? [positions[section]!] : null,
+                  ),
           )..removeWhere((key, value) => value == null);
           if (sectionLines.isNotEmpty) {
             workedPaths.add(sectionLines);

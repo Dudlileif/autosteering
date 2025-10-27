@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:async';
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/theme/utils/utils.dart';
@@ -632,10 +634,12 @@ class _Sections extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                        controller.animateTo(
-                          controller.positions.first.maxScrollExtent,
-                          duration: Durations.long4,
-                          curve: Curves.easeInOutCubicEmphasized,
+                        unawaited(
+                          controller.animateTo(
+                            controller.positions.first.maxScrollExtent,
+                            duration: Durations.long4,
+                            curve: Curves.easeInOutCubicEmphasized,
+                          ),
                         );
                       },
                       child: Text('${sections.length}'),

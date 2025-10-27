@@ -6,236 +6,308 @@ part of 'log_replay_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loadLogReplayFromFileHash() =>
-    r'039c5f7116fb6afef9bdce010f1745ac1eba16d3';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// A provider for the active [LogReplay].
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
+@ProviderFor(ActiveLogReplay)
+const activeLogReplayProvider = ActiveLogReplayProvider._();
 
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// A provider for loading a [LogReplay] from a file at [path], if it's valid.
-///
-/// Copied from [loadLogReplayFromFile].
-@ProviderFor(loadLogReplayFromFile)
-const loadLogReplayFromFileProvider = LoadLogReplayFromFileFamily();
-
-/// A provider for loading a [LogReplay] from a file at [path], if it's valid.
-///
-/// Copied from [loadLogReplayFromFile].
-class LoadLogReplayFromFileFamily extends Family<AsyncValue<LogReplay?>> {
-  /// A provider for loading a [LogReplay] from a file at [path], if it's valid.
-  ///
-  /// Copied from [loadLogReplayFromFile].
-  const LoadLogReplayFromFileFamily();
-
-  /// A provider for loading a [LogReplay] from a file at [path], if it's valid.
-  ///
-  /// Copied from [loadLogReplayFromFile].
-  LoadLogReplayFromFileProvider call(String path) {
-    return LoadLogReplayFromFileProvider(path);
-  }
-
-  @override
-  LoadLogReplayFromFileProvider getProviderOverride(
-    covariant LoadLogReplayFromFileProvider provider,
-  ) {
-    return call(provider.path);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'loadLogReplayFromFileProvider';
-}
-
-/// A provider for loading a [LogReplay] from a file at [path], if it's valid.
-///
-/// Copied from [loadLogReplayFromFile].
-class LoadLogReplayFromFileProvider
-    extends AutoDisposeFutureProvider<LogReplay?> {
-  /// A provider for loading a [LogReplay] from a file at [path], if it's valid.
-  ///
-  /// Copied from [loadLogReplayFromFile].
-  LoadLogReplayFromFileProvider(String path)
-    : this._internal(
-        (ref) => loadLogReplayFromFile(ref as LoadLogReplayFromFileRef, path),
-        from: loadLogReplayFromFileProvider,
-        name: r'loadLogReplayFromFileProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$loadLogReplayFromFileHash,
-        dependencies: LoadLogReplayFromFileFamily._dependencies,
-        allTransitiveDependencies:
-            LoadLogReplayFromFileFamily._allTransitiveDependencies,
-        path: path,
+/// A provider for the active [LogReplay].
+final class ActiveLogReplayProvider
+    extends $NotifierProvider<ActiveLogReplay, LogReplay?> {
+  /// A provider for the active [LogReplay].
+  const ActiveLogReplayProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'activeLogReplayProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
       );
 
-  LoadLogReplayFromFileProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.path,
-  }) : super.internal();
-
-  final String path;
-
   @override
-  Override overrideWith(
-    FutureOr<LogReplay?> Function(LoadLogReplayFromFileRef provider) create,
-  ) {
-    return ProviderOverride(
+  String debugGetCreateSourceHash() => _$activeLogReplayHash();
+
+  @$internal
+  @override
+  ActiveLogReplay create() => ActiveLogReplay();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(LogReplay? value) {
+    return $ProviderOverride(
       origin: this,
-      override: LoadLogReplayFromFileProvider._internal(
-        (ref) => create(ref as LoadLogReplayFromFileRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        path: path,
-      ),
+      providerOverride: $SyncValueProvider<LogReplay?>(value),
     );
   }
+}
+
+String _$activeLogReplayHash() => r'e8d93a42b54febed5a79e8ea7887d983d672640e';
+
+/// A provider for the active [LogReplay].
+
+abstract class _$ActiveLogReplay extends $Notifier<LogReplay?> {
+  LogReplay? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<LogReplay?, LogReplay?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<LogReplay?, LogReplay?>,
+              LogReplay?,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for the index of the playing log replay.
+
+@ProviderFor(LogReplayIndex)
+const logReplayIndexProvider = LogReplayIndexProvider._();
+
+/// A provider for the index of the playing log replay.
+final class LogReplayIndexProvider
+    extends $NotifierProvider<LogReplayIndex, int> {
+  /// A provider for the index of the playing log replay.
+  const LogReplayIndexProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'logReplayIndexProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
-  AutoDisposeFutureProviderElement<LogReplay?> createElement() {
-    return _LoadLogReplayFromFileProviderElement(this);
+  String debugGetCreateSourceHash() => _$logReplayIndexHash();
+
+  @$internal
+  @override
+  LogReplayIndex create() => LogReplayIndex();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(int value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<int>(value),
+    );
+  }
+}
+
+String _$logReplayIndexHash() => r'dc32309208b056c60eaad78b57186e6a104098c4';
+
+/// A provider for the index of the playing log replay.
+
+abstract class _$LogReplayIndex extends $Notifier<int> {
+  int build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<int, int>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<int, int>,
+              int,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for whether the log replays should loop.
+
+@ProviderFor(LoopLogReplay)
+const loopLogReplayProvider = LoopLogReplayProvider._();
+
+/// A provider for whether the log replays should loop.
+final class LoopLogReplayProvider
+    extends $NotifierProvider<LoopLogReplay, bool> {
+  /// A provider for whether the log replays should loop.
+  const LoopLogReplayProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'loopLogReplayProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$loopLogReplayHash();
+
+  @$internal
+  @override
+  LoopLogReplay create() => LoopLogReplay();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$loopLogReplayHash() => r'3bec3b6c091b803d78ce49288b328363cab03785';
+
+/// A provider for whether the log replays should loop.
+
+abstract class _$LoopLogReplay extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for loading a [LogReplay] from a file at [path], if it's valid.
+
+@ProviderFor(loadLogReplayFromFile)
+const loadLogReplayFromFileProvider = LoadLogReplayFromFileFamily._();
+
+/// A provider for loading a [LogReplay] from a file at [path], if it's valid.
+
+final class LoadLogReplayFromFileProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<LogReplay?>,
+          LogReplay?,
+          FutureOr<LogReplay?>
+        >
+    with $FutureModifier<LogReplay?>, $FutureProvider<LogReplay?> {
+  /// A provider for loading a [LogReplay] from a file at [path], if it's valid.
+  const LoadLogReplayFromFileProvider._({
+    required LoadLogReplayFromFileFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'loadLogReplayFromFileProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$loadLogReplayFromFileHash();
+
+  @override
+  String toString() {
+    return r'loadLogReplayFromFileProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<LogReplay?> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<LogReplay?> create(Ref ref) {
+    final argument = this.argument as String;
+    return loadLogReplayFromFile(ref, argument);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is LoadLogReplayFromFileProvider && other.path == path;
+    return other is LoadLogReplayFromFileProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, path.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin LoadLogReplayFromFileRef on AutoDisposeFutureProviderRef<LogReplay?> {
-  /// The parameter `path` of this provider.
-  String get path;
-}
+String _$loadLogReplayFromFileHash() =>
+    r'039c5f7116fb6afef9bdce010f1745ac1eba16d3';
 
-class _LoadLogReplayFromFileProviderElement
-    extends AutoDisposeFutureProviderElement<LogReplay?>
-    with LoadLogReplayFromFileRef {
-  _LoadLogReplayFromFileProviderElement(super.provider);
+/// A provider for loading a [LogReplay] from a file at [path], if it's valid.
+
+final class LoadLogReplayFromFileFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<LogReplay?>, String> {
+  const LoadLogReplayFromFileFamily._()
+    : super(
+        retry: null,
+        name: r'loadLogReplayFromFileProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// A provider for loading a [LogReplay] from a file at [path], if it's valid.
+
+  LoadLogReplayFromFileProvider call(String path) =>
+      LoadLogReplayFromFileProvider._(argument: path, from: this);
 
   @override
-  String get path => (origin as LoadLogReplayFromFileProvider).path;
+  String toString() => r'loadLogReplayFromFileProvider';
+}
+
+/// A provider for importing a [LogReplay] from a file.
+
+@ProviderFor(importLogReplay)
+const importLogReplayProvider = ImportLogReplayProvider._();
+
+/// A provider for importing a [LogReplay] from a file.
+
+final class ImportLogReplayProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<LogReplay?>,
+          LogReplay?,
+          FutureOr<LogReplay?>
+        >
+    with $FutureModifier<LogReplay?>, $FutureProvider<LogReplay?> {
+  /// A provider for importing a [LogReplay] from a file.
+  const ImportLogReplayProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'importLogReplayProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$importLogReplayHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<LogReplay?> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<LogReplay?> create(Ref ref) {
+    return importLogReplay(ref);
+  }
 }
 
 String _$importLogReplayHash() => r'a6fd83373024d96572cd9a42f3fa561043d90d72';
-
-/// A provider for importing a [LogReplay] from a file.
-///
-/// Copied from [importLogReplay].
-@ProviderFor(importLogReplay)
-final importLogReplayProvider = AutoDisposeFutureProvider<LogReplay?>.internal(
-  importLogReplay,
-  name: r'importLogReplayProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$importLogReplayHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ImportLogReplayRef = AutoDisposeFutureProviderRef<LogReplay?>;
-String _$activeLogReplayHash() => r'e8d93a42b54febed5a79e8ea7887d983d672640e';
-
-/// A provider for the active [LogReplay].
-///
-/// Copied from [ActiveLogReplay].
-@ProviderFor(ActiveLogReplay)
-final activeLogReplayProvider =
-    NotifierProvider<ActiveLogReplay, LogReplay?>.internal(
-      ActiveLogReplay.new,
-      name: r'activeLogReplayProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$activeLogReplayHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$ActiveLogReplay = Notifier<LogReplay?>;
-String _$logReplayIndexHash() => r'dc32309208b056c60eaad78b57186e6a104098c4';
-
-/// A provider for the index of the playing log replay.
-///
-/// Copied from [LogReplayIndex].
-@ProviderFor(LogReplayIndex)
-final logReplayIndexProvider = NotifierProvider<LogReplayIndex, int>.internal(
-  LogReplayIndex.new,
-  name: r'logReplayIndexProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$logReplayIndexHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$LogReplayIndex = Notifier<int>;
-String _$loopLogReplayHash() => r'3bec3b6c091b803d78ce49288b328363cab03785';
-
-/// A provider for whether the log replays should loop.
-///
-/// Copied from [LoopLogReplay].
-@ProviderFor(LoopLogReplay)
-final loopLogReplayProvider = NotifierProvider<LoopLogReplay, bool>.internal(
-  LoopLogReplay.new,
-  name: r'loopLogReplayProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$loopLogReplayHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$LoopLogReplay = Notifier<bool>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

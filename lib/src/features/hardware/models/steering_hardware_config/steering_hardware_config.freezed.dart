@@ -1,6 +1,5 @@
-// dart format width=80
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -166,6 +165,130 @@ as bool,
 
 }
 
+
+/// Adds pattern-matching-related methods to [SteeringHardwareConfig].
+extension SteeringHardwareConfigPatterns on SteeringHardwareConfig {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SteeringHardwareConfig value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _SteeringHardwareConfig() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SteeringHardwareConfig value)  $default,){
+final _that = this;
+switch (_that) {
+case _SteeringHardwareConfig():
+return $default(_that);}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SteeringHardwareConfig value)?  $default,){
+final _that = this;
+switch (_that) {
+case _SteeringHardwareConfig() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: SteeringHardwareConfigKey.reverseDirection)  bool reverseDirection, @JsonKey(name: SteeringHardwareConfigKey.microSteps)  int microSteps, @JsonKey(name: SteeringHardwareConfigKey.stepsPerRotation)  int stepsPerRotation, @JsonKey(name: SteeringHardwareConfigKey.rmsCurrent)  int rmsCurrent, @JsonKey(name: SteeringHardwareConfigKey.holdMultiplier)  double holdMultiplier, @JsonKey(name: SteeringHardwareConfigKey.freeWheel)  MotorHoldingMode freeWheel, @JsonKey(name: SteeringHardwareConfigKey.maxAcceleration)  double maxAcceleration, @JsonKey(name: SteeringHardwareConfigKey.maxDeceleration)  double maxDeceleration, @JsonKey(name: SteeringHardwareConfigKey.maxRPM)  double maxRPM, @JsonKey(name: SteeringHardwareConfigKey.vStop)  int vStop, @JsonKey(name: SteeringHardwareConfigKey.vStart)  int vStart, @JsonKey(name: SteeringHardwareConfigKey.tOff)  int tOff, @JsonKey(name: SteeringHardwareConfigKey.stallguardThreshold)  int stallguardThreshold, @JsonKey(name: SteeringHardwareConfigKey.stallguardFiltering)  bool stallguardFiltering, @JsonKey(name: SteeringHardwareConfigKey.stallguardStop)  bool stallguardStop, @JsonKey(name: SteeringHardwareConfigKey.semin)  int semin, @JsonKey(name: SteeringHardwareConfigKey.semax)  int semax, @JsonKey(name: SteeringHardwareConfigKey.coolstepThresholdRPM)  double coolstepThresholdRPM, @JsonKey(name: SteeringHardwareConfigKey.stealthChopThresholdRPM)  double stealthChopThresholdRPM, @JsonKey(name: SteeringHardwareConfigKey.chopperMode)  bool chopperMode, @JsonKey(name: SteeringHardwareConfigKey.highVelocityChopperModeChangeThresholdRPM)  double highVelocityChopperModeChangeThresholdRPM, @JsonKey(name: SteeringHardwareConfigKey.dcStepThresholdRPM)  double dcStepThresholdRPM, @JsonKey(name: SteeringHardwareConfigKey.fullstepAtHighVelocities)  bool fullstepAtHighVelocities, @JsonKey(name: SteeringHardwareConfigKey.setConstantChopperAtHighVelocities)  bool setConstantChopperAtHighVelocities, @JsonKey(name: SteeringHardwareConfigKey.dcStepLoadMeasurementPulseWidth)  int dcStepLoadMeasurementPulseWidth, @JsonKey(name: SteeringHardwareConfigKey.dcStepStallguardSensitivity)  int dcStepStallguardSensitivity, @JsonKey(name: SteeringHardwareConfigKey.hysteresisStart)  int hysteresisStart, @JsonKey(name: SteeringHardwareConfigKey.hysteresisEnd)  int hysteresisEnd, @JsonKey(name: SteeringHardwareConfigKey.currentHoldDelay)  int currentHoldDelay, @JsonKey(name: SteeringHardwareConfigKey.blankTime)  ComparatorBlankTime blankTime, @JsonKey(name: SteeringHardwareConfigKey.powerDownTime)  int powerDownTime, @JsonKey(name: SteeringHardwareConfigKey.zeroWaitTime)  int zeroWaitTime, @JsonKey(name: SteeringHardwareConfigKey.enableStealthChop)  bool enableStealthChop, @JsonKey(name: SteeringHardwareConfigKey.automaticCurrentControl)  bool automaticCurrentControl, @JsonKey(name: SteeringHardwareConfigKey.automaticPWMTuning)  bool automaticPWMTuning, @JsonKey(name: SteeringHardwareConfigKey.pidP)  double pidP, @JsonKey(name: SteeringHardwareConfigKey.pidI)  double pidI, @JsonKey(name: SteeringHardwareConfigKey.pidD)  double pidD, @JsonKey(name: SteeringHardwareConfigKey.wasMin)  int wasMin, @JsonKey(name: SteeringHardwareConfigKey.wasCenter)  int wasCenter, @JsonKey(name: SteeringHardwareConfigKey.wasMax)  int wasMax, @JsonKey(name: SteeringHardwareConfigKey.asymmetricVelocity)  bool asymmetricVelocity)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _SteeringHardwareConfig() when $default != null:
+return $default(_that.reverseDirection,_that.microSteps,_that.stepsPerRotation,_that.rmsCurrent,_that.holdMultiplier,_that.freeWheel,_that.maxAcceleration,_that.maxDeceleration,_that.maxRPM,_that.vStop,_that.vStart,_that.tOff,_that.stallguardThreshold,_that.stallguardFiltering,_that.stallguardStop,_that.semin,_that.semax,_that.coolstepThresholdRPM,_that.stealthChopThresholdRPM,_that.chopperMode,_that.highVelocityChopperModeChangeThresholdRPM,_that.dcStepThresholdRPM,_that.fullstepAtHighVelocities,_that.setConstantChopperAtHighVelocities,_that.dcStepLoadMeasurementPulseWidth,_that.dcStepStallguardSensitivity,_that.hysteresisStart,_that.hysteresisEnd,_that.currentHoldDelay,_that.blankTime,_that.powerDownTime,_that.zeroWaitTime,_that.enableStealthChop,_that.automaticCurrentControl,_that.automaticPWMTuning,_that.pidP,_that.pidI,_that.pidD,_that.wasMin,_that.wasCenter,_that.wasMax,_that.asymmetricVelocity);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: SteeringHardwareConfigKey.reverseDirection)  bool reverseDirection, @JsonKey(name: SteeringHardwareConfigKey.microSteps)  int microSteps, @JsonKey(name: SteeringHardwareConfigKey.stepsPerRotation)  int stepsPerRotation, @JsonKey(name: SteeringHardwareConfigKey.rmsCurrent)  int rmsCurrent, @JsonKey(name: SteeringHardwareConfigKey.holdMultiplier)  double holdMultiplier, @JsonKey(name: SteeringHardwareConfigKey.freeWheel)  MotorHoldingMode freeWheel, @JsonKey(name: SteeringHardwareConfigKey.maxAcceleration)  double maxAcceleration, @JsonKey(name: SteeringHardwareConfigKey.maxDeceleration)  double maxDeceleration, @JsonKey(name: SteeringHardwareConfigKey.maxRPM)  double maxRPM, @JsonKey(name: SteeringHardwareConfigKey.vStop)  int vStop, @JsonKey(name: SteeringHardwareConfigKey.vStart)  int vStart, @JsonKey(name: SteeringHardwareConfigKey.tOff)  int tOff, @JsonKey(name: SteeringHardwareConfigKey.stallguardThreshold)  int stallguardThreshold, @JsonKey(name: SteeringHardwareConfigKey.stallguardFiltering)  bool stallguardFiltering, @JsonKey(name: SteeringHardwareConfigKey.stallguardStop)  bool stallguardStop, @JsonKey(name: SteeringHardwareConfigKey.semin)  int semin, @JsonKey(name: SteeringHardwareConfigKey.semax)  int semax, @JsonKey(name: SteeringHardwareConfigKey.coolstepThresholdRPM)  double coolstepThresholdRPM, @JsonKey(name: SteeringHardwareConfigKey.stealthChopThresholdRPM)  double stealthChopThresholdRPM, @JsonKey(name: SteeringHardwareConfigKey.chopperMode)  bool chopperMode, @JsonKey(name: SteeringHardwareConfigKey.highVelocityChopperModeChangeThresholdRPM)  double highVelocityChopperModeChangeThresholdRPM, @JsonKey(name: SteeringHardwareConfigKey.dcStepThresholdRPM)  double dcStepThresholdRPM, @JsonKey(name: SteeringHardwareConfigKey.fullstepAtHighVelocities)  bool fullstepAtHighVelocities, @JsonKey(name: SteeringHardwareConfigKey.setConstantChopperAtHighVelocities)  bool setConstantChopperAtHighVelocities, @JsonKey(name: SteeringHardwareConfigKey.dcStepLoadMeasurementPulseWidth)  int dcStepLoadMeasurementPulseWidth, @JsonKey(name: SteeringHardwareConfigKey.dcStepStallguardSensitivity)  int dcStepStallguardSensitivity, @JsonKey(name: SteeringHardwareConfigKey.hysteresisStart)  int hysteresisStart, @JsonKey(name: SteeringHardwareConfigKey.hysteresisEnd)  int hysteresisEnd, @JsonKey(name: SteeringHardwareConfigKey.currentHoldDelay)  int currentHoldDelay, @JsonKey(name: SteeringHardwareConfigKey.blankTime)  ComparatorBlankTime blankTime, @JsonKey(name: SteeringHardwareConfigKey.powerDownTime)  int powerDownTime, @JsonKey(name: SteeringHardwareConfigKey.zeroWaitTime)  int zeroWaitTime, @JsonKey(name: SteeringHardwareConfigKey.enableStealthChop)  bool enableStealthChop, @JsonKey(name: SteeringHardwareConfigKey.automaticCurrentControl)  bool automaticCurrentControl, @JsonKey(name: SteeringHardwareConfigKey.automaticPWMTuning)  bool automaticPWMTuning, @JsonKey(name: SteeringHardwareConfigKey.pidP)  double pidP, @JsonKey(name: SteeringHardwareConfigKey.pidI)  double pidI, @JsonKey(name: SteeringHardwareConfigKey.pidD)  double pidD, @JsonKey(name: SteeringHardwareConfigKey.wasMin)  int wasMin, @JsonKey(name: SteeringHardwareConfigKey.wasCenter)  int wasCenter, @JsonKey(name: SteeringHardwareConfigKey.wasMax)  int wasMax, @JsonKey(name: SteeringHardwareConfigKey.asymmetricVelocity)  bool asymmetricVelocity)  $default,) {final _that = this;
+switch (_that) {
+case _SteeringHardwareConfig():
+return $default(_that.reverseDirection,_that.microSteps,_that.stepsPerRotation,_that.rmsCurrent,_that.holdMultiplier,_that.freeWheel,_that.maxAcceleration,_that.maxDeceleration,_that.maxRPM,_that.vStop,_that.vStart,_that.tOff,_that.stallguardThreshold,_that.stallguardFiltering,_that.stallguardStop,_that.semin,_that.semax,_that.coolstepThresholdRPM,_that.stealthChopThresholdRPM,_that.chopperMode,_that.highVelocityChopperModeChangeThresholdRPM,_that.dcStepThresholdRPM,_that.fullstepAtHighVelocities,_that.setConstantChopperAtHighVelocities,_that.dcStepLoadMeasurementPulseWidth,_that.dcStepStallguardSensitivity,_that.hysteresisStart,_that.hysteresisEnd,_that.currentHoldDelay,_that.blankTime,_that.powerDownTime,_that.zeroWaitTime,_that.enableStealthChop,_that.automaticCurrentControl,_that.automaticPWMTuning,_that.pidP,_that.pidI,_that.pidD,_that.wasMin,_that.wasCenter,_that.wasMax,_that.asymmetricVelocity);}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: SteeringHardwareConfigKey.reverseDirection)  bool reverseDirection, @JsonKey(name: SteeringHardwareConfigKey.microSteps)  int microSteps, @JsonKey(name: SteeringHardwareConfigKey.stepsPerRotation)  int stepsPerRotation, @JsonKey(name: SteeringHardwareConfigKey.rmsCurrent)  int rmsCurrent, @JsonKey(name: SteeringHardwareConfigKey.holdMultiplier)  double holdMultiplier, @JsonKey(name: SteeringHardwareConfigKey.freeWheel)  MotorHoldingMode freeWheel, @JsonKey(name: SteeringHardwareConfigKey.maxAcceleration)  double maxAcceleration, @JsonKey(name: SteeringHardwareConfigKey.maxDeceleration)  double maxDeceleration, @JsonKey(name: SteeringHardwareConfigKey.maxRPM)  double maxRPM, @JsonKey(name: SteeringHardwareConfigKey.vStop)  int vStop, @JsonKey(name: SteeringHardwareConfigKey.vStart)  int vStart, @JsonKey(name: SteeringHardwareConfigKey.tOff)  int tOff, @JsonKey(name: SteeringHardwareConfigKey.stallguardThreshold)  int stallguardThreshold, @JsonKey(name: SteeringHardwareConfigKey.stallguardFiltering)  bool stallguardFiltering, @JsonKey(name: SteeringHardwareConfigKey.stallguardStop)  bool stallguardStop, @JsonKey(name: SteeringHardwareConfigKey.semin)  int semin, @JsonKey(name: SteeringHardwareConfigKey.semax)  int semax, @JsonKey(name: SteeringHardwareConfigKey.coolstepThresholdRPM)  double coolstepThresholdRPM, @JsonKey(name: SteeringHardwareConfigKey.stealthChopThresholdRPM)  double stealthChopThresholdRPM, @JsonKey(name: SteeringHardwareConfigKey.chopperMode)  bool chopperMode, @JsonKey(name: SteeringHardwareConfigKey.highVelocityChopperModeChangeThresholdRPM)  double highVelocityChopperModeChangeThresholdRPM, @JsonKey(name: SteeringHardwareConfigKey.dcStepThresholdRPM)  double dcStepThresholdRPM, @JsonKey(name: SteeringHardwareConfigKey.fullstepAtHighVelocities)  bool fullstepAtHighVelocities, @JsonKey(name: SteeringHardwareConfigKey.setConstantChopperAtHighVelocities)  bool setConstantChopperAtHighVelocities, @JsonKey(name: SteeringHardwareConfigKey.dcStepLoadMeasurementPulseWidth)  int dcStepLoadMeasurementPulseWidth, @JsonKey(name: SteeringHardwareConfigKey.dcStepStallguardSensitivity)  int dcStepStallguardSensitivity, @JsonKey(name: SteeringHardwareConfigKey.hysteresisStart)  int hysteresisStart, @JsonKey(name: SteeringHardwareConfigKey.hysteresisEnd)  int hysteresisEnd, @JsonKey(name: SteeringHardwareConfigKey.currentHoldDelay)  int currentHoldDelay, @JsonKey(name: SteeringHardwareConfigKey.blankTime)  ComparatorBlankTime blankTime, @JsonKey(name: SteeringHardwareConfigKey.powerDownTime)  int powerDownTime, @JsonKey(name: SteeringHardwareConfigKey.zeroWaitTime)  int zeroWaitTime, @JsonKey(name: SteeringHardwareConfigKey.enableStealthChop)  bool enableStealthChop, @JsonKey(name: SteeringHardwareConfigKey.automaticCurrentControl)  bool automaticCurrentControl, @JsonKey(name: SteeringHardwareConfigKey.automaticPWMTuning)  bool automaticPWMTuning, @JsonKey(name: SteeringHardwareConfigKey.pidP)  double pidP, @JsonKey(name: SteeringHardwareConfigKey.pidI)  double pidI, @JsonKey(name: SteeringHardwareConfigKey.pidD)  double pidD, @JsonKey(name: SteeringHardwareConfigKey.wasMin)  int wasMin, @JsonKey(name: SteeringHardwareConfigKey.wasCenter)  int wasCenter, @JsonKey(name: SteeringHardwareConfigKey.wasMax)  int wasMax, @JsonKey(name: SteeringHardwareConfigKey.asymmetricVelocity)  bool asymmetricVelocity)?  $default,) {final _that = this;
+switch (_that) {
+case _SteeringHardwareConfig() when $default != null:
+return $default(_that.reverseDirection,_that.microSteps,_that.stepsPerRotation,_that.rmsCurrent,_that.holdMultiplier,_that.freeWheel,_that.maxAcceleration,_that.maxDeceleration,_that.maxRPM,_that.vStop,_that.vStart,_that.tOff,_that.stallguardThreshold,_that.stallguardFiltering,_that.stallguardStop,_that.semin,_that.semax,_that.coolstepThresholdRPM,_that.stealthChopThresholdRPM,_that.chopperMode,_that.highVelocityChopperModeChangeThresholdRPM,_that.dcStepThresholdRPM,_that.fullstepAtHighVelocities,_that.setConstantChopperAtHighVelocities,_that.dcStepLoadMeasurementPulseWidth,_that.dcStepStallguardSensitivity,_that.hysteresisStart,_that.hysteresisEnd,_that.currentHoldDelay,_that.blankTime,_that.powerDownTime,_that.zeroWaitTime,_that.enableStealthChop,_that.automaticCurrentControl,_that.automaticPWMTuning,_that.pidP,_that.pidI,_that.pidD,_that.wasMin,_that.wasCenter,_that.wasMax,_that.asymmetricVelocity);case _:
+  return null;
+
+}
+}
+
+}
 
 /// @nodoc
 @JsonSerializable()

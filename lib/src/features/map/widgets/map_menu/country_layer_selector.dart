@@ -92,59 +92,54 @@ class _CountryLayerMenuItemButton extends StatelessWidget {
       children: [
         Expanded(
           child: Consumer(
-            builder:
-                (context, ref, child) => CheckboxListTile(
-                  controlAffinity: ListTileControlAffinity.leading,
-                  value: enabled,
-                  onChanged:
-                      (value) =>
-                          value != null
-                              ? value
-                                  ? ref
-                                      .read(
-                                        enabledCountryLayersProvider.notifier,
-                                      )
-                                      .add(layer)
-                                  : ref
-                                      .read(
-                                        enabledCountryLayersProvider.notifier,
-                                      )
-                                      .remove(layer)
-                              : null,
-                  title: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(layer.name, style: theme.menuButtonWithChildrenText),
-                      SliderTheme(
-                        data: theme.sliderTheme.copyWith(
-                          showValueIndicator: ShowValueIndicator.always,
-                        ),
-                        child: Consumer(
-                          builder: (context, ref, child) {
-                            final opacity =
-                                ref.watch(countryLayerOpacitiesProvider)[layer
-                                    .name]!;
+            builder: (context, ref, child) => CheckboxListTile(
+              controlAffinity: ListTileControlAffinity.leading,
+              value: enabled,
+              onChanged: (value) => value != null
+                  ? value
+                        ? ref
+                              .read(
+                                enabledCountryLayersProvider.notifier,
+                              )
+                              .add(layer)
+                        : ref
+                              .read(
+                                enabledCountryLayersProvider.notifier,
+                              )
+                              .remove(layer)
+                  : null,
+              title: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(layer.name, style: theme.menuButtonWithChildrenText),
+                  SliderTheme(
+                    data: theme.sliderTheme.copyWith(
+                      showValueIndicator: ShowValueIndicator.alwaysVisible,
+                    ),
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        final opacity = ref.watch(
+                          countryLayerOpacitiesProvider,
+                        )[layer.name]!;
 
-                            return Slider(
-                              value: opacity,
-                              label: 'Opacity: ${opacity.toStringAsFixed(2)}',
-                              onChanged:
-                                  enabled
-                                      ? (value) => ref
-                                          .read(
-                                            countryLayerOpacitiesProvider
-                                                .notifier,
-                                          )
-                                          .update(layer, value)
-                                      : null,
-                              divisions: 20,
-                            );
-                          },
-                        ),
-                      ),
-                    ],
+                        return Slider(
+                          value: opacity,
+                          label: 'Opacity: ${opacity.toStringAsFixed(2)}',
+                          onChanged: enabled
+                              ? (value) => ref
+                                    .read(
+                                      countryLayerOpacitiesProvider.notifier,
+                                    )
+                                    .update(layer, value)
+                              : null,
+                          divisions: 20,
+                        );
+                      },
+                    ),
                   ),
-                ),
+                ],
+              ),
+            ),
           ),
         ),
         Padding(

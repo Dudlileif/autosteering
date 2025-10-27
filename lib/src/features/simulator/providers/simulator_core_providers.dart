@@ -24,7 +24,6 @@ import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/providers/simulator_core_native_providers.dart'
     if (dart.library.js_interop) 'simulator_core_web_providers.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'simulator_core_providers.g.dart';
@@ -55,7 +54,7 @@ class SimulatorUpdateFrequency extends _$SimulatorUpdateFrequency {
 }
 
 /// Sends initial parameters to  the sim core.
-@riverpod
+@Riverpod(keepAlive: true)
 void initializeSimCore(Ref ref) {
   Logger.instance.i('Sending initial data to Simulator Core...');
   ref.read(simInputProvider.notifier)

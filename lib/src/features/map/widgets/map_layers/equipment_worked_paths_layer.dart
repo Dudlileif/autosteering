@@ -16,7 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 // Some color are currently not overidden.
-// ignore_for_file: unused_element, unused_element_parameter
+// ignore_for_file: unused_element_parameter
 
 import 'dart:typed_data';
 import 'dart:ui';
@@ -58,57 +58,56 @@ class _EquipmentWorkedPathsLayerState
       final activationStatus = equipment.sectionActivationStatus;
       final workedLines = ref.watch(equipmentPathsProvider(equipment.uuid));
       if (workedLines.isNotEmpty) {
-        final screenPoints =
-            workedLines
-                .mapIndexed(
-                  (activationIndex, activation) => activation
-                    .map<int, Float32List>((section, points) {
-                      if (points != null) {
-                        final offsets = [
-                          for (final offset in points.map((e) {
-                            final offset1 = camera.latLngToScreenOffset(
-                              e.left.latLng,
-                            );
-                            final offset2 = camera.latLngToScreenOffset(
-                              e.right.latLng,
-                            );
-
-                            return [
-                              offset1.dx,
-                              offset1.dy,
-                              offset2.dx,
-                              offset2.dy,
-                            ];
-                          }))
-                            ...offset,
-                        ];
-
-                        if (activationIndex == workedLines.length - 1 &&
-                            activationStatus[section]!) {
-                          final points = equipment.sectionEdgePositions(
-                            section,
-                            fraction: recordFraction,
-                          );
+        final screenPoints = workedLines
+            .mapIndexed(
+              (activationIndex, activation) =>
+                  activation.map<int, Float32List>((section, points) {
+                    if (points != null) {
+                      final offsets = [
+                        for (final offset in points.map((e) {
                           final offset1 = camera.latLngToScreenOffset(
-                            points!.left.latLng,
+                            e.left.latLng,
                           );
                           final offset2 = camera.latLngToScreenOffset(
-                            points.right.latLng,
+                            e.right.latLng,
                           );
 
-                          offsets.addAll([
+                          return [
                             offset1.dx,
                             offset1.dy,
                             offset2.dx,
                             offset2.dy,
-                          ]);
-                        }
-                        return MapEntry(section, Float32List.fromList(offsets));
+                          ];
+                        }))
+                          ...offset,
+                      ];
+
+                      if (activationIndex == workedLines.length - 1 &&
+                          activationStatus[section]!) {
+                        final points = equipment.sectionEdgePositions(
+                          section,
+                          fraction: recordFraction,
+                        );
+                        final offset1 = camera.latLngToScreenOffset(
+                          points!.left.latLng,
+                        );
+                        final offset2 = camera.latLngToScreenOffset(
+                          points.right.latLng,
+                        );
+
+                        offsets.addAll([
+                          offset1.dx,
+                          offset1.dy,
+                          offset2.dx,
+                          offset2.dy,
+                        ]);
                       }
-                      return MapEntry(section, Float32List.fromList([]));
-                    })..removeWhere((key, value) => value.isEmpty),
-                )
-                .toList();
+                      return MapEntry(section, Float32List.fromList(offsets));
+                    }
+                    return MapEntry(section, Float32List.fromList([]));
+                  })..removeWhere((key, value) => value.isEmpty),
+            )
+            .toList();
 
         children.add(
           CustomPaint(

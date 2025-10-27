@@ -6,51 +6,133 @@ part of 'remote_control_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$sendRemoteControlLedStateHash() =>
-    r'74657709b26b4e849112c74f8256ac751c0babbb';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// A provider for which [RemoteControlButtonAction]s the remote control buttons
+/// shuld map to.
 
-/// A provider for sending the current state of the features corresponding of
-/// the mapped [RemoteControlButtonActions] to the remote controller.
-///
-/// Copied from [sendRemoteControlLedState].
-@ProviderFor(sendRemoteControlLedState)
-final sendRemoteControlLedStateProvider = AutoDisposeProvider<void>.internal(
-  sendRemoteControlLedState,
-  name: r'sendRemoteControlLedStateProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$sendRemoteControlLedStateHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(RemoteControlButtonActions)
+const remoteControlButtonActionsProvider =
+    RemoteControlButtonActionsProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef SendRemoteControlLedStateRef = AutoDisposeProviderRef<void>;
+/// A provider for which [RemoteControlButtonAction]s the remote control buttons
+/// shuld map to.
+final class RemoteControlButtonActionsProvider
+    extends
+        $NotifierProvider<
+          RemoteControlButtonActions,
+          Map<int, RemoteControlButtonAction?>
+        > {
+  /// A provider for which [RemoteControlButtonAction]s the remote control buttons
+  /// shuld map to.
+  const RemoteControlButtonActionsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'remoteControlButtonActionsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$remoteControlButtonActionsHash();
+
+  @$internal
+  @override
+  RemoteControlButtonActions create() => RemoteControlButtonActions();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Map<int, RemoteControlButtonAction?> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride:
+          $SyncValueProvider<Map<int, RemoteControlButtonAction?>>(value),
+    );
+  }
+}
+
 String _$remoteControlButtonActionsHash() =>
     r'86e4683e38deb3f3a02b457f80e789086224c945';
 
 /// A provider for which [RemoteControlButtonAction]s the remote control buttons
 /// shuld map to.
-///
-/// Copied from [RemoteControlButtonActions].
-@ProviderFor(RemoteControlButtonActions)
-final remoteControlButtonActionsProvider = NotifierProvider<
-  RemoteControlButtonActions,
-  Map<int, RemoteControlButtonAction?>
->.internal(
-  RemoteControlButtonActions.new,
-  name: r'remoteControlButtonActionsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$remoteControlButtonActionsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-typedef _$RemoteControlButtonActions =
-    Notifier<Map<int, RemoteControlButtonAction?>>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$RemoteControlButtonActions
+    extends $Notifier<Map<int, RemoteControlButtonAction?>> {
+  Map<int, RemoteControlButtonAction?> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref =
+        this.ref
+            as $Ref<
+              Map<int, RemoteControlButtonAction?>,
+              Map<int, RemoteControlButtonAction?>
+            >;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                Map<int, RemoteControlButtonAction?>,
+                Map<int, RemoteControlButtonAction?>
+              >,
+              Map<int, RemoteControlButtonAction?>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for sending the current state of the features corresponding of
+/// the mapped [RemoteControlButtonActions] to the remote controller.
+
+@ProviderFor(sendRemoteControlLedState)
+const sendRemoteControlLedStateProvider = SendRemoteControlLedStateProvider._();
+
+/// A provider for sending the current state of the features corresponding of
+/// the mapped [RemoteControlButtonActions] to the remote controller.
+
+final class SendRemoteControlLedStateProvider
+    extends $FunctionalProvider<void, void, void>
+    with $Provider<void> {
+  /// A provider for sending the current state of the features corresponding of
+  /// the mapped [RemoteControlButtonActions] to the remote controller.
+  const SendRemoteControlLedStateProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'sendRemoteControlLedStateProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$sendRemoteControlLedStateHash();
+
+  @$internal
+  @override
+  $ProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  void create(Ref ref) {
+    return sendRemoteControlLedState(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(void value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<void>(value),
+    );
+  }
+}
+
+String _$sendRemoteControlLedStateHash() =>
+    r'74657709b26b4e849112c74f8256ac751c0babbb';

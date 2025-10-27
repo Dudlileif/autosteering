@@ -101,11 +101,9 @@ sealed class ABTracking {
     }
     length = baseLine.foldIndexed(
       0,
-      (index, prevValue, element) =>
-          index + 1 < baseLine.length
-              ? prevValue +
-                  element.distanceToRhumb(baseLine.elementAt(index + 1))
-              : prevValue,
+      (index, prevValue, element) => index + 1 < baseLine.length
+          ? prevValue + element.distanceToRhumb(baseLine.elementAt(index + 1))
+          : prevValue,
     );
     if (calculateLinesOnCreation) {
       calculateLinesWithinBoundary();
@@ -271,19 +269,17 @@ sealed class ABTracking {
       offsetLine(offset).lastOrNull ?? _offsetEndRaw(offset);
 
   /// The start point for the line with [currentOffset].
-  WayPoint? get currentStart =>
-      currentOffset != null
-          ? pathAlongAToB
-              ? currentLine?.firstOrNull ?? currentEnd
-              : currentLine?.lastOrNull ?? offsetStart(currentOffset!)
-          : null;
+  WayPoint? get currentStart => currentOffset != null
+      ? pathAlongAToB
+            ? currentLine?.firstOrNull ?? currentEnd
+            : currentLine?.lastOrNull ?? offsetStart(currentOffset!)
+      : null;
 
   /// The end point for the line with [currentOffset].
-  WayPoint? get currentEnd =>
-      pathAlongAToB
-          ? currentLine?.lastOrNull ??
-              (currentOffset != null ? offsetEnd(currentOffset!) : null)
-          : currentLine?.firstOrNull ?? currentStart;
+  WayPoint? get currentEnd => pathAlongAToB
+      ? currentLine?.lastOrNull ??
+            (currentOffset != null ? offsetEnd(currentOffset!) : null)
+      : currentLine?.firstOrNull ?? currentStart;
 
   /// The bearing of the current line at the [currentStart].
   double? get currentInitialBearing => currentStart?.bearing;
@@ -299,24 +295,22 @@ sealed class ABTracking {
   WayPoint? get nextEnd => nextOffset != null ? offsetEnd(nextOffset!) : null;
 
   /// The line for the [currentOffset].
-  List<WayPoint>? get currentLine =>
-      currentOffset != null
-          ? !pathAlongAToB
-              ? offsetLine(currentOffset!).reversed
+  List<WayPoint>? get currentLine => currentOffset != null
+      ? !pathAlongAToB
+            ? offsetLine(currentOffset!).reversed
                   .map((e) => e.copyWith(bearing: (e.bearing + 180).wrap360()))
                   .toList()
-              : offsetLine(currentOffset!)
-          : null;
+            : offsetLine(currentOffset!)
+      : null;
 
   /// The line for the [nextOffset].
-  List<WayPoint>? get nextLine =>
-      nextOffset != null
-          ? pathAlongAToB
-              ? offsetLine(nextOffset!).reversed
+  List<WayPoint>? get nextLine => nextOffset != null
+      ? pathAlongAToB
+            ? offsetLine(nextOffset!).reversed
                   .map((e) => e.copyWith(bearing: (e.bearing + 180).wrap360()))
                   .toList()
-              : offsetLine(nextOffset!)
-          : null;
+            : offsetLine(nextOffset!)
+      : null;
 
   set currentOffset(int? newOffset) {
     if (newOffset == null) {
@@ -382,17 +376,16 @@ sealed class ABTracking {
         }
       }
 
-      nextOffset =
-          currentOffset != null
-              ? offsetsInsideBoundary!.reduce(
-                (previousValue, element) =>
-                    sqrt(pow(currentOffset! - element, 2)) <
-                                sqrt(pow(currentOffset! - previousValue, 2)) &&
-                            element != currentOffset
-                        ? element
-                        : previousValue,
-              )
-              : null;
+      nextOffset = currentOffset != null
+          ? offsetsInsideBoundary!.reduce(
+              (previousValue, element) =>
+                  sqrt(pow(currentOffset! - element, 2)) <
+                          sqrt(pow(currentOffset! - previousValue, 2)) &&
+                      element != currentOffset
+                  ? element
+                  : previousValue,
+            )
+          : null;
 
       allOffsetsInsideBoundaryFound = true;
     }
@@ -510,9 +503,7 @@ sealed class ABTracking {
           pointsToRemove.add(point);
         }
       }
-      for (final element in pointsToRemove) {
-        newPath.remove(element);
-      }
+      pointsToRemove.forEach(newPath.remove);
     }
 
     if (!ignoreBoundary && boundary?.exterior != null && newPath.isNotEmpty) {
@@ -588,9 +579,9 @@ sealed class ABTracking {
                   startIntersections.reduce(
                     (value, element) =>
                         newPath.first.distanceToRhumb(element) <
-                                newPath.first.distanceToRhumb(value)
-                            ? element
-                            : value,
+                            newPath.first.distanceToRhumb(value)
+                        ? element
+                        : value,
                   ),
               ],
             );
@@ -616,9 +607,9 @@ sealed class ABTracking {
                       .reduce(
                         (value, element) =>
                             newPath.last.distanceToRhumb(element) <
-                                    newPath.last.distanceToRhumb(value)
-                                ? element
-                                : value,
+                                newPath.last.distanceToRhumb(value)
+                            ? element
+                            : value,
                       )
                       .rotateByAngle(180),
               ],
@@ -808,15 +799,15 @@ sealed class ABTracking {
   /// The distance is negative if the point is to the left of the base line.
   double perpendicularDistanceToBaseLine(Vehicle vehicle) =>
       baseLinePathTracking.vehiclePointingInPathDirection(vehicle)
-          ? baseLinePathTracking.perpendicularDistance(vehicle)
-          : -baseLinePathTracking.perpendicularDistance(vehicle);
+      ? baseLinePathTracking.perpendicularDistance(vehicle)
+      : -baseLinePathTracking.perpendicularDistance(vehicle);
 
   /// The perpendicular distance from [vehicle] to the line of [offset] offsets.
   double? perpendicularDistanceToOffsetLine(int offset, Vehicle vehicle) =>
       currentOffset != null
-          ? signedPerpendicularDistanceToCurrentLine(vehicle) +
-              (offset - currentOffset!) * width
-          : null;
+      ? signedPerpendicularDistanceToCurrentLine(vehicle) +
+            (offset - currentOffset!) * width
+      : null;
 
   /// How many [width] offsets from the original line we need to get the
   /// closest line.
@@ -1062,18 +1053,19 @@ sealed class ABTracking {
           !(offsetsInsideBoundary?.contains(nextOffset) ?? false)) {
         nextPathTracking = null;
       } else if (nextOffset != null && nextLine != null) {
-        nextPathTracking = switch (vehicle.pathTrackingMode) {
-            PathTrackingMode.stanley => StanleyPathTracking(
-              wayPoints: nextLine!,
-            ),
-            PathTrackingMode.purePursuit => PurePursuitPathTracking(
-              wayPoints: nextLine!,
-            ),
-          }
-          ..cumulativeIndex = switch (vehicle.isReversing) {
-            true => -1,
-            false => 0,
-          };
+        nextPathTracking =
+            switch (vehicle.pathTrackingMode) {
+                PathTrackingMode.stanley => StanleyPathTracking(
+                  wayPoints: nextLine!,
+                ),
+                PathTrackingMode.purePursuit => PurePursuitPathTracking(
+                  wayPoints: nextLine!,
+                ),
+              }
+              ..cumulativeIndex = switch (vehicle.isReversing) {
+                true => -1,
+                false => 0,
+              };
       } else {
         nextPathTracking = null;
       }
@@ -1386,17 +1378,17 @@ sealed class ABTracking {
       'finished_offsets': finishedOffsets.toList(),
       'lines': {
         'offsets': lines.keys.toList(),
-        'paths':
-            lines.values
-                .map((line) => line.map((e) => e.toJson()).toList())
-                .toList(),
+        'paths': lines.values
+            .map((line) => line.map((e) => e.toJson()).toList())
+            .toList(),
       },
       'calculate_lines': boundary != null && lines.isEmpty,
     };
     if (correctedBaseLine != null || baseLineSidewaysOffset.abs() > 0) {
       map['base_line_sideways_offset'] = baseLineSidewaysOffset;
-      map['corrected_base_line'] =
-          correctedBaseLine?.map((e) => e.toJson()).toList();
+      map['corrected_base_line'] = correctedBaseLine
+          ?.map((e) => e.toJson())
+          .toList();
     }
     return map;
   }

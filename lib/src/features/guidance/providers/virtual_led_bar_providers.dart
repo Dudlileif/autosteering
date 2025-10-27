@@ -17,7 +17,6 @@
 
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'virtual_led_bar_providers.g.dart';

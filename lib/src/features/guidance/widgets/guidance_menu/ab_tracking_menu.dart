@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:async';
+
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
@@ -78,89 +80,80 @@ class ABTrackingMenu extends ConsumerWidget {
                 visualDensity: VisualDensity.compact,
               ),
               showSelectedIcon: false,
-              onSelectionChanged:
-                  (values) => ref
-                      .read(currentABTrackingTypeProvider.notifier)
-                      .update(values.first),
+              onSelectionChanged: (values) => ref
+                  .read(currentABTrackingTypeProvider.notifier)
+                  .update(values.first),
               selected: {abTrackingType},
-              segments:
-                  ABTrackingType.values
-                      .map(
-                        (type) =>
-                            ButtonSegment(value: type, label: Text(type.name)),
-                      )
-                      .toList(),
+              segments: ABTrackingType.values
+                  .map(
+                    (type) =>
+                        ButtonSegment(value: type, label: Text(type.name)),
+                  )
+                  .toList(),
             ),
           ),
         Consumer(
           child: Text('Apply and use', style: theme.menuButtonWithChildrenText),
-          builder:
-              (context, ref, child) => menuConfiguredTracking.when(
-                data:
-                    (data) => MenuItemButton(
-                      closeOnActivate: false,
-                      leadingIcon: const Padding(
-                        padding: EdgeInsets.only(left: 8),
-                        child: Icon(Icons.check),
-                      ),
-                      onPressed:
-                          data != null
-                              ? () {
-                                if (ref.watch(
-                                  displayPathTrackingProvider.select(
-                                    (value) => value != null,
-                                  ),
-                                )) {
-                                  showDialog<void>(
-                                    context: context,
-                                    builder:
-                                        (context) => Consumer(
-                                          builder: (context, ref, child) {
-                                            return ConfirmationDialog(
-                                              title:
-                                                  'Close active path tracking?',
-                                              onConfirmation:
-                                                  () async => ref
-                                                      .read(
-                                                        simInputProvider
-                                                            .notifier,
-                                                      )
-                                                      .send((abTracking: data)),
-                                            );
-                                          },
-                                        ),
-                                  );
-                                } else {
-                                  ref.read(simInputProvider.notifier).send((
-                                    abTracking: data,
-                                  ));
-                                }
-                              }
-                              : null,
-                      child: child,
-                    ),
-                error:
-                    (error, stackTrace) => Text(
-                      'Error during creation.',
-                      style: theme.menuButtonWithChildrenText?.copyWith(
-                        color: theme.colorScheme.error,
-                      ),
-                    ),
-                loading:
-                    () => MenuItemButton(
-                      leadingIcon: const Padding(
-                        padding: EdgeInsets.only(left: 8),
-                        child: SizedBox.square(
-                          dimension: 20,
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
-                      child: Text(
-                        'Creating tracking',
-                        style: theme.menuButtonWithChildrenText,
-                      ),
-                    ),
+          builder: (context, ref, child) => menuConfiguredTracking.when(
+            data: (data) => MenuItemButton(
+              closeOnActivate: false,
+              leadingIcon: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Icon(Icons.check),
               ),
+              onPressed: data != null
+                  ? () {
+                      if (ref.watch(
+                        displayPathTrackingProvider.select(
+                          (value) => value != null,
+                        ),
+                      )) {
+                        unawaited(
+                          showDialog<void>(
+                            context: context,
+                            builder: (context) => Consumer(
+                              builder: (context, ref, child) {
+                                return ConfirmationDialog(
+                                  title: 'Close active path tracking?',
+                                  onConfirmation: () async => ref
+                                      .read(
+                                        simInputProvider.notifier,
+                                      )
+                                      .send((abTracking: data)),
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      } else {
+                        ref.read(simInputProvider.notifier).send((
+                          abTracking: data,
+                        ));
+                      }
+                    }
+                  : null,
+              child: child,
+            ),
+            error: (error, stackTrace) => Text(
+              'Error during creation.',
+              style: theme.menuButtonWithChildrenText?.copyWith(
+                color: theme.colorScheme.error,
+              ),
+            ),
+            loading: () => MenuItemButton(
+              leadingIcon: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: SizedBox.square(
+                  dimension: 20,
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+              child: Text(
+                'Creating tracking',
+                style: theme.menuButtonWithChildrenText,
+              ),
+            ),
+          ),
         ),
         if (!workSessionGuidanceActive &&
             (abTrackingType == ABTrackingType.aPlusLine ||
@@ -172,32 +165,29 @@ class ABTrackingMenu extends ConsumerWidget {
               return MenuItemButton(
                 leadingIcon: Padding(
                   padding: const EdgeInsets.only(left: 8),
-                  child:
-                      pointIsSet
-                          ? const Icon(Icons.gps_fixed)
-                          : const Icon(Icons.gps_not_fixed),
+                  child: pointIsSet
+                      ? const Icon(Icons.gps_fixed)
+                      : const Icon(Icons.gps_not_fixed),
                 ),
-                trailingIcon:
-                    pointIsSet
-                        ? Row(
-                          children: [
-                            IconButton(
-                              onPressed:
-                                  ref
-                                      .read(showABPointAProvider.notifier)
-                                      .toggle,
-                              icon: switch (ref.watch(showABPointAProvider)) {
-                                true => const Icon(Icons.visibility),
-                                false => const Icon(Icons.visibility_off),
-                              },
-                            ),
-                            IconButton(
-                              onPressed: () => ref.invalidate(aBPointAProvider),
-                              icon: const Icon(Icons.clear),
-                            ),
-                          ],
-                        )
-                        : null,
+                trailingIcon: pointIsSet
+                    ? Row(
+                        children: [
+                          IconButton(
+                            onPressed: ref
+                                .read(showABPointAProvider.notifier)
+                                .toggle,
+                            icon: switch (ref.watch(showABPointAProvider)) {
+                              true => const Icon(Icons.visibility),
+                              false => const Icon(Icons.visibility_off),
+                            },
+                          ),
+                          IconButton(
+                            onPressed: () => ref.invalidate(aBPointAProvider),
+                            icon: const Icon(Icons.clear),
+                          ),
+                        ],
+                      )
+                    : null,
                 closeOnActivate: false,
                 onPressed: () {
                   ref
@@ -223,32 +213,29 @@ class ABTrackingMenu extends ConsumerWidget {
               return MenuItemButton(
                 leadingIcon: Padding(
                   padding: const EdgeInsets.only(left: 8),
-                  child:
-                      pointIsSet
-                          ? const Icon(Icons.gps_fixed)
-                          : const Icon(Icons.gps_not_fixed),
+                  child: pointIsSet
+                      ? const Icon(Icons.gps_fixed)
+                      : const Icon(Icons.gps_not_fixed),
                 ),
-                trailingIcon:
-                    pointIsSet
-                        ? Row(
-                          children: [
-                            IconButton(
-                              onPressed:
-                                  ref
-                                      .read(showABPointBProvider.notifier)
-                                      .toggle,
-                              icon: switch (ref.watch(showABPointBProvider)) {
-                                true => const Icon(Icons.visibility),
-                                false => const Icon(Icons.visibility_off),
-                              },
-                            ),
-                            IconButton(
-                              onPressed: () => ref.invalidate(aBPointBProvider),
-                              icon: const Icon(Icons.clear),
-                            ),
-                          ],
-                        )
-                        : null,
+                trailingIcon: pointIsSet
+                    ? Row(
+                        children: [
+                          IconButton(
+                            onPressed: ref
+                                .read(showABPointBProvider.notifier)
+                                .toggle,
+                            icon: switch (ref.watch(showABPointBProvider)) {
+                              true => const Icon(Icons.visibility),
+                              false => const Icon(Icons.visibility_off),
+                            },
+                          ),
+                          IconButton(
+                            onPressed: () => ref.invalidate(aBPointBProvider),
+                            icon: const Icon(Icons.clear),
+                          ),
+                        ],
+                      )
+                    : null,
                 closeOnActivate: false,
                 onPressed: () {
                   ref
@@ -278,11 +265,10 @@ class ABTrackingMenu extends ConsumerWidget {
 
               return MenuItemButton(
                 closeOnActivate: false,
-                onPressed:
-                    () => showDialog<void>(
-                      context: context,
-                      builder: (context) => const _APlusLineBearingDialog(),
-                    ),
+                onPressed: () => showDialog<void>(
+                  context: context,
+                  builder: (context) => const _APlusLineBearingDialog(),
+                ),
                 trailingIcon: IconButton(
                   icon: const Icon(Icons.clear),
                   onPressed: () => ref.invalidate(aPlusLineBearingProvider),
@@ -296,13 +282,12 @@ class ABTrackingMenu extends ConsumerWidget {
           )
         else if (abTrackingType == ABTrackingType.abLine)
           Consumer(
-            builder:
-                (context, ref, child) => ListTile(
-                  title: Text(
-                    '''Bearing: ${abTracking != null ? '${abTracking.initialBearing.toStringAsFixed(1)}°' : ''}''',
-                    style: theme.menuButtonWithChildrenText,
-                  ),
-                ),
+            builder: (context, ref, child) => ListTile(
+              title: Text(
+                '''Bearing: ${abTracking != null ? '${abTracking.initialBearing.toStringAsFixed(1)}°' : ''}''',
+                style: theme.menuButtonWithChildrenText,
+              ),
+            ),
           )
         else if (abTrackingType == ABTrackingType.abCurve)
           switch (ref.watch(
@@ -356,29 +341,28 @@ class ABTrackingMenu extends ConsumerWidget {
               _ => const SizedBox.shrink(),
             },
             false => Consumer(
-              builder:
-                  (context, ref, child) => MenuItemButton(
-                    closeOnActivate: false,
-                    leadingIcon: const Padding(
-                      padding: EdgeInsets.only(left: 8),
-                      child: Icon(Icons.voicemail),
-                    ),
-                    onPressed: () {
-                      ref
-                          .read(enablePathRecorderProvider.notifier)
-                          .update(value: true);
-                      ref
-                          .read(activePathRecordingTargetProvider.notifier)
-                          .update(PathRecordingTarget.abCurve);
-                      ref
-                          .read(showPathRecordingMenuProvider.notifier)
-                          .update(value: true);
-                    },
-                    child: Text(
-                      'Record curve',
-                      style: theme.menuButtonWithChildrenText,
-                    ),
-                  ),
+              builder: (context, ref, child) => MenuItemButton(
+                closeOnActivate: false,
+                leadingIcon: const Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: Icon(Icons.voicemail),
+                ),
+                onPressed: () {
+                  ref
+                      .read(enablePathRecorderProvider.notifier)
+                      .update(value: true);
+                  ref
+                      .read(activePathRecordingTargetProvider.notifier)
+                      .update(PathRecordingTarget.abCurve);
+                  ref
+                      .read(showPathRecordingMenuProvider.notifier)
+                      .update(value: true);
+                },
+                child: Text(
+                  'Record curve',
+                  style: theme.menuButtonWithChildrenText,
+                ),
+              ),
             ),
           },
 
@@ -389,27 +373,26 @@ class ABTrackingMenu extends ConsumerWidget {
             ) &&
             !ref.watch(enableSelectablePathProvider))
           Consumer(
-            builder:
-                (context, ref, child) => MenuItemButton(
-                  closeOnActivate: false,
-                  leadingIcon: const Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: Icon(Icons.route),
-                  ),
-                  onPressed: () {
-                    final tracking = ref.watch(displayPathTrackingProvider);
-                    ref
-                        .read(selectablePathPointsProvider.notifier)
-                        .update(tracking?.wayPoints.map((e) => e.position));
-                    ref
-                        .read(enableSelectablePathProvider.notifier)
-                        .update(value: true);
-                  },
-                  child: Text(
-                    'Select from path tracking',
-                    style: theme.menuButtonWithChildrenText,
-                  ),
-                ),
+            builder: (context, ref, child) => MenuItemButton(
+              closeOnActivate: false,
+              leadingIcon: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Icon(Icons.route),
+              ),
+              onPressed: () {
+                final tracking = ref.watch(displayPathTrackingProvider);
+                ref
+                    .read(selectablePathPointsProvider.notifier)
+                    .update(tracking?.wayPoints.map((e) => e.position));
+                ref
+                    .read(enableSelectablePathProvider.notifier)
+                    .update(value: true);
+              },
+              child: Text(
+                'Select from path tracking',
+                style: theme.menuButtonWithChildrenText,
+              ),
+            ),
           ),
         if (ref.watch(
               activeFieldProvider.select(
@@ -420,82 +403,73 @@ class ABTrackingMenu extends ConsumerWidget {
             ) &&
             !ref.watch(enableSelectablePathProvider))
           Consumer(
-            builder:
-                (context, ref, child) => MenuItemButton(
-                  closeOnActivate: false,
-                  leadingIcon: const Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: Stack(
-                      children: [
-                        Icon(Icons.texture),
-                        Icon(Icons.square_outlined),
-                      ],
-                    ),
-                  ),
-                  onPressed: () {
-                    final points = ref.watch(
-                      activeFieldProvider.select(
-                        (value) =>
-                            value?.polygon.exterior?.toGeographicPositions,
-                      ),
-                    );
-                    ref
-                        .read(selectablePathPointsProvider.notifier)
-                        .update(points);
-                    ref
-                        .read(enableSelectablePathProvider.notifier)
-                        .update(value: true);
-                  },
-                  child: Text(
-                    'Select from field border',
-                    style: theme.menuButtonWithChildrenText,
-                  ),
+            builder: (context, ref, child) => MenuItemButton(
+              closeOnActivate: false,
+              leadingIcon: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Stack(
+                  children: [
+                    Icon(Icons.texture),
+                    Icon(Icons.square_outlined),
+                  ],
                 ),
+              ),
+              onPressed: () {
+                final points = ref.watch(
+                  activeFieldProvider.select(
+                    (value) => value?.polygon.exterior?.toGeographicPositions,
+                  ),
+                );
+                ref.read(selectablePathPointsProvider.notifier).update(points);
+                ref
+                    .read(enableSelectablePathProvider.notifier)
+                    .update(value: true);
+              },
+              child: Text(
+                'Select from field border',
+                style: theme.menuButtonWithChildrenText,
+              ),
+            ),
           ),
         if (ref.watch(
               bufferedFieldProvider.select(
                 (value) => value.maybeWhen(
-                  data:
-                      (data) =>
-                          data?.polygon.exterior != null &&
-                          data!.polygon.exterior!.positionCount >= 2,
+                  data: (data) =>
+                      data?.polygon.exterior != null &&
+                      data!.polygon.exterior!.positionCount >= 2,
                   orElse: () => false,
                 ),
               ),
             ) &&
             !ref.watch(enableSelectablePathProvider))
           Consumer(
-            builder:
-                (context, ref, child) => MenuItemButton(
-                  closeOnActivate: false,
-                  leadingIcon: const Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: Stack(
-                      children: [
-                        Icon(Icons.texture),
-                        Icon(Icons.square_outlined),
-                      ],
-                    ),
-                  ),
-                  onPressed: () async {
-                    final points = await ref.watch(
-                      bufferedFieldProvider.selectAsync(
-                        (value) =>
-                            value?.polygon.exterior?.toGeographicPositions,
-                      ),
-                    );
-                    ref
-                        .read(selectablePathPointsProvider.notifier)
-                        .update(points);
-                    ref
-                        .read(enableSelectablePathProvider.notifier)
-                        .update(value: true);
-                  },
-                  child: Text(
-                    'Select from buffered field border',
-                    style: theme.menuButtonWithChildrenText,
-                  ),
+            builder: (context, ref, child) => MenuItemButton(
+              closeOnActivate: false,
+              leadingIcon: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Stack(
+                  children: [
+                    Icon(Icons.texture),
+                    Icon(Icons.square_outlined),
+                  ],
                 ),
+              ),
+              onPressed: () async {
+                final points = await ref.watch(
+                  bufferedFieldProvider.selectAsync(
+                    (value) => value?.polygon.exterior?.toGeographicPositions,
+                  ),
+                );
+                ref.read(selectablePathPointsProvider.notifier).update(points);
+                ref
+                    .read(enableSelectablePathProvider.notifier)
+                    .update(value: true);
+              },
+              child: Text(
+                'Select from buffered field border',
+                style: theme.menuButtonWithChildrenText,
+              ),
+            ),
           ),
         if (ref.watch(enableSelectablePathProvider) &&
             ref.watch(
@@ -504,58 +478,51 @@ class ABTrackingMenu extends ConsumerWidget {
               ),
             ))
           Consumer(
-            builder:
-                (context, ref, child) => MenuItemButton(
-                  closeOnActivate: false,
-                  leadingIcon: const Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: Icon(Icons.route),
-                  ),
-                  onPressed: () {
-                    final points = ref.watch(selectablePathStartToEndProvider);
-                    if (points != null && points.isNotEmpty) {
-                      final wayPoints = <WayPoint>[];
-                      for (final (index, point) in points.indexed) {
-                        if (index < points.length - 1) {
-                          wayPoints.add(
-                            WayPoint(
-                              position: point,
-                              bearing: point.rhumb.initialBearingTo(
-                                points.elementAt(index + 1),
-                              ),
-                            ),
-                          );
-                        } else {
-                          wayPoints.add(
-                            WayPoint(
-                              position: point,
-                              bearing: points
-                                  .elementAt(index - 1)
-                                  .rhumb
-                                  .finalBearingTo(point),
-                            ),
-                          );
-                        }
-                      }
-                      ref
-                          .read(aBPointAProvider.notifier)
-                          .update(wayPoints.first);
-                      ref
-                          .read(aBPointBProvider.notifier)
-                          .update(wayPoints.last);
-                      ref
-                          .read(aBCurvePointsProvider.notifier)
-                          .update(wayPoints);
+            builder: (context, ref, child) => MenuItemButton(
+              closeOnActivate: false,
+              leadingIcon: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Icon(Icons.route),
+              ),
+              onPressed: () {
+                final points = ref.watch(selectablePathStartToEndProvider);
+                if (points != null && points.isNotEmpty) {
+                  final wayPoints = <WayPoint>[];
+                  for (final (index, point) in points.indexed) {
+                    if (index < points.length - 1) {
+                      wayPoints.add(
+                        WayPoint(
+                          position: point,
+                          bearing: point.rhumb.initialBearingTo(
+                            points.elementAt(index + 1),
+                          ),
+                        ),
+                      );
+                    } else {
+                      wayPoints.add(
+                        WayPoint(
+                          position: point,
+                          bearing: points
+                              .elementAt(index - 1)
+                              .rhumb
+                              .finalBearingTo(point),
+                        ),
+                      );
                     }
-                    ref
-                        .read(enableSelectablePathProvider.notifier)
-                        .update(value: false);
-                  },
-                  child: Text(
-                    'Use selected path',
-                    style: theme.menuButtonWithChildrenText,
-                  ),
-                ),
+                  }
+                  ref.read(aBPointAProvider.notifier).update(wayPoints.first);
+                  ref.read(aBPointBProvider.notifier).update(wayPoints.last);
+                  ref.read(aBCurvePointsProvider.notifier).update(wayPoints);
+                }
+                ref
+                    .read(enableSelectablePathProvider.notifier)
+                    .update(value: false);
+              },
+              child: Text(
+                'Use selected path',
+                style: theme.menuButtonWithChildrenText,
+              ),
+            ),
           ),
         _ABCommonMenu(abTracking: abTracking),
         Consumer(
@@ -563,24 +530,23 @@ class ABTrackingMenu extends ConsumerWidget {
             'Recalculate lines',
             style: theme.menuButtonWithChildrenText,
           ),
-          builder:
-              (context, ref, child) => MenuItemButton(
-                leadingIcon: const Padding(
-                  padding: EdgeInsets.only(left: 8),
-                  child: Icon(Icons.refresh),
-                ),
-                closeOnActivate: false,
-                child: child,
-                onPressed: () {
-                  ref
-                    ..invalidate(aPlusLineProvider)
-                    ..invalidate(aBLineProvider)
-                    ..invalidate(aBCurveProvider);
-                  if (!workSessionGuidanceActive) {
-                    ref.invalidate(configuredABTrackingProvider);
-                  }
-                },
-              ),
+          builder: (context, ref, child) => MenuItemButton(
+            leadingIcon: const Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Icon(Icons.refresh),
+            ),
+            closeOnActivate: false,
+            child: child,
+            onPressed: () {
+              ref
+                ..invalidate(aPlusLineProvider)
+                ..invalidate(aBLineProvider)
+                ..invalidate(aBCurveProvider);
+              if (!workSessionGuidanceActive) {
+                ref.invalidate(configuredABTrackingProvider);
+              }
+            },
+          ),
         ),
       ],
     );
@@ -632,13 +598,16 @@ class _APlusLineBearingDialogState
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
-              initialValue: (aPlusLine.value?.initialBearing ??
-                      ref.read(aBPointAProvider)?.bearing ??
-                      ref.read(
-                        mainVehicleProvider.select((value) => value.bearing),
-                      ) ??
-                      0)
-                  .toStringAsFixed(2),
+              initialValue:
+                  (aPlusLine.value?.initialBearing ??
+                          ref.read(aBPointAProvider)?.bearing ??
+                          ref.read(
+                            mainVehicleProvider.select(
+                              (value) => value.bearing,
+                            ),
+                          ) ??
+                          0)
+                      .toStringAsFixed(2),
               onChanged: (value) {
                 final updated =
                     double.tryParse(value.replaceAll(',', '.')) ?? bearing;
@@ -662,20 +631,18 @@ class _APlusLineBearingDialogState
                 label: const Text('Cancel'),
               ),
               Consumer(
-                builder:
-                    (context, ref, child) => FilledButton.icon(
-                      onPressed:
-                          bearing != null
-                              ? () {
-                                ref
-                                    .read(aPlusLineBearingProvider.notifier)
-                                    .update(bearing);
-                                Navigator.of(context).pop();
-                              }
-                              : null,
-                      icon: const Icon(Icons.check),
-                      label: Text('Use ${bearing?.toStringAsFixed(2)}°'),
-                    ),
+                builder: (context, ref, child) => FilledButton.icon(
+                  onPressed: bearing != null
+                      ? () {
+                          ref
+                              .read(aPlusLineBearingProvider.notifier)
+                              .update(bearing);
+                          Navigator.of(context).pop();
+                        }
+                      : null,
+                  icon: const Icon(Icons.check),
+                  label: Text('Use ${bearing?.toStringAsFixed(2)}°'),
+                ),
               ),
             ],
           ),
@@ -710,59 +677,51 @@ class _ABCommonMenu extends ConsumerWidget {
         if (!dadMode)
           Consumer(
             child: Text('Show', style: textStyle),
-            builder:
-                (context, ref, child) => CheckboxListTile(
-                  secondary: switch (ref.watch(showABTrackingProvider)) {
-                    true => const Icon(Icons.visibility),
-                    false => const Icon(Icons.visibility_off),
-                  },
-                  title: child,
-                  value: ref.watch(showABTrackingProvider),
-                  onChanged:
-                      (value) =>
-                          value != null
-                              ? ref
-                                  .read(showABTrackingProvider.notifier)
-                                  .update(value: value)
-                              : null,
-                ),
+            builder: (context, ref, child) => CheckboxListTile(
+              secondary: switch (ref.watch(showABTrackingProvider)) {
+                true => const Icon(Icons.visibility),
+                false => const Icon(Icons.visibility_off),
+              },
+              title: child,
+              value: ref.watch(showABTrackingProvider),
+              onChanged: (value) => value != null
+                  ? ref
+                        .read(showABTrackingProvider.notifier)
+                        .update(value: value)
+                  : null,
+            ),
           ),
         Consumer(
           child: Text('Show all lines', style: textStyle),
-          builder:
-              (context, ref, child) => CheckboxListTile(
-                secondary: switch (ref.watch(aBTrackingShowAllLinesProvider)) {
-                  true => const Icon(Icons.visibility),
-                  false => const Icon(Icons.visibility_off),
-                },
-                title: child,
-                value: ref.watch(aBTrackingShowAllLinesProvider),
-                onChanged:
-                    (value) =>
-                        value != null
-                            ? ref
-                                .read(aBTrackingShowAllLinesProvider.notifier)
-                                .update(value: value)
-                            : null,
-              ),
+          builder: (context, ref, child) => CheckboxListTile(
+            secondary: switch (ref.watch(aBTrackingShowAllLinesProvider)) {
+              true => const Icon(Icons.visibility),
+              false => const Icon(Icons.visibility_off),
+            },
+            title: child,
+            value: ref.watch(aBTrackingShowAllLinesProvider),
+            onChanged: (value) => value != null
+                ? ref
+                      .read(aBTrackingShowAllLinesProvider.notifier)
+                      .update(value: value)
+                : null,
+          ),
         ),
         if (ref.watch(displayABTrackingProvider) != null &&
             ref.watch(displayABTrackingProvider)!.finishedOffsets.isNotEmpty)
           Consumer(
             child: Text('Reset finished lines', style: textStyle),
-            builder:
-                (context, ref, child) => MenuItemButton(
-                  closeOnActivate: false,
-                  leadingIcon: const Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: Icon(Icons.refresh),
-                  ),
-                  child: child,
-                  onPressed:
-                      () => ref.read(simInputProvider.notifier).send((
-                        abTrackingClearFinishedOffsets: true,
-                      )),
-                ),
+            builder: (context, ref, child) => MenuItemButton(
+              closeOnActivate: false,
+              leadingIcon: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Icon(Icons.refresh),
+              ),
+              child: child,
+              onPressed: () => ref.read(simInputProvider.notifier).send((
+                abTrackingClearFinishedOffsets: true,
+              )),
+            ),
           ),
         Consumer(
           builder: (context, ref, child) {
@@ -770,198 +729,178 @@ class _ABCommonMenu extends ConsumerWidget {
             return MenuButtonWithChildren(
               text: 'Limit mode',
               icon: Icons.u_turn_right,
-              menuChildren:
-                  ABLimitMode.values
-                      .map(
-                        (mode) => CheckboxListTile(
-                          secondary: Text(
-                            mode.name
-                                .replaceFirst('un', 'Un')
-                                .replaceFirst('limitedT', 'T')
-                                .replaceFirst('Turn', 'Turn '),
-                            style: textStyle,
-                          ),
-                          value: limitMode == mode,
-                          onChanged:
-                              (value) => ref
-                                  .read(aBTrackingLimitModeProvider.notifier)
-                                  .update(mode),
-                        ),
-                      )
-                      .toList(),
+              menuChildren: ABLimitMode.values
+                  .map(
+                    (mode) => CheckboxListTile(
+                      secondary: Text(
+                        mode.name
+                            .replaceFirst('un', 'Un')
+                            .replaceFirst('limitedT', 'T')
+                            .replaceFirst('Turn', 'Turn '),
+                        style: textStyle,
+                      ),
+                      value: limitMode == mode,
+                      onChanged: (value) => ref
+                          .read(aBTrackingLimitModeProvider.notifier)
+                          .update(mode),
+                    ),
+                  )
+                  .toList(),
             );
           },
         ),
         Consumer(
-          builder:
-              (context, ref, child) => MenuItemButton(
-                closeOnActivate: false,
-                onPressed:
-                    () => showDialog<void>(
-                      context: context,
-                      builder: (context) => const _ABSpacingDialog(),
-                    ),
-                leadingIcon: const Padding(
-                  padding: EdgeInsets.only(left: 8),
-                  child: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
-                ),
-                child: Text(
-                  'Spacing: ${ref.watch(aBWidthProvider).toStringAsFixed(1)} m',
-                  style: textStyle,
-                ),
-              ),
+          builder: (context, ref, child) => MenuItemButton(
+            closeOnActivate: false,
+            onPressed: () => showDialog<void>(
+              context: context,
+              builder: (context) => const _ABSpacingDialog(),
+            ),
+            leadingIcon: const Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
+            ),
+            child: Text(
+              'Spacing: ${ref.watch(aBWidthProvider).toStringAsFixed(1)} m',
+              style: textStyle,
+            ),
+          ),
         ),
         Consumer(
-          builder:
-              (context, ref, child) => MenuItemButton(
-                closeOnActivate: false,
-                onPressed:
-                    () => showDialog<void>(
-                      context: context,
-                      builder:
-                          (context) => SimpleDialog(
-                            title: const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('Offset from base line'),
-                                CloseButton(),
-                              ],
-                            ),
-                            contentPadding: const EdgeInsets.only(
-                              left: 24,
-                              top: 12,
-                              right: 24,
-                              bottom: 16,
-                            ),
-                            children: [
-                              Consumer(
-                                builder:
-                                    (context, ref, child) => TextFormField(
-                                      controller: TextEditingController(
-                                        text:
-                                            ref
-                                                .watch(aBSidewaysOffsetProvider)
-                                                .toString(),
-                                      ),
-                                      decoration: const InputDecoration(
-                                        labelText: 'Offset (-left / +right)',
-                                        suffixText: 'm',
-                                      ),
-                                      keyboardType:
-                                          const TextInputType.numberWithOptions(
-                                            signed: true,
-                                            decimal: true,
-                                          ),
-                                      onFieldSubmitted: (value) {
-                                        final offset = double.tryParse(value);
-                                        if (offset != null) {
-                                          ref
-                                              .read(
-                                                aBSidewaysOffsetProvider
-                                                    .notifier,
-                                              )
-                                              .update(offset);
-                                        }
-                                      },
-                                    ),
-                              ),
-                            ],
-                          ),
+          builder: (context, ref, child) => MenuItemButton(
+            closeOnActivate: false,
+            onPressed: () => showDialog<void>(
+              context: context,
+              builder: (context) => SimpleDialog(
+                title: const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Offset from base line'),
+                    CloseButton(),
+                  ],
+                ),
+                contentPadding: const EdgeInsets.only(
+                  left: 24,
+                  top: 12,
+                  right: 24,
+                  bottom: 16,
+                ),
+                children: [
+                  Consumer(
+                    builder: (context, ref, child) => TextFormField(
+                      controller: TextEditingController(
+                        text: ref.watch(aBSidewaysOffsetProvider).toString(),
+                      ),
+                      decoration: const InputDecoration(
+                        labelText: 'Offset (-left / +right)',
+                        suffixText: 'm',
+                      ),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        signed: true,
+                        decimal: true,
+                      ),
+                      onFieldSubmitted: (value) {
+                        final offset = double.tryParse(value);
+                        if (offset != null) {
+                          ref
+                              .read(
+                                aBSidewaysOffsetProvider.notifier,
+                              )
+                              .update(offset);
+                        }
+                      },
                     ),
-                leadingIcon: const Padding(
-                  padding: EdgeInsets.only(left: 8),
-                  child: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
-                ),
-                child: Text(
-                  '''Sideways offset: ${ref.watch(aBSidewaysOffsetProvider).toStringAsFixed(1)} m''',
-                  style: textStyle,
-                ),
+                  ),
+                ],
               ),
+            ),
+            leadingIcon: const Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
+            ),
+            child: Text(
+              '''Sideways offset: ${ref.watch(aBSidewaysOffsetProvider).toStringAsFixed(1)} m''',
+              style: textStyle,
+            ),
+          ),
         ),
         if (limitModeActive)
           Consumer(
-            builder:
-                (context, ref, child) => MenuItemButton(
-                  closeOnActivate: false,
-                  onPressed:
-                      () => showDialog<void>(
-                        context: context,
-                        builder:
-                            (context) => SimpleDialog(
-                              title: const Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('AB turning radius'),
-                                  CloseButton(),
-                                ],
-                              ),
-                              contentPadding: const EdgeInsets.only(
-                                left: 24,
-                                top: 12,
-                                right: 24,
-                                bottom: 16,
-                              ),
-                              children: [
-                                Consumer(
-                                  builder:
-                                      (context, ref, child) => TextFormField(
-                                        decoration: const InputDecoration(
-                                          labelText: 'Turning radius',
-                                          suffixText: 'm',
-                                        ),
-                                        keyboardType: TextInputType.number,
-                                        controller: TextEditingController(
-                                          text:
-                                              ref
-                                                  .watch(
-                                                    aBTurningRadiusProvider,
-                                                  )
-                                                  .toString(),
-                                        ),
-                                        onFieldSubmitted: (value) {
-                                          final radius = double.tryParse(value);
-                                          if (radius != null && radius >= 0) {
-                                            ref
-                                                .read(
-                                                  aBTurningRadiusProvider
-                                                      .notifier,
-                                                )
-                                                .update(radius);
-                                          }
-                                        },
-                                      ),
-                                ),
-                                Consumer(
-                                  builder: (context, ref, child) {
-                                    return Padding(
-                                      padding: const EdgeInsets.only(top: 16),
-                                      child: ElevatedButton.icon(
-                                        onPressed: () {
-                                          ref.invalidate(
-                                            aBTurningRadiusProvider,
-                                          );
-                                        },
-                                        icon: const Icon(Icons.agriculture),
-                                        label: const Text(
-                                          '''Set to 1.25 x vehicle turning radius''',
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
+            builder: (context, ref, child) => MenuItemButton(
+              closeOnActivate: false,
+              onPressed: () => showDialog<void>(
+                context: context,
+                builder: (context) => SimpleDialog(
+                  title: const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('AB turning radius'),
+                      CloseButton(),
+                    ],
+                  ),
+                  contentPadding: const EdgeInsets.only(
+                    left: 24,
+                    top: 12,
+                    right: 24,
+                    bottom: 16,
+                  ),
+                  children: [
+                    Consumer(
+                      builder: (context, ref, child) => TextFormField(
+                        decoration: const InputDecoration(
+                          labelText: 'Turning radius',
+                          suffixText: 'm',
+                        ),
+                        keyboardType: TextInputType.number,
+                        controller: TextEditingController(
+                          text: ref
+                              .watch(
+                                aBTurningRadiusProvider,
+                              )
+                              .toString(),
+                        ),
+                        onFieldSubmitted: (value) {
+                          final radius = double.tryParse(value);
+                          if (radius != null && radius >= 0) {
+                            ref
+                                .read(
+                                  aBTurningRadiusProvider.notifier,
+                                )
+                                .update(radius);
+                          }
+                        },
                       ),
-                  leadingIcon: const Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: Icon(Icons.looks),
-                  ),
-                  child: Text(
-                    '''Turning radius: ${ref.watch(aBTurningRadiusProvider).toStringAsFixed(1)} m''',
-                    style: textStyle,
-                  ),
+                    ),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 16),
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              ref.invalidate(
+                                aBTurningRadiusProvider,
+                              );
+                            },
+                            icon: const Icon(Icons.agriculture),
+                            label: const Text(
+                              '''Set to 1.25 x vehicle turning radius''',
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
+              ),
+              leadingIcon: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Icon(Icons.looks),
+              ),
+              child: Text(
+                '''Turning radius: ${ref.watch(aBTurningRadiusProvider).toStringAsFixed(1)} m''',
+                style: textStyle,
+              ),
+            ),
           ),
         if (limitModeActive)
           Consumer(
@@ -978,10 +917,9 @@ class _ABCommonMenu extends ConsumerWidget {
                   ),
                   Slider.adaptive(
                     value: turnOffsetMinSkips.toDouble(),
-                    onChanged:
-                        (value) => ref
-                            .read(aBTurnOffsetMinSkipsProvider.notifier)
-                            .update(value.round()),
+                    onChanged: (value) => ref
+                        .read(aBTurnOffsetMinSkipsProvider.notifier)
+                        .update(value.round()),
                     max: 10,
                     divisions: 10,
                   ),
@@ -991,19 +929,16 @@ class _ABCommonMenu extends ConsumerWidget {
           ),
         if (ref.watch(enableDebugModeProvider)) ...[
           Consumer(
-            builder:
-                (context, ref, child) => CheckboxListTile(
-                  secondary: const Icon(Icons.bug_report),
-                  title: Text('Debug', style: textStyle),
-                  value: ref.watch(debugABTrackingProvider),
-                  onChanged:
-                      (value) =>
-                          value != null
-                              ? ref
-                                  .read(debugABTrackingProvider.notifier)
-                                  .update(value: value)
-                              : null,
-                ),
+            builder: (context, ref, child) => CheckboxListTile(
+              secondary: const Icon(Icons.bug_report),
+              title: Text('Debug', style: textStyle),
+              value: ref.watch(debugABTrackingProvider),
+              onChanged: (value) => value != null
+                  ? ref
+                        .read(debugABTrackingProvider.notifier)
+                        .update(value: value)
+                  : null,
+            ),
           ),
           if (ref.watch(debugABTrackingProvider)) ...[
             Consumer(
@@ -1018,8 +953,9 @@ class _ABCommonMenu extends ConsumerWidget {
                     ),
                     Slider.adaptive(
                       value: stepSize,
-                      onChanged:
-                          ref.read(aBDebugStepSizeProvider.notifier).update,
+                      onChanged: ref
+                          .read(aBDebugStepSizeProvider.notifier)
+                          .update,
                       max: 10,
                       divisions: 20,
                     ),
@@ -1036,10 +972,9 @@ class _ABCommonMenu extends ConsumerWidget {
                     Text('Points ahead: $numPointsAhead', style: textStyle),
                     Slider.adaptive(
                       value: numPointsAhead.toDouble(),
-                      onChanged:
-                          (value) => ref
-                              .read(aBDebugNumPointsAheadProvider.notifier)
-                              .update(value.round()),
+                      onChanged: (value) => ref
+                          .read(aBDebugNumPointsAheadProvider.notifier)
+                          .update(value.round()),
                       max: 10,
                       divisions: 10,
                     ),
@@ -1058,10 +993,9 @@ class _ABCommonMenu extends ConsumerWidget {
                     Text('Points behind: $numPointsBehind', style: textStyle),
                     Slider.adaptive(
                       value: numPointsBehind.toDouble(),
-                      onChanged:
-                          (value) => ref
-                              .read(aBDebugNumPointsBehindProvider.notifier)
-                              .update(value.round()),
+                      onChanged: (value) => ref
+                          .read(aBDebugNumPointsBehindProvider.notifier)
+                          .update(value.round()),
                       max: 10,
                       divisions: 10,
                     ),
@@ -1119,14 +1053,13 @@ class __ABSpacingDialogState extends ConsumerState<_ABSpacingDialog> {
           ElevatedButton.icon(
             onPressed: () {
               setState(
-                () =>
-                    spacing =
-                        ref.read(
-                          loadedEquipmentProvider.select(
-                            (value) => value?.width,
-                          ),
-                        ) ??
-                        15,
+                () => spacing =
+                    ref.read(
+                      loadedEquipmentProvider.select(
+                        (value) => value?.width,
+                      ),
+                    ) ??
+                    15,
               );
             },
             icon: const Icon(Icons.handyman),

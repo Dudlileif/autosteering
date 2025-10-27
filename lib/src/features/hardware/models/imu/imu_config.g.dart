@@ -9,10 +9,9 @@ part of 'imu_config.dart';
 _ImuConfig _$ImuConfigFromJson(Map<String, dynamic> json) => _ImuConfig(
   usePitchAndRoll: json['usePitchAndRoll'] as bool? ?? true,
   swapPitchAndRoll: json['swapPitchAndRoll'] as bool? ?? false,
-  zeroValues:
-      json['zeroValues'] == null
-          ? const ImuZeroValues()
-          : ImuZeroValues.fromJson(json['zeroValues'] as Map<String, dynamic>),
+  zeroValues: json['zeroValues'] == null
+      ? const ImuZeroValues()
+      : ImuZeroValues.fromJson(json['zeroValues'] as Map<String, dynamic>),
   useYaw: json['useYaw'] as bool? ?? false,
   invertYaw: json['invertYaw'] as bool? ?? false,
   invertPitch: json['invertPitch'] as bool? ?? false,

@@ -19,7 +19,6 @@ import 'dart:async';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart' as implementation;
 import 'package:path/path.dart' as path;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -80,27 +79,27 @@ Future<File?> loggingFile(Ref ref) async {
 
     final logsDir = Directory(path.join(dirPath, 'logs'));
     if (logsDir.existsSync()) {
-      final files =
-          logsDir
-              .listSync()
-              .where(
-                (element) =>
-                    FileSystemEntity.typeSync(element.path) ==
-                    FileSystemEntityType.file,
-              )
-              .toList();
+      final files = logsDir
+          .listSync()
+          .where(
+            (element) =>
+                FileSystemEntity.typeSync(element.path) ==
+                FileSystemEntityType.file,
+          )
+          .toList();
 
       final removed = <String>[];
       for (final file in files) {
-        final time = DateTimeFileNameExtension.tryParseIso8601Filename(
-          path.split(file.path).last.split('.log').first,
-        )?.copyWith(
-          hour: 0,
-          minute: 0,
-          second: 0,
-          millisecond: 0,
-          microsecond: 0,
-        );
+        final time =
+            DateTimeFileNameExtension.tryParseIso8601Filename(
+              path.split(file.path).last.split('.log').first,
+            )?.copyWith(
+              hour: 0,
+              minute: 0,
+              second: 0,
+              millisecond: 0,
+              microsecond: 0,
+            );
         if (time != null) {
           if (now.difference(time).inDays >
               ref.read(daysToKeepLogFilesProvider)) {
@@ -119,26 +118,26 @@ Future<File?> loggingFile(Ref ref) async {
         path.join(dirPath, 'logs', 'hardware', hardware),
       );
       if (hardwareLogsDir.existsSync()) {
-        final files =
-            hardwareLogsDir
-                .listSync()
-                .where(
-                  (element) =>
-                      FileSystemEntity.typeSync(element.path) ==
-                      FileSystemEntityType.file,
-                )
-                .toList();
+        final files = hardwareLogsDir
+            .listSync()
+            .where(
+              (element) =>
+                  FileSystemEntity.typeSync(element.path) ==
+                  FileSystemEntityType.file,
+            )
+            .toList();
         final removed = <String>[];
         for (final file in files) {
-          final time = DateTimeFileNameExtension.tryParseIso8601Filename(
-            path.split(file.path).last.split('.log').first,
-          )?.copyWith(
-            hour: 0,
-            minute: 0,
-            second: 0,
-            millisecond: 0,
-            microsecond: 0,
-          );
+          final time =
+              DateTimeFileNameExtension.tryParseIso8601Filename(
+                path.split(file.path).last.split('.log').first,
+              )?.copyWith(
+                hour: 0,
+                minute: 0,
+                second: 0,
+                millisecond: 0,
+                microsecond: 0,
+              );
           if (time != null) {
             if (now.difference(time).inDays >
                 ref.read(daysToKeepLogFilesProvider)) {

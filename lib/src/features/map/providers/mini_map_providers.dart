@@ -23,6 +23,7 @@ import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'mini_map_providers.g.dart';
@@ -76,7 +77,7 @@ class ShowMiniMap extends _$ShowMiniMap {
 }
 
 /// Whether the map is ready to be shown or not.
-@riverpod
+@Riverpod(keepAlive: true)
 class MiniMapReady extends _$MiniMapReady {
   @override
   bool build() => false;
@@ -87,7 +88,7 @@ class MiniMapReady extends _$MiniMapReady {
 
 /// The mini map [MapController] provider, which allows controlling the
 /// map from outside the widget code itself.
-@riverpod
+@Riverpod(keepAlive: true)
 class MiniMapController extends _$MiniMapController {
   @override
   MapController build() => MapController();

@@ -6,64 +6,184 @@ part of 'was_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// A provider for the frequency of the WAS updates.
+
+@ProviderFor(WasCurrentFrequency)
+const wasCurrentFrequencyProvider = WasCurrentFrequencyProvider._();
+
+/// A provider for the frequency of the WAS updates.
+final class WasCurrentFrequencyProvider
+    extends $NotifierProvider<WasCurrentFrequency, double?> {
+  /// A provider for the frequency of the WAS updates.
+  const WasCurrentFrequencyProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'wasCurrentFrequencyProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$wasCurrentFrequencyHash();
+
+  @$internal
+  @override
+  WasCurrentFrequency create() => WasCurrentFrequency();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(double? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<double?>(value),
+    );
+  }
+}
+
 String _$wasCurrentFrequencyHash() =>
     r'f6b74cd2a414e6274cc3690c8115b96e5ab69e1f';
 
 /// A provider for the frequency of the WAS updates.
-///
-/// Copied from [WasCurrentFrequency].
-@ProviderFor(WasCurrentFrequency)
-final wasCurrentFrequencyProvider =
-    AutoDisposeNotifierProvider<WasCurrentFrequency, double?>.internal(
-      WasCurrentFrequency.new,
-      name: r'wasCurrentFrequencyProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$wasCurrentFrequencyHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$WasCurrentFrequency = AutoDisposeNotifier<double?>;
+abstract class _$WasCurrentFrequency extends $Notifier<double?> {
+  double? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<double?, double?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<double?, double?>,
+              double?,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for the current raw [WasReading] from the hardware.
+
+@ProviderFor(WasCurrentReading)
+const wasCurrentReadingProvider = WasCurrentReadingProvider._();
+
+/// A provider for the current raw [WasReading] from the hardware.
+final class WasCurrentReadingProvider
+    extends $NotifierProvider<WasCurrentReading, WasReading?> {
+  /// A provider for the current raw [WasReading] from the hardware.
+  const WasCurrentReadingProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'wasCurrentReadingProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$wasCurrentReadingHash();
+
+  @$internal
+  @override
+  WasCurrentReading create() => WasCurrentReading();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(WasReading? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<WasReading?>(value),
+    );
+  }
+}
+
 String _$wasCurrentReadingHash() => r'657c28334eb4a6873b3e07cd3ec3c803fd581a4f';
 
 /// A provider for the current raw [WasReading] from the hardware.
-///
-/// Copied from [WasCurrentReading].
-@ProviderFor(WasCurrentReading)
-final wasCurrentReadingProvider =
-    AutoDisposeNotifierProvider<WasCurrentReading, WasReading?>.internal(
-      WasCurrentReading.new,
-      name: r'wasCurrentReadingProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$wasCurrentReadingHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$WasCurrentReading = AutoDisposeNotifier<WasReading?>;
+abstract class _$WasCurrentReading extends $Notifier<WasReading?> {
+  WasReading? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<WasReading?, WasReading?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<WasReading?, WasReading?>,
+              WasReading?,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// Whether to show the steering hardware configurator.
+
+@ProviderFor(ShowSteeringHardwareConfig)
+const showSteeringHardwareConfigProvider =
+    ShowSteeringHardwareConfigProvider._();
+
+/// Whether to show the steering hardware configurator.
+final class ShowSteeringHardwareConfigProvider
+    extends $NotifierProvider<ShowSteeringHardwareConfig, bool> {
+  /// Whether to show the steering hardware configurator.
+  const ShowSteeringHardwareConfigProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'showSteeringHardwareConfigProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$showSteeringHardwareConfigHash();
+
+  @$internal
+  @override
+  ShowSteeringHardwareConfig create() => ShowSteeringHardwareConfig();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$showSteeringHardwareConfigHash() =>
     r'2a29f37ebfee0127c28ef3e6b31fd478891ed0bc';
 
 /// Whether to show the steering hardware configurator.
-///
-/// Copied from [ShowSteeringHardwareConfig].
-@ProviderFor(ShowSteeringHardwareConfig)
-final showSteeringHardwareConfigProvider =
-    AutoDisposeNotifierProvider<ShowSteeringHardwareConfig, bool>.internal(
-      ShowSteeringHardwareConfig.new,
-      name: r'showSteeringHardwareConfigProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$showSteeringHardwareConfigHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$ShowSteeringHardwareConfig = AutoDisposeNotifier<bool>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$ShowSteeringHardwareConfig extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

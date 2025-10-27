@@ -82,7 +82,7 @@ class MainMapController extends _$MainMapController {
 }
 
 /// The home position of the vehicle, i.e. where the vehicle will reset to.
-@riverpod
+@Riverpod(keepAlive: true)
 class HomePosition extends _$HomePosition {
   @override
   LatLng build() {
@@ -140,7 +140,7 @@ class CenterMapOnVehicle extends _$CenterMapOnVehicle {
 
   /// Update the [state] to [value]. Will update the map if necessary.
   void update({bool? value}) {
-    Future(() => state = value ?? state);
+    unawaited(Future(() => state = value ?? state));
     if (value != null) {
       if (value) {
         ref
@@ -175,26 +175,32 @@ class ZoomTimerController extends _$ZoomTimerController {
   /// Start to zoom in.
   void zoomIn() {
     cancel();
-    Future(
-      () =>
-          state = Timer.periodic(const Duration(microseconds: 16667), (timer) {
-            ref
-                .read(mainMapControllerProvider.notifier)
-                .zoomIn(timer.tick * 0.001);
-          }),
+    unawaited(
+      Future(
+        () => state = Timer.periodic(const Duration(microseconds: 16667), (
+          timer,
+        ) {
+          ref
+              .read(mainMapControllerProvider.notifier)
+              .zoomIn(timer.tick * 0.001);
+        }),
+      ),
     );
   }
 
   /// Start to zoom out.
   void zoomOut() {
     cancel();
-    Future(
-      () =>
-          state = Timer.periodic(const Duration(microseconds: 16667), (timer) {
-            ref
-                .read(mainMapControllerProvider.notifier)
-                .zoomOut(timer.tick * 0.001);
-          }),
+    unawaited(
+      Future(
+        () => state = Timer.periodic(const Duration(microseconds: 16667), (
+          timer,
+        ) {
+          ref
+              .read(mainMapControllerProvider.notifier)
+              .zoomOut(timer.tick * 0.001);
+        }),
+      ),
     );
   }
 }
@@ -458,13 +464,12 @@ FutureOr<DateTime?> mapCacheDate(Ref ref, String filePath) async {
 
 /// A provider for listing all the map layer cache folders.
 @riverpod
-FutureOr<List<String>> mapCacheDirectories(Ref ref) async =>
-    await Directory(
-      path.join(
-        ref.watch(fileDirectoryProvider).requireValue.path,
-        'map_image_cache',
-      ),
-    ).findSubfoldersWithTargetFile();
+FutureOr<List<String>> mapCacheDirectories(Ref ref) async => await Directory(
+  path.join(
+    ref.watch(fileDirectoryProvider).requireValue.path,
+    'map_image_cache',
+  ),
+).findSubfoldersWithTargetFile();
 
 /// Whether the map should be allowed to download tiles over the internet.
 @riverpod

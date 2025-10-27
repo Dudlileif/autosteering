@@ -115,10 +115,9 @@ extension PolygonBufferExtension on Polygon {
   }
 
   /// Area of the polygon in square meters.
-  double get area =>
-      exterior != null
-          ? computeArea(exterior!.toGeographicPositions).toDouble()
-          : 0;
+  double get area => exterior != null
+      ? computeArea(exterior!.toGeographicPositions).toDouble()
+      : 0;
 
   /// Area of the polygon with the area of the holes deducted.
   double get areaWithoutHoles => area - holesArea;
@@ -127,11 +126,9 @@ extension PolygonBufferExtension on Polygon {
   double get holesArea =>
       interior.fold(
         0,
-        (previousValue, hole) =>
-            previousValue != null
-                ? previousValue +
-                    computeArea(hole.toGeographicPositions).toDouble()
-                : computeArea(hole.toGeographicPositions).toDouble(),
+        (previousValue, hole) => previousValue != null
+            ? previousValue + computeArea(hole.toGeographicPositions).toDouble()
+            : computeArea(hole.toGeographicPositions).toDouble(),
       ) ??
       0;
 
@@ -153,7 +150,7 @@ extension PolygonBufferExtension on Polygon {
         exteriorContains &&
             !interior
                 .map((hole) => point.isWithinRing(hole.toGeographicPositions))
-                .any((element) => element == true),
+                .any((element) => element),
     };
   }
 
@@ -228,8 +225,8 @@ extension PolygonBufferExtension on Polygon {
     StrokeJoin strokeJoin = StrokeJoin.round,
     String? label,
     TextStyle labelStyle = const TextStyle(),
-    map.PolygonLabelPlacement labelPlacement =
-        map.PolygonLabelPlacement.centroid,
+    map.PolygonLabelPlacementCalculator labelPlacement =
+        const map.PolygonLabelPlacementCalculator.centroid(),
     bool rotateLabel = false,
   }) => map.Polygon(
     points: switch (withExterior && exterior != null) {
@@ -240,10 +237,9 @@ extension PolygonBufferExtension on Polygon {
       true =>
         interior
             .map(
-              (hole) =>
-                  hole.toGeographicPositions
-                      .map((point) => point.latLng)
-                      .toList(),
+              (hole) => hole.toGeographicPositions
+                  .map((point) => point.latLng)
+                  .toList(),
             )
             .toList(),
       false => [],
@@ -257,7 +253,7 @@ extension PolygonBufferExtension on Polygon {
     strokeJoin: strokeJoin,
     label: label,
     labelStyle: labelStyle,
-    labelPlacement: labelPlacement,
+    labelPlacementCalculator: labelPlacement,
     rotateLabel: rotateLabel,
   );
 }

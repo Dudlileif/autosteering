@@ -6,212 +6,301 @@ part of 'vehicle_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$saveVehicleHash() => r'e14dbec81d0ac50650b9dae17e469eae45078661';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// The main provider for the vehicle state.
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
+@ProviderFor(MainVehicle)
+const mainVehicleProvider = MainVehicleProvider._();
 
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
+/// The main provider for the vehicle state.
+final class MainVehicleProvider
+    extends $NotifierProvider<MainVehicle, Vehicle> {
+  /// The main provider for the vehicle state.
+  const MainVehicleProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'mainVehicleProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$mainVehicleHash();
+
+  @$internal
+  @override
+  MainVehicle create() => MainVehicle();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Vehicle value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Vehicle>(value),
+    );
   }
+}
 
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+String _$mainVehicleHash() => r'0ebe1fa9a4a91073984d25b186bdb3913bbf2e8c';
+
+/// The main provider for the vehicle state.
+
+abstract class _$MainVehicle extends $Notifier<Vehicle> {
+  Vehicle build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<Vehicle, Vehicle>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Vehicle, Vehicle>,
+              Vehicle,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for the active [AutosteeringState] of the vehicle.
+
+@ProviderFor(ActiveAutosteeringState)
+const activeAutosteeringStateProvider = ActiveAutosteeringStateProvider._();
+
+/// A provider for the active [AutosteeringState] of the vehicle.
+final class ActiveAutosteeringStateProvider
+    extends $NotifierProvider<ActiveAutosteeringState, AutosteeringState> {
+  /// A provider for the active [AutosteeringState] of the vehicle.
+  const ActiveAutosteeringStateProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'activeAutosteeringStateProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$activeAutosteeringStateHash();
+
+  @$internal
+  @override
+  ActiveAutosteeringState create() => ActiveAutosteeringState();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AutosteeringState value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AutosteeringState>(value),
+    );
+  }
+}
+
+String _$activeAutosteeringStateHash() =>
+    r'b537d59efe69ab2e11126bbb1b9bc70661216fc4';
+
+/// A provider for the active [AutosteeringState] of the vehicle.
+
+abstract class _$ActiveAutosteeringState extends $Notifier<AutosteeringState> {
+  AutosteeringState build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<AutosteeringState, AutosteeringState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AutosteeringState, AutosteeringState>,
+              AutosteeringState,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
   }
 }
 
 /// A provider for saving [vehicle] to a file in the user file directory.
 ///
 /// Override the file name with [overrideName].
-///
-/// Copied from [saveVehicle].
+
 @ProviderFor(saveVehicle)
-const saveVehicleProvider = SaveVehicleFamily();
+const saveVehicleProvider = SaveVehicleFamily._();
 
 /// A provider for saving [vehicle] to a file in the user file directory.
 ///
 /// Override the file name with [overrideName].
-///
-/// Copied from [saveVehicle].
-class SaveVehicleFamily extends Family<AsyncValue<void>> {
+
+final class SaveVehicleProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+    with $FutureModifier<void>, $FutureProvider<void> {
   /// A provider for saving [vehicle] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
-  ///
-  /// Copied from [saveVehicle].
-  const SaveVehicleFamily();
-
-  /// A provider for saving [vehicle] to a file in the user file directory.
-  ///
-  /// Override the file name with [overrideName].
-  ///
-  /// Copied from [saveVehicle].
-  SaveVehicleProvider call(
-    Vehicle vehicle, {
-    String? overrideName,
-    bool downloadIfWeb = false,
-  }) {
-    return SaveVehicleProvider(
-      vehicle,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    );
-  }
-
-  @override
-  SaveVehicleProvider getProviderOverride(
-    covariant SaveVehicleProvider provider,
-  ) {
-    return call(
-      provider.vehicle,
-      overrideName: provider.overrideName,
-      downloadIfWeb: provider.downloadIfWeb,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'saveVehicleProvider';
-}
-
-/// A provider for saving [vehicle] to a file in the user file directory.
-///
-/// Override the file name with [overrideName].
-///
-/// Copied from [saveVehicle].
-class SaveVehicleProvider extends AutoDisposeFutureProvider<void> {
-  /// A provider for saving [vehicle] to a file in the user file directory.
-  ///
-  /// Override the file name with [overrideName].
-  ///
-  /// Copied from [saveVehicle].
-  SaveVehicleProvider(
-    Vehicle vehicle, {
-    String? overrideName,
-    bool downloadIfWeb = false,
-  }) : this._internal(
-         (ref) => saveVehicle(
-           ref as SaveVehicleRef,
-           vehicle,
-           overrideName: overrideName,
-           downloadIfWeb: downloadIfWeb,
-         ),
-         from: saveVehicleProvider,
+  const SaveVehicleProvider._({
+    required SaveVehicleFamily super.from,
+    required (Vehicle, {String? overrideName, bool downloadIfWeb})
+    super.argument,
+  }) : super(
+         retry: null,
          name: r'saveVehicleProvider',
-         debugGetCreateSourceHash:
-             const bool.fromEnvironment('dart.vm.product')
-                 ? null
-                 : _$saveVehicleHash,
-         dependencies: SaveVehicleFamily._dependencies,
-         allTransitiveDependencies:
-             SaveVehicleFamily._allTransitiveDependencies,
-         vehicle: vehicle,
-         overrideName: overrideName,
-         downloadIfWeb: downloadIfWeb,
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
        );
 
-  SaveVehicleProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.vehicle,
-    required this.overrideName,
-    required this.downloadIfWeb,
-  }) : super.internal();
-
-  final Vehicle vehicle;
-  final String? overrideName;
-  final bool downloadIfWeb;
+  @override
+  String debugGetCreateSourceHash() => _$saveVehicleHash();
 
   @override
-  Override overrideWith(
-    FutureOr<void> Function(SaveVehicleRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: SaveVehicleProvider._internal(
-        (ref) => create(ref as SaveVehicleRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        vehicle: vehicle,
-        overrideName: overrideName,
-        downloadIfWeb: downloadIfWeb,
-      ),
-    );
+  String toString() {
+    return r'saveVehicleProvider'
+        ''
+        '$argument';
   }
 
+  @$internal
   @override
-  AutoDisposeFutureProviderElement<void> createElement() {
-    return _SaveVehicleProviderElement(this);
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<void> create(Ref ref) {
+    final argument =
+        this.argument as (Vehicle, {String? overrideName, bool downloadIfWeb});
+    return saveVehicle(
+      ref,
+      argument.$1,
+      overrideName: argument.overrideName,
+      downloadIfWeb: argument.downloadIfWeb,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return other is SaveVehicleProvider &&
-        other.vehicle == vehicle &&
-        other.overrideName == overrideName &&
-        other.downloadIfWeb == downloadIfWeb;
+    return other is SaveVehicleProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, vehicle.hashCode);
-    hash = _SystemHash.combine(hash, overrideName.hashCode);
-    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin SaveVehicleRef on AutoDisposeFutureProviderRef<void> {
-  /// The parameter `vehicle` of this provider.
-  Vehicle get vehicle;
+String _$saveVehicleHash() => r'bed0b0eaa85f2ca4441391fd8b7af974a3e36523';
 
-  /// The parameter `overrideName` of this provider.
-  String? get overrideName;
+/// A provider for saving [vehicle] to a file in the user file directory.
+///
+/// Override the file name with [overrideName].
 
-  /// The parameter `downloadIfWeb` of this provider.
-  bool get downloadIfWeb;
+final class SaveVehicleFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<void>,
+          (Vehicle, {String? overrideName, bool downloadIfWeb})
+        > {
+  const SaveVehicleFamily._()
+    : super(
+        retry: null,
+        name: r'saveVehicleProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  /// A provider for saving [vehicle] to a file in the user file directory.
+  ///
+  /// Override the file name with [overrideName].
+
+  SaveVehicleProvider call(
+    Vehicle vehicle, {
+    String? overrideName,
+    bool downloadIfWeb = false,
+  }) => SaveVehicleProvider._(
+    argument: (
+      vehicle,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    ),
+    from: this,
+  );
+
+  @override
+  String toString() => r'saveVehicleProvider';
 }
 
-class _SaveVehicleProviderElement extends AutoDisposeFutureProviderElement<void>
-    with SaveVehicleRef {
-  _SaveVehicleProviderElement(super.provider);
+/// A provider for saving [vehicle] to a file.
+///
+/// Override the file name with [overrideName].
+
+@ProviderFor(exportVehicle)
+const exportVehicleProvider = ExportVehicleFamily._();
+
+/// A provider for saving [vehicle] to a file.
+///
+/// Override the file name with [overrideName].
+
+final class ExportVehicleProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+    with $FutureModifier<void>, $FutureProvider<void> {
+  /// A provider for saving [vehicle] to a file.
+  ///
+  /// Override the file name with [overrideName].
+  const ExportVehicleProvider._({
+    required ExportVehicleFamily super.from,
+    required (Vehicle, {String? overrideName, bool downloadIfWeb})
+    super.argument,
+  }) : super(
+         retry: null,
+         name: r'exportVehicleProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
-  Vehicle get vehicle => (origin as SaveVehicleProvider).vehicle;
+  String debugGetCreateSourceHash() => _$exportVehicleHash();
+
   @override
-  String? get overrideName => (origin as SaveVehicleProvider).overrideName;
+  String toString() {
+    return r'exportVehicleProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
   @override
-  bool get downloadIfWeb => (origin as SaveVehicleProvider).downloadIfWeb;
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<void> create(Ref ref) {
+    final argument =
+        this.argument as (Vehicle, {String? overrideName, bool downloadIfWeb});
+    return exportVehicle(
+      ref,
+      argument.$1,
+      overrideName: argument.overrideName,
+      downloadIfWeb: argument.downloadIfWeb,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ExportVehicleProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
 }
 
 String _$exportVehicleHash() => r'cd71215436b2f327671f58007d90e4ae056e3776';
@@ -219,818 +308,750 @@ String _$exportVehicleHash() => r'cd71215436b2f327671f58007d90e4ae056e3776';
 /// A provider for saving [vehicle] to a file.
 ///
 /// Override the file name with [overrideName].
-///
-/// Copied from [exportVehicle].
-@ProviderFor(exportVehicle)
-const exportVehicleProvider = ExportVehicleFamily();
 
-/// A provider for saving [vehicle] to a file.
-///
-/// Override the file name with [overrideName].
-///
-/// Copied from [exportVehicle].
-class ExportVehicleFamily extends Family<AsyncValue<void>> {
-  /// A provider for saving [vehicle] to a file.
-  ///
-  /// Override the file name with [overrideName].
-  ///
-  /// Copied from [exportVehicle].
-  const ExportVehicleFamily();
+final class ExportVehicleFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<void>,
+          (Vehicle, {String? overrideName, bool downloadIfWeb})
+        > {
+  const ExportVehicleFamily._()
+    : super(
+        retry: null,
+        name: r'exportVehicleProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
 
   /// A provider for saving [vehicle] to a file.
   ///
   /// Override the file name with [overrideName].
-  ///
-  /// Copied from [exportVehicle].
+
   ExportVehicleProvider call(
     Vehicle vehicle, {
     String? overrideName,
     bool downloadIfWeb = true,
-  }) {
-    return ExportVehicleProvider(
+  }) => ExportVehicleProvider._(
+    argument: (
       vehicle,
       overrideName: overrideName,
       downloadIfWeb: downloadIfWeb,
-    );
-  }
+    ),
+    from: this,
+  );
 
   @override
-  ExportVehicleProvider getProviderOverride(
-    covariant ExportVehicleProvider provider,
-  ) {
-    return call(
-      provider.vehicle,
-      overrideName: provider.overrideName,
-      downloadIfWeb: provider.downloadIfWeb,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'exportVehicleProvider';
+  String toString() => r'exportVehicleProvider';
 }
 
-/// A provider for saving [vehicle] to a file.
-///
-/// Override the file name with [overrideName].
-///
-/// Copied from [exportVehicle].
-class ExportVehicleProvider extends AutoDisposeFutureProvider<void> {
-  /// A provider for saving [vehicle] to a file.
-  ///
-  /// Override the file name with [overrideName].
-  ///
-  /// Copied from [exportVehicle].
-  ExportVehicleProvider(
-    Vehicle vehicle, {
-    String? overrideName,
-    bool downloadIfWeb = true,
-  }) : this._internal(
-         (ref) => exportVehicle(
-           ref as ExportVehicleRef,
-           vehicle,
-           overrideName: overrideName,
-           downloadIfWeb: downloadIfWeb,
-         ),
-         from: exportVehicleProvider,
-         name: r'exportVehicleProvider',
-         debugGetCreateSourceHash:
-             const bool.fromEnvironment('dart.vm.product')
-                 ? null
-                 : _$exportVehicleHash,
-         dependencies: ExportVehicleFamily._dependencies,
-         allTransitiveDependencies:
-             ExportVehicleFamily._allTransitiveDependencies,
-         vehicle: vehicle,
-         overrideName: overrideName,
-         downloadIfWeb: downloadIfWeb,
-       );
+/// A provider for reading and holding all the saved [Vehicle]s in the
+/// user file directory.
 
-  ExportVehicleProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.vehicle,
-    required this.overrideName,
-    required this.downloadIfWeb,
-  }) : super.internal();
+@ProviderFor(savedVehicles)
+const savedVehiclesProvider = SavedVehiclesProvider._();
 
-  final Vehicle vehicle;
-  final String? overrideName;
-  final bool downloadIfWeb;
+/// A provider for reading and holding all the saved [Vehicle]s in the
+/// user file directory.
 
-  @override
-  Override overrideWith(
-    FutureOr<void> Function(ExportVehicleRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: ExportVehicleProvider._internal(
-        (ref) => create(ref as ExportVehicleRef),
-        from: from,
-        name: null,
+final class SavedVehiclesProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Vehicle>>,
+          List<Vehicle>,
+          FutureOr<List<Vehicle>>
+        >
+    with $FutureModifier<List<Vehicle>>, $FutureProvider<List<Vehicle>> {
+  /// A provider for reading and holding all the saved [Vehicle]s in the
+  /// user file directory.
+  const SavedVehiclesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'savedVehiclesProvider',
+        isAutoDispose: false,
         dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        vehicle: vehicle,
-        overrideName: overrideName,
-        downloadIfWeb: downloadIfWeb,
-      ),
-    );
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$savedVehiclesHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Vehicle>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Vehicle>> create(Ref ref) {
+    return savedVehicles(ref);
   }
-
-  @override
-  AutoDisposeFutureProviderElement<void> createElement() {
-    return _ExportVehicleProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is ExportVehicleProvider &&
-        other.vehicle == vehicle &&
-        other.overrideName == overrideName &&
-        other.downloadIfWeb == downloadIfWeb;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, vehicle.hashCode);
-    hash = _SystemHash.combine(hash, overrideName.hashCode);
-    hash = _SystemHash.combine(hash, downloadIfWeb.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin ExportVehicleRef on AutoDisposeFutureProviderRef<void> {
-  /// The parameter `vehicle` of this provider.
-  Vehicle get vehicle;
-
-  /// The parameter `overrideName` of this provider.
-  String? get overrideName;
-
-  /// The parameter `downloadIfWeb` of this provider.
-  bool get downloadIfWeb;
-}
-
-class _ExportVehicleProviderElement
-    extends AutoDisposeFutureProviderElement<void>
-    with ExportVehicleRef {
-  _ExportVehicleProviderElement(super.provider);
-
-  @override
-  Vehicle get vehicle => (origin as ExportVehicleProvider).vehicle;
-  @override
-  String? get overrideName => (origin as ExportVehicleProvider).overrideName;
-  @override
-  bool get downloadIfWeb => (origin as ExportVehicleProvider).downloadIfWeb;
 }
 
 String _$savedVehiclesHash() => r'3aaba3bb1dcc7019f369f7dc7c79b772728e572f';
 
-/// A provider for reading and holding all the saved [Vehicle]s in the
-/// user file directory.
+/// A provider for deleting [vehicle] from the user file system.
 ///
-/// Copied from [savedVehicles].
-@ProviderFor(savedVehicles)
-final savedVehiclesProvider = FutureProvider<List<Vehicle>>.internal(
-  savedVehicles,
-  name: r'savedVehiclesProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$savedVehiclesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+/// Override the file name with [overrideName].
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef SavedVehiclesRef = FutureProviderRef<List<Vehicle>>;
+@ProviderFor(deleteVehicle)
+const deleteVehicleProvider = DeleteVehicleFamily._();
+
+/// A provider for deleting [vehicle] from the user file system.
+///
+/// Override the file name with [overrideName].
+
+final class DeleteVehicleProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+    with $FutureModifier<void>, $FutureProvider<void> {
+  /// A provider for deleting [vehicle] from the user file system.
+  ///
+  /// Override the file name with [overrideName].
+  const DeleteVehicleProvider._({
+    required DeleteVehicleFamily super.from,
+    required (Vehicle, {String? overrideName}) super.argument,
+  }) : super(
+         retry: null,
+         name: r'deleteVehicleProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$deleteVehicleHash();
+
+  @override
+  String toString() {
+    return r'deleteVehicleProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<void> create(Ref ref) {
+    final argument = this.argument as (Vehicle, {String? overrideName});
+    return deleteVehicle(ref, argument.$1, overrideName: argument.overrideName);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DeleteVehicleProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
 String _$deleteVehicleHash() => r'52cc524e4e9958192919a6883fd8e4eb61f628ad';
 
 /// A provider for deleting [vehicle] from the user file system.
 ///
 /// Override the file name with [overrideName].
-///
-/// Copied from [deleteVehicle].
-@ProviderFor(deleteVehicle)
-const deleteVehicleProvider = DeleteVehicleFamily();
 
-/// A provider for deleting [vehicle] from the user file system.
-///
-/// Override the file name with [overrideName].
-///
-/// Copied from [deleteVehicle].
-class DeleteVehicleFamily extends Family<AsyncValue<void>> {
-  /// A provider for deleting [vehicle] from the user file system.
-  ///
-  /// Override the file name with [overrideName].
-  ///
-  /// Copied from [deleteVehicle].
-  const DeleteVehicleFamily();
-
-  /// A provider for deleting [vehicle] from the user file system.
-  ///
-  /// Override the file name with [overrideName].
-  ///
-  /// Copied from [deleteVehicle].
-  DeleteVehicleProvider call(Vehicle vehicle, {String? overrideName}) {
-    return DeleteVehicleProvider(vehicle, overrideName: overrideName);
-  }
-
-  @override
-  DeleteVehicleProvider getProviderOverride(
-    covariant DeleteVehicleProvider provider,
-  ) {
-    return call(provider.vehicle, overrideName: provider.overrideName);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'deleteVehicleProvider';
-}
-
-/// A provider for deleting [vehicle] from the user file system.
-///
-/// Override the file name with [overrideName].
-///
-/// Copied from [deleteVehicle].
-class DeleteVehicleProvider extends AutoDisposeFutureProvider<void> {
-  /// A provider for deleting [vehicle] from the user file system.
-  ///
-  /// Override the file name with [overrideName].
-  ///
-  /// Copied from [deleteVehicle].
-  DeleteVehicleProvider(Vehicle vehicle, {String? overrideName})
-    : this._internal(
-        (ref) => deleteVehicle(
-          ref as DeleteVehicleRef,
-          vehicle,
-          overrideName: overrideName,
-        ),
-        from: deleteVehicleProvider,
+final class DeleteVehicleFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<void>,
+          (Vehicle, {String? overrideName})
+        > {
+  const DeleteVehicleFamily._()
+    : super(
+        retry: null,
         name: r'deleteVehicleProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$deleteVehicleHash,
-        dependencies: DeleteVehicleFamily._dependencies,
-        allTransitiveDependencies:
-            DeleteVehicleFamily._allTransitiveDependencies,
-        vehicle: vehicle,
-        overrideName: overrideName,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
       );
 
-  DeleteVehicleProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.vehicle,
-    required this.overrideName,
-  }) : super.internal();
+  /// A provider for deleting [vehicle] from the user file system.
+  ///
+  /// Override the file name with [overrideName].
 
-  final Vehicle vehicle;
-  final String? overrideName;
+  DeleteVehicleProvider call(Vehicle vehicle, {String? overrideName}) =>
+      DeleteVehicleProvider._(
+        argument: (vehicle, overrideName: overrideName),
+        from: this,
+      );
 
   @override
-  Override overrideWith(
-    FutureOr<void> Function(DeleteVehicleRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: DeleteVehicleProvider._internal(
-        (ref) => create(ref as DeleteVehicleRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        vehicle: vehicle,
-        overrideName: overrideName,
-      ),
-    );
+  String toString() => r'deleteVehicleProvider';
+}
+
+/// A provider for loading a [Vehicle] from a file at [path], if it's valid.
+
+@ProviderFor(loadVehicleFromFile)
+const loadVehicleFromFileProvider = LoadVehicleFromFileFamily._();
+
+/// A provider for loading a [Vehicle] from a file at [path], if it's valid.
+
+final class LoadVehicleFromFileProvider
+    extends
+        $FunctionalProvider<AsyncValue<Vehicle?>, Vehicle?, FutureOr<Vehicle?>>
+    with $FutureModifier<Vehicle?>, $FutureProvider<Vehicle?> {
+  /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
+  const LoadVehicleFromFileProvider._({
+    required LoadVehicleFromFileFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'loadVehicleFromFileProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$loadVehicleFromFileHash();
+
+  @override
+  String toString() {
+    return r'loadVehicleFromFileProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  AutoDisposeFutureProviderElement<void> createElement() {
-    return _DeleteVehicleProviderElement(this);
+  $FutureProviderElement<Vehicle?> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<Vehicle?> create(Ref ref) {
+    final argument = this.argument as String;
+    return loadVehicleFromFile(ref, argument);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is DeleteVehicleProvider &&
-        other.vehicle == vehicle &&
-        other.overrideName == overrideName;
+    return other is LoadVehicleFromFileProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, vehicle.hashCode);
-    hash = _SystemHash.combine(hash, overrideName.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
-}
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin DeleteVehicleRef on AutoDisposeFutureProviderRef<void> {
-  /// The parameter `vehicle` of this provider.
-  Vehicle get vehicle;
-
-  /// The parameter `overrideName` of this provider.
-  String? get overrideName;
-}
-
-class _DeleteVehicleProviderElement
-    extends AutoDisposeFutureProviderElement<void>
-    with DeleteVehicleRef {
-  _DeleteVehicleProviderElement(super.provider);
-
-  @override
-  Vehicle get vehicle => (origin as DeleteVehicleProvider).vehicle;
-  @override
-  String? get overrideName => (origin as DeleteVehicleProvider).overrideName;
 }
 
 String _$loadVehicleFromFileHash() =>
     r'20bcb6de25d3e30735cfbe17ca11ef60943b2105';
 
 /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
-///
-/// Copied from [loadVehicleFromFile].
-@ProviderFor(loadVehicleFromFile)
-const loadVehicleFromFileProvider = LoadVehicleFromFileFamily();
 
-/// A provider for loading a [Vehicle] from a file at [path], if it's valid.
-///
-/// Copied from [loadVehicleFromFile].
-class LoadVehicleFromFileFamily extends Family<AsyncValue<Vehicle?>> {
-  /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
-  ///
-  /// Copied from [loadVehicleFromFile].
-  const LoadVehicleFromFileFamily();
-
-  /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
-  ///
-  /// Copied from [loadVehicleFromFile].
-  LoadVehicleFromFileProvider call(String path) {
-    return LoadVehicleFromFileProvider(path);
-  }
-
-  @override
-  LoadVehicleFromFileProvider getProviderOverride(
-    covariant LoadVehicleFromFileProvider provider,
-  ) {
-    return call(provider.path);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'loadVehicleFromFileProvider';
-}
-
-/// A provider for loading a [Vehicle] from a file at [path], if it's valid.
-///
-/// Copied from [loadVehicleFromFile].
-class LoadVehicleFromFileProvider extends AutoDisposeFutureProvider<Vehicle?> {
-  /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
-  ///
-  /// Copied from [loadVehicleFromFile].
-  LoadVehicleFromFileProvider(String path)
-    : this._internal(
-        (ref) => loadVehicleFromFile(ref as LoadVehicleFromFileRef, path),
-        from: loadVehicleFromFileProvider,
+final class LoadVehicleFromFileFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<Vehicle?>, String> {
+  const LoadVehicleFromFileFamily._()
+    : super(
+        retry: null,
         name: r'loadVehicleFromFileProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$loadVehicleFromFileHash,
-        dependencies: LoadVehicleFromFileFamily._dependencies,
-        allTransitiveDependencies:
-            LoadVehicleFromFileFamily._allTransitiveDependencies,
-        path: path,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
       );
 
-  LoadVehicleFromFileProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.path,
-  }) : super.internal();
+  /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
 
-  final String path;
+  LoadVehicleFromFileProvider call(String path) =>
+      LoadVehicleFromFileProvider._(argument: path, from: this);
 
   @override
-  Override overrideWith(
-    FutureOr<Vehicle?> Function(LoadVehicleFromFileRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: LoadVehicleFromFileProvider._internal(
-        (ref) => create(ref as LoadVehicleFromFileRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        path: path,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeFutureProviderElement<Vehicle?> createElement() {
-    return _LoadVehicleFromFileProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is LoadVehicleFromFileProvider && other.path == path;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, path.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
+  String toString() => r'loadVehicleFromFileProvider';
 }
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin LoadVehicleFromFileRef on AutoDisposeFutureProviderRef<Vehicle?> {
-  /// The parameter `path` of this provider.
-  String get path;
-}
-
-class _LoadVehicleFromFileProviderElement
-    extends AutoDisposeFutureProviderElement<Vehicle?>
-    with LoadVehicleFromFileRef {
-  _LoadVehicleFromFileProviderElement(super.provider);
-
-  @override
-  String get path => (origin as LoadVehicleFromFileProvider).path;
-}
-
-String _$lastUsedVehicleHash() => r'286f2c8f04bb4d0b06c044bd219d21348cd4e3ca';
 
 /// A provider for the most recently used [Vehicle].
 ///
 /// The vehicle is found by sorting the saved vehicles by their last used
 /// property.
-///
-/// Copied from [lastUsedVehicle].
+
 @ProviderFor(lastUsedVehicle)
-final lastUsedVehicleProvider = Provider<AsyncValue<Vehicle>>.internal(
-  lastUsedVehicle,
-  name: r'lastUsedVehicleProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$lastUsedVehicleHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const lastUsedVehicleProvider = LastUsedVehicleProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef LastUsedVehicleRef = ProviderRef<AsyncValue<Vehicle>>;
-String _$importVehicleHash() => r'9424f72c9aa7ec7efc5cbf08fb8a67e3e9e31858';
-
-/// A provider for importing a vehicle configuration from a file and applying it
-/// to the [ConfiguredVehicle] provider.
+/// A provider for the most recently used [Vehicle].
 ///
-/// Copied from [importVehicle].
-@ProviderFor(importVehicle)
-final importVehicleProvider = AutoDisposeFutureProvider<Vehicle?>.internal(
-  importVehicle,
-  name: r'importVehicleProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$importVehicleHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+/// The vehicle is found by sorting the saved vehicles by their last used
+/// property.
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ImportVehicleRef = AutoDisposeFutureProviderRef<Vehicle?>;
-String _$exportVehiclesHash() => r'1791fa257813e56b8d158ef9b2323726810d183f';
-
-/// A provider for exporting all vehicle files.
-///
-/// Copied from [exportVehicles].
-@ProviderFor(exportVehicles)
-const exportVehiclesProvider = ExportVehiclesFamily();
-
-/// A provider for exporting all vehicle files.
-///
-/// Copied from [exportVehicles].
-class ExportVehiclesFamily extends Family<AsyncValue<void>> {
-  /// A provider for exporting all vehicle files.
+final class LastUsedVehicleProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<Vehicle>,
+          AsyncValue<Vehicle>,
+          AsyncValue<Vehicle>
+        >
+    with $Provider<AsyncValue<Vehicle>> {
+  /// A provider for the most recently used [Vehicle].
   ///
-  /// Copied from [exportVehicles].
-  const ExportVehiclesFamily();
-
-  /// A provider for exporting all vehicle files.
-  ///
-  /// Copied from [exportVehicles].
-  ExportVehiclesProvider call({bool zip = true}) {
-    return ExportVehiclesProvider(zip: zip);
-  }
-
-  @override
-  ExportVehiclesProvider getProviderOverride(
-    covariant ExportVehiclesProvider provider,
-  ) {
-    return call(zip: provider.zip);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'exportVehiclesProvider';
-}
-
-/// A provider for exporting all vehicle files.
-///
-/// Copied from [exportVehicles].
-class ExportVehiclesProvider extends AutoDisposeFutureProvider<void> {
-  /// A provider for exporting all vehicle files.
-  ///
-  /// Copied from [exportVehicles].
-  ExportVehiclesProvider({bool zip = true})
-    : this._internal(
-        (ref) => exportVehicles(ref as ExportVehiclesRef, zip: zip),
-        from: exportVehiclesProvider,
-        name: r'exportVehiclesProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$exportVehiclesHash,
-        dependencies: ExportVehiclesFamily._dependencies,
-        allTransitiveDependencies:
-            ExportVehiclesFamily._allTransitiveDependencies,
-        zip: zip,
+  /// The vehicle is found by sorting the saved vehicles by their last used
+  /// property.
+  const LastUsedVehicleProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'lastUsedVehicleProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
       );
 
-  ExportVehiclesProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.zip,
-  }) : super.internal();
+  @override
+  String debugGetCreateSourceHash() => _$lastUsedVehicleHash();
 
-  final bool zip;
+  @$internal
+  @override
+  $ProviderElement<AsyncValue<Vehicle>> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
-  Override overrideWith(
-    FutureOr<void> Function(ExportVehiclesRef provider) create,
-  ) {
-    return ProviderOverride(
+  AsyncValue<Vehicle> create(Ref ref) {
+    return lastUsedVehicle(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AsyncValue<Vehicle> value) {
+    return $ProviderOverride(
       origin: this,
-      override: ExportVehiclesProvider._internal(
-        (ref) => create(ref as ExportVehiclesRef),
-        from: from,
-        name: null,
+      providerOverride: $SyncValueProvider<AsyncValue<Vehicle>>(value),
+    );
+  }
+}
+
+String _$lastUsedVehicleHash() => r'286f2c8f04bb4d0b06c044bd219d21348cd4e3ca';
+
+/// A provider for the number of previous positions to use for calculating
+/// the gauge velocity and bearing values.
+
+@ProviderFor(GaugesAverageCount)
+const gaugesAverageCountProvider = GaugesAverageCountProvider._();
+
+/// A provider for the number of previous positions to use for calculating
+/// the gauge velocity and bearing values.
+final class GaugesAverageCountProvider
+    extends $NotifierProvider<GaugesAverageCount, int> {
+  /// A provider for the number of previous positions to use for calculating
+  /// the gauge velocity and bearing values.
+  const GaugesAverageCountProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'gaugesAverageCountProvider',
+        isAutoDispose: false,
         dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        zip: zip,
-      ),
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$gaugesAverageCountHash();
+
+  @$internal
+  @override
+  GaugesAverageCount create() => GaugesAverageCount();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(int value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<int>(value),
     );
   }
-
-  @override
-  AutoDisposeFutureProviderElement<void> createElement() {
-    return _ExportVehiclesProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is ExportVehiclesProvider && other.zip == zip;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, zip.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin ExportVehiclesRef on AutoDisposeFutureProviderRef<void> {
-  /// The parameter `zip` of this provider.
-  bool get zip;
-}
-
-class _ExportVehiclesProviderElement
-    extends AutoDisposeFutureProviderElement<void>
-    with ExportVehiclesRef {
-  _ExportVehiclesProviderElement(super.provider);
-
-  @override
-  bool get zip => (origin as ExportVehiclesProvider).zip;
-}
-
-String _$mainVehicleHash() => r'0ebe1fa9a4a91073984d25b186bdb3913bbf2e8c';
-
-/// The main provider for the vehicle state.
-///
-/// Copied from [MainVehicle].
-@ProviderFor(MainVehicle)
-final mainVehicleProvider = NotifierProvider<MainVehicle, Vehicle>.internal(
-  MainVehicle.new,
-  name: r'mainVehicleProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$mainVehicleHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$MainVehicle = Notifier<Vehicle>;
-String _$activeAutosteeringStateHash() =>
-    r'b537d59efe69ab2e11126bbb1b9bc70661216fc4';
-
-/// A provider for the active [AutosteeringState] of the vehicle.
-///
-/// Copied from [ActiveAutosteeringState].
-@ProviderFor(ActiveAutosteeringState)
-final activeAutosteeringStateProvider =
-    NotifierProvider<ActiveAutosteeringState, AutosteeringState>.internal(
-      ActiveAutosteeringState.new,
-      name: r'activeAutosteeringStateProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$activeAutosteeringStateHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$ActiveAutosteeringState = Notifier<AutosteeringState>;
 String _$gaugesAverageCountHash() =>
     r'e407f07f9f1334a8aa3816877cf3f391c25a7e48';
 
 /// A provider for the number of previous positions to use for calculating
 /// the gauge velocity and bearing values.
-///
-/// Copied from [GaugesAverageCount].
-@ProviderFor(GaugesAverageCount)
-final gaugesAverageCountProvider =
-    NotifierProvider<GaugesAverageCount, int>.internal(
-      GaugesAverageCount.new,
-      name: r'gaugesAverageCountProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$gaugesAverageCountHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$GaugesAverageCount = Notifier<int>;
+abstract class _$GaugesAverageCount extends $Notifier<int> {
+  int build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<int, int>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<int, int>,
+              int,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for the target steering angle when using guidance.
+
+@ProviderFor(VehicleSteeringAngleTarget)
+const vehicleSteeringAngleTargetProvider =
+    VehicleSteeringAngleTargetProvider._();
+
+/// A provider for the target steering angle when using guidance.
+final class VehicleSteeringAngleTargetProvider
+    extends $NotifierProvider<VehicleSteeringAngleTarget, double?> {
+  /// A provider for the target steering angle when using guidance.
+  const VehicleSteeringAngleTargetProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'vehicleSteeringAngleTargetProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$vehicleSteeringAngleTargetHash();
+
+  @$internal
+  @override
+  VehicleSteeringAngleTarget create() => VehicleSteeringAngleTarget();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(double? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<double?>(value),
+    );
+  }
+}
+
 String _$vehicleSteeringAngleTargetHash() =>
     r'a347c0e38a1f5a0300bb32f6872853c2aa6b99b8';
 
 /// A provider for the target steering angle when using guidance.
-///
-/// Copied from [VehicleSteeringAngleTarget].
-@ProviderFor(VehicleSteeringAngleTarget)
-final vehicleSteeringAngleTargetProvider =
-    NotifierProvider<VehicleSteeringAngleTarget, double?>.internal(
-      VehicleSteeringAngleTarget.new,
-      name: r'vehicleSteeringAngleTargetProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$vehicleSteeringAngleTargetHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$VehicleSteeringAngleTarget = Notifier<double?>;
+abstract class _$VehicleSteeringAngleTarget extends $Notifier<double?> {
+  double? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<double?, double?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<double?, double?>,
+              double?,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for importing a vehicle configuration from a file and applying it
+/// to the [ConfiguredVehicle] provider.
+
+@ProviderFor(importVehicle)
+const importVehicleProvider = ImportVehicleProvider._();
+
+/// A provider for importing a vehicle configuration from a file and applying it
+/// to the [ConfiguredVehicle] provider.
+
+final class ImportVehicleProvider
+    extends
+        $FunctionalProvider<AsyncValue<Vehicle?>, Vehicle?, FutureOr<Vehicle?>>
+    with $FutureModifier<Vehicle?>, $FutureProvider<Vehicle?> {
+  /// A provider for importing a vehicle configuration from a file and applying it
+  /// to the [ConfiguredVehicle] provider.
+  const ImportVehicleProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'importVehicleProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$importVehicleHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<Vehicle?> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<Vehicle?> create(Ref ref) {
+    return importVehicle(ref);
+  }
+}
+
+String _$importVehicleHash() => r'9424f72c9aa7ec7efc5cbf08fb8a67e3e9e31858';
+
+/// A provider for whether widgets for overriding the steering should be shown.
+
+@ProviderFor(ShowOverrideSteering)
+const showOverrideSteeringProvider = ShowOverrideSteeringProvider._();
+
+/// A provider for whether widgets for overriding the steering should be shown.
+final class ShowOverrideSteeringProvider
+    extends $NotifierProvider<ShowOverrideSteering, bool> {
+  /// A provider for whether widgets for overriding the steering should be shown.
+  const ShowOverrideSteeringProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'showOverrideSteeringProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$showOverrideSteeringHash();
+
+  @$internal
+  @override
+  ShowOverrideSteering create() => ShowOverrideSteering();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$showOverrideSteeringHash() =>
     r'ac8c0487d367a157a3f04c3a9f5fbb7d63ad9d66';
 
 /// A provider for whether widgets for overriding the steering should be shown.
-///
-/// Copied from [ShowOverrideSteering].
-@ProviderFor(ShowOverrideSteering)
-final showOverrideSteeringProvider =
-    AutoDisposeNotifierProvider<ShowOverrideSteering, bool>.internal(
-      ShowOverrideSteering.new,
-      name: r'showOverrideSteeringProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$showOverrideSteeringHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$ShowOverrideSteering = AutoDisposeNotifier<bool>;
+abstract class _$ShowOverrideSteering extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// Whether the steering should be overridden. Usually used to test the
+/// steering motor and WAS together.
+
+@ProviderFor(OverrideSteering)
+const overrideSteeringProvider = OverrideSteeringProvider._();
+
+/// Whether the steering should be overridden. Usually used to test the
+/// steering motor and WAS together.
+final class OverrideSteeringProvider
+    extends $NotifierProvider<OverrideSteering, bool> {
+  /// Whether the steering should be overridden. Usually used to test the
+  /// steering motor and WAS together.
+  const OverrideSteeringProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'overrideSteeringProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$overrideSteeringHash();
+
+  @$internal
+  @override
+  OverrideSteering create() => OverrideSteering();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$overrideSteeringHash() => r'967f33baa1640de4ae8e216de5993c018db80eb2';
 
 /// Whether the steering should be overridden. Usually used to test the
 /// steering motor and WAS together.
-///
-/// Copied from [OverrideSteering].
-@ProviderFor(OverrideSteering)
-final overrideSteeringProvider =
-    AutoDisposeNotifierProvider<OverrideSteering, bool>.internal(
-      OverrideSteering.new,
-      name: r'overrideSteeringProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$overrideSteeringHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$OverrideSteering = AutoDisposeNotifier<bool>;
+abstract class _$OverrideSteering extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for the steering angle to override with.
+
+@ProviderFor(OverrideSteeringAngle)
+const overrideSteeringAngleProvider = OverrideSteeringAngleProvider._();
+
+/// A provider for the steering angle to override with.
+final class OverrideSteeringAngleProvider
+    extends $NotifierProvider<OverrideSteeringAngle, double> {
+  /// A provider for the steering angle to override with.
+  const OverrideSteeringAngleProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'overrideSteeringAngleProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$overrideSteeringAngleHash();
+
+  @$internal
+  @override
+  OverrideSteeringAngle create() => OverrideSteeringAngle();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(double value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<double>(value),
+    );
+  }
+}
+
 String _$overrideSteeringAngleHash() =>
     r'1b900da2b35f4f4a099e4ffd84786acd7ab8ed5b';
 
 /// A provider for the steering angle to override with.
-///
-/// Copied from [OverrideSteeringAngle].
-@ProviderFor(OverrideSteeringAngle)
-final overrideSteeringAngleProvider =
-    AutoDisposeNotifierProvider<OverrideSteeringAngle, double>.internal(
-      OverrideSteeringAngle.new,
-      name: r'overrideSteeringAngleProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$overrideSteeringAngleHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$OverrideSteeringAngle = AutoDisposeNotifier<double>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$OverrideSteeringAngle extends $Notifier<double> {
+  double build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<double, double>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<double, double>,
+              double,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for exporting all vehicle files.
+
+@ProviderFor(exportVehicles)
+const exportVehiclesProvider = ExportVehiclesFamily._();
+
+/// A provider for exporting all vehicle files.
+
+final class ExportVehiclesProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+    with $FutureModifier<void>, $FutureProvider<void> {
+  /// A provider for exporting all vehicle files.
+  const ExportVehiclesProvider._({
+    required ExportVehiclesFamily super.from,
+    required bool super.argument,
+  }) : super(
+         retry: null,
+         name: r'exportVehiclesProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$exportVehiclesHash();
+
+  @override
+  String toString() {
+    return r'exportVehiclesProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<void> create(Ref ref) {
+    final argument = this.argument as bool;
+    return exportVehicles(ref, zip: argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ExportVehiclesProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$exportVehiclesHash() => r'1791fa257813e56b8d158ef9b2323726810d183f';
+
+/// A provider for exporting all vehicle files.
+
+final class ExportVehiclesFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<void>, bool> {
+  const ExportVehiclesFamily._()
+    : super(
+        retry: null,
+        name: r'exportVehiclesProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// A provider for exporting all vehicle files.
+
+  ExportVehiclesProvider call({bool zip = true}) =>
+      ExportVehiclesProvider._(argument: zip, from: this);
+
+  @override
+  String toString() => r'exportVehiclesProvider';
+}

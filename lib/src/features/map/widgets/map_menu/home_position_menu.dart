@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:autosteering/src/features/common/common.dart';
@@ -72,33 +73,31 @@ class HomePositionMenu extends StatelessWidget {
         ),
         Consumer(
           child: Text('Set to screen center', style: textStyle),
-          builder:
-              (context, ref, child) => MenuItemButton(
-                closeOnActivate: false,
-                leadingIcon: const Icon(Icons.map),
-                onPressed: () {
-                  ref
-                      .read(homePositionProvider.notifier)
-                      .update(
-                        ref.watch(
-                          mainMapControllerProvider.select(
-                            (value) => value.camera.center,
-                          ),
-                        ),
-                      );
-                  ref.read(currentCountryProvider.notifier).update();
-                },
-                child: child,
-              ),
+          builder: (context, ref, child) => MenuItemButton(
+            closeOnActivate: false,
+            leadingIcon: const Icon(Icons.map),
+            onPressed: () {
+              ref
+                  .read(homePositionProvider.notifier)
+                  .update(
+                    ref.watch(
+                      mainMapControllerProvider.select(
+                        (value) => value.camera.center,
+                      ),
+                    ),
+                  );
+              unawaited(ref.read(currentCountryProvider.notifier).update());
+            },
+            child: child,
+          ),
         ),
         MenuItemButton(
           closeOnActivate: false,
           leadingIcon: const Icon(Icons.edit),
-          onPressed:
-              () => showDialog<void>(
-                context: context,
-                builder: (context) => const _EnterHomePositionDialog(),
-              ),
+          onPressed: () => showDialog<void>(
+            context: context,
+            builder: (context) => const _EnterHomePositionDialog(),
+          ),
           child: Text('Enter home position', style: textStyle),
         ),
       ],
@@ -202,22 +201,20 @@ class _EnterHomePositionDialogState
                 label: const Text('Cancel'),
               ),
               Consumer(
-                builder:
-                    (context, ref, child) => FilledButton.icon(
-                      onPressed:
-                          lat != null && lon != null
-                              ? () {
-                                if (lat != null && lon != null) {
-                                  ref
-                                      .read(homePositionProvider.notifier)
-                                      .update(LatLng(lat!, lon!));
-                                }
-                                Navigator.of(context).pop();
-                              }
-                              : null,
-                      icon: const Icon(Icons.check),
-                      label: const Text('Use entered position'),
-                    ),
+                builder: (context, ref, child) => FilledButton.icon(
+                  onPressed: lat != null && lon != null
+                      ? () {
+                          if (lat != null && lon != null) {
+                            ref
+                                .read(homePositionProvider.notifier)
+                                .update(LatLng(lat!, lon!));
+                          }
+                          Navigator.of(context).pop();
+                        }
+                      : null,
+                  icon: const Icon(Icons.check),
+                  label: const Text('Use entered position'),
+                ),
               ),
             ],
           ),

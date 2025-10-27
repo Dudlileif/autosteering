@@ -91,36 +91,33 @@ class _SentinelLayerMenuItemButton extends StatelessWidget {
               return CheckboxListTile(
                 controlAffinity: ListTileControlAffinity.leading,
                 value: enabled,
-                onChanged:
-                    (value) => ref
-                        .read(enabledSentinelLayersProvider.notifier)
-                        .toggle(layer),
+                onChanged: (value) => ref
+                    .read(enabledSentinelLayersProvider.notifier)
+                    .toggle(layer),
                 title: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(layer.name, style: theme.menuButtonWithChildrenText),
                     SliderTheme(
                       data: theme.sliderTheme.copyWith(
-                        showValueIndicator: ShowValueIndicator.always,
+                        showValueIndicator: ShowValueIndicator.alwaysVisible,
                       ),
                       child: Consumer(
                         builder: (context, ref, child) {
-                          final opacity =
-                              ref.watch(sentinelLayerOpacitiesProvider)[layer
-                                  .layerType]!;
+                          final opacity = ref.watch(
+                            sentinelLayerOpacitiesProvider,
+                          )[layer.layerType]!;
 
                           return Slider(
                             value: opacity,
                             label: 'Opacity: ${opacity.toStringAsFixed(2)}',
-                            onChanged:
-                                enabled
-                                    ? (value) => ref
-                                        .read(
-                                          sentinelLayerOpacitiesProvider
-                                              .notifier,
-                                        )
-                                        .update(layer.layerType, value)
-                                    : null,
+                            onChanged: enabled
+                                ? (value) => ref
+                                      .read(
+                                        sentinelLayerOpacitiesProvider.notifier,
+                                      )
+                                      .update(layer.layerType, value)
+                                : null,
                             divisions: 20,
                           );
                         },

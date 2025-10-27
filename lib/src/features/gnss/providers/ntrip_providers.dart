@@ -229,10 +229,9 @@ class NtripClient extends _$NtripClient {
             ageOfDifferentialData: currentSentence?.ageOfDifferentialData,
             time: currentSentence?.utc,
             geodialSeparation: currentSentence?.geoidSeparation,
-            source:
-                currentSentence is TalkerSentence
-                    ? (currentSentence! as TalkerSentence).source
-                    : null,
+            source: currentSentence is TalkerSentence
+                ? (currentSentence! as TalkerSentence).source
+                : null,
           );
     }
 
@@ -280,7 +279,9 @@ class NtripClient extends _$NtripClient {
                   .updateBy(event.lengthInBytes);
 
               if (ref.read(hardwareSerialProvider) != null) {
-                ref.read(hardwareSerialProvider.notifier).write(event);
+                unawaited(
+                  ref.read(hardwareSerialProvider.notifier).write(event),
+                );
               } else {
                 ref.read(tcpServerProvider.notifier).send(event);
               }
@@ -324,12 +325,11 @@ class NtripClient extends _$NtripClient {
             });
           }
         },
-        error:
-            (error, stackTrace) => Logger.instance.e(
-              'Failed to create NTRIP client.',
-              error: error,
-              stackTrace: stackTrace,
-            ),
+        error: (error, stackTrace) => Logger.instance.e(
+          'Failed to create NTRIP client.',
+          error: error,
+          stackTrace: stackTrace,
+        ),
         loading: () {},
       );
     });
@@ -358,7 +358,8 @@ FutureOr<Iterable<gnss.NtripMountPoint>?> ntripSourcetable(
 
   try {
     final auth = const Base64Encoder().convert('$username:$password'.codeUnits);
-    final message = '''
+    final message =
+        '''
 GET / HTTP/1.1\r
 User-Agent: NTRIP NTRIPClient/0.1\r
 Accept: */*\r
@@ -418,12 +419,11 @@ FutureOr<Map<gnss.NtripMountPointStream, double?>?> ntripMountPointsSorted(
   final position = ref.read(
     mainVehicleProvider.select((value) => value.position),
   );
-  final sorted =
-      sourcetable?.whereType<gnss.NtripMountPointStream>().toList()
-        ?..sortByCompare(
-          (element) => element.distanceToPoint(position) ?? double.infinity,
-          (a, b) => a.compareTo(b),
-        );
+  final sorted = sourcetable?.whereType<gnss.NtripMountPointStream>().toList()
+    ?..sortByCompare(
+      (element) => element.distanceToPoint(position) ?? double.infinity,
+      (a, b) => a.compareTo(b),
+    );
 
   if (sorted != null) {
     final closestDistance = sorted.first.distanceToPoint(position);
@@ -464,7 +464,9 @@ class NtripDataUsageByMonth extends _$NtripDataUsageByMonth {
           'Created data usage file not found, new created: ${file.path}',
         );
       }
-      file.writeAsString(const JsonEncoder.withIndent('    ').convert(next));
+      unawaited(
+        file.writeAsString(const JsonEncoder.withIndent('    ').convert(next)),
+      );
     });
 
     final fileContent = file.readAsStringSync();
@@ -485,12 +487,12 @@ class NtripDataUsageByMonth extends _$NtripDataUsageByMonth {
 
   /// Updates [state] field from [date] by [value].
   void updateBy({required DateTime date, required int value}) => Future(
-    () =>
-        state = Map.from(state)..update(
-          date.toIso8601String().substring(0, 7),
-          (old) => old + value,
-          ifAbsent: () => value,
-        ),
+    () => state = Map.from(state)
+      ..update(
+        date.toIso8601String().substring(0, 7),
+        (old) => old + value,
+        ifAbsent: () => value,
+      ),
   );
 
   @override

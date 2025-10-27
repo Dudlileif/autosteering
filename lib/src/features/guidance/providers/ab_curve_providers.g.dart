@@ -6,41 +6,116 @@ part of 'ab_curve_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// A provider for the curve points for the AB-curve.
+
+@ProviderFor(ABCurvePoints)
+const aBCurvePointsProvider = ABCurvePointsProvider._();
+
+/// A provider for the curve points for the AB-curve.
+final class ABCurvePointsProvider
+    extends $NotifierProvider<ABCurvePoints, List<guidance.WayPoint>?> {
+  /// A provider for the curve points for the AB-curve.
+  const ABCurvePointsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'aBCurvePointsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$aBCurvePointsHash();
+
+  @$internal
+  @override
+  ABCurvePoints create() => ABCurvePoints();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<guidance.WayPoint>? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<guidance.WayPoint>?>(value),
+    );
+  }
+}
+
 String _$aBCurvePointsHash() => r'7cbb02c6b77cd8ebc2801d8313be67efbf64bb60';
 
 /// A provider for the curve points for the AB-curve.
-///
-/// Copied from [ABCurvePoints].
-@ProviderFor(ABCurvePoints)
-final aBCurvePointsProvider =
-    NotifierProvider<ABCurvePoints, List<WayPoint>?>.internal(
-      ABCurvePoints.new,
-      name: r'aBCurvePointsProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$aBCurvePointsHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$ABCurvePoints = Notifier<List<WayPoint>?>;
+abstract class _$ABCurvePoints extends $Notifier<List<guidance.WayPoint>?> {
+  List<guidance.WayPoint>? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref =
+        this.ref as $Ref<List<guidance.WayPoint>?, List<guidance.WayPoint>?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<List<guidance.WayPoint>?, List<guidance.WayPoint>?>,
+              List<guidance.WayPoint>?,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// A provider for the AB-curve.
+
+@ProviderFor(ABCurve)
+const aBCurveProvider = ABCurveProvider._();
+
+/// A provider for the AB-curve.
+final class ABCurveProvider
+    extends $AsyncNotifierProvider<ABCurve, guidance.ABCurve?> {
+  /// A provider for the AB-curve.
+  const ABCurveProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'aBCurveProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$aBCurveHash();
+
+  @$internal
+  @override
+  ABCurve create() => ABCurve();
+}
+
 String _$aBCurveHash() => r'be12162470875036a0462ffe78234f34a90d8535';
 
 /// A provider for the AB-curve.
-///
-/// Copied from [ABCurve].
-@ProviderFor(ABCurve)
-final aBCurveProvider =
-    AsyncNotifierProvider<ABCurve, guidance.ABCurve?>.internal(
-      ABCurve.new,
-      name: r'aBCurveProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product') ? null : _$aBCurveHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
 
-typedef _$ABCurve = AsyncNotifier<guidance.ABCurve?>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$ABCurve extends $AsyncNotifier<guidance.ABCurve?> {
+  FutureOr<guidance.ABCurve?> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref =
+        this.ref as $Ref<AsyncValue<guidance.ABCurve?>, guidance.ABCurve?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<guidance.ABCurve?>, guidance.ABCurve?>,
+              AsyncValue<guidance.ABCurve?>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
