@@ -79,8 +79,8 @@ extension PolygonBufferExtension on Polygon {
         joinType: exteriorJoinType,
         getRawPoints: getRawPoints,
       )
-    else if (exterior != null)
-      exterior!,
+    else
+      ?exterior,
     if (interiorDistance != null)
       ...bufferedInterior(
         distance: interiorDistance,

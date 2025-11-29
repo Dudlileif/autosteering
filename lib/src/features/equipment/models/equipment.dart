@@ -84,21 +84,19 @@ class Equipment extends Hitchable {
     final dimensions = Map<String, dynamic>.from(json['dimensions'] as Map);
     final hitches = Map<String, dynamic>.from(json['hitches'] as Map);
 
-    final decoration =
-        dimensions['decoration'] != null
-            ? Map<String, dynamic>.from(dimensions['decoration'] as Map)
-            : null;
+    final decoration = dimensions['decoration'] != null
+        ? Map<String, dynamic>.from(dimensions['decoration'] as Map)
+        : null;
 
-    final sections =
-        json['sections'] != null
-            ? (json['sections'] as List)
-                .map(
-                  (section) => Section.fromJson(
-                    Map<String, dynamic>.from(section as Map),
-                  ),
-                )
-                .toList()
-            : null;
+    final sections = json['sections'] != null
+        ? (json['sections'] as List)
+              .map(
+                (section) => Section.fromJson(
+                  Map<String, dynamic>.from(section as Map),
+                ),
+              )
+              .toList()
+        : null;
 
     final equipment = Equipment(
       hitchType: HitchType.values.firstWhere(
@@ -127,29 +125,25 @@ class Equipment extends Hitchable {
       lastUsed: DateTime.tryParse(info['last_used'] as String),
     );
 
-    final children =
-        json['children'] != null
-            ? Map<String, Map<String, dynamic>?>.from(json['children'] as Map)
-            : null;
+    final children = json['children'] != null
+        ? Map<String, Map<String, dynamic>?>.from(json['children'] as Map)
+        : null;
 
-    final hitchFrontFixedChild =
-        children?['front_fixed'] != null
-            ? Equipment.fromJson(
-              Map<String, dynamic>.from(children!['front_fixed']!),
-            )
-            : null;
-    final hitchRearFixedChild =
-        children?['rear_fixed'] != null
-            ? Equipment.fromJson(
-              Map<String, dynamic>.from(children!['rear_fixed']!),
-            )
-            : null;
-    final hitchRearTowbarChild =
-        children?['rear_towbar'] != null
-            ? Equipment.fromJson(
-              Map<String, dynamic>.from(children!['rear_towbar']!),
-            )
-            : null;
+    final hitchFrontFixedChild = children?['front_fixed'] != null
+        ? Equipment.fromJson(
+            Map<String, dynamic>.from(children!['front_fixed']!),
+          )
+        : null;
+    final hitchRearFixedChild = children?['rear_fixed'] != null
+        ? Equipment.fromJson(
+            Map<String, dynamic>.from(children!['rear_fixed']!),
+          )
+        : null;
+    final hitchRearTowbarChild = children?['rear_towbar'] != null
+        ? Equipment.fromJson(
+            Map<String, dynamic>.from(children!['rear_towbar']!),
+          )
+        : null;
 
     if (hitchFrontFixedChild != null) {
       equipment.attachChild(hitchFrontFixedChild, Hitch.frontFixed);
@@ -420,11 +414,10 @@ class Equipment extends Hitchable {
   /// current state.
   EquipmentLogRecord get logRecord => EquipmentLogRecord(
     wayPoint: WayPoint(position: position, bearing: bearing),
-    activeSections:
-        sections
-            .where((section) => section.active)
-            .map((section) => section.index)
-            .toList(),
+    activeSections: sections
+        .where((section) => section.active)
+        .map((section) => section.index)
+        .toList(),
     time: DateTime.now(),
   );
 
@@ -510,15 +503,14 @@ class Equipment extends Hitchable {
           drawbarEnd().rhumb.initialBearingTo(position),
         );
 
-        var turningRadius =
-            bearingChange.abs() > 0
-                // Circle chord to radius
-                ? clampDouble(
-                  movedDistance / (2 * sin(bearingChange.toRadians() / 2)),
-                  -500,
-                  500,
-                )
-                : null;
+        var turningRadius = bearingChange.abs() > 0
+            // Circle chord to radius
+            ? clampDouble(
+                movedDistance / (2 * sin(bearingChange.toRadians() / 2)),
+                -500,
+                500,
+              )
+            : null;
 
         if (turningRadius != null) {
           if (turningRadius.abs() >= 500) {
@@ -529,13 +521,12 @@ class Equipment extends Hitchable {
         }
         _turningRadius = turningRadius?.abs();
 
-        _turningRadiusCenter =
-            turningRadius != null
-                ? workingCenter.rhumb.destinationPoint(
-                  distance: turningRadius,
-                  bearing: bearing + 90,
-                )
-                : null;
+        _turningRadiusCenter = turningRadius != null
+            ? workingCenter.rhumb.destinationPoint(
+                distance: turningRadius,
+                bearing: bearing + 90,
+              )
+            : null;
 
         final hitchToParentTurningCircleBase = switch (hitchParent) {
           AxleSteeredVehicle(solidAxleToRearTowbarDistance: final distance) =>
@@ -556,28 +547,26 @@ class Equipment extends Hitchable {
               hitchParent!.velocity /
               (drawbarLength + hitchToParentTurningCircleBase);
 
-          final y1 =
-              hitchParent!.currentTurningRadius != null
-                  ? atan(
-                    hitchToParentTurningCircleBase /
-                        hitchParent!.currentTurningRadius!,
-                  )
-                  : 0.0;
+          final y1 = hitchParent!.currentTurningRadius != null
+              ? atan(
+                  hitchToParentTurningCircleBase /
+                      hitchParent!.currentTurningRadius!,
+                )
+              : 0.0;
 
-          var y2 =
-              hitchParent!.currentTurningRadius != null
-                  ? clampDouble(
-                    asin(
-                      drawbarLength /
-                          sqrt(
-                            pow(hitchToParentTurningCircleBase, 2) +
-                                pow(hitchParent!.currentTurningRadius!, 2),
-                          ),
-                    ),
-                    -1,
-                    1,
-                  )
-                  : 0.0;
+          var y2 = hitchParent!.currentTurningRadius != null
+              ? clampDouble(
+                  asin(
+                    drawbarLength /
+                        sqrt(
+                          pow(hitchToParentTurningCircleBase, 2) +
+                              pow(hitchParent!.currentTurningRadius!, 2),
+                        ),
+                  ),
+                  -1,
+                  1,
+                )
+              : 0.0;
           if (y2.isNaN) {
             y2 = 0;
           }
@@ -643,8 +632,9 @@ class Equipment extends Hitchable {
     bool forceOwnPositionAndBearing = false,
   }) {
     final calculationBearing = forceOwnPositionAndBearing ? _bearing : bearing;
-    final calculationPosition =
-        forceOwnPositionAndBearing ? _position : position;
+    final calculationPosition = forceOwnPositionAndBearing
+        ? _position
+        : position;
 
     return switch (overrideHitch ?? parentHitch) {
       Hitch.frontFixed => calculationPosition.rhumb.destinationPoint(
@@ -735,22 +725,24 @@ class Equipment extends Hitchable {
 
     // The starting point of this equipment, i.e. the center-front point
     // of the working area.
-    final equipmentStart = switch (overrideHitch ?? parentHitch) {
-      Hitch.frontFixed => drawbarEnd(
-        overrideHitch: overrideHitch,
-        forceOwnPositionAndBearing: forceOwnPositionAndBearing,
-      ).rhumb.destinationPoint(
-        distance: workingAreaLength,
-        bearing: calculationBearing,
-      ),
-      _ => drawbarEnd(
-        overrideHitch: overrideHitch,
-        forceOwnPositionAndBearing: forceOwnPositionAndBearing,
-      ),
-    }.rhumb.destinationPoint(
-      distance: sidewaysOffset,
-      bearing: calculationBearing + 90,
-    );
+    final equipmentStart =
+        switch (overrideHitch ?? parentHitch) {
+          Hitch.frontFixed =>
+            drawbarEnd(
+              overrideHitch: overrideHitch,
+              forceOwnPositionAndBearing: forceOwnPositionAndBearing,
+            ).rhumb.destinationPoint(
+              distance: workingAreaLength,
+              bearing: calculationBearing,
+            ),
+          _ => drawbarEnd(
+            overrideHitch: overrideHitch,
+            forceOwnPositionAndBearing: forceOwnPositionAndBearing,
+          ),
+        }.rhumb.destinationPoint(
+          distance: sidewaysOffset,
+          bearing: calculationBearing + 90,
+        );
 
     final section = sections[index];
 
@@ -835,14 +827,13 @@ class Equipment extends Hitchable {
       (section) => section.workingWidth > 0,
     )) {
       if (element.active || forceIndices.contains(element.index)) {
-        map[element.index] =
-            sectionEdgePositions(
-              element.index,
-              fraction: fraction,
-              overrideHitch: overrideHitch,
-              overrideTime: overrideTime,
-              forceOwnPositionAndBearing: forceOwnPositionAndBearing,
-            )!;
+        map[element.index] = sectionEdgePositions(
+          element.index,
+          fraction: fraction,
+          overrideHitch: overrideHitch,
+          overrideTime: overrideTime,
+          forceOwnPositionAndBearing: forceOwnPositionAndBearing,
+        )!;
       }
     }
     return map;
@@ -919,20 +910,18 @@ class Equipment extends Hitchable {
   }
 
   /// An iterable of all the sections' polygons.
-  Iterable<map.Polygon> get sectionMapPolygons =>
-      List.generate(
-        sections.length,
-        sectionMapPolygon,
-        growable: false,
-      ).nonNulls;
+  Iterable<map.Polygon> get sectionMapPolygons => List.generate(
+    sections.length,
+    sectionMapPolygon,
+    growable: false,
+  ).nonNulls;
 
   /// An iterable of all the sections' working polygons.
-  Iterable<map.Polygon> get sectionWorkingMapPolygons =>
-      List.generate(
-        sections.length,
-        sectionWorkingMapPolygon,
-        growable: false,
-      ).nonNulls;
+  Iterable<map.Polygon> get sectionWorkingMapPolygons => List.generate(
+    sections.length,
+    sectionWorkingMapPolygon,
+    growable: false,
+  ).nonNulls;
 
   /// A list of the polygon(s) for the drawbar(s).
   List<map.Polygon> get drawbarMapPolygons => [
@@ -1103,7 +1092,7 @@ class Equipment extends Hitchable {
   List<map.Polygon> get mapPolygons {
     return [
       ...drawbarMapPolygons,
-      if (decorationPolygon != null) decorationPolygon!,
+      ?decorationPolygon,
       ...List.generate(
         sections.length,
         sectionWorkingMapPolygon,

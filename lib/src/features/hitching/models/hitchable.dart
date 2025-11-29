@@ -38,7 +38,8 @@ enum Hitch {
   rearFixed('Rear fixed'),
 
   /// The rear towbar or similar articulating hitch.
-  rearTowbar('Rear towbar');
+  rearTowbar('Rear towbar')
+  ;
 
   const Hitch(this.name);
 
@@ -146,10 +147,9 @@ abstract class Hitchable {
       final newSections = childToAttach.sections;
       for (final (index, section) in newSections.indexed) {
         newSections[index] = section.copyWith(
-          active:
-              uuidAlreadyAttached.sections
-                  .firstWhereOrNull((element) => element.index == section.index)
-                  ?.active,
+          active: uuidAlreadyAttached.sections
+              .firstWhereOrNull((element) => element.index == section.index)
+              ?.active,
         );
       }
 
@@ -196,10 +196,9 @@ abstract class Hitchable {
       final newSections = childToAttach.sections;
       for (final (index, section) in newSections.indexed) {
         newSections[index] = section.copyWith(
-          active:
-              uuidAlreadyAttached.sections
-                  .firstWhereOrNull((element) => element.index == section.index)
-                  ?.active,
+          active: uuidAlreadyAttached.sections
+              .firstWhereOrNull((element) => element.index == section.index)
+              ?.active,
         );
       }
 
@@ -289,9 +288,9 @@ abstract class Hitchable {
 
   /// A list of the directly attached children.
   List<Hitchable> get hitchChildren => [
-    if (hitchFrontFixedChild != null) hitchFrontFixedChild!,
-    if (hitchRearFixedChild != null) hitchRearFixedChild!,
-    if (hitchRearTowbarChild != null) hitchRearTowbarChild!,
+    ?hitchFrontFixedChild,
+    ?hitchRearFixedChild,
+    ?hitchRearTowbarChild,
   ];
 
   /// A list of the all the recursively attached children.
@@ -320,12 +319,11 @@ abstract class Hitchable {
   Geographic? get hitchRearTowbarPoint;
 
   /// The hitch positions of this that are not null.
-  Iterable<Geographic> get hitchPoints =>
-      [
-        hitchFrontFixedPoint,
-        hitchRearFixedPoint,
-        hitchRearTowbarPoint,
-      ].nonNulls;
+  Iterable<Geographic> get hitchPoints => [
+    hitchFrontFixedPoint,
+    hitchRearFixedPoint,
+    hitchRearTowbarPoint,
+  ].nonNulls;
 
   /// The number of children recursively attached to this.
   int get numAttachedChildren => hitchChildren.fold(

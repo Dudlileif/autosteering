@@ -89,7 +89,7 @@ class TileLayerData {
     path.joinAll([
       userFolder,
       'map_image_cache',
-      if (folderName != null) folderName!,
+      ?folderName,
       name,
     ]),
   );
