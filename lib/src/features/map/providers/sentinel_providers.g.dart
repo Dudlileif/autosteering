@@ -11,13 +11,13 @@ part of 'sentinel_providers.dart';
 /// A provider for the Sentinel Dataspace instance id.
 
 @ProviderFor(CopernicusInstanceId)
-const copernicusInstanceIdProvider = CopernicusInstanceIdProvider._();
+final copernicusInstanceIdProvider = CopernicusInstanceIdProvider._();
 
 /// A provider for the Sentinel Dataspace instance id.
 final class CopernicusInstanceIdProvider
     extends $NotifierProvider<CopernicusInstanceId, String?> {
   /// A provider for the Sentinel Dataspace instance id.
-  const CopernicusInstanceIdProvider._()
+  CopernicusInstanceIdProvider._()
     : super(
         from: null,
         argument: null,
@@ -54,7 +54,6 @@ abstract class _$CopernicusInstanceId extends $Notifier<String?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<String?, String?>;
     final element =
         ref.element
@@ -64,20 +63,20 @@ abstract class _$CopernicusInstanceId extends $Notifier<String?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the available Sentinel layers.
 
 @ProviderFor(AvailableSentinelLayers)
-const availableSentinelLayersProvider = AvailableSentinelLayersProvider._();
+final availableSentinelLayersProvider = AvailableSentinelLayersProvider._();
 
 /// A provider for the available Sentinel layers.
 final class AvailableSentinelLayersProvider
     extends $NotifierProvider<AvailableSentinelLayers, List<SentinelLayer>> {
   /// A provider for the available Sentinel layers.
-  const AvailableSentinelLayersProvider._()
+  AvailableSentinelLayersProvider._()
     : super(
         from: null,
         argument: null,
@@ -115,7 +114,6 @@ abstract class _$AvailableSentinelLayers
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<List<SentinelLayer>, List<SentinelLayer>>;
     final element =
         ref.element
@@ -125,7 +123,7 @@ abstract class _$AvailableSentinelLayers
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -133,7 +131,7 @@ abstract class _$AvailableSentinelLayers
 /// should query for.
 
 @ProviderFor(SentinelMaxCloudCoveragePercent)
-const sentinelMaxCloudCoveragePercentProvider =
+final sentinelMaxCloudCoveragePercentProvider =
     SentinelMaxCloudCoveragePercentProvider._();
 
 /// A provider for the max level of cloud coverage that the Sentinel layers
@@ -142,7 +140,7 @@ final class SentinelMaxCloudCoveragePercentProvider
     extends $NotifierProvider<SentinelMaxCloudCoveragePercent, double> {
   /// A provider for the max level of cloud coverage that the Sentinel layers
   /// should query for.
-  const SentinelMaxCloudCoveragePercentProvider._()
+  SentinelMaxCloudCoveragePercentProvider._()
     : super(
         from: null,
         argument: null,
@@ -180,7 +178,6 @@ abstract class _$SentinelMaxCloudCoveragePercent extends $Notifier<double> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -190,20 +187,20 @@ abstract class _$SentinelMaxCloudCoveragePercent extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the set of selected Sentinel layers.
 
 @ProviderFor(EnabledSentinelLayers)
-const enabledSentinelLayersProvider = EnabledSentinelLayersProvider._();
+final enabledSentinelLayersProvider = EnabledSentinelLayersProvider._();
 
 /// A provider for the set of selected Sentinel layers.
 final class EnabledSentinelLayersProvider
     extends $NotifierProvider<EnabledSentinelLayers, Set<SentinelLayer>> {
   /// A provider for the set of selected Sentinel layers.
-  const EnabledSentinelLayersProvider._()
+  EnabledSentinelLayersProvider._()
     : super(
         from: null,
         argument: null,
@@ -240,7 +237,6 @@ abstract class _$EnabledSentinelLayers extends $Notifier<Set<SentinelLayer>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Set<SentinelLayer>, Set<SentinelLayer>>;
     final element =
         ref.element
@@ -250,14 +246,14 @@ abstract class _$EnabledSentinelLayers extends $Notifier<Set<SentinelLayer>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A map for the Sentinel layers and their opacities, which can be specified.
 
 @ProviderFor(SentinelLayerOpacities)
-const sentinelLayerOpacitiesProvider = SentinelLayerOpacitiesProvider._();
+final sentinelLayerOpacitiesProvider = SentinelLayerOpacitiesProvider._();
 
 /// A map for the Sentinel layers and their opacities, which can be specified.
 final class SentinelLayerOpacitiesProvider
@@ -267,7 +263,7 @@ final class SentinelLayerOpacitiesProvider
           Map<SentinelLayerType, double>
         > {
   /// A map for the Sentinel layers and their opacities, which can be specified.
-  const SentinelLayerOpacitiesProvider._()
+  SentinelLayerOpacitiesProvider._()
     : super(
         from: null,
         argument: null,
@@ -307,7 +303,6 @@ abstract class _$SentinelLayerOpacities
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref
             as $Ref<
@@ -325,6 +320,6 @@ abstract class _$SentinelLayerOpacities
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

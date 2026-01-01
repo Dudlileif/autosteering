@@ -11,13 +11,13 @@ part of 'log_replay_providers.dart';
 /// A provider for the active [LogReplay].
 
 @ProviderFor(ActiveLogReplay)
-const activeLogReplayProvider = ActiveLogReplayProvider._();
+final activeLogReplayProvider = ActiveLogReplayProvider._();
 
 /// A provider for the active [LogReplay].
 final class ActiveLogReplayProvider
     extends $NotifierProvider<ActiveLogReplay, LogReplay?> {
   /// A provider for the active [LogReplay].
-  const ActiveLogReplayProvider._()
+  ActiveLogReplayProvider._()
     : super(
         from: null,
         argument: null,
@@ -53,7 +53,6 @@ abstract class _$ActiveLogReplay extends $Notifier<LogReplay?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<LogReplay?, LogReplay?>;
     final element =
         ref.element
@@ -63,20 +62,20 @@ abstract class _$ActiveLogReplay extends $Notifier<LogReplay?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the index of the playing log replay.
 
 @ProviderFor(LogReplayIndex)
-const logReplayIndexProvider = LogReplayIndexProvider._();
+final logReplayIndexProvider = LogReplayIndexProvider._();
 
 /// A provider for the index of the playing log replay.
 final class LogReplayIndexProvider
     extends $NotifierProvider<LogReplayIndex, int> {
   /// A provider for the index of the playing log replay.
-  const LogReplayIndexProvider._()
+  LogReplayIndexProvider._()
     : super(
         from: null,
         argument: null,
@@ -112,7 +111,6 @@ abstract class _$LogReplayIndex extends $Notifier<int> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<int, int>;
     final element =
         ref.element
@@ -122,20 +120,20 @@ abstract class _$LogReplayIndex extends $Notifier<int> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for whether the log replays should loop.
 
 @ProviderFor(LoopLogReplay)
-const loopLogReplayProvider = LoopLogReplayProvider._();
+final loopLogReplayProvider = LoopLogReplayProvider._();
 
 /// A provider for whether the log replays should loop.
 final class LoopLogReplayProvider
     extends $NotifierProvider<LoopLogReplay, bool> {
   /// A provider for whether the log replays should loop.
-  const LoopLogReplayProvider._()
+  LoopLogReplayProvider._()
     : super(
         from: null,
         argument: null,
@@ -171,7 +169,6 @@ abstract class _$LoopLogReplay extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -181,14 +178,14 @@ abstract class _$LoopLogReplay extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for loading a [LogReplay] from a file at [path], if it's valid.
 
 @ProviderFor(loadLogReplayFromFile)
-const loadLogReplayFromFileProvider = LoadLogReplayFromFileFamily._();
+final loadLogReplayFromFileProvider = LoadLogReplayFromFileFamily._();
 
 /// A provider for loading a [LogReplay] from a file at [path], if it's valid.
 
@@ -201,7 +198,7 @@ final class LoadLogReplayFromFileProvider
         >
     with $FutureModifier<LogReplay?>, $FutureProvider<LogReplay?> {
   /// A provider for loading a [LogReplay] from a file at [path], if it's valid.
-  const LoadLogReplayFromFileProvider._({
+  LoadLogReplayFromFileProvider._({
     required LoadLogReplayFromFileFamily super.from,
     required String super.argument,
   }) : super(
@@ -251,7 +248,7 @@ String _$loadLogReplayFromFileHash() =>
 
 final class LoadLogReplayFromFileFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<LogReplay?>, String> {
-  const LoadLogReplayFromFileFamily._()
+  LoadLogReplayFromFileFamily._()
     : super(
         retry: null,
         name: r'loadLogReplayFromFileProvider',
@@ -272,7 +269,7 @@ final class LoadLogReplayFromFileFamily extends $Family
 /// A provider for importing a [LogReplay] from a file.
 
 @ProviderFor(importLogReplay)
-const importLogReplayProvider = ImportLogReplayProvider._();
+final importLogReplayProvider = ImportLogReplayProvider._();
 
 /// A provider for importing a [LogReplay] from a file.
 
@@ -285,7 +282,7 @@ final class ImportLogReplayProvider
         >
     with $FutureModifier<LogReplay?>, $FutureProvider<LogReplay?> {
   /// A provider for importing a [LogReplay] from a file.
-  const ImportLogReplayProvider._()
+  ImportLogReplayProvider._()
     : super(
         from: null,
         argument: null,

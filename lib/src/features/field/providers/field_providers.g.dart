@@ -11,12 +11,12 @@ part of 'field_providers.dart';
 /// A provider for whether the active field should be shown.
 
 @ProviderFor(ShowField)
-const showFieldProvider = ShowFieldProvider._();
+final showFieldProvider = ShowFieldProvider._();
 
 /// A provider for whether the active field should be shown.
 final class ShowFieldProvider extends $NotifierProvider<ShowField, bool> {
   /// A provider for whether the active field should be shown.
-  const ShowFieldProvider._()
+  ShowFieldProvider._()
     : super(
         from: null,
         argument: null,
@@ -52,7 +52,6 @@ abstract class _$ShowField extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -62,19 +61,19 @@ abstract class _$ShowField extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the active field.
 
 @ProviderFor(ActiveField)
-const activeFieldProvider = ActiveFieldProvider._();
+final activeFieldProvider = ActiveFieldProvider._();
 
 /// A provider for the active field.
 final class ActiveFieldProvider extends $NotifierProvider<ActiveField, Field?> {
   /// A provider for the active field.
-  const ActiveFieldProvider._()
+  ActiveFieldProvider._()
     : super(
         from: null,
         argument: null,
@@ -110,7 +109,6 @@ abstract class _$ActiveField extends $Notifier<Field?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Field?, Field?>;
     final element =
         ref.element
@@ -120,20 +118,20 @@ abstract class _$ActiveField extends $Notifier<Field?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for whether the active field's border's points should be shown.
 
 @ProviderFor(ShowFieldBorderPoints)
-const showFieldBorderPointsProvider = ShowFieldBorderPointsProvider._();
+final showFieldBorderPointsProvider = ShowFieldBorderPointsProvider._();
 
 /// A provider for whether the active field's border's points should be shown.
 final class ShowFieldBorderPointsProvider
     extends $NotifierProvider<ShowFieldBorderPoints, bool> {
   /// A provider for whether the active field's border's points should be shown.
-  const ShowFieldBorderPointsProvider._()
+  ShowFieldBorderPointsProvider._()
     : super(
         from: null,
         argument: null,
@@ -170,7 +168,6 @@ abstract class _$ShowFieldBorderPoints extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -180,20 +177,20 @@ abstract class _$ShowFieldBorderPoints extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for whether bounding box of the active field should be shown.
 
 @ProviderFor(ShowFieldBoundingBox)
-const showFieldBoundingBoxProvider = ShowFieldBoundingBoxProvider._();
+final showFieldBoundingBoxProvider = ShowFieldBoundingBoxProvider._();
 
 /// A provider for whether bounding box of the active field should be shown.
 final class ShowFieldBoundingBoxProvider
     extends $NotifierProvider<ShowFieldBoundingBox, bool> {
   /// A provider for whether bounding box of the active field should be shown.
-  const ShowFieldBoundingBoxProvider._()
+  ShowFieldBoundingBoxProvider._()
     : super(
         from: null,
         argument: null,
@@ -230,7 +227,6 @@ abstract class _$ShowFieldBoundingBox extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -240,7 +236,7 @@ abstract class _$ShowFieldBoundingBox extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -248,7 +244,7 @@ abstract class _$ShowFieldBoundingBox extends $Notifier<bool> {
 /// exterior.
 
 @ProviderFor(FieldExteriorBufferJoin)
-const fieldExteriorBufferJoinProvider = FieldExteriorBufferJoinProvider._();
+final fieldExteriorBufferJoinProvider = FieldExteriorBufferJoinProvider._();
 
 /// A provider for which type of join should be used when buffering the
 /// exterior.
@@ -256,7 +252,7 @@ final class FieldExteriorBufferJoinProvider
     extends $NotifierProvider<FieldExteriorBufferJoin, BufferJoin> {
   /// A provider for which type of join should be used when buffering the
   /// exterior.
-  const FieldExteriorBufferJoinProvider._()
+  FieldExteriorBufferJoinProvider._()
     : super(
         from: null,
         argument: null,
@@ -294,7 +290,6 @@ abstract class _$FieldExteriorBufferJoin extends $Notifier<BufferJoin> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<BufferJoin, BufferJoin>;
     final element =
         ref.element
@@ -304,7 +299,7 @@ abstract class _$FieldExteriorBufferJoin extends $Notifier<BufferJoin> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -312,7 +307,7 @@ abstract class _$FieldExteriorBufferJoin extends $Notifier<BufferJoin> {
 /// interior holes.
 
 @ProviderFor(FieldInteriorBufferJoin)
-const fieldInteriorBufferJoinProvider = FieldInteriorBufferJoinProvider._();
+final fieldInteriorBufferJoinProvider = FieldInteriorBufferJoinProvider._();
 
 /// A provider for which type of join should be used when buffering the
 /// interior holes.
@@ -320,7 +315,7 @@ final class FieldInteriorBufferJoinProvider
     extends $NotifierProvider<FieldInteriorBufferJoin, BufferJoin> {
   /// A provider for which type of join should be used when buffering the
   /// interior holes.
-  const FieldInteriorBufferJoinProvider._()
+  FieldInteriorBufferJoinProvider._()
     : super(
         from: null,
         argument: null,
@@ -358,7 +353,6 @@ abstract class _$FieldInteriorBufferJoin extends $Notifier<BufferJoin> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<BufferJoin, BufferJoin>;
     final element =
         ref.element
@@ -368,20 +362,20 @@ abstract class _$FieldInteriorBufferJoin extends $Notifier<BufferJoin> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether the field buffer functionality should be enabled.
 
 @ProviderFor(FieldBufferEnabled)
-const fieldBufferEnabledProvider = FieldBufferEnabledProvider._();
+final fieldBufferEnabledProvider = FieldBufferEnabledProvider._();
 
 /// Whether the field buffer functionality should be enabled.
 final class FieldBufferEnabledProvider
     extends $NotifierProvider<FieldBufferEnabled, bool> {
   /// Whether the field buffer functionality should be enabled.
-  const FieldBufferEnabledProvider._()
+  FieldBufferEnabledProvider._()
     : super(
         from: null,
         argument: null,
@@ -418,7 +412,6 @@ abstract class _$FieldBufferEnabled extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -428,14 +421,14 @@ abstract class _$FieldBufferEnabled extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for which type of field buffer distance should be used.
 
 @ProviderFor(ActiveFieldBufferDistanceType)
-const activeFieldBufferDistanceTypeProvider =
+final activeFieldBufferDistanceTypeProvider =
     ActiveFieldBufferDistanceTypeProvider._();
 
 /// A provider for which type of field buffer distance should be used.
@@ -446,7 +439,7 @@ final class ActiveFieldBufferDistanceTypeProvider
           FieldBufferDistanceType
         > {
   /// A provider for which type of field buffer distance should be used.
-  const ActiveFieldBufferDistanceTypeProvider._()
+  ActiveFieldBufferDistanceTypeProvider._()
     : super(
         from: null,
         argument: null,
@@ -484,7 +477,6 @@ abstract class _$ActiveFieldBufferDistanceType
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref as $Ref<FieldBufferDistanceType, FieldBufferDistanceType>;
     final element =
@@ -495,7 +487,7 @@ abstract class _$ActiveFieldBufferDistanceType
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -503,7 +495,7 @@ abstract class _$ActiveFieldBufferDistanceType
 /// be buffered.
 
 @ProviderFor(FieldExteriorBufferDistance)
-const fieldExteriorBufferDistanceProvider =
+final fieldExteriorBufferDistanceProvider =
     FieldExteriorBufferDistanceProvider._();
 
 /// A provider for the distance that the [Field.polygon] exterior should
@@ -512,7 +504,7 @@ final class FieldExteriorBufferDistanceProvider
     extends $NotifierProvider<FieldExteriorBufferDistance, double> {
   /// A provider for the distance that the [Field.polygon] exterior should
   /// be buffered.
-  const FieldExteriorBufferDistanceProvider._()
+  FieldExteriorBufferDistanceProvider._()
     : super(
         from: null,
         argument: null,
@@ -550,7 +542,6 @@ abstract class _$FieldExteriorBufferDistance extends $Notifier<double> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -560,7 +551,7 @@ abstract class _$FieldExteriorBufferDistance extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -568,7 +559,7 @@ abstract class _$FieldExteriorBufferDistance extends $Notifier<double> {
 /// be buffered.
 
 @ProviderFor(FieldInteriorBufferDistance)
-const fieldInteriorBufferDistanceProvider =
+final fieldInteriorBufferDistanceProvider =
     FieldInteriorBufferDistanceProvider._();
 
 /// A provider for the distance that the [Field.polygon] interior should
@@ -577,7 +568,7 @@ final class FieldInteriorBufferDistanceProvider
     extends $NotifierProvider<FieldInteriorBufferDistance, double> {
   /// A provider for the distance that the [Field.polygon] interior should
   /// be buffered.
-  const FieldInteriorBufferDistanceProvider._()
+  FieldInteriorBufferDistanceProvider._()
     : super(
         from: null,
         argument: null,
@@ -615,7 +606,6 @@ abstract class _$FieldInteriorBufferDistance extends $Notifier<double> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -625,20 +615,20 @@ abstract class _$FieldInteriorBufferDistance extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for whether the buffered field should be shown.
 
 @ProviderFor(ShowBufferedField)
-const showBufferedFieldProvider = ShowBufferedFieldProvider._();
+final showBufferedFieldProvider = ShowBufferedFieldProvider._();
 
 /// A provider for whether the buffered field should be shown.
 final class ShowBufferedFieldProvider
     extends $NotifierProvider<ShowBufferedField, bool> {
   /// A provider for whether the buffered field should be shown.
-  const ShowBufferedFieldProvider._()
+  ShowBufferedFieldProvider._()
     : super(
         from: null,
         argument: null,
@@ -674,7 +664,6 @@ abstract class _$ShowBufferedField extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -684,14 +673,14 @@ abstract class _$ShowBufferedField extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for creating and updating the buffered test field.
 
 @ProviderFor(bufferedField)
-const bufferedFieldProvider = BufferedFieldProvider._();
+final bufferedFieldProvider = BufferedFieldProvider._();
 
 /// A provider for creating and updating the buffered test field.
 
@@ -699,7 +688,7 @@ final class BufferedFieldProvider
     extends $FunctionalProvider<AsyncValue<Field?>, Field?, FutureOr<Field?>>
     with $FutureModifier<Field?>, $FutureProvider<Field?> {
   /// A provider for creating and updating the buffered test field.
-  const BufferedFieldProvider._()
+  BufferedFieldProvider._()
     : super(
         from: null,
         argument: null,
@@ -729,14 +718,14 @@ String _$bufferedFieldHash() => r'b656a524caa62cc5ce4277030d42447c39bbf122';
 /// A provider for whether bounding box of the test field should be shown.
 
 @ProviderFor(ShowBufferedFieldBoundingBox)
-const showBufferedFieldBoundingBoxProvider =
+final showBufferedFieldBoundingBoxProvider =
     ShowBufferedFieldBoundingBoxProvider._();
 
 /// A provider for whether bounding box of the test field should be shown.
 final class ShowBufferedFieldBoundingBoxProvider
     extends $NotifierProvider<ShowBufferedFieldBoundingBox, bool> {
   /// A provider for whether bounding box of the test field should be shown.
-  const ShowBufferedFieldBoundingBoxProvider._()
+  ShowBufferedFieldBoundingBoxProvider._()
     : super(
         from: null,
         argument: null,
@@ -773,7 +762,6 @@ abstract class _$ShowBufferedFieldBoundingBox extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -783,20 +771,20 @@ abstract class _$ShowBufferedFieldBoundingBox extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for whether bounding box of the field should be shown.
 
 @ProviderFor(FieldBufferGetRawPoints)
-const fieldBufferGetRawPointsProvider = FieldBufferGetRawPointsProvider._();
+final fieldBufferGetRawPointsProvider = FieldBufferGetRawPointsProvider._();
 
 /// A provider for whether bounding box of the field should be shown.
 final class FieldBufferGetRawPointsProvider
     extends $NotifierProvider<FieldBufferGetRawPoints, bool> {
   /// A provider for whether bounding box of the field should be shown.
-  const FieldBufferGetRawPointsProvider._()
+  FieldBufferGetRawPointsProvider._()
     : super(
         from: null,
         argument: null,
@@ -833,7 +821,6 @@ abstract class _$FieldBufferGetRawPoints extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -843,20 +830,20 @@ abstract class _$FieldBufferGetRawPoints extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the recorded exterior ring of a field.
 
 @ProviderFor(FieldExteriorRing)
-const fieldExteriorRingProvider = FieldExteriorRingProvider._();
+final fieldExteriorRingProvider = FieldExteriorRingProvider._();
 
 /// A provider for the recorded exterior ring of a field.
 final class FieldExteriorRingProvider
     extends $NotifierProvider<FieldExteriorRing, List<Geographic>?> {
   /// A provider for the recorded exterior ring of a field.
-  const FieldExteriorRingProvider._()
+  FieldExteriorRingProvider._()
     : super(
         from: null,
         argument: null,
@@ -892,7 +879,6 @@ abstract class _$FieldExteriorRing extends $Notifier<List<Geographic>?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<List<Geographic>?, List<Geographic>?>;
     final element =
         ref.element
@@ -902,20 +888,20 @@ abstract class _$FieldExteriorRing extends $Notifier<List<Geographic>?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the recorded interior rings of a field.
 
 @ProviderFor(FieldInteriorRings)
-const fieldInteriorRingsProvider = FieldInteriorRingsProvider._();
+final fieldInteriorRingsProvider = FieldInteriorRingsProvider._();
 
 /// A provider for the recorded interior rings of a field.
 final class FieldInteriorRingsProvider
     extends $NotifierProvider<FieldInteriorRings, List<List<Geographic>>?> {
   /// A provider for the recorded interior rings of a field.
-  const FieldInteriorRingsProvider._()
+  FieldInteriorRingsProvider._()
     : super(
         from: null,
         argument: null,
@@ -952,7 +938,6 @@ abstract class _$FieldInteriorRings extends $Notifier<List<List<Geographic>>?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref as $Ref<List<List<Geographic>>?, List<List<Geographic>>?>;
     final element =
@@ -963,7 +948,7 @@ abstract class _$FieldInteriorRings extends $Notifier<List<List<Geographic>>?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -972,7 +957,7 @@ abstract class _$FieldInteriorRings extends $Notifier<List<List<Geographic>>?> {
 /// Override the file name with [overrideName].
 
 @ProviderFor(saveField)
-const saveFieldProvider = SaveFieldFamily._();
+final saveFieldProvider = SaveFieldFamily._();
 
 /// A provider for saving [field] to a file in the user file directory.
 ///
@@ -984,7 +969,7 @@ final class SaveFieldProvider
   /// A provider for saving [field] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
-  const SaveFieldProvider._({
+  SaveFieldProvider._({
     required SaveFieldFamily super.from,
     required (Field, {String? overrideName, bool downloadIfWeb}) super.argument,
   }) : super(
@@ -1045,7 +1030,7 @@ final class SaveFieldFamily extends $Family
           FutureOr<void>,
           (Field, {String? overrideName, bool downloadIfWeb})
         > {
-  const SaveFieldFamily._()
+  SaveFieldFamily._()
     : super(
         retry: null,
         name: r'saveFieldProvider',
@@ -1076,7 +1061,7 @@ final class SaveFieldFamily extends $Family
 /// Override the file name with [overrideName].
 
 @ProviderFor(exportField)
-const exportFieldProvider = ExportFieldFamily._();
+final exportFieldProvider = ExportFieldFamily._();
 
 /// A provider for exporting [field] to a file.
 ///
@@ -1088,7 +1073,7 @@ final class ExportFieldProvider
   /// A provider for exporting [field] to a file.
   ///
   /// Override the file name with [overrideName].
-  const ExportFieldProvider._({
+  ExportFieldProvider._({
     required ExportFieldFamily super.from,
     required (Field, {String? overrideName, bool downloadIfWeb}) super.argument,
   }) : super(
@@ -1149,7 +1134,7 @@ final class ExportFieldFamily extends $Family
           FutureOr<void>,
           (Field, {String? overrideName, bool downloadIfWeb})
         > {
-  const ExportFieldFamily._()
+  ExportFieldFamily._()
     : super(
         retry: null,
         name: r'exportFieldProvider',
@@ -1179,7 +1164,7 @@ final class ExportFieldFamily extends $Family
 /// user file directory.
 
 @ProviderFor(savedFields)
-const savedFieldsProvider = SavedFieldsProvider._();
+final savedFieldsProvider = SavedFieldsProvider._();
 
 /// A provider for reading and holding all the saved [Field]s in the
 /// user file directory.
@@ -1194,7 +1179,7 @@ final class SavedFieldsProvider
     with $FutureModifier<List<Field>>, $FutureProvider<List<Field>> {
   /// A provider for reading and holding all the saved [Field]s in the
   /// user file directory.
-  const SavedFieldsProvider._()
+  SavedFieldsProvider._()
     : super(
         from: null,
         argument: null,
@@ -1227,7 +1212,7 @@ String _$savedFieldsHash() => r'f7493e6ecfac6850213e6f0ce78c1e88e5a4d40b';
 /// Override the file name with [overrideName].
 
 @ProviderFor(deleteField)
-const deleteFieldProvider = DeleteFieldFamily._();
+final deleteFieldProvider = DeleteFieldFamily._();
 
 /// A provider for deleting [field] from the user file system.
 ///
@@ -1239,7 +1224,7 @@ final class DeleteFieldProvider
   /// A provider for deleting [field] from the user file system.
   ///
   /// Override the file name with [overrideName].
-  const DeleteFieldProvider._({
+  DeleteFieldProvider._({
     required DeleteFieldFamily super.from,
     required (Field, {String? overrideName}) super.argument,
   }) : super(
@@ -1294,7 +1279,7 @@ final class DeleteFieldFamily extends $Family
           FutureOr<void>,
           (Field, {String? overrideName})
         > {
-  const DeleteFieldFamily._()
+  DeleteFieldFamily._()
     : super(
         retry: null,
         name: r'deleteFieldProvider',
@@ -1320,7 +1305,7 @@ final class DeleteFieldFamily extends $Family
 /// A provider for loading a [Field] from a file at [path], if it's valid.
 
 @ProviderFor(loadFieldFromFile)
-const loadFieldFromFileProvider = LoadFieldFromFileFamily._();
+final loadFieldFromFileProvider = LoadFieldFromFileFamily._();
 
 /// A provider for loading a [Field] from a file at [path], if it's valid.
 
@@ -1328,7 +1313,7 @@ final class LoadFieldFromFileProvider
     extends $FunctionalProvider<AsyncValue<Field?>, Field?, FutureOr<Field?>>
     with $FutureModifier<Field?>, $FutureProvider<Field?> {
   /// A provider for loading a [Field] from a file at [path], if it's valid.
-  const LoadFieldFromFileProvider._({
+  LoadFieldFromFileProvider._({
     required LoadFieldFromFileFamily super.from,
     required String super.argument,
   }) : super(
@@ -1377,7 +1362,7 @@ String _$loadFieldFromFileHash() => r'defdf4eda3e6aa375860ecaddb0a99bc3fb1ae46';
 
 final class LoadFieldFromFileFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<Field?>, String> {
-  const LoadFieldFromFileFamily._()
+  LoadFieldFromFileFamily._()
     : super(
         retry: null,
         name: r'loadFieldFromFileProvider',
@@ -1399,7 +1384,7 @@ final class LoadFieldFromFileFamily extends $Family
 /// [ActiveField] provider.
 
 @ProviderFor(importField)
-const importFieldProvider = ImportFieldProvider._();
+final importFieldProvider = ImportFieldProvider._();
 
 /// A provider for importing a field from a file and applying
 /// [ActiveField] provider.
@@ -1409,7 +1394,7 @@ final class ImportFieldProvider
     with $FutureModifier<Field?>, $FutureProvider<Field?> {
   /// A provider for importing a field from a file and applying
   /// [ActiveField] provider.
-  const ImportFieldProvider._()
+  ImportFieldProvider._()
     : super(
         from: null,
         argument: null,
@@ -1439,7 +1424,7 @@ String _$importFieldHash() => r'9ade62a28510a92e2f6cadd5f48fe28ed07d913b';
 /// A provider for exporting all field files.
 
 @ProviderFor(exportFields)
-const exportFieldsProvider = ExportFieldsFamily._();
+final exportFieldsProvider = ExportFieldsFamily._();
 
 /// A provider for exporting all field files.
 
@@ -1447,7 +1432,7 @@ final class ExportFieldsProvider
     extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
     with $FutureModifier<void>, $FutureProvider<void> {
   /// A provider for exporting all field files.
-  const ExportFieldsProvider._({
+  ExportFieldsProvider._({
     required ExportFieldsFamily super.from,
     required bool super.argument,
   }) : super(
@@ -1496,7 +1481,7 @@ String _$exportFieldsHash() => r'c1d87b9901f7a889082e21769769226e46e4fcd8';
 
 final class ExportFieldsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<void>, bool> {
-  const ExportFieldsFamily._()
+  ExportFieldsFamily._()
     : super(
         retry: null,
         name: r'exportFieldsProvider',

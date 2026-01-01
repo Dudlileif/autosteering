@@ -11,12 +11,12 @@ part of 'simulator_core_native_providers.dart';
 /// A provider for sending messages to the [SimulatorCore].
 
 @ProviderFor(SimInput)
-const simInputProvider = SimInputProvider._();
+final simInputProvider = SimInputProvider._();
 
 /// A provider for sending messages to the [SimulatorCore].
 final class SimInputProvider extends $NotifierProvider<SimInput, void> {
   /// A provider for sending messages to the [SimulatorCore].
-  const SimInputProvider._()
+  SimInputProvider._()
     : super(
         from: null,
         argument: null,
@@ -52,7 +52,6 @@ abstract class _$SimInput extends $Notifier<void> {
   @$mustCallSuper
   @override
   void runBuild() {
-    build();
     final ref = this.ref as $Ref<void, void>;
     final element =
         ref.element
@@ -62,7 +61,7 @@ abstract class _$SimInput extends $Notifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -70,7 +69,7 @@ abstract class _$SimInput extends $Notifier<void> {
 /// native platform. Vehicle inputs gets directed here from [SimInput].
 
 @ProviderFor(_SimCoreIsolatePort)
-const _simCoreIsolatePortProvider = _SimCoreIsolatePortProvider._();
+final _simCoreIsolatePortProvider = _SimCoreIsolatePortProvider._();
 
 /// A provider for keeping the isolate [SendPort] when working on a
 /// native platform. Vehicle inputs gets directed here from [SimInput].
@@ -78,7 +77,7 @@ final class _SimCoreIsolatePortProvider
     extends $NotifierProvider<_SimCoreIsolatePort, SendPort?> {
   /// A provider for keeping the isolate [SendPort] when working on a
   /// native platform. Vehicle inputs gets directed here from [SimInput].
-  const _SimCoreIsolatePortProvider._()
+  _SimCoreIsolatePortProvider._()
     : super(
         from: null,
         argument: null,
@@ -116,7 +115,6 @@ abstract class _$SimCoreIsolatePort extends $Notifier<SendPort?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<SendPort?, SendPort?>;
     final element =
         ref.element
@@ -126,7 +124,7 @@ abstract class _$SimCoreIsolatePort extends $Notifier<SendPort?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -137,7 +135,7 @@ abstract class _$SimCoreIsolatePort extends $Notifier<SendPort?> {
 /// update the vehicle gauge providers.
 
 @ProviderFor(simCoreIsolateStream)
-const simCoreIsolateStreamProvider = SimCoreIsolateStreamProvider._();
+final simCoreIsolateStreamProvider = SimCoreIsolateStreamProvider._();
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// native platforms.
@@ -153,7 +151,7 @@ final class SimCoreIsolateStreamProvider
   ///
   /// It will update the stream with vehicle updates from the simulator and also
   /// update the vehicle gauge providers.
-  const SimCoreIsolateStreamProvider._()
+  SimCoreIsolateStreamProvider._()
     : super(
         from: null,
         argument: null,
@@ -185,7 +183,7 @@ String _$simCoreIsolateStreamHash() =>
 /// position when necessary.
 
 @ProviderFor(simCoreVehicleDriving)
-const simCoreVehicleDrivingProvider = SimCoreVehicleDrivingProvider._();
+final simCoreVehicleDrivingProvider = SimCoreVehicleDrivingProvider._();
 
 /// A provider that watches the simulated vehicle and updates the map
 /// position when necessary.
@@ -195,7 +193,7 @@ final class SimCoreVehicleDrivingProvider
     with $Provider<void> {
   /// A provider that watches the simulated vehicle and updates the map
   /// position when necessary.
-  const SimCoreVehicleDrivingProvider._()
+  SimCoreVehicleDrivingProvider._()
     : super(
         from: null,
         argument: null,

@@ -11,13 +11,13 @@ part of 'theme_providers.dart';
 /// A provider that contains the current theme mode state.
 
 @ProviderFor(ActiveThemeMode)
-const activeThemeModeProvider = ActiveThemeModeProvider._();
+final activeThemeModeProvider = ActiveThemeModeProvider._();
 
 /// A provider that contains the current theme mode state.
 final class ActiveThemeModeProvider
     extends $NotifierProvider<ActiveThemeMode, ThemeMode> {
   /// A provider that contains the current theme mode state.
-  const ActiveThemeModeProvider._()
+  ActiveThemeModeProvider._()
     : super(
         from: null,
         argument: null,
@@ -53,7 +53,6 @@ abstract class _$ActiveThemeMode extends $Notifier<ThemeMode> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<ThemeMode, ThemeMode>;
     final element =
         ref.element
@@ -63,20 +62,20 @@ abstract class _$ActiveThemeMode extends $Notifier<ThemeMode> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider that contains theme color state.
 
 @ProviderFor(Manufacturer)
-const manufacturerProvider = ManufacturerProvider._();
+final manufacturerProvider = ManufacturerProvider._();
 
 /// A provider that contains theme color state.
 final class ManufacturerProvider
     extends $NotifierProvider<Manufacturer, ManufacturerColors> {
   /// A provider that contains theme color state.
-  const ManufacturerProvider._()
+  ManufacturerProvider._()
     : super(
         from: null,
         argument: null,
@@ -112,7 +111,6 @@ abstract class _$Manufacturer extends $Notifier<ManufacturerColors> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<ManufacturerColors, ManufacturerColors>;
     final element =
         ref.element
@@ -122,7 +120,7 @@ abstract class _$Manufacturer extends $Notifier<ManufacturerColors> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -130,7 +128,7 @@ abstract class _$Manufacturer extends $Notifier<ManufacturerColors> {
 /// inherited from the active vehicle or from a selected one.
 
 @ProviderFor(ColorSchemeInheritFromVehicle)
-const colorSchemeInheritFromVehicleProvider =
+final colorSchemeInheritFromVehicleProvider =
     ColorSchemeInheritFromVehicleProvider._();
 
 /// A provider for whether the [appTheme] should use [ManufacturerColors]
@@ -139,7 +137,7 @@ final class ColorSchemeInheritFromVehicleProvider
     extends $NotifierProvider<ColorSchemeInheritFromVehicle, bool> {
   /// A provider for whether the [appTheme] should use [ManufacturerColors]
   /// inherited from the active vehicle or from a selected one.
-  const ColorSchemeInheritFromVehicleProvider._()
+  ColorSchemeInheritFromVehicleProvider._()
     : super(
         from: null,
         argument: null,
@@ -177,7 +175,6 @@ abstract class _$ColorSchemeInheritFromVehicle extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -187,7 +184,7 @@ abstract class _$ColorSchemeInheritFromVehicle extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -197,7 +194,7 @@ abstract class _$ColorSchemeInheritFromVehicle extends $Notifier<bool> {
 /// for the options changes.
 
 @ProviderFor(appTheme)
-const appThemeProvider = AppThemeProvider._();
+final appThemeProvider = AppThemeProvider._();
 
 /// A provider for the app's theme.
 ///
@@ -211,7 +208,7 @@ final class AppThemeProvider
   ///
   /// Updates the [AppTheme] configuration when any of the providers
   /// for the options changes.
-  const AppThemeProvider._()
+  AppThemeProvider._()
     : super(
         from: null,
         argument: null,

@@ -11,13 +11,13 @@ part of 'graph_providers.dart';
 /// A provider for whether the [DraggableGraph] should be shown.
 
 @ProviderFor(ShowDraggableGraph)
-const showDraggableGraphProvider = ShowDraggableGraphProvider._();
+final showDraggableGraphProvider = ShowDraggableGraphProvider._();
 
 /// A provider for whether the [DraggableGraph] should be shown.
 final class ShowDraggableGraphProvider
     extends $NotifierProvider<ShowDraggableGraph, bool> {
   /// A provider for whether the [DraggableGraph] should be shown.
-  const ShowDraggableGraphProvider._()
+  ShowDraggableGraphProvider._()
     : super(
         from: null,
         argument: null,
@@ -54,7 +54,6 @@ abstract class _$ShowDraggableGraph extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -64,20 +63,20 @@ abstract class _$ShowDraggableGraph extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the time, in seconds, for the graph to show.
 
 @ProviderFor(GraphRetainTimeSeconds)
-const graphRetainTimeSecondsProvider = GraphRetainTimeSecondsProvider._();
+final graphRetainTimeSecondsProvider = GraphRetainTimeSecondsProvider._();
 
 /// A provider for the time, in seconds, for the graph to show.
 final class GraphRetainTimeSecondsProvider
     extends $NotifierProvider<GraphRetainTimeSeconds, double> {
   /// A provider for the time, in seconds, for the graph to show.
-  const GraphRetainTimeSecondsProvider._()
+  GraphRetainTimeSecondsProvider._()
     : super(
         from: null,
         argument: null,
@@ -114,7 +113,6 @@ abstract class _$GraphRetainTimeSeconds extends $Notifier<double> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -124,7 +122,7 @@ abstract class _$GraphRetainTimeSeconds extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -132,7 +130,7 @@ abstract class _$GraphRetainTimeSeconds extends $Notifier<double> {
 /// show on the graph.
 
 @ProviderFor(GraphActiveParameters)
-const graphActiveParametersProvider = GraphActiveParametersProvider._();
+final graphActiveParametersProvider = GraphActiveParametersProvider._();
 
 /// A provider for the currently active [GraphParameter]s, i.e. which data to
 /// show on the graph.
@@ -140,7 +138,7 @@ final class GraphActiveParametersProvider
     extends $NotifierProvider<GraphActiveParameters, Set<GraphParameter>> {
   /// A provider for the currently active [GraphParameter]s, i.e. which data to
   /// show on the graph.
-  const GraphActiveParametersProvider._()
+  GraphActiveParametersProvider._()
     : super(
         from: null,
         argument: null,
@@ -178,7 +176,6 @@ abstract class _$GraphActiveParameters extends $Notifier<Set<GraphParameter>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Set<GraphParameter>, Set<GraphParameter>>;
     final element =
         ref.element
@@ -188,7 +185,7 @@ abstract class _$GraphActiveParameters extends $Notifier<Set<GraphParameter>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -196,7 +193,7 @@ abstract class _$GraphActiveParameters extends $Notifier<Set<GraphParameter>> {
 /// [GraphActiveParameters].
 
 @ProviderFor(graphActiveData)
-const graphActiveDataProvider = GraphActiveDataProvider._();
+final graphActiveDataProvider = GraphActiveDataProvider._();
 
 /// A provider for the currently active [GraphData], derived from
 /// [GraphActiveParameters].
@@ -206,7 +203,7 @@ final class GraphActiveDataProvider
     with $Provider<Set<GraphData>> {
   /// A provider for the currently active [GraphData], derived from
   /// [GraphActiveParameters].
-  const GraphActiveDataProvider._()
+  GraphActiveDataProvider._()
     : super(
         from: null,
         argument: null,
@@ -246,7 +243,7 @@ String _$graphActiveDataHash() => r'71410bb4a1062a0af018495a5ee5978e4cd880f8';
 /// It is periodically refreshed with new data at a rate of 30 Hz.
 
 @ProviderFor(GraphValues)
-const graphValuesProvider = GraphValuesProvider._();
+final graphValuesProvider = GraphValuesProvider._();
 
 /// A provider for the values to show on the graph.
 ///
@@ -260,7 +257,7 @@ final class GraphValuesProvider
   /// A provider for the values to show on the graph.
   ///
   /// It is periodically refreshed with new data at a rate of 30 Hz.
-  const GraphValuesProvider._()
+  GraphValuesProvider._()
     : super(
         from: null,
         argument: null,
@@ -304,7 +301,6 @@ abstract class _$GraphValues
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref
             as $Ref<
@@ -322,20 +318,20 @@ abstract class _$GraphValues
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the UI [Offset] for the path recording configurator.
 
 @ProviderFor(DraggableGraphUiOffset)
-const draggableGraphUiOffsetProvider = DraggableGraphUiOffsetProvider._();
+final draggableGraphUiOffsetProvider = DraggableGraphUiOffsetProvider._();
 
 /// A provider for the UI [Offset] for the path recording configurator.
 final class DraggableGraphUiOffsetProvider
     extends $NotifierProvider<DraggableGraphUiOffset, Offset> {
   /// A provider for the UI [Offset] for the path recording configurator.
-  const DraggableGraphUiOffsetProvider._()
+  DraggableGraphUiOffsetProvider._()
     : super(
         from: null,
         argument: null,
@@ -372,7 +368,6 @@ abstract class _$DraggableGraphUiOffset extends $Notifier<Offset> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Offset, Offset>;
     final element =
         ref.element
@@ -382,6 +377,6 @@ abstract class _$DraggableGraphUiOffset extends $Notifier<Offset> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

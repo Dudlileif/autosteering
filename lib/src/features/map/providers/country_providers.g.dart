@@ -14,7 +14,7 @@ part of 'country_providers.dart';
 /// Can check the current location by querying the OSM servers.
 
 @ProviderFor(CurrentCountry)
-const currentCountryProvider = CurrentCountryProvider._();
+final currentCountryProvider = CurrentCountryProvider._();
 
 /// A provider fort showing the country we are currently in, if the country
 /// has defined custom map layers.
@@ -26,7 +26,7 @@ final class CurrentCountryProvider
   /// has defined custom map layers.
   ///
   /// Can check the current location by querying the OSM servers.
-  const CurrentCountryProvider._()
+  CurrentCountryProvider._()
     : super(
         from: null,
         argument: null,
@@ -65,7 +65,6 @@ abstract class _$CurrentCountry extends $Notifier<Country?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Country?, Country?>;
     final element =
         ref.element
@@ -75,7 +74,7 @@ abstract class _$CurrentCountry extends $Notifier<Country?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -83,7 +82,7 @@ abstract class _$CurrentCountry extends $Notifier<Country?> {
 /// [CurrentCountry].
 
 @ProviderFor(AvailableCountryLayers)
-const availableCountryLayersProvider = AvailableCountryLayersProvider._();
+final availableCountryLayersProvider = AvailableCountryLayersProvider._();
 
 /// A provider that contains all the custom layers available for the
 /// [CurrentCountry].
@@ -91,7 +90,7 @@ final class AvailableCountryLayersProvider
     extends $NotifierProvider<AvailableCountryLayers, List<TileLayerData>> {
   /// A provider that contains all the custom layers available for the
   /// [CurrentCountry].
-  const AvailableCountryLayersProvider._()
+  AvailableCountryLayersProvider._()
     : super(
         from: null,
         argument: null,
@@ -129,7 +128,6 @@ abstract class _$AvailableCountryLayers extends $Notifier<List<TileLayerData>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<List<TileLayerData>, List<TileLayerData>>;
     final element =
         ref.element
@@ -139,20 +137,20 @@ abstract class _$AvailableCountryLayers extends $Notifier<List<TileLayerData>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A set of the current selction of custom layers for the [CurrentCountry].
 
 @ProviderFor(EnabledCountryLayers)
-const enabledCountryLayersProvider = EnabledCountryLayersProvider._();
+final enabledCountryLayersProvider = EnabledCountryLayersProvider._();
 
 /// A set of the current selction of custom layers for the [CurrentCountry].
 final class EnabledCountryLayersProvider
     extends $NotifierProvider<EnabledCountryLayers, Set<TileLayerData>> {
   /// A set of the current selction of custom layers for the [CurrentCountry].
-  const EnabledCountryLayersProvider._()
+  EnabledCountryLayersProvider._()
     : super(
         from: null,
         argument: null,
@@ -189,7 +187,6 @@ abstract class _$EnabledCountryLayers extends $Notifier<Set<TileLayerData>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Set<TileLayerData>, Set<TileLayerData>>;
     final element =
         ref.element
@@ -199,7 +196,7 @@ abstract class _$EnabledCountryLayers extends $Notifier<Set<TileLayerData>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -207,7 +204,7 @@ abstract class _$EnabledCountryLayers extends $Notifier<Set<TileLayerData>> {
 /// list.
 
 @ProviderFor(sortedCountryLayers)
-const sortedCountryLayersProvider = SortedCountryLayersProvider._();
+final sortedCountryLayersProvider = SortedCountryLayersProvider._();
 
 /// The selected country layers sorted by their index in the available layers
 /// list.
@@ -222,7 +219,7 @@ final class SortedCountryLayersProvider
     with $Provider<List<TileLayerData>> {
   /// The selected country layers sorted by their index in the available layers
   /// list.
-  const SortedCountryLayersProvider._()
+  SortedCountryLayersProvider._()
     : super(
         from: null,
         argument: null,
@@ -263,7 +260,7 @@ String _$sortedCountryLayersHash() =>
 /// specified.
 
 @ProviderFor(CountryLayerOpacities)
-const countryLayerOpacitiesProvider = CountryLayerOpacitiesProvider._();
+final countryLayerOpacitiesProvider = CountryLayerOpacitiesProvider._();
 
 /// A map of the available country layers and their opacities, which can be
 /// specified.
@@ -271,7 +268,7 @@ final class CountryLayerOpacitiesProvider
     extends $NotifierProvider<CountryLayerOpacities, Map<String, double>> {
   /// A map of the available country layers and their opacities, which can be
   /// specified.
-  const CountryLayerOpacitiesProvider._()
+  CountryLayerOpacitiesProvider._()
     : super(
         from: null,
         argument: null,
@@ -309,7 +306,6 @@ abstract class _$CountryLayerOpacities extends $Notifier<Map<String, double>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Map<String, double>, Map<String, double>>;
     final element =
         ref.element
@@ -319,6 +315,6 @@ abstract class _$CountryLayerOpacities extends $Notifier<Map<String, double>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

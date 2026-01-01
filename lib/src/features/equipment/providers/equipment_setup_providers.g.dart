@@ -11,13 +11,13 @@ part of 'equipment_setup_providers.dart';
 /// A provider or holding the configured/loaded [EquipmentSetup] in memory.
 
 @ProviderFor(ConfiguredEquipmentSetup)
-const configuredEquipmentSetupProvider = ConfiguredEquipmentSetupProvider._();
+final configuredEquipmentSetupProvider = ConfiguredEquipmentSetupProvider._();
 
 /// A provider or holding the configured/loaded [EquipmentSetup] in memory.
 final class ConfiguredEquipmentSetupProvider
     extends $NotifierProvider<ConfiguredEquipmentSetup, EquipmentSetup?> {
   /// A provider or holding the configured/loaded [EquipmentSetup] in memory.
-  const ConfiguredEquipmentSetupProvider._()
+  ConfiguredEquipmentSetupProvider._()
     : super(
         from: null,
         argument: null,
@@ -54,7 +54,6 @@ abstract class _$ConfiguredEquipmentSetup extends $Notifier<EquipmentSetup?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<EquipmentSetup?, EquipmentSetup?>;
     final element =
         ref.element
@@ -64,7 +63,7 @@ abstract class _$ConfiguredEquipmentSetup extends $Notifier<EquipmentSetup?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -73,7 +72,7 @@ abstract class _$ConfiguredEquipmentSetup extends $Notifier<EquipmentSetup?> {
 /// Override the file name with [overrideName].
 
 @ProviderFor(saveEquipmentSetup)
-const saveEquipmentSetupProvider = SaveEquipmentSetupFamily._();
+final saveEquipmentSetupProvider = SaveEquipmentSetupFamily._();
 
 /// A provider for saving [setup] to a file in the user file directory.
 ///
@@ -85,7 +84,7 @@ final class SaveEquipmentSetupProvider
   /// A provider for saving [setup] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
-  const SaveEquipmentSetupProvider._({
+  SaveEquipmentSetupProvider._({
     required SaveEquipmentSetupFamily super.from,
     required (EquipmentSetup, {String? overrideName, bool downloadIfWeb})
     super.argument,
@@ -149,7 +148,7 @@ final class SaveEquipmentSetupFamily extends $Family
           FutureOr<void>,
           (EquipmentSetup, {String? overrideName, bool downloadIfWeb})
         > {
-  const SaveEquipmentSetupFamily._()
+  SaveEquipmentSetupFamily._()
     : super(
         retry: null,
         name: r'saveEquipmentSetupProvider',
@@ -180,7 +179,7 @@ final class SaveEquipmentSetupFamily extends $Family
 /// Override the file name with [overrideName].
 
 @ProviderFor(exportEquipmentSetup)
-const exportEquipmentSetupProvider = ExportEquipmentSetupFamily._();
+final exportEquipmentSetupProvider = ExportEquipmentSetupFamily._();
 
 /// A provider for exporting [setup] to a file.
 ///
@@ -192,7 +191,7 @@ final class ExportEquipmentSetupProvider
   /// A provider for exporting [setup] to a file.
   ///
   /// Override the file name with [overrideName].
-  const ExportEquipmentSetupProvider._({
+  ExportEquipmentSetupProvider._({
     required ExportEquipmentSetupFamily super.from,
     required (EquipmentSetup, {String? overrideName, bool downloadIfWeb})
     super.argument,
@@ -256,7 +255,7 @@ final class ExportEquipmentSetupFamily extends $Family
           FutureOr<void>,
           (EquipmentSetup, {String? overrideName, bool downloadIfWeb})
         > {
-  const ExportEquipmentSetupFamily._()
+  ExportEquipmentSetupFamily._()
     : super(
         retry: null,
         name: r'exportEquipmentSetupProvider',
@@ -286,7 +285,7 @@ final class ExportEquipmentSetupFamily extends $Family
 /// user file directory.
 
 @ProviderFor(savedEquipmentSetups)
-const savedEquipmentSetupsProvider = SavedEquipmentSetupsProvider._();
+final savedEquipmentSetupsProvider = SavedEquipmentSetupsProvider._();
 
 /// A provider for reading and holding all the saved [EquipmentSetup]s in the
 /// user file directory.
@@ -303,7 +302,7 @@ final class SavedEquipmentSetupsProvider
         $FutureProvider<List<EquipmentSetup>> {
   /// A provider for reading and holding all the saved [EquipmentSetup]s in the
   /// user file directory.
-  const SavedEquipmentSetupsProvider._()
+  SavedEquipmentSetupsProvider._()
     : super(
         from: null,
         argument: null,
@@ -337,7 +336,7 @@ String _$savedEquipmentSetupsHash() =>
 /// Override the file name with [overrideName].
 
 @ProviderFor(deleteEquipmentSetup)
-const deleteEquipmentSetupProvider = DeleteEquipmentSetupFamily._();
+final deleteEquipmentSetupProvider = DeleteEquipmentSetupFamily._();
 
 /// A provider for deleting [setup] form the user file system.
 ///
@@ -349,7 +348,7 @@ final class DeleteEquipmentSetupProvider
   /// A provider for deleting [setup] form the user file system.
   ///
   /// Override the file name with [overrideName].
-  const DeleteEquipmentSetupProvider._({
+  DeleteEquipmentSetupProvider._({
     required DeleteEquipmentSetupFamily super.from,
     required (EquipmentSetup, {String? overrideName, bool downloadIfWeb})
     super.argument,
@@ -413,7 +412,7 @@ final class DeleteEquipmentSetupFamily extends $Family
           FutureOr<void>,
           (EquipmentSetup, {String? overrideName, bool downloadIfWeb})
         > {
-  const DeleteEquipmentSetupFamily._()
+  DeleteEquipmentSetupFamily._()
     : super(
         retry: null,
         name: r'deleteEquipmentSetupProvider',
@@ -443,7 +442,7 @@ final class DeleteEquipmentSetupFamily extends $Family
 /// valid.
 
 @ProviderFor(loadEquipmentSetupFromFile)
-const loadEquipmentSetupFromFileProvider = LoadEquipmentSetupFromFileFamily._();
+final loadEquipmentSetupFromFileProvider = LoadEquipmentSetupFromFileFamily._();
 
 /// A provider for loading an [EquipmentSetup] from a file at [path], if it's
 /// valid.
@@ -458,7 +457,7 @@ final class LoadEquipmentSetupFromFileProvider
     with $FutureModifier<EquipmentSetup?>, $FutureProvider<EquipmentSetup?> {
   /// A provider for loading an [EquipmentSetup] from a file at [path], if it's
   /// valid.
-  const LoadEquipmentSetupFromFileProvider._({
+  LoadEquipmentSetupFromFileProvider._({
     required LoadEquipmentSetupFromFileFamily super.from,
     required String super.argument,
   }) : super(
@@ -511,7 +510,7 @@ String _$loadEquipmentSetupFromFileHash() =>
 
 final class LoadEquipmentSetupFromFileFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<EquipmentSetup?>, String> {
-  const LoadEquipmentSetupFromFileFamily._()
+  LoadEquipmentSetupFromFileFamily._()
     : super(
         retry: null,
         name: r'loadEquipmentSetupFromFileProvider',
@@ -534,7 +533,7 @@ final class LoadEquipmentSetupFromFileFamily extends $Family
 /// directory and applying it to the [ConfiguredEquipmentSetup] provider.
 
 @ProviderFor(importEquipmentSetup)
-const importEquipmentSetupProvider = ImportEquipmentSetupProvider._();
+final importEquipmentSetupProvider = ImportEquipmentSetupProvider._();
 
 /// A provider for importing a equipment setup configuration from the user file
 /// directory and applying it to the [ConfiguredEquipmentSetup] provider.
@@ -549,7 +548,7 @@ final class ImportEquipmentSetupProvider
     with $FutureModifier<EquipmentSetup?>, $FutureProvider<EquipmentSetup?> {
   /// A provider for importing a equipment setup configuration from the user file
   /// directory and applying it to the [ConfiguredEquipmentSetup] provider.
-  const ImportEquipmentSetupProvider._()
+  ImportEquipmentSetupProvider._()
     : super(
         from: null,
         argument: null,

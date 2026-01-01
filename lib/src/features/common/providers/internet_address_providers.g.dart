@@ -12,7 +12,7 @@ part of 'internet_address_providers.dart';
 /// has a reachable IP address attached to it.
 
 @ProviderFor(validInternetAddress)
-const validInternetAddressProvider = ValidInternetAddressFamily._();
+final validInternetAddressProvider = ValidInternetAddressFamily._();
 
 /// A provider for figuring out whether an internet [address] is valid, i.e.
 /// has a reachable IP address attached to it.
@@ -22,7 +22,7 @@ final class ValidInternetAddressProvider
     with $FutureModifier<bool>, $FutureProvider<bool> {
   /// A provider for figuring out whether an internet [address] is valid, i.e.
   /// has a reachable IP address attached to it.
-  const ValidInternetAddressProvider._({
+  ValidInternetAddressProvider._({
     required ValidInternetAddressFamily super.from,
     required String? super.argument,
   }) : super(
@@ -73,7 +73,7 @@ String _$validInternetAddressHash() =>
 
 final class ValidInternetAddressFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<bool>, String?> {
-  const ValidInternetAddressFamily._()
+  ValidInternetAddressFamily._()
     : super(
         retry: null,
         name: r'validInternetAddressProvider',

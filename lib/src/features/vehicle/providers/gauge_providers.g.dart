@@ -11,13 +11,13 @@ part of 'gauge_providers.dart';
 /// A provider for the distance travelled by the vehicle.
 
 @ProviderFor(GaugeTravelledDistance)
-const gaugeTravelledDistanceProvider = GaugeTravelledDistanceProvider._();
+final gaugeTravelledDistanceProvider = GaugeTravelledDistanceProvider._();
 
 /// A provider for the distance travelled by the vehicle.
 final class GaugeTravelledDistanceProvider
     extends $NotifierProvider<GaugeTravelledDistance, double> {
   /// A provider for the distance travelled by the vehicle.
-  const GaugeTravelledDistanceProvider._()
+  GaugeTravelledDistanceProvider._()
     : super(
         from: null,
         argument: null,
@@ -54,7 +54,6 @@ abstract class _$GaugeTravelledDistance extends $Notifier<double> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -64,20 +63,20 @@ abstract class _$GaugeTravelledDistance extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the vehicle's velocity gauge.
 
 @ProviderFor(GaugeVelocity)
-const gaugeVelocityProvider = GaugeVelocityProvider._();
+final gaugeVelocityProvider = GaugeVelocityProvider._();
 
 /// A provider for the vehicle's velocity gauge.
 final class GaugeVelocityProvider
     extends $NotifierProvider<GaugeVelocity, double> {
   /// A provider for the vehicle's velocity gauge.
-  const GaugeVelocityProvider._()
+  GaugeVelocityProvider._()
     : super(
         from: null,
         argument: null,
@@ -113,7 +112,6 @@ abstract class _$GaugeVelocity extends $Notifier<double> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -123,20 +121,20 @@ abstract class _$GaugeVelocity extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the vehicle's bearing gauge.
 
 @ProviderFor(GaugeBearing)
-const gaugeBearingProvider = GaugeBearingProvider._();
+final gaugeBearingProvider = GaugeBearingProvider._();
 
 /// A provider for the vehicle's bearing gauge.
 final class GaugeBearingProvider
     extends $NotifierProvider<GaugeBearing, double> {
   /// A provider for the vehicle's bearing gauge.
-  const GaugeBearingProvider._()
+  GaugeBearingProvider._()
     : super(
         from: null,
         argument: null,
@@ -172,7 +170,6 @@ abstract class _$GaugeBearing extends $Notifier<double> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -182,6 +179,6 @@ abstract class _$GaugeBearing extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

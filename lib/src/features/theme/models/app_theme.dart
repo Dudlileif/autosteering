@@ -71,6 +71,8 @@ class AppTheme {
       blendOnLevel: 10,
       navigationBarHeight: 80,
       unselectedToggleIsColored: true,
+      sliderYear2023: false,
+      progressIndicatorYear2023: false,
     ),
     swapLegacyOnMaterial3: true,
   );
@@ -90,6 +92,8 @@ class AppTheme {
       blendOnLevel: 20,
       navigationBarHeight: 80,
       unselectedToggleIsColored: true,
+      sliderYear2023: false,
+      progressIndicatorYear2023: false,
     ),
     swapLegacyOnMaterial3: true,
   );

@@ -11,12 +11,12 @@ part of 'ntrip_providers.dart';
 /// A provider for whether the [NtripClient] provider should run.
 
 @ProviderFor(NtripEnabled)
-const ntripEnabledProvider = NtripEnabledProvider._();
+final ntripEnabledProvider = NtripEnabledProvider._();
 
 /// A provider for whether the [NtripClient] provider should run.
 final class NtripEnabledProvider extends $NotifierProvider<NtripEnabled, bool> {
   /// A provider for whether the [NtripClient] provider should run.
-  const NtripEnabledProvider._()
+  NtripEnabledProvider._()
     : super(
         from: null,
         argument: null,
@@ -52,7 +52,6 @@ abstract class _$NtripEnabled extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -62,20 +61,20 @@ abstract class _$NtripEnabled extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the stored [gnss.NtripProfile]s.
 
 @ProviderFor(NtripProfiles)
-const ntripProfilesProvider = NtripProfilesProvider._();
+final ntripProfilesProvider = NtripProfilesProvider._();
 
 /// A provider for the stored [gnss.NtripProfile]s.
 final class NtripProfilesProvider
     extends $NotifierProvider<NtripProfiles, List<gnss.NtripProfile>> {
   /// A provider for the stored [gnss.NtripProfile]s.
-  const NtripProfilesProvider._()
+  NtripProfilesProvider._()
     : super(
         from: null,
         argument: null,
@@ -111,7 +110,6 @@ abstract class _$NtripProfiles extends $Notifier<List<gnss.NtripProfile>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref as $Ref<List<gnss.NtripProfile>, List<gnss.NtripProfile>>;
     final element =
@@ -122,20 +120,20 @@ abstract class _$NtripProfiles extends $Notifier<List<gnss.NtripProfile>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the active [gnss.NtripProfile], if there is one.
 
 @ProviderFor(ActiveNtripProfile)
-const activeNtripProfileProvider = ActiveNtripProfileProvider._();
+final activeNtripProfileProvider = ActiveNtripProfileProvider._();
 
 /// A provider for the active [gnss.NtripProfile], if there is one.
 final class ActiveNtripProfileProvider
     extends $NotifierProvider<ActiveNtripProfile, gnss.NtripProfile?> {
   /// A provider for the active [gnss.NtripProfile], if there is one.
-  const ActiveNtripProfileProvider._()
+  ActiveNtripProfileProvider._()
     : super(
         from: null,
         argument: null,
@@ -172,7 +170,6 @@ abstract class _$ActiveNtripProfile extends $Notifier<gnss.NtripProfile?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<gnss.NtripProfile?, gnss.NtripProfile?>;
     final element =
         ref.element
@@ -182,20 +179,20 @@ abstract class _$ActiveNtripProfile extends $Notifier<gnss.NtripProfile?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the NTRIP data usage in bytes for this session.
 
 @ProviderFor(NtripDataUsageSession)
-const ntripDataUsageSessionProvider = NtripDataUsageSessionProvider._();
+final ntripDataUsageSessionProvider = NtripDataUsageSessionProvider._();
 
 /// A provider for the NTRIP data usage in bytes for this session.
 final class NtripDataUsageSessionProvider
     extends $NotifierProvider<NtripDataUsageSession, int?> {
   /// A provider for the NTRIP data usage in bytes for this session.
-  const NtripDataUsageSessionProvider._()
+  NtripDataUsageSessionProvider._()
     : super(
         from: null,
         argument: null,
@@ -232,7 +229,6 @@ abstract class _$NtripDataUsageSession extends $Notifier<int?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<int?, int?>;
     final element =
         ref.element
@@ -242,7 +238,7 @@ abstract class _$NtripDataUsageSession extends $Notifier<int?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -252,7 +248,7 @@ abstract class _$NtripDataUsageSession extends $Notifier<int?> {
 /// [NtripClient].
 
 @ProviderFor(NtripAlive)
-const ntripAliveProvider = NtripAliveProvider._();
+final ntripAliveProvider = NtripAliveProvider._();
 
 /// A provider for telling whether the [NtripClient] is receiving data.
 ///
@@ -263,7 +259,7 @@ final class NtripAliveProvider extends $NotifierProvider<NtripAlive, bool> {
   ///
   /// If not set to true in the last 5 seconds, it will invalidate itself and the
   /// [NtripClient].
-  const NtripAliveProvider._()
+  NtripAliveProvider._()
     : super(
         from: null,
         argument: null,
@@ -302,7 +298,6 @@ abstract class _$NtripAlive extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -312,7 +307,7 @@ abstract class _$NtripAlive extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -322,7 +317,7 @@ abstract class _$NtripAlive extends $Notifier<bool> {
 /// connected [HardwareSerial] if connected or the [TcpServer].
 
 @ProviderFor(NtripClient)
-const ntripClientProvider = NtripClientProvider._();
+final ntripClientProvider = NtripClientProvider._();
 
 /// A provider for creating and listening to an [NtripClient].
 ///
@@ -334,7 +329,7 @@ final class NtripClientProvider
   ///
   /// The received NTRIP messages will be split into parts and sent to the
   /// connected [HardwareSerial] if connected or the [TcpServer].
-  const NtripClientProvider._()
+  NtripClientProvider._()
     : super(
         from: null,
         argument: null,
@@ -365,7 +360,6 @@ abstract class _$NtripClient extends $AsyncNotifier<gnss.NtripClient?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref as $Ref<AsyncValue<gnss.NtripClient?>, gnss.NtripClient?>;
     final element =
@@ -376,7 +370,7 @@ abstract class _$NtripClient extends $AsyncNotifier<gnss.NtripClient?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -384,7 +378,7 @@ abstract class _$NtripClient extends $AsyncNotifier<gnss.NtripClient?> {
 /// NTRIP caster server.
 
 @ProviderFor(ntripSourcetable)
-const ntripSourcetableProvider = NtripSourcetableFamily._();
+final ntripSourcetableProvider = NtripSourcetableFamily._();
 
 /// A provider for the NTRIP caster sourcetable for the currently selected
 /// NTRIP caster server.
@@ -401,7 +395,7 @@ final class NtripSourcetableProvider
         $FutureProvider<Iterable<gnss.NtripMountPoint>?> {
   /// A provider for the NTRIP caster sourcetable for the currently selected
   /// NTRIP caster server.
-  const NtripSourcetableProvider._({
+  NtripSourcetableProvider._({
     required NtripSourcetableFamily super.from,
     required ({String host, int port, String? username, String? password})
     super.argument,
@@ -465,7 +459,7 @@ final class NtripSourcetableFamily extends $Family
           FutureOr<Iterable<gnss.NtripMountPoint>?>,
           ({String host, int port, String? username, String? password})
         > {
-  const NtripSourcetableFamily._()
+  NtripSourcetableFamily._()
     : super(
         retry: null,
         name: r'ntripSourcetableProvider',
@@ -495,7 +489,7 @@ final class NtripSourcetableFamily extends $Family
 /// [MainVehicle].
 
 @ProviderFor(ntripMountPointsSorted)
-const ntripMountPointsSortedProvider = NtripMountPointsSortedFamily._();
+final ntripMountPointsSortedProvider = NtripMountPointsSortedFamily._();
 
 /// A provider for sorting the [ntripSourcetable] by their distance to
 /// [MainVehicle].
@@ -512,7 +506,7 @@ final class NtripMountPointsSortedProvider
         $FutureProvider<Map<gnss.NtripMountPointStream, double?>?> {
   /// A provider for sorting the [ntripSourcetable] by their distance to
   /// [MainVehicle].
-  const NtripMountPointsSortedProvider._({
+  NtripMountPointsSortedProvider._({
     required NtripMountPointsSortedFamily super.from,
     required ({String host, int port, String? username, String? password})
     super.argument,
@@ -577,7 +571,7 @@ final class NtripMountPointsSortedFamily extends $Family
           FutureOr<Map<gnss.NtripMountPointStream, double?>?>,
           ({String host, int port, String? username, String? password})
         > {
-  const NtripMountPointsSortedFamily._()
+  NtripMountPointsSortedFamily._()
     : super(
         retry: null,
         name: r'ntripMountPointsSortedProvider',
@@ -607,7 +601,7 @@ final class NtripMountPointsSortedFamily extends $Family
 /// data usage.
 
 @ProviderFor(NtripDataUsageByMonth)
-const ntripDataUsageByMonthProvider = NtripDataUsageByMonthProvider._();
+final ntripDataUsageByMonthProvider = NtripDataUsageByMonthProvider._();
 
 /// A provider for a map of all recorded months with their corresponding
 /// data usage.
@@ -615,7 +609,7 @@ final class NtripDataUsageByMonthProvider
     extends $NotifierProvider<NtripDataUsageByMonth, Map<String, int>> {
   /// A provider for a map of all recorded months with their corresponding
   /// data usage.
-  const NtripDataUsageByMonthProvider._()
+  NtripDataUsageByMonthProvider._()
     : super(
         from: null,
         argument: null,
@@ -653,7 +647,6 @@ abstract class _$NtripDataUsageByMonth extends $Notifier<Map<String, int>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Map<String, int>, Map<String, int>>;
     final element =
         ref.element
@@ -663,6 +656,6 @@ abstract class _$NtripDataUsageByMonth extends $Notifier<Map<String, int>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

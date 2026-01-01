@@ -11,13 +11,13 @@ part of 'hardware_motor_providers.dart';
 /// A provider for the WAS target for the steering motor when using guidance.
 
 @ProviderFor(SteeringMotorWasTarget)
-const steeringMotorWasTargetProvider = SteeringMotorWasTargetProvider._();
+final steeringMotorWasTargetProvider = SteeringMotorWasTargetProvider._();
 
 /// A provider for the WAS target for the steering motor when using guidance.
 final class SteeringMotorWasTargetProvider
     extends $NotifierProvider<SteeringMotorWasTarget, int?> {
   /// A provider for the WAS target for the steering motor when using guidance.
-  const SteeringMotorWasTargetProvider._()
+  SteeringMotorWasTargetProvider._()
     : super(
         from: null,
         argument: null,
@@ -54,7 +54,6 @@ abstract class _$SteeringMotorWasTarget extends $Notifier<int?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<int?, int?>;
     final element =
         ref.element
@@ -64,20 +63,20 @@ abstract class _$SteeringMotorWasTarget extends $Notifier<int?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the actual current steering motor rpm when using guidance.
 
 @ProviderFor(SteeringMotorActualRPM)
-const steeringMotorActualRPMProvider = SteeringMotorActualRPMProvider._();
+final steeringMotorActualRPMProvider = SteeringMotorActualRPMProvider._();
 
 /// A provider for the actual current steering motor rpm when using guidance.
 final class SteeringMotorActualRPMProvider
     extends $NotifierProvider<SteeringMotorActualRPM, double?> {
   /// A provider for the actual current steering motor rpm when using guidance.
-  const SteeringMotorActualRPMProvider._()
+  SteeringMotorActualRPMProvider._()
     : super(
         from: null,
         argument: null,
@@ -114,7 +113,6 @@ abstract class _$SteeringMotorActualRPM extends $Notifier<double?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -124,20 +122,20 @@ abstract class _$SteeringMotorActualRPM extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the steering motor is enabled when using guidance.
 
 @ProviderFor(SteeringMotorStatus)
-const steeringMotorStatusProvider = SteeringMotorStatusProvider._();
+final steeringMotorStatusProvider = SteeringMotorStatusProvider._();
 
 /// A provider for the steering motor is enabled when using guidance.
 final class SteeringMotorStatusProvider
     extends $NotifierProvider<SteeringMotorStatus, MotorStatus?> {
   /// A provider for the steering motor is enabled when using guidance.
-  const SteeringMotorStatusProvider._()
+  SteeringMotorStatusProvider._()
     : super(
         from: null,
         argument: null,
@@ -174,7 +172,6 @@ abstract class _$SteeringMotorStatus extends $Notifier<MotorStatus?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<MotorStatus?, MotorStatus?>;
     final element =
         ref.element
@@ -184,20 +181,20 @@ abstract class _$SteeringMotorStatus extends $Notifier<MotorStatus?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the steering motor Stallguard reading.
 
 @ProviderFor(SteeringMotorCurrentScale)
-const steeringMotorCurrentScaleProvider = SteeringMotorCurrentScaleProvider._();
+final steeringMotorCurrentScaleProvider = SteeringMotorCurrentScaleProvider._();
 
 /// A provider for the steering motor Stallguard reading.
 final class SteeringMotorCurrentScaleProvider
     extends $NotifierProvider<SteeringMotorCurrentScale, int?> {
   /// A provider for the steering motor Stallguard reading.
-  const SteeringMotorCurrentScaleProvider._()
+  SteeringMotorCurrentScaleProvider._()
     : super(
         from: null,
         argument: null,
@@ -234,7 +231,6 @@ abstract class _$SteeringMotorCurrentScale extends $Notifier<int?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<int?, int?>;
     final element =
         ref.element
@@ -244,20 +240,20 @@ abstract class _$SteeringMotorCurrentScale extends $Notifier<int?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the steering motor Stallguard reading.
 
 @ProviderFor(SteeringMotorStallguard)
-const steeringMotorStallguardProvider = SteeringMotorStallguardProvider._();
+final steeringMotorStallguardProvider = SteeringMotorStallguardProvider._();
 
 /// A provider for the steering motor Stallguard reading.
 final class SteeringMotorStallguardProvider
     extends $NotifierProvider<SteeringMotorStallguard, int?> {
   /// A provider for the steering motor Stallguard reading.
-  const SteeringMotorStallguardProvider._()
+  SteeringMotorStallguardProvider._()
     : super(
         from: null,
         argument: null,
@@ -294,7 +290,6 @@ abstract class _$SteeringMotorStallguard extends $Notifier<int?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<int?, int?>;
     final element =
         ref.element
@@ -304,21 +299,21 @@ abstract class _$SteeringMotorStallguard extends $Notifier<int?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider whether the steering motor should be in calibration mode.
 
 @ProviderFor(SteeringMotorEnableCalibration)
-const steeringMotorEnableCalibrationProvider =
+final steeringMotorEnableCalibrationProvider =
     SteeringMotorEnableCalibrationProvider._();
 
 /// A provider whether the steering motor should be in calibration mode.
 final class SteeringMotorEnableCalibrationProvider
     extends $NotifierProvider<SteeringMotorEnableCalibration, bool> {
   /// A provider whether the steering motor should be in calibration mode.
-  const SteeringMotorEnableCalibrationProvider._()
+  SteeringMotorEnableCalibrationProvider._()
     : super(
         from: null,
         argument: null,
@@ -355,7 +350,6 @@ abstract class _$SteeringMotorEnableCalibration extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -365,20 +359,20 @@ abstract class _$SteeringMotorEnableCalibration extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the current rotational position of the steering motor.
 
 @ProviderFor(SteeringMotorRotation)
-const steeringMotorRotationProvider = SteeringMotorRotationProvider._();
+final steeringMotorRotationProvider = SteeringMotorRotationProvider._();
 
 /// A provider for the current rotational position of the steering motor.
 final class SteeringMotorRotationProvider
     extends $NotifierProvider<SteeringMotorRotation, double?> {
   /// A provider for the current rotational position of the steering motor.
-  const SteeringMotorRotationProvider._()
+  SteeringMotorRotationProvider._()
     : super(
         from: null,
         argument: null,
@@ -415,7 +409,6 @@ abstract class _$SteeringMotorRotation extends $Notifier<double?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -425,7 +418,7 @@ abstract class _$SteeringMotorRotation extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -433,7 +426,7 @@ abstract class _$SteeringMotorRotation extends $Notifier<double?> {
 /// only used in calibration mode.
 
 @ProviderFor(SteeringMotorTargetRotation)
-const steeringMotorTargetRotationProvider =
+final steeringMotorTargetRotationProvider =
     SteeringMotorTargetRotationProvider._();
 
 /// A provider for target rotational position of the steering motor,
@@ -442,7 +435,7 @@ final class SteeringMotorTargetRotationProvider
     extends $NotifierProvider<SteeringMotorTargetRotation, double?> {
   /// A provider for target rotational position of the steering motor,
   /// only used in calibration mode.
-  const SteeringMotorTargetRotationProvider._()
+  SteeringMotorTargetRotationProvider._()
     : super(
         from: null,
         argument: null,
@@ -480,7 +473,6 @@ abstract class _$SteeringMotorTargetRotation extends $Notifier<double?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -490,7 +482,7 @@ abstract class _$SteeringMotorTargetRotation extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -498,7 +490,7 @@ abstract class _$SteeringMotorTargetRotation extends $Notifier<double?> {
 /// value.
 
 @ProviderFor(SteeringMotorStepsPerWasIncrementMinToCenter)
-const steeringMotorStepsPerWasIncrementMinToCenterProvider =
+final steeringMotorStepsPerWasIncrementMinToCenterProvider =
     SteeringMotorStepsPerWasIncrementMinToCenterProvider._();
 
 /// A provider for the motor steps per WAS increment between WAS min and center
@@ -511,7 +503,7 @@ final class SteeringMotorStepsPerWasIncrementMinToCenterProvider
         > {
   /// A provider for the motor steps per WAS increment between WAS min and center
   /// value.
-  const SteeringMotorStepsPerWasIncrementMinToCenterProvider._()
+  SteeringMotorStepsPerWasIncrementMinToCenterProvider._()
     : super(
         from: null,
         argument: null,
@@ -552,7 +544,6 @@ abstract class _$SteeringMotorStepsPerWasIncrementMinToCenter
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -562,7 +553,7 @@ abstract class _$SteeringMotorStepsPerWasIncrementMinToCenter
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -570,7 +561,7 @@ abstract class _$SteeringMotorStepsPerWasIncrementMinToCenter
 /// value.
 
 @ProviderFor(SteeringMotorStepsPerWasIncrementCenterToMax)
-const steeringMotorStepsPerWasIncrementCenterToMaxProvider =
+final steeringMotorStepsPerWasIncrementCenterToMaxProvider =
     SteeringMotorStepsPerWasIncrementCenterToMaxProvider._();
 
 /// A provider for the motor steps per WAS increment between WAS center and max
@@ -583,7 +574,7 @@ final class SteeringMotorStepsPerWasIncrementCenterToMaxProvider
         > {
   /// A provider for the motor steps per WAS increment between WAS center and max
   /// value.
-  const SteeringMotorStepsPerWasIncrementCenterToMaxProvider._()
+  SteeringMotorStepsPerWasIncrementCenterToMaxProvider._()
     : super(
         from: null,
         argument: null,
@@ -624,7 +615,6 @@ abstract class _$SteeringMotorStepsPerWasIncrementCenterToMax
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -634,14 +624,14 @@ abstract class _$SteeringMotorStepsPerWasIncrementCenterToMax
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for getting the motor configuration from the hardware.
 
 @ProviderFor(getSteeringHardwareConfig)
-const getSteeringHardwareConfigProvider = GetSteeringHardwareConfigProvider._();
+final getSteeringHardwareConfigProvider = GetSteeringHardwareConfigProvider._();
 
 /// A provider for getting the motor configuration from the hardware.
 
@@ -649,7 +639,7 @@ final class GetSteeringHardwareConfigProvider
     extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
     with $FutureModifier<void>, $FutureProvider<void> {
   /// A provider for getting the motor configuration from the hardware.
-  const GetSteeringHardwareConfigProvider._()
+  GetSteeringHardwareConfigProvider._()
     : super(
         from: null,
         argument: null,
@@ -681,7 +671,7 @@ String _$getSteeringHardwareConfigHash() =>
 /// parameters corresponding to [keyContainer].
 
 @ProviderFor(updateSteeringHardwareConfig)
-const updateSteeringHardwareConfigProvider =
+final updateSteeringHardwareConfigProvider =
     UpdateSteeringHardwareConfigFamily._();
 
 /// A provider for updating the motor configuration on the hardware with the
@@ -692,7 +682,7 @@ final class UpdateSteeringHardwareConfigProvider
     with $FutureModifier<void>, $FutureProvider<void> {
   /// A provider for updating the motor configuration on the hardware with the
   /// parameters corresponding to [keyContainer].
-  const UpdateSteeringHardwareConfigProvider._({
+  UpdateSteeringHardwareConfigProvider._({
     required UpdateSteeringHardwareConfigFamily super.from,
     required SteeringHardwareConfigKeysContainer super.argument,
   }) : super(
@@ -748,7 +738,7 @@ final class UpdateSteeringHardwareConfigFamily extends $Family
           FutureOr<void>,
           SteeringHardwareConfigKeysContainer
         > {
-  const UpdateSteeringHardwareConfigFamily._()
+  UpdateSteeringHardwareConfigFamily._()
     : super(
         retry: null,
         name: r'updateSteeringHardwareConfigProvider',
@@ -774,7 +764,7 @@ final class UpdateSteeringHardwareConfigFamily extends $Family
 /// A provider for sending the whole motor configuration to the hardware.
 
 @ProviderFor(sendSteeringHardwareConfig)
-const sendSteeringHardwareConfigProvider =
+final sendSteeringHardwareConfigProvider =
     SendSteeringHardwareConfigProvider._();
 
 /// A provider for sending the whole motor configuration to the hardware.
@@ -783,7 +773,7 @@ final class SendSteeringHardwareConfigProvider
     extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
     with $FutureModifier<void>, $FutureProvider<void> {
   /// A provider for sending the whole motor configuration to the hardware.
-  const SendSteeringHardwareConfigProvider._()
+  SendSteeringHardwareConfigProvider._()
     : super(
         from: null,
         argument: null,
@@ -814,14 +804,14 @@ String _$sendSteeringHardwareConfigHash() =>
 /// A provider for the UI [Offset] for the steering hardware configurator.
 
 @ProviderFor(SteeringHardwareConfiguratorUiOffset)
-const steeringHardwareConfiguratorUiOffsetProvider =
+final steeringHardwareConfiguratorUiOffsetProvider =
     SteeringHardwareConfiguratorUiOffsetProvider._();
 
 /// A provider for the UI [Offset] for the steering hardware configurator.
 final class SteeringHardwareConfiguratorUiOffsetProvider
     extends $NotifierProvider<SteeringHardwareConfiguratorUiOffset, Offset> {
   /// A provider for the UI [Offset] for the steering hardware configurator.
-  const SteeringHardwareConfiguratorUiOffsetProvider._()
+  SteeringHardwareConfiguratorUiOffsetProvider._()
     : super(
         from: null,
         argument: null,
@@ -861,7 +851,6 @@ abstract class _$SteeringHardwareConfiguratorUiOffset
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Offset, Offset>;
     final element =
         ref.element
@@ -871,6 +860,6 @@ abstract class _$SteeringHardwareConfiguratorUiOffset
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

@@ -11,13 +11,13 @@ part of 'ab_common_providers.dart';
 /// A provider for the current AB tracking type.
 
 @ProviderFor(CurrentABTrackingType)
-const currentABTrackingTypeProvider = CurrentABTrackingTypeProvider._();
+final currentABTrackingTypeProvider = CurrentABTrackingTypeProvider._();
 
 /// A provider for the current AB tracking type.
 final class CurrentABTrackingTypeProvider
     extends $NotifierProvider<CurrentABTrackingType, ABTrackingType> {
   /// A provider for the current AB tracking type.
-  const CurrentABTrackingTypeProvider._()
+  CurrentABTrackingTypeProvider._()
     : super(
         from: null,
         argument: null,
@@ -54,7 +54,6 @@ abstract class _$CurrentABTrackingType extends $Notifier<ABTrackingType> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<ABTrackingType, ABTrackingType>;
     final element =
         ref.element
@@ -64,20 +63,20 @@ abstract class _$CurrentABTrackingType extends $Notifier<ABTrackingType> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for whether the AB-tracking should be shown.
 
 @ProviderFor(ShowABTracking)
-const showABTrackingProvider = ShowABTrackingProvider._();
+final showABTrackingProvider = ShowABTrackingProvider._();
 
 /// A provider for whether the AB-tracking should be shown.
 final class ShowABTrackingProvider
     extends $NotifierProvider<ShowABTracking, bool> {
   /// A provider for whether the AB-tracking should be shown.
-  const ShowABTrackingProvider._()
+  ShowABTrackingProvider._()
     : super(
         from: null,
         argument: null,
@@ -113,7 +112,6 @@ abstract class _$ShowABTracking extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -123,20 +121,20 @@ abstract class _$ShowABTracking extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for whether the AB-tracking debug features should be shown.
 
 @ProviderFor(DebugABTracking)
-const debugABTrackingProvider = DebugABTrackingProvider._();
+final debugABTrackingProvider = DebugABTrackingProvider._();
 
 /// A provider for whether the AB-tracking debug features should be shown.
 final class DebugABTrackingProvider
     extends $NotifierProvider<DebugABTracking, bool> {
   /// A provider for whether the AB-tracking debug features should be shown.
-  const DebugABTrackingProvider._()
+  DebugABTrackingProvider._()
     : super(
         from: null,
         argument: null,
@@ -172,7 +170,6 @@ abstract class _$DebugABTracking extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -182,20 +179,20 @@ abstract class _$DebugABTracking extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the step size of an AB-line.
 
 @ProviderFor(ABDebugStepSize)
-const aBDebugStepSizeProvider = ABDebugStepSizeProvider._();
+final aBDebugStepSizeProvider = ABDebugStepSizeProvider._();
 
 /// A provider for the step size of an AB-line.
 final class ABDebugStepSizeProvider
     extends $NotifierProvider<ABDebugStepSize, double> {
   /// A provider for the step size of an AB-line.
-  const ABDebugStepSizeProvider._()
+  ABDebugStepSizeProvider._()
     : super(
         from: null,
         argument: null,
@@ -231,7 +228,6 @@ abstract class _$ABDebugStepSize extends $Notifier<double> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -241,7 +237,7 @@ abstract class _$ABDebugStepSize extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -249,7 +245,7 @@ abstract class _$ABDebugStepSize extends $Notifier<double> {
 /// generated ahead of the vehicle.
 
 @ProviderFor(ABDebugNumPointsAhead)
-const aBDebugNumPointsAheadProvider = ABDebugNumPointsAheadProvider._();
+final aBDebugNumPointsAheadProvider = ABDebugNumPointsAheadProvider._();
 
 /// A provider for the number of points of the closest AB-line to be
 /// generated ahead of the vehicle.
@@ -257,7 +253,7 @@ final class ABDebugNumPointsAheadProvider
     extends $NotifierProvider<ABDebugNumPointsAhead, int> {
   /// A provider for the number of points of the closest AB-line to be
   /// generated ahead of the vehicle.
-  const ABDebugNumPointsAheadProvider._()
+  ABDebugNumPointsAheadProvider._()
     : super(
         from: null,
         argument: null,
@@ -295,7 +291,6 @@ abstract class _$ABDebugNumPointsAhead extends $Notifier<int> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<int, int>;
     final element =
         ref.element
@@ -305,7 +300,7 @@ abstract class _$ABDebugNumPointsAhead extends $Notifier<int> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -313,7 +308,7 @@ abstract class _$ABDebugNumPointsAhead extends $Notifier<int> {
 /// generated behind of the vehicle.
 
 @ProviderFor(ABDebugNumPointsBehind)
-const aBDebugNumPointsBehindProvider = ABDebugNumPointsBehindProvider._();
+final aBDebugNumPointsBehindProvider = ABDebugNumPointsBehindProvider._();
 
 /// A provider for the number of points of the closest AB-line to be
 /// generated behind of the vehicle.
@@ -321,7 +316,7 @@ final class ABDebugNumPointsBehindProvider
     extends $NotifierProvider<ABDebugNumPointsBehind, int> {
   /// A provider for the number of points of the closest AB-line to be
   /// generated behind of the vehicle.
-  const ABDebugNumPointsBehindProvider._()
+  ABDebugNumPointsBehindProvider._()
     : super(
         from: null,
         argument: null,
@@ -359,7 +354,6 @@ abstract class _$ABDebugNumPointsBehind extends $Notifier<int> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<int, int>;
     final element =
         ref.element
@@ -369,19 +363,19 @@ abstract class _$ABDebugNumPointsBehind extends $Notifier<int> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the width of an AB-line.
 
 @ProviderFor(ABWidth)
-const aBWidthProvider = ABWidthProvider._();
+final aBWidthProvider = ABWidthProvider._();
 
 /// A provider for the width of an AB-line.
 final class ABWidthProvider extends $NotifierProvider<ABWidth, double> {
   /// A provider for the width of an AB-line.
-  const ABWidthProvider._()
+  ABWidthProvider._()
     : super(
         from: null,
         argument: null,
@@ -417,7 +411,6 @@ abstract class _$ABWidth extends $Notifier<double> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -427,20 +420,20 @@ abstract class _$ABWidth extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the sideways offset of an AB-line.
 
 @ProviderFor(ABSidewaysOffset)
-const aBSidewaysOffsetProvider = ABSidewaysOffsetProvider._();
+final aBSidewaysOffsetProvider = ABSidewaysOffsetProvider._();
 
 /// A provider for the sideways offset of an AB-line.
 final class ABSidewaysOffsetProvider
     extends $NotifierProvider<ABSidewaysOffset, double> {
   /// A provider for the sideways offset of an AB-line.
-  const ABSidewaysOffsetProvider._()
+  ABSidewaysOffsetProvider._()
     : super(
         from: null,
         argument: null,
@@ -476,7 +469,6 @@ abstract class _$ABSidewaysOffset extends $Notifier<double> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -486,20 +478,20 @@ abstract class _$ABSidewaysOffset extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the turning radius of an AB-line.
 
 @ProviderFor(ABTurningRadius)
-const aBTurningRadiusProvider = ABTurningRadiusProvider._();
+final aBTurningRadiusProvider = ABTurningRadiusProvider._();
 
 /// A provider for the turning radius of an AB-line.
 final class ABTurningRadiusProvider
     extends $NotifierProvider<ABTurningRadius, double> {
   /// A provider for the turning radius of an AB-line.
-  const ABTurningRadiusProvider._()
+  ABTurningRadiusProvider._()
     : super(
         from: null,
         argument: null,
@@ -535,7 +527,6 @@ abstract class _$ABTurningRadius extends $Notifier<double> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -545,20 +536,20 @@ abstract class _$ABTurningRadius extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the width of an AB-line.
 
 @ProviderFor(ABTurnOffsetMinSkips)
-const aBTurnOffsetMinSkipsProvider = ABTurnOffsetMinSkipsProvider._();
+final aBTurnOffsetMinSkipsProvider = ABTurnOffsetMinSkipsProvider._();
 
 /// A provider for the width of an AB-line.
 final class ABTurnOffsetMinSkipsProvider
     extends $NotifierProvider<ABTurnOffsetMinSkips, int> {
   /// A provider for the width of an AB-line.
-  const ABTurnOffsetMinSkipsProvider._()
+  ABTurnOffsetMinSkipsProvider._()
     : super(
         from: null,
         argument: null,
@@ -595,7 +586,6 @@ abstract class _$ABTurnOffsetMinSkips extends $Notifier<int> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<int, int>;
     final element =
         ref.element
@@ -605,20 +595,20 @@ abstract class _$ABTurnOffsetMinSkips extends $Notifier<int> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for which limit mode the AB tracking should use.
 
 @ProviderFor(ABTrackingLimitMode)
-const aBTrackingLimitModeProvider = ABTrackingLimitModeProvider._();
+final aBTrackingLimitModeProvider = ABTrackingLimitModeProvider._();
 
 /// A provider for which limit mode the AB tracking should use.
 final class ABTrackingLimitModeProvider
     extends $NotifierProvider<ABTrackingLimitMode, ABLimitMode> {
   /// A provider for which limit mode the AB tracking should use.
-  const ABTrackingLimitModeProvider._()
+  ABTrackingLimitModeProvider._()
     : super(
         from: null,
         argument: null,
@@ -655,7 +645,6 @@ abstract class _$ABTrackingLimitMode extends $Notifier<ABLimitMode> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<ABLimitMode, ABLimitMode>;
     final element =
         ref.element
@@ -665,20 +654,20 @@ abstract class _$ABTrackingLimitMode extends $Notifier<ABLimitMode> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for which swapping which way the AB-tracking should turn.
 
 @ProviderFor(ABOffsetOppositeTurn)
-const aBOffsetOppositeTurnProvider = ABOffsetOppositeTurnProvider._();
+final aBOffsetOppositeTurnProvider = ABOffsetOppositeTurnProvider._();
 
 /// A provider for which swapping which way the AB-tracking should turn.
 final class ABOffsetOppositeTurnProvider
     extends $NotifierProvider<ABOffsetOppositeTurn, bool> {
   /// A provider for which swapping which way the AB-tracking should turn.
-  const ABOffsetOppositeTurnProvider._()
+  ABOffsetOppositeTurnProvider._()
     : super(
         from: null,
         argument: null,
@@ -715,7 +704,6 @@ abstract class _$ABOffsetOppositeTurn extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -725,20 +713,20 @@ abstract class _$ABOffsetOppositeTurn extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for whether the AB-tracking should snap to the closest line.
 
 @ProviderFor(ABSnapToClosestLine)
-const aBSnapToClosestLineProvider = ABSnapToClosestLineProvider._();
+final aBSnapToClosestLineProvider = ABSnapToClosestLineProvider._();
 
 /// A provider for whether the AB-tracking should snap to the closest line.
 final class ABSnapToClosestLineProvider
     extends $NotifierProvider<ABSnapToClosestLine, bool> {
   /// A provider for whether the AB-tracking should snap to the closest line.
-  const ABSnapToClosestLineProvider._()
+  ABSnapToClosestLineProvider._()
     : super(
         from: null,
         argument: null,
@@ -775,7 +763,6 @@ abstract class _$ABSnapToClosestLine extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -785,20 +772,20 @@ abstract class _$ABSnapToClosestLine extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the currently configured [ABTracking].
 
 @ProviderFor(ConfiguredABTracking)
-const configuredABTrackingProvider = ConfiguredABTrackingProvider._();
+final configuredABTrackingProvider = ConfiguredABTrackingProvider._();
 
 /// A provider for the currently configured [ABTracking].
 final class ConfiguredABTrackingProvider
     extends $NotifierProvider<ConfiguredABTracking, ABTracking?> {
   /// A provider for the currently configured [ABTracking].
-  const ConfiguredABTrackingProvider._()
+  ConfiguredABTrackingProvider._()
     : super(
         from: null,
         argument: null,
@@ -835,7 +822,6 @@ abstract class _$ConfiguredABTracking extends $Notifier<ABTracking?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<ABTracking?, ABTracking?>;
     final element =
         ref.element
@@ -845,20 +831,20 @@ abstract class _$ConfiguredABTracking extends $Notifier<ABTracking?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the currently configured [ABTracking].
 
 @ProviderFor(ConfiguredMenuABTracking)
-const configuredMenuABTrackingProvider = ConfiguredMenuABTrackingProvider._();
+final configuredMenuABTrackingProvider = ConfiguredMenuABTrackingProvider._();
 
 /// A provider for the currently configured [ABTracking].
 final class ConfiguredMenuABTrackingProvider
     extends $AsyncNotifierProvider<ConfiguredMenuABTracking, ABTracking?> {
   /// A provider for the currently configured [ABTracking].
-  const ConfiguredMenuABTrackingProvider._()
+  ConfiguredMenuABTrackingProvider._()
     : super(
         from: null,
         argument: null,
@@ -887,7 +873,6 @@ abstract class _$ConfiguredMenuABTracking extends $AsyncNotifier<ABTracking?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<AsyncValue<ABTracking?>, ABTracking?>;
     final element =
         ref.element
@@ -897,20 +882,20 @@ abstract class _$ConfiguredMenuABTracking extends $AsyncNotifier<ABTracking?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the [ABTracking] to display.
 
 @ProviderFor(DisplayABTracking)
-const displayABTrackingProvider = DisplayABTrackingProvider._();
+final displayABTrackingProvider = DisplayABTrackingProvider._();
 
 /// A provider for the [ABTracking] to display.
 final class DisplayABTrackingProvider
     extends $NotifierProvider<DisplayABTracking, ABTracking?> {
   /// A provider for the [ABTracking] to display.
-  const DisplayABTrackingProvider._()
+  DisplayABTrackingProvider._()
     : super(
         from: null,
         argument: null,
@@ -946,7 +931,6 @@ abstract class _$DisplayABTracking extends $Notifier<ABTracking?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<ABTracking?, ABTracking?>;
     final element =
         ref.element
@@ -956,19 +940,19 @@ abstract class _$DisplayABTracking extends $Notifier<ABTracking?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the starting point A of an AB-line.
 
 @ProviderFor(ABPointA)
-const aBPointAProvider = ABPointAProvider._();
+final aBPointAProvider = ABPointAProvider._();
 
 /// A provider for the starting point A of an AB-line.
 final class ABPointAProvider extends $NotifierProvider<ABPointA, WayPoint?> {
   /// A provider for the starting point A of an AB-line.
-  const ABPointAProvider._()
+  ABPointAProvider._()
     : super(
         from: null,
         argument: null,
@@ -1004,7 +988,6 @@ abstract class _$ABPointA extends $Notifier<WayPoint?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<WayPoint?, WayPoint?>;
     final element =
         ref.element
@@ -1014,19 +997,19 @@ abstract class _$ABPointA extends $Notifier<WayPoint?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the ending point B of an AB-line.
 
 @ProviderFor(ABPointB)
-const aBPointBProvider = ABPointBProvider._();
+final aBPointBProvider = ABPointBProvider._();
 
 /// A provider for the ending point B of an AB-line.
 final class ABPointBProvider extends $NotifierProvider<ABPointB, WayPoint?> {
   /// A provider for the ending point B of an AB-line.
-  const ABPointBProvider._()
+  ABPointBProvider._()
     : super(
         from: null,
         argument: null,
@@ -1062,7 +1045,6 @@ abstract class _$ABPointB extends $Notifier<WayPoint?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<WayPoint?, WayPoint?>;
     final element =
         ref.element
@@ -1072,19 +1054,19 @@ abstract class _$ABPointB extends $Notifier<WayPoint?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for whether to show the starting point A of an AB-line.
 
 @ProviderFor(ShowABPointA)
-const showABPointAProvider = ShowABPointAProvider._();
+final showABPointAProvider = ShowABPointAProvider._();
 
 /// A provider for whether to show the starting point A of an AB-line.
 final class ShowABPointAProvider extends $NotifierProvider<ShowABPointA, bool> {
   /// A provider for whether to show the starting point A of an AB-line.
-  const ShowABPointAProvider._()
+  ShowABPointAProvider._()
     : super(
         from: null,
         argument: null,
@@ -1120,7 +1102,6 @@ abstract class _$ShowABPointA extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -1130,19 +1111,19 @@ abstract class _$ShowABPointA extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for whether to show the ending point B of an AB-line.
 
 @ProviderFor(ShowABPointB)
-const showABPointBProvider = ShowABPointBProvider._();
+final showABPointBProvider = ShowABPointBProvider._();
 
 /// A provider for whether to show the ending point B of an AB-line.
 final class ShowABPointBProvider extends $NotifierProvider<ShowABPointB, bool> {
   /// A provider for whether to show the ending point B of an AB-line.
-  const ShowABPointBProvider._()
+  ShowABPointBProvider._()
     : super(
         from: null,
         argument: null,
@@ -1178,7 +1159,6 @@ abstract class _$ShowABPointB extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -1188,7 +1168,7 @@ abstract class _$ShowABPointB extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -1196,7 +1176,7 @@ abstract class _$ShowABPointB extends $Notifier<bool> {
 /// to the [MainVehicle].
 
 @ProviderFor(abTrackingPerpendicularDistance)
-const abTrackingPerpendicularDistanceProvider =
+final abTrackingPerpendicularDistanceProvider =
     AbTrackingPerpendicularDistanceProvider._();
 
 /// A provider for the perpendicular distance from the AB tracking line
@@ -1207,7 +1187,7 @@ final class AbTrackingPerpendicularDistanceProvider
     with $Provider<double?> {
   /// A provider for the perpendicular distance from the AB tracking line
   /// to the [MainVehicle].
-  const AbTrackingPerpendicularDistanceProvider._()
+  AbTrackingPerpendicularDistanceProvider._()
     : super(
         from: null,
         argument: null,
@@ -1246,7 +1226,7 @@ String _$abTrackingPerpendicularDistanceHash() =>
 /// A provider for the currently active AB configuration.
 
 @ProviderFor(activeABConfig)
-const activeABConfigProvider = ActiveABConfigProvider._();
+final activeABConfigProvider = ActiveABConfigProvider._();
 
 /// A provider for the currently active AB configuration.
 
@@ -1254,7 +1234,7 @@ final class ActiveABConfigProvider
     extends $FunctionalProvider<ABConfig, ABConfig, ABConfig>
     with $Provider<ABConfig> {
   /// A provider for the currently active AB configuration.
-  const ActiveABConfigProvider._()
+  ActiveABConfigProvider._()
     : super(
         from: null,
         argument: null,
@@ -1293,7 +1273,7 @@ String _$activeABConfigHash() => r'a04ac3f20818e3dcb0c4797174bada5f38cfa463';
 /// be shown.
 
 @ProviderFor(ABTrackingShowAllLines)
-const aBTrackingShowAllLinesProvider = ABTrackingShowAllLinesProvider._();
+final aBTrackingShowAllLinesProvider = ABTrackingShowAllLinesProvider._();
 
 /// A provider for whether all the calculated lines for the AB tracking should
 /// be shown.
@@ -1301,7 +1281,7 @@ final class ABTrackingShowAllLinesProvider
     extends $NotifierProvider<ABTrackingShowAllLines, bool> {
   /// A provider for whether all the calculated lines for the AB tracking should
   /// be shown.
-  const ABTrackingShowAllLinesProvider._()
+  ABTrackingShowAllLinesProvider._()
     : super(
         from: null,
         argument: null,
@@ -1339,7 +1319,6 @@ abstract class _$ABTrackingShowAllLines extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -1349,7 +1328,7 @@ abstract class _$ABTrackingShowAllLines extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -1357,7 +1336,7 @@ abstract class _$ABTrackingShowAllLines extends $Notifier<bool> {
 /// valid.
 
 @ProviderFor(loadABTrackingFromFile)
-const loadABTrackingFromFileProvider = LoadABTrackingFromFileFamily._();
+final loadABTrackingFromFileProvider = LoadABTrackingFromFileFamily._();
 
 /// A provider for loading an [ABTracking] from a file at [path], if it's
 /// valid.
@@ -1372,7 +1351,7 @@ final class LoadABTrackingFromFileProvider
     with $FutureModifier<ABTracking?>, $FutureProvider<ABTracking?> {
   /// A provider for loading an [ABTracking] from a file at [path], if it's
   /// valid.
-  const LoadABTrackingFromFileProvider._({
+  LoadABTrackingFromFileProvider._({
     required LoadABTrackingFromFileFamily super.from,
     required String super.argument,
   }) : super(
@@ -1425,7 +1404,7 @@ String _$loadABTrackingFromFileHash() =>
 
 final class LoadABTrackingFromFileFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<ABTracking?>, String> {
-  const LoadABTrackingFromFileFamily._()
+  LoadABTrackingFromFileFamily._()
     : super(
         retry: null,
         name: r'loadABTrackingFromFileProvider',
@@ -1449,7 +1428,7 @@ final class LoadABTrackingFromFileFamily extends $Family
 /// Override the file name with [overrideName].
 
 @ProviderFor(saveABTracking)
-const saveABTrackingProvider = SaveABTrackingFamily._();
+final saveABTrackingProvider = SaveABTrackingFamily._();
 
 /// A provider for saving [tracking] to a file in the user file directory.
 ///
@@ -1461,7 +1440,7 @@ final class SaveABTrackingProvider
   /// A provider for saving [tracking] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
-  const SaveABTrackingProvider._({
+  SaveABTrackingProvider._({
     required SaveABTrackingFamily super.from,
     required (ABTracking, {String? overrideName, bool downloadIfWeb})
     super.argument,
@@ -1524,7 +1503,7 @@ final class SaveABTrackingFamily extends $Family
           FutureOr<void>,
           (ABTracking, {String? overrideName, bool downloadIfWeb})
         > {
-  const SaveABTrackingFamily._()
+  SaveABTrackingFamily._()
     : super(
         retry: null,
         name: r'saveABTrackingProvider',
@@ -1559,7 +1538,7 @@ final class SaveABTrackingFamily extends $Family
 /// Override the file name with [overrideName].
 
 @ProviderFor(exportABTracking)
-const exportABTrackingProvider = ExportABTrackingFamily._();
+final exportABTrackingProvider = ExportABTrackingFamily._();
 
 /// A provider for exporting [tracking] to a file.
 ///
@@ -1571,7 +1550,7 @@ final class ExportABTrackingProvider
   /// A provider for exporting [tracking] to a file.
   ///
   /// Override the file name with [overrideName].
-  const ExportABTrackingProvider._({
+  ExportABTrackingProvider._({
     required ExportABTrackingFamily super.from,
     required (ABTracking, {String? overrideName, bool downloadIfWeb})
     super.argument,
@@ -1634,7 +1613,7 @@ final class ExportABTrackingFamily extends $Family
           FutureOr<void>,
           (ABTracking, {String? overrideName, bool downloadIfWeb})
         > {
-  const ExportABTrackingFamily._()
+  ExportABTrackingFamily._()
     : super(
         retry: null,
         name: r'exportABTrackingProvider',
@@ -1668,7 +1647,7 @@ final class ExportABTrackingFamily extends $Family
 /// user file directory.
 
 @ProviderFor(savedABTrackings)
-const savedABTrackingsProvider = SavedABTrackingsProvider._();
+final savedABTrackingsProvider = SavedABTrackingsProvider._();
 
 /// A provider for reading and holding all the saved [ABTracking] in the
 /// user file directory.
@@ -1683,7 +1662,7 @@ final class SavedABTrackingsProvider
     with $FutureModifier<List<ABTracking>>, $FutureProvider<List<ABTracking>> {
   /// A provider for reading and holding all the saved [ABTracking] in the
   /// user file directory.
-  const SavedABTrackingsProvider._()
+  SavedABTrackingsProvider._()
     : super(
         from: null,
         argument: null,
@@ -1716,7 +1695,7 @@ String _$savedABTrackingsHash() => r'1e113dca6f21424d1e0c9c56621eb72de77c6121';
 /// Override the file name with [overrideName].
 
 @ProviderFor(deleteABTracking)
-const deleteABTrackingProvider = DeleteABTrackingFamily._();
+final deleteABTrackingProvider = DeleteABTrackingFamily._();
 
 /// A provider for deleting [tracking] from the user file systemm.
 ///
@@ -1728,7 +1707,7 @@ final class DeleteABTrackingProvider
   /// A provider for deleting [tracking] from the user file systemm.
   ///
   /// Override the file name with [overrideName].
-  const DeleteABTrackingProvider._({
+  DeleteABTrackingProvider._({
     required DeleteABTrackingFamily super.from,
     required (ABTracking, {String? overrideName, bool downloadIfWeb})
     super.argument,
@@ -1791,7 +1770,7 @@ final class DeleteABTrackingFamily extends $Family
           FutureOr<void>,
           (ABTracking, {String? overrideName, bool downloadIfWeb})
         > {
-  const DeleteABTrackingFamily._()
+  DeleteABTrackingFamily._()
     : super(
         retry: null,
         name: r'deleteABTrackingProvider',
@@ -1825,7 +1804,7 @@ final class DeleteABTrackingFamily extends $Family
 /// the [ConfiguredABTracking] provider.
 
 @ProviderFor(importABTracking)
-const importABTrackingProvider = ImportABTrackingProvider._();
+final importABTrackingProvider = ImportABTrackingProvider._();
 
 /// A provider for importing an [ABTracking] from a file and applying it to
 /// the [ConfiguredABTracking] provider.
@@ -1840,7 +1819,7 @@ final class ImportABTrackingProvider
     with $FutureModifier<ABTracking?>, $FutureProvider<ABTracking?> {
   /// A provider for importing an [ABTracking] from a file and applying it to
   /// the [ConfiguredABTracking] provider.
-  const ImportABTrackingProvider._()
+  ImportABTrackingProvider._()
     : super(
         from: null,
         argument: null,

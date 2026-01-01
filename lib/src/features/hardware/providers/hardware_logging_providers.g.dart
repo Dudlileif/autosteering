@@ -11,13 +11,13 @@ part of 'hardware_logging_providers.dart';
 /// A provider for whether received NMEA messages should be logged.
 
 @ProviderFor(HardwareLogGnss)
-const hardwareLogGnssProvider = HardwareLogGnssProvider._();
+final hardwareLogGnssProvider = HardwareLogGnssProvider._();
 
 /// A provider for whether received NMEA messages should be logged.
 final class HardwareLogGnssProvider
     extends $NotifierProvider<HardwareLogGnss, bool> {
   /// A provider for whether received NMEA messages should be logged.
-  const HardwareLogGnssProvider._()
+  HardwareLogGnssProvider._()
     : super(
         from: null,
         argument: null,
@@ -53,7 +53,6 @@ abstract class _$HardwareLogGnss extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -63,20 +62,20 @@ abstract class _$HardwareLogGnss extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for whether received IMU messages should be logged.
 
 @ProviderFor(HardwareLogImu)
-const hardwareLogImuProvider = HardwareLogImuProvider._();
+final hardwareLogImuProvider = HardwareLogImuProvider._();
 
 /// A provider for whether received IMU messages should be logged.
 final class HardwareLogImuProvider
     extends $NotifierProvider<HardwareLogImu, bool> {
   /// A provider for whether received IMU messages should be logged.
-  const HardwareLogImuProvider._()
+  HardwareLogImuProvider._()
     : super(
         from: null,
         argument: null,
@@ -112,7 +111,6 @@ abstract class _$HardwareLogImu extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -122,20 +120,20 @@ abstract class _$HardwareLogImu extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for whether received WAS messages should be logged.
 
 @ProviderFor(HardwareLogWas)
-const hardwareLogWasProvider = HardwareLogWasProvider._();
+final hardwareLogWasProvider = HardwareLogWasProvider._();
 
 /// A provider for whether received WAS messages should be logged.
 final class HardwareLogWasProvider
     extends $NotifierProvider<HardwareLogWas, bool> {
   /// A provider for whether received WAS messages should be logged.
-  const HardwareLogWasProvider._()
+  HardwareLogWasProvider._()
     : super(
         from: null,
         argument: null,
@@ -171,7 +169,6 @@ abstract class _$HardwareLogWas extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -181,7 +178,7 @@ abstract class _$HardwareLogWas extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -189,7 +186,7 @@ abstract class _$HardwareLogWas extends $Notifier<bool> {
 /// in a single file.
 
 @ProviderFor(HardwareLogCombined)
-const hardwareLogCombinedProvider = HardwareLogCombinedProvider._();
+final hardwareLogCombinedProvider = HardwareLogCombinedProvider._();
 
 /// A provider for whether received NMEA, IMU and WAS messages should be logged
 /// in a single file.
@@ -197,7 +194,7 @@ final class HardwareLogCombinedProvider
     extends $NotifierProvider<HardwareLogCombined, bool> {
   /// A provider for whether received NMEA, IMU and WAS messages should be logged
   /// in a single file.
-  const HardwareLogCombinedProvider._()
+  HardwareLogCombinedProvider._()
     : super(
         from: null,
         argument: null,
@@ -235,7 +232,6 @@ abstract class _$HardwareLogCombined extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -245,14 +241,14 @@ abstract class _$HardwareLogCombined extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for whether any hardware logging is taking place.
 
 @ProviderFor(hardwareAnyLoggingEnabled)
-const hardwareAnyLoggingEnabledProvider = HardwareAnyLoggingEnabledProvider._();
+final hardwareAnyLoggingEnabledProvider = HardwareAnyLoggingEnabledProvider._();
 
 /// A provider for whether any hardware logging is taking place.
 
@@ -260,7 +256,7 @@ final class HardwareAnyLoggingEnabledProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// A provider for whether any hardware logging is taking place.
-  const HardwareAnyLoggingEnabledProvider._()
+  HardwareAnyLoggingEnabledProvider._()
     : super(
         from: null,
         argument: null,

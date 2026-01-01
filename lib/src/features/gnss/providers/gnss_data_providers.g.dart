@@ -11,14 +11,14 @@ part of 'gnss_data_providers.dart';
 /// A provider for the quality of last GNSS position update.
 
 @ProviderFor(GnssCurrentSentence)
-const gnssCurrentSentenceProvider = GnssCurrentSentenceProvider._();
+final gnssCurrentSentenceProvider = GnssCurrentSentenceProvider._();
 
 /// A provider for the quality of last GNSS position update.
 final class GnssCurrentSentenceProvider
     extends
         $NotifierProvider<GnssCurrentSentence, GnssPositionCommonSentence?> {
   /// A provider for the quality of last GNSS position update.
-  const GnssCurrentSentenceProvider._()
+  GnssCurrentSentenceProvider._()
     : super(
         from: null,
         argument: null,
@@ -56,7 +56,6 @@ abstract class _$GnssCurrentSentence
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref
             as $Ref<GnssPositionCommonSentence?, GnssPositionCommonSentence?>;
@@ -71,20 +70,20 @@ abstract class _$GnssCurrentSentence
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the frequency of the GNSS updates.
 
 @ProviderFor(GnssCurrentFrequency)
-const gnssCurrentFrequencyProvider = GnssCurrentFrequencyProvider._();
+final gnssCurrentFrequencyProvider = GnssCurrentFrequencyProvider._();
 
 /// A provider for the frequency of the GNSS updates.
 final class GnssCurrentFrequencyProvider
     extends $NotifierProvider<GnssCurrentFrequency, double?> {
   /// A provider for the frequency of the GNSS updates.
-  const GnssCurrentFrequencyProvider._()
+  GnssCurrentFrequencyProvider._()
     : super(
         from: null,
         argument: null,
@@ -121,7 +120,6 @@ abstract class _$GnssCurrentFrequency extends $Notifier<double?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -131,14 +129,14 @@ abstract class _$GnssCurrentFrequency extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the time of the last GNSS update.
 
 @ProviderFor(GnssLastUpdateTime)
-const gnssLastUpdateTimeProvider = GnssLastUpdateTimeProvider._();
+final gnssLastUpdateTimeProvider = GnssLastUpdateTimeProvider._();
 
 /// A provider for the time of the last GNSS update.
 final class GnssLastUpdateTimeProvider
@@ -148,7 +146,7 @@ final class GnssLastUpdateTimeProvider
           ({Duration? delay, DateTime device, DateTime? receiver})?
         > {
   /// A provider for the time of the last GNSS update.
-  const GnssLastUpdateTimeProvider._()
+  GnssLastUpdateTimeProvider._()
     : super(
         from: null,
         argument: null,
@@ -192,7 +190,6 @@ abstract class _$GnssLastUpdateTime
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref
             as $Ref<
@@ -210,14 +207,14 @@ abstract class _$GnssLastUpdateTime
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the precision error of the last GNSS update.
 
 @ProviderFor(GnssPrecisionError)
-const gnssPrecisionErrorProvider = GnssPrecisionErrorProvider._();
+final gnssPrecisionErrorProvider = GnssPrecisionErrorProvider._();
 
 /// A provider for the precision error of the last GNSS update.
 final class GnssPrecisionErrorProvider
@@ -231,7 +228,7 @@ final class GnssPrecisionErrorProvider
           })?
         > {
   /// A provider for the precision error of the last GNSS update.
-  const GnssPrecisionErrorProvider._()
+  GnssPrecisionErrorProvider._()
     : super(
         from: null,
         argument: null,
@@ -287,7 +284,6 @@ abstract class _$GnssPrecisionError
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref
             as $Ref<
@@ -325,6 +321,6 @@ abstract class _$GnssPrecisionError
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

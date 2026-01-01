@@ -11,12 +11,12 @@ part of 'enabled_map_layers_providers.dart';
 /// Whether the OpenStreetMap layer should be shown.
 
 @ProviderFor(ShowOSMLayer)
-const showOSMLayerProvider = ShowOSMLayerProvider._();
+final showOSMLayerProvider = ShowOSMLayerProvider._();
 
 /// Whether the OpenStreetMap layer should be shown.
 final class ShowOSMLayerProvider extends $NotifierProvider<ShowOSMLayer, bool> {
   /// Whether the OpenStreetMap layer should be shown.
-  const ShowOSMLayerProvider._()
+  ShowOSMLayerProvider._()
     : super(
         from: null,
         argument: null,
@@ -52,7 +52,6 @@ abstract class _$ShowOSMLayer extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -62,14 +61,14 @@ abstract class _$ShowOSMLayer extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether the selected country layers should be shown.
 
 @ProviderFor(showCountryLayers)
-const showCountryLayersProvider = ShowCountryLayersProvider._();
+final showCountryLayersProvider = ShowCountryLayersProvider._();
 
 /// Whether the selected country layers should be shown.
 
@@ -77,7 +76,7 @@ final class ShowCountryLayersProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// Whether the selected country layers should be shown.
-  const ShowCountryLayersProvider._()
+  ShowCountryLayersProvider._()
     : super(
         from: null,
         argument: null,
@@ -115,7 +114,7 @@ String _$showCountryLayersHash() => r'693e1e9787f292cdb0dece26cdfa8015415ed2a8';
 /// Whether the selected Sentinel layers should be shown.
 
 @ProviderFor(showSentinelLayers)
-const showSentinelLayersProvider = ShowSentinelLayersProvider._();
+final showSentinelLayersProvider = ShowSentinelLayersProvider._();
 
 /// Whether the selected Sentinel layers should be shown.
 
@@ -123,7 +122,7 @@ final class ShowSentinelLayersProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// Whether the selected Sentinel layers should be shown.
-  const ShowSentinelLayersProvider._()
+  ShowSentinelLayersProvider._()
     : super(
         from: null,
         argument: null,
@@ -162,7 +161,7 @@ String _$showSentinelLayersHash() =>
 /// Whether the finished recorded path should be shown.
 
 @ProviderFor(showFinishedPathLayer)
-const showFinishedPathLayerProvider = ShowFinishedPathLayerProvider._();
+final showFinishedPathLayerProvider = ShowFinishedPathLayerProvider._();
 
 /// Whether the finished recorded path should be shown.
 
@@ -170,7 +169,7 @@ final class ShowFinishedPathLayerProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// Whether the finished recorded path should be shown.
-  const ShowFinishedPathLayerProvider._()
+  ShowFinishedPathLayerProvider._()
     : super(
         from: null,
         argument: null,
@@ -209,7 +208,7 @@ String _$showFinishedPathLayerHash() =>
 /// Whether the currently recording path should be shown.
 
 @ProviderFor(showPathRecordingLayer)
-const showPathRecordingLayerProvider = ShowPathRecordingLayerProvider._();
+final showPathRecordingLayerProvider = ShowPathRecordingLayerProvider._();
 
 /// Whether the currently recording path should be shown.
 
@@ -217,7 +216,7 @@ final class ShowPathRecordingLayerProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// Whether the currently recording path should be shown.
-  const ShowPathRecordingLayerProvider._()
+  ShowPathRecordingLayerProvider._()
     : super(
         from: null,
         argument: null,
@@ -256,7 +255,7 @@ String _$showPathRecordingLayerHash() =>
 /// Whether the editable recorded path should be shown.
 
 @ProviderFor(showEditablePathLayer)
-const showEditablePathLayerProvider = ShowEditablePathLayerProvider._();
+final showEditablePathLayerProvider = ShowEditablePathLayerProvider._();
 
 /// Whether the editable recorded path should be shown.
 
@@ -264,7 +263,7 @@ final class ShowEditablePathLayerProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// Whether the editable recorded path should be shown.
-  const ShowEditablePathLayerProvider._()
+  ShowEditablePathLayerProvider._()
     : super(
         from: null,
         argument: null,
@@ -303,13 +302,13 @@ String _$showEditablePathLayerHash() =>
 /// Whether the vehicle image drawing layer should be shown.
 
 @ProviderFor(ShowVehicleDrawingLayer)
-const showVehicleDrawingLayerProvider = ShowVehicleDrawingLayerProvider._();
+final showVehicleDrawingLayerProvider = ShowVehicleDrawingLayerProvider._();
 
 /// Whether the vehicle image drawing layer should be shown.
 final class ShowVehicleDrawingLayerProvider
     extends $NotifierProvider<ShowVehicleDrawingLayer, bool> {
   /// Whether the vehicle image drawing layer should be shown.
-  const ShowVehicleDrawingLayerProvider._()
+  ShowVehicleDrawingLayerProvider._()
     : super(
         from: null,
         argument: null,
@@ -346,7 +345,6 @@ abstract class _$ShowVehicleDrawingLayer extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -356,14 +354,14 @@ abstract class _$ShowVehicleDrawingLayer extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether the debugging layer for the vehicle should be shown.
 
 @ProviderFor(showVehicleDebugLayer)
-const showVehicleDebugLayerProvider = ShowVehicleDebugLayerProvider._();
+final showVehicleDebugLayerProvider = ShowVehicleDebugLayerProvider._();
 
 /// Whether the debugging layer for the vehicle should be shown.
 
@@ -371,7 +369,7 @@ final class ShowVehicleDebugLayerProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// Whether the debugging layer for the vehicle should be shown.
-  const ShowVehicleDebugLayerProvider._()
+  ShowVehicleDebugLayerProvider._()
     : super(
         from: null,
         argument: null,
@@ -410,7 +408,7 @@ String _$showVehicleDebugLayerHash() =>
 /// Whether the debugging layer for the Dubins path should be shown.
 
 @ProviderFor(showDubinsPathDebugLayer)
-const showDubinsPathDebugLayerProvider = ShowDubinsPathDebugLayerProvider._();
+final showDubinsPathDebugLayerProvider = ShowDubinsPathDebugLayerProvider._();
 
 /// Whether the debugging layer for the Dubins path should be shown.
 
@@ -418,7 +416,7 @@ final class ShowDubinsPathDebugLayerProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// Whether the debugging layer for the Dubins path should be shown.
-  const ShowDubinsPathDebugLayerProvider._()
+  ShowDubinsPathDebugLayerProvider._()
     : super(
         from: null,
         argument: null,
@@ -457,7 +455,7 @@ String _$showDubinsPathDebugLayerHash() =>
 /// Whether the layer for the path tracking should be shown.
 
 @ProviderFor(showPathTrackingLayer)
-const showPathTrackingLayerProvider = ShowPathTrackingLayerProvider._();
+final showPathTrackingLayerProvider = ShowPathTrackingLayerProvider._();
 
 /// Whether the layer for the path tracking should be shown.
 
@@ -465,7 +463,7 @@ final class ShowPathTrackingLayerProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// Whether the layer for the path tracking should be shown.
-  const ShowPathTrackingLayerProvider._()
+  ShowPathTrackingLayerProvider._()
     : super(
         from: null,
         argument: null,
@@ -504,14 +502,14 @@ String _$showPathTrackingLayerHash() =>
 /// Whether the layer for field should be shown.
 
 @ProviderFor(showFieldLayer)
-const showFieldLayerProvider = ShowFieldLayerProvider._();
+final showFieldLayerProvider = ShowFieldLayerProvider._();
 
 /// Whether the layer for field should be shown.
 
 final class ShowFieldLayerProvider extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// Whether the layer for field should be shown.
-  const ShowFieldLayerProvider._()
+  ShowFieldLayerProvider._()
     : super(
         from: null,
         argument: null,
@@ -549,13 +547,13 @@ String _$showFieldLayerHash() => r'1548f19a2b5051fa1fed449ccb0033d09f71f69b';
 /// Whether the equipment drawing layer should be shown.
 
 @ProviderFor(ShowEquipmentDrawingLayer)
-const showEquipmentDrawingLayerProvider = ShowEquipmentDrawingLayerProvider._();
+final showEquipmentDrawingLayerProvider = ShowEquipmentDrawingLayerProvider._();
 
 /// Whether the equipment drawing layer should be shown.
 final class ShowEquipmentDrawingLayerProvider
     extends $NotifierProvider<ShowEquipmentDrawingLayer, bool> {
   /// Whether the equipment drawing layer should be shown.
-  const ShowEquipmentDrawingLayerProvider._()
+  ShowEquipmentDrawingLayerProvider._()
     : super(
         from: null,
         argument: null,
@@ -592,7 +590,6 @@ abstract class _$ShowEquipmentDrawingLayer extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -602,14 +599,14 @@ abstract class _$ShowEquipmentDrawingLayer extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether the debugging layer for the equipment should be shown.
 
 @ProviderFor(showEquipmentDebugLayer)
-const showEquipmentDebugLayerProvider = ShowEquipmentDebugLayerProvider._();
+final showEquipmentDebugLayerProvider = ShowEquipmentDebugLayerProvider._();
 
 /// Whether the debugging layer for the equipment should be shown.
 
@@ -617,7 +614,7 @@ final class ShowEquipmentDebugLayerProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// Whether the debugging layer for the equipment should be shown.
-  const ShowEquipmentDebugLayerProvider._()
+  ShowEquipmentDebugLayerProvider._()
     : super(
         from: null,
         argument: null,
@@ -656,7 +653,7 @@ String _$showEquipmentDebugLayerHash() =>
 /// Whether the layer for AB-tracking should be shown.
 
 @ProviderFor(showABTrackingLayer)
-const showABTrackingLayerProvider = ShowABTrackingLayerProvider._();
+final showABTrackingLayerProvider = ShowABTrackingLayerProvider._();
 
 /// Whether the layer for AB-tracking should be shown.
 
@@ -664,7 +661,7 @@ final class ShowABTrackingLayerProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// Whether the layer for AB-tracking should be shown.
-  const ShowABTrackingLayerProvider._()
+  ShowABTrackingLayerProvider._()
     : super(
         from: null,
         argument: null,
@@ -703,13 +700,13 @@ String _$showABTrackingLayerHash() =>
 /// Whether the map should show grid lines.
 
 @ProviderFor(ShowGridLayer)
-const showGridLayerProvider = ShowGridLayerProvider._();
+final showGridLayerProvider = ShowGridLayerProvider._();
 
 /// Whether the map should show grid lines.
 final class ShowGridLayerProvider
     extends $NotifierProvider<ShowGridLayer, bool> {
   /// Whether the map should show grid lines.
-  const ShowGridLayerProvider._()
+  ShowGridLayerProvider._()
     : super(
         from: null,
         argument: null,
@@ -745,7 +742,6 @@ abstract class _$ShowGridLayer extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -755,14 +751,14 @@ abstract class _$ShowGridLayer extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether the layer for selectable path should be shown.
 
 @ProviderFor(showSelectablePathLayer)
-const showSelectablePathLayerProvider = ShowSelectablePathLayerProvider._();
+final showSelectablePathLayerProvider = ShowSelectablePathLayerProvider._();
 
 /// Whether the layer for selectable path should be shown.
 
@@ -770,7 +766,7 @@ final class ShowSelectablePathLayerProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// Whether the layer for selectable path should be shown.
-  const ShowSelectablePathLayerProvider._()
+  ShowSelectablePathLayerProvider._()
     : super(
         from: null,
         argument: null,

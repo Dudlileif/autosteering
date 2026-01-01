@@ -11,13 +11,13 @@ part of 'ab_line_providers.dart';
 /// A provider for the AB-line.
 
 @ProviderFor(ABLine)
-const aBLineProvider = ABLineProvider._();
+final aBLineProvider = ABLineProvider._();
 
 /// A provider for the AB-line.
 final class ABLineProvider
     extends $AsyncNotifierProvider<ABLine, guidance.ABLine?> {
   /// A provider for the AB-line.
-  const ABLineProvider._()
+  ABLineProvider._()
     : super(
         from: null,
         argument: null,
@@ -45,7 +45,6 @@ abstract class _$ABLine extends $AsyncNotifier<guidance.ABLine?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref as $Ref<AsyncValue<guidance.ABLine?>, guidance.ABLine?>;
     final element =
@@ -56,20 +55,20 @@ abstract class _$ABLine extends $AsyncNotifier<guidance.ABLine?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the A+-line bearing.
 
 @ProviderFor(APlusLineBearing)
-const aPlusLineBearingProvider = APlusLineBearingProvider._();
+final aPlusLineBearingProvider = APlusLineBearingProvider._();
 
 /// A provider for the A+-line bearing.
 final class APlusLineBearingProvider
     extends $NotifierProvider<APlusLineBearing, double?> {
   /// A provider for the A+-line bearing.
-  const APlusLineBearingProvider._()
+  APlusLineBearingProvider._()
     : super(
         from: null,
         argument: null,
@@ -105,7 +104,6 @@ abstract class _$APlusLineBearing extends $Notifier<double?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -115,20 +113,20 @@ abstract class _$APlusLineBearing extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the A+-line.
 
 @ProviderFor(APlusLine)
-const aPlusLineProvider = APlusLineProvider._();
+final aPlusLineProvider = APlusLineProvider._();
 
 /// A provider for the A+-line.
 final class APlusLineProvider
     extends $AsyncNotifierProvider<APlusLine, guidance.APlusLine?> {
   /// A provider for the A+-line.
-  const APlusLineProvider._()
+  APlusLineProvider._()
     : super(
         from: null,
         argument: null,
@@ -156,7 +154,6 @@ abstract class _$APlusLine extends $AsyncNotifier<guidance.APlusLine?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref as $Ref<AsyncValue<guidance.APlusLine?>, guidance.APlusLine?>;
     final element =
@@ -167,6 +164,6 @@ abstract class _$APlusLine extends $AsyncNotifier<guidance.APlusLine?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

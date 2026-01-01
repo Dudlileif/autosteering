@@ -11,13 +11,13 @@ part of 'path_tracking_providers.dart';
 /// A provider for the path interpolation distance.
 
 @ProviderFor(PathInterpolationDistance)
-const pathInterpolationDistanceProvider = PathInterpolationDistanceProvider._();
+final pathInterpolationDistanceProvider = PathInterpolationDistanceProvider._();
 
 /// A provider for the path interpolation distance.
 final class PathInterpolationDistanceProvider
     extends $NotifierProvider<PathInterpolationDistance, double> {
   /// A provider for the path interpolation distance.
-  const PathInterpolationDistanceProvider._()
+  PathInterpolationDistanceProvider._()
     : super(
         from: null,
         argument: null,
@@ -54,7 +54,6 @@ abstract class _$PathInterpolationDistance extends $Notifier<double> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -64,20 +63,20 @@ abstract class _$PathInterpolationDistance extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for holding the [WayPoint]s for the [ConfiguredPathTracking].
 
 @ProviderFor(PathTrackingPoints)
-const pathTrackingPointsProvider = PathTrackingPointsProvider._();
+final pathTrackingPointsProvider = PathTrackingPointsProvider._();
 
 /// A provider for holding the [WayPoint]s for the [ConfiguredPathTracking].
 final class PathTrackingPointsProvider
     extends $NotifierProvider<PathTrackingPoints, List<WayPoint>?> {
   /// A provider for holding the [WayPoint]s for the [ConfiguredPathTracking].
-  const PathTrackingPointsProvider._()
+  PathTrackingPointsProvider._()
     : super(
         from: null,
         argument: null,
@@ -114,7 +113,6 @@ abstract class _$PathTrackingPoints extends $Notifier<List<WayPoint>?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<List<WayPoint>?, List<WayPoint>?>;
     final element =
         ref.element
@@ -124,7 +122,7 @@ abstract class _$PathTrackingPoints extends $Notifier<List<WayPoint>?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -132,7 +130,7 @@ abstract class _$PathTrackingPoints extends $Notifier<List<WayPoint>?> {
 /// previously recorded waypoints.
 
 @ProviderFor(ConfiguredPathTracking)
-const configuredPathTrackingProvider = ConfiguredPathTrackingProvider._();
+final configuredPathTrackingProvider = ConfiguredPathTrackingProvider._();
 
 /// A provider for creating and holding a [PathTracking] model for the
 /// previously recorded waypoints.
@@ -140,7 +138,7 @@ final class ConfiguredPathTrackingProvider
     extends $NotifierProvider<ConfiguredPathTracking, PathTracking?> {
   /// A provider for creating and holding a [PathTracking] model for the
   /// previously recorded waypoints.
-  const ConfiguredPathTrackingProvider._()
+  ConfiguredPathTrackingProvider._()
     : super(
         from: null,
         argument: null,
@@ -178,7 +176,6 @@ abstract class _$ConfiguredPathTracking extends $Notifier<PathTracking?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<PathTracking?, PathTracking?>;
     final element =
         ref.element
@@ -188,7 +185,7 @@ abstract class _$ConfiguredPathTracking extends $Notifier<PathTracking?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -196,7 +193,7 @@ abstract class _$ConfiguredPathTracking extends $Notifier<PathTracking?> {
 /// follow.
 
 @ProviderFor(PathTrackingLoop)
-const pathTrackingLoopProvider = PathTrackingLoopProvider._();
+final pathTrackingLoopProvider = PathTrackingLoopProvider._();
 
 /// A provider for which looping mode the [ConfiguredPathTracking] should
 /// follow.
@@ -204,7 +201,7 @@ final class PathTrackingLoopProvider
     extends $NotifierProvider<PathTrackingLoop, PathTrackingLoopMode> {
   /// A provider for which looping mode the [ConfiguredPathTracking] should
   /// follow.
-  const PathTrackingLoopProvider._()
+  PathTrackingLoopProvider._()
     : super(
         from: null,
         argument: null,
@@ -241,7 +238,6 @@ abstract class _$PathTrackingLoop extends $Notifier<PathTrackingLoopMode> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<PathTrackingLoopMode, PathTrackingLoopMode>;
     final element =
         ref.element
@@ -251,7 +247,7 @@ abstract class _$PathTrackingLoop extends $Notifier<PathTrackingLoopMode> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -259,7 +255,7 @@ abstract class _$PathTrackingLoop extends $Notifier<PathTrackingLoopMode> {
 /// recieved and updated from the simulator.
 
 @ProviderFor(DisplayPathTracking)
-const displayPathTrackingProvider = DisplayPathTrackingProvider._();
+final displayPathTrackingProvider = DisplayPathTrackingProvider._();
 
 /// A provider for the activated [ConfiguredPathTracking] model, typically
 /// recieved and updated from the simulator.
@@ -267,7 +263,7 @@ final class DisplayPathTrackingProvider
     extends $NotifierProvider<DisplayPathTracking, PathTracking?> {
   /// A provider for the activated [ConfiguredPathTracking] model, typically
   /// recieved and updated from the simulator.
-  const DisplayPathTrackingProvider._()
+  DisplayPathTrackingProvider._()
     : super(
         from: null,
         argument: null,
@@ -305,7 +301,6 @@ abstract class _$DisplayPathTracking extends $Notifier<PathTracking?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<PathTracking?, PathTracking?>;
     final element =
         ref.element
@@ -315,7 +310,7 @@ abstract class _$DisplayPathTracking extends $Notifier<PathTracking?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -323,7 +318,7 @@ abstract class _$DisplayPathTracking extends $Notifier<PathTracking?> {
 /// line to the [MainVehicle].
 
 @ProviderFor(pathTrackingPerpendicularDistance)
-const pathTrackingPerpendicularDistanceProvider =
+final pathTrackingPerpendicularDistanceProvider =
     PathTrackingPerpendicularDistanceProvider._();
 
 /// A provider for the perpendicular distance from the [DisplayPathTracking]
@@ -334,7 +329,7 @@ final class PathTrackingPerpendicularDistanceProvider
     with $Provider<double?> {
   /// A provider for the perpendicular distance from the [DisplayPathTracking]
   /// line to the [MainVehicle].
-  const PathTrackingPerpendicularDistanceProvider._()
+  PathTrackingPerpendicularDistanceProvider._()
     : super(
         from: null,
         argument: null,
@@ -374,13 +369,13 @@ String _$pathTrackingPerpendicularDistanceHash() =>
 /// A provider for whether or not the path tracking should be shown.
 
 @ProviderFor(ShowPathTracking)
-const showPathTrackingProvider = ShowPathTrackingProvider._();
+final showPathTrackingProvider = ShowPathTrackingProvider._();
 
 /// A provider for whether or not the path tracking should be shown.
 final class ShowPathTrackingProvider
     extends $NotifierProvider<ShowPathTracking, bool> {
   /// A provider for whether or not the path tracking should be shown.
-  const ShowPathTrackingProvider._()
+  ShowPathTrackingProvider._()
     : super(
         from: null,
         argument: null,
@@ -416,7 +411,6 @@ abstract class _$ShowPathTracking extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -426,20 +420,20 @@ abstract class _$ShowPathTracking extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether the path tracking debug features should show.
 
 @ProviderFor(DebugPathTracking)
-const debugPathTrackingProvider = DebugPathTrackingProvider._();
+final debugPathTrackingProvider = DebugPathTrackingProvider._();
 
 /// Whether the path tracking debug features should show.
 final class DebugPathTrackingProvider
     extends $NotifierProvider<DebugPathTracking, bool> {
   /// Whether the path tracking debug features should show.
-  const DebugPathTrackingProvider._()
+  DebugPathTrackingProvider._()
     : super(
         from: null,
         argument: null,
@@ -475,7 +469,6 @@ abstract class _$DebugPathTracking extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -485,7 +478,7 @@ abstract class _$DebugPathTracking extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -493,7 +486,7 @@ abstract class _$DebugPathTracking extends $Notifier<bool> {
 /// valid.
 
 @ProviderFor(loadPathTrackingFromFile)
-const loadPathTrackingFromFileProvider = LoadPathTrackingFromFileFamily._();
+final loadPathTrackingFromFileProvider = LoadPathTrackingFromFileFamily._();
 
 /// A provider for loading an [PathTracking] from a file at [path], if it's
 /// valid.
@@ -508,7 +501,7 @@ final class LoadPathTrackingFromFileProvider
     with $FutureModifier<PathTracking?>, $FutureProvider<PathTracking?> {
   /// A provider for loading an [PathTracking] from a file at [path], if it's
   /// valid.
-  const LoadPathTrackingFromFileProvider._({
+  LoadPathTrackingFromFileProvider._({
     required LoadPathTrackingFromFileFamily super.from,
     required String super.argument,
   }) : super(
@@ -561,7 +554,7 @@ String _$loadPathTrackingFromFileHash() =>
 
 final class LoadPathTrackingFromFileFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<PathTracking?>, String> {
-  const LoadPathTrackingFromFileFamily._()
+  LoadPathTrackingFromFileFamily._()
     : super(
         retry: null,
         name: r'loadPathTrackingFromFileProvider',
@@ -585,7 +578,7 @@ final class LoadPathTrackingFromFileFamily extends $Family
 /// Override the file name with [overrideName].
 
 @ProviderFor(savePathTracking)
-const savePathTrackingProvider = SavePathTrackingFamily._();
+final savePathTrackingProvider = SavePathTrackingFamily._();
 
 /// A provider for saving [tracking] to a file in the user file directory.
 ///
@@ -597,7 +590,7 @@ final class SavePathTrackingProvider
   /// A provider for saving [tracking] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
-  const SavePathTrackingProvider._({
+  SavePathTrackingProvider._({
     required SavePathTrackingFamily super.from,
     required (PathTracking, {String? overrideName, bool downloadIfWeb})
     super.argument,
@@ -660,7 +653,7 @@ final class SavePathTrackingFamily extends $Family
           FutureOr<void>,
           (PathTracking, {String? overrideName, bool downloadIfWeb})
         > {
-  const SavePathTrackingFamily._()
+  SavePathTrackingFamily._()
     : super(
         retry: null,
         name: r'savePathTrackingProvider',
@@ -695,7 +688,7 @@ final class SavePathTrackingFamily extends $Family
 /// Override the file name with [overrideName].
 
 @ProviderFor(exportPathTracking)
-const exportPathTrackingProvider = ExportPathTrackingFamily._();
+final exportPathTrackingProvider = ExportPathTrackingFamily._();
 
 /// A provider for saving [tracking] to a file in the user file directory.
 ///
@@ -707,7 +700,7 @@ final class ExportPathTrackingProvider
   /// A provider for saving [tracking] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
-  const ExportPathTrackingProvider._({
+  ExportPathTrackingProvider._({
     required ExportPathTrackingFamily super.from,
     required (PathTracking, {String? overrideName, bool downloadIfWeb})
     super.argument,
@@ -771,7 +764,7 @@ final class ExportPathTrackingFamily extends $Family
           FutureOr<void>,
           (PathTracking, {String? overrideName, bool downloadIfWeb})
         > {
-  const ExportPathTrackingFamily._()
+  ExportPathTrackingFamily._()
     : super(
         retry: null,
         name: r'exportPathTrackingProvider',
@@ -805,7 +798,7 @@ final class ExportPathTrackingFamily extends $Family
 /// user file directory.
 
 @ProviderFor(savedPathTrackings)
-const savedPathTrackingsProvider = SavedPathTrackingsProvider._();
+final savedPathTrackingsProvider = SavedPathTrackingsProvider._();
 
 /// A provider for reading and holding all the saved [PathTracking] in the
 /// user file directory.
@@ -822,7 +815,7 @@ final class SavedPathTrackingsProvider
         $FutureProvider<List<PathTracking>> {
   /// A provider for reading and holding all the saved [PathTracking] in the
   /// user file directory.
-  const SavedPathTrackingsProvider._()
+  SavedPathTrackingsProvider._()
     : super(
         from: null,
         argument: null,
@@ -856,7 +849,7 @@ String _$savedPathTrackingsHash() =>
 /// Override the file name with [overrideName].
 
 @ProviderFor(deletePathTracking)
-const deletePathTrackingProvider = DeletePathTrackingFamily._();
+final deletePathTrackingProvider = DeletePathTrackingFamily._();
 
 /// A provider for deleting [tracking] from the user file systemm.
 ///
@@ -868,7 +861,7 @@ final class DeletePathTrackingProvider
   /// A provider for deleting [tracking] from the user file systemm.
   ///
   /// Override the file name with [overrideName].
-  const DeletePathTrackingProvider._({
+  DeletePathTrackingProvider._({
     required DeletePathTrackingFamily super.from,
     required (PathTracking, {String? overrideName, bool downloadIfWeb})
     super.argument,
@@ -932,7 +925,7 @@ final class DeletePathTrackingFamily extends $Family
           FutureOr<void>,
           (PathTracking, {String? overrideName, bool downloadIfWeb})
         > {
-  const DeletePathTrackingFamily._()
+  DeletePathTrackingFamily._()
     : super(
         retry: null,
         name: r'deletePathTrackingProvider',
@@ -966,7 +959,7 @@ final class DeletePathTrackingFamily extends $Family
 /// the [ConfiguredPathTracking] provider.
 
 @ProviderFor(importPathTracking)
-const importPathTrackingProvider = ImportPathTrackingProvider._();
+final importPathTrackingProvider = ImportPathTrackingProvider._();
 
 /// A provider for importing a [PathTracking] from a file and applying it to
 /// the [ConfiguredPathTracking] provider.
@@ -981,7 +974,7 @@ final class ImportPathTrackingProvider
     with $FutureModifier<PathTracking?>, $FutureProvider<PathTracking?> {
   /// A provider for importing a [PathTracking] from a file and applying it to
   /// the [ConfiguredPathTracking] provider.
-  const ImportPathTrackingProvider._()
+  ImportPathTrackingProvider._()
     : super(
         from: null,
         argument: null,
@@ -1013,7 +1006,7 @@ String _$importPathTrackingHash() =>
 /// A provider for exporting all guidance files.
 
 @ProviderFor(exportGuidances)
-const exportGuidancesProvider = ExportGuidancesFamily._();
+final exportGuidancesProvider = ExportGuidancesFamily._();
 
 /// A provider for exporting all guidance files.
 
@@ -1021,7 +1014,7 @@ final class ExportGuidancesProvider
     extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
     with $FutureModifier<void>, $FutureProvider<void> {
   /// A provider for exporting all guidance files.
-  const ExportGuidancesProvider._({
+  ExportGuidancesProvider._({
     required ExportGuidancesFamily super.from,
     required bool super.argument,
   }) : super(
@@ -1070,7 +1063,7 @@ String _$exportGuidancesHash() => r'c3a70f44a023ff06985977bc6f6cbf05b7d30e7b';
 
 final class ExportGuidancesFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<void>, bool> {
-  const ExportGuidancesFamily._()
+  ExportGuidancesFamily._()
     : super(
         retry: null,
         name: r'exportGuidancesProvider',

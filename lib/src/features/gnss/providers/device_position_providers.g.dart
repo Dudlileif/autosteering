@@ -11,7 +11,7 @@ part of 'device_position_providers.dart';
 /// A provider for the position of the device.
 
 @ProviderFor(devicePositionPermission)
-const devicePositionPermissionProvider = DevicePositionPermissionProvider._();
+final devicePositionPermissionProvider = DevicePositionPermissionProvider._();
 
 /// A provider for the position of the device.
 
@@ -19,7 +19,7 @@ final class DevicePositionPermissionProvider
     extends $FunctionalProvider<AsyncValue<bool>, bool, FutureOr<bool>>
     with $FutureModifier<bool>, $FutureProvider<bool> {
   /// A provider for the position of the device.
-  const DevicePositionPermissionProvider._()
+  DevicePositionPermissionProvider._()
     : super(
         from: null,
         argument: null,
@@ -50,14 +50,14 @@ String _$devicePositionPermissionHash() =>
 /// A provider for whether the device's position should be used for the vehicle.
 
 @ProviderFor(DevicePositionAsVehiclePosition)
-const devicePositionAsVehiclePositionProvider =
+final devicePositionAsVehiclePositionProvider =
     DevicePositionAsVehiclePositionProvider._();
 
 /// A provider for whether the device's position should be used for the vehicle.
 final class DevicePositionAsVehiclePositionProvider
     extends $NotifierProvider<DevicePositionAsVehiclePosition, bool> {
   /// A provider for whether the device's position should be used for the vehicle.
-  const DevicePositionAsVehiclePositionProvider._()
+  DevicePositionAsVehiclePositionProvider._()
     : super(
         from: null,
         argument: null,
@@ -94,7 +94,6 @@ abstract class _$DevicePositionAsVehiclePosition extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -104,14 +103,14 @@ abstract class _$DevicePositionAsVehiclePosition extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the raw position stream from the device.
 
 @ProviderFor(rawDevicePositionStream)
-const rawDevicePositionStreamProvider = RawDevicePositionStreamProvider._();
+final rawDevicePositionStreamProvider = RawDevicePositionStreamProvider._();
 
 /// A provider for the raw position stream from the device.
 
@@ -120,7 +119,7 @@ final class RawDevicePositionStreamProvider
         $FunctionalProvider<AsyncValue<Position>, Position, Stream<Position>>
     with $FutureModifier<Position>, $StreamProvider<Position> {
   /// A provider for the raw position stream from the device.
-  const RawDevicePositionStreamProvider._()
+  RawDevicePositionStreamProvider._()
     : super(
         from: null,
         argument: null,
@@ -153,7 +152,7 @@ String _$rawDevicePositionStreamHash() =>
 /// it.
 
 @ProviderFor(updatePositionFromDevice)
-const updatePositionFromDeviceProvider = UpdatePositionFromDeviceProvider._();
+final updatePositionFromDeviceProvider = UpdatePositionFromDeviceProvider._();
 
 /// A provider that sends device position updates to the simulation core
 /// if [DevicePositionAsVehiclePosition] and [devicePositionPermission] allow
@@ -165,7 +164,7 @@ final class UpdatePositionFromDeviceProvider
   /// A provider that sends device position updates to the simulation core
   /// if [DevicePositionAsVehiclePosition] and [devicePositionPermission] allow
   /// it.
-  const UpdatePositionFromDeviceProvider._()
+  UpdatePositionFromDeviceProvider._()
     : super(
         from: null,
         argument: null,

@@ -12,7 +12,7 @@ part of 'equipment_configurator_providers.dart';
 /// configurator dialog.
 
 @ProviderFor(EquipmentConfiguratorIndex)
-const equipmentConfiguratorIndexProvider =
+final equipmentConfiguratorIndexProvider =
     EquipmentConfiguratorIndexProvider._();
 
 /// A provider for the index of the naviagtion rail of the equipment
@@ -21,7 +21,7 @@ final class EquipmentConfiguratorIndexProvider
     extends $NotifierProvider<EquipmentConfiguratorIndex, int> {
   /// A provider for the index of the naviagtion rail of the equipment
   /// configurator dialog.
-  const EquipmentConfiguratorIndexProvider._()
+  EquipmentConfiguratorIndexProvider._()
     : super(
         from: null,
         argument: null,
@@ -59,7 +59,6 @@ abstract class _$EquipmentConfiguratorIndex extends $Notifier<int> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<int, int>;
     final element =
         ref.element
@@ -69,20 +68,20 @@ abstract class _$EquipmentConfiguratorIndex extends $Notifier<int> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the equipment from the configurator.
 
 @ProviderFor(ConfiguredEquipment)
-const configuredEquipmentProvider = ConfiguredEquipmentProvider._();
+final configuredEquipmentProvider = ConfiguredEquipmentProvider._();
 
 /// A provider for the equipment from the configurator.
 final class ConfiguredEquipmentProvider
     extends $NotifierProvider<ConfiguredEquipment, Equipment> {
   /// A provider for the equipment from the configurator.
-  const ConfiguredEquipmentProvider._()
+  ConfiguredEquipmentProvider._()
     : super(
         from: null,
         argument: null,
@@ -119,7 +118,6 @@ abstract class _$ConfiguredEquipment extends $Notifier<Equipment> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Equipment, Equipment>;
     final element =
         ref.element
@@ -129,7 +127,7 @@ abstract class _$ConfiguredEquipment extends $Notifier<Equipment> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -137,7 +135,7 @@ abstract class _$ConfiguredEquipment extends $Notifier<Equipment> {
 /// widths.
 
 @ProviderFor(ConfiguredEquipmentEqualWidths)
-const configuredEquipmentEqualWidthsProvider =
+final configuredEquipmentEqualWidthsProvider =
     ConfiguredEquipmentEqualWidthsProvider._();
 
 /// A provider for whether the configured equipment sections should have equal
@@ -146,7 +144,7 @@ final class ConfiguredEquipmentEqualWidthsProvider
     extends $NotifierProvider<ConfiguredEquipmentEqualWidths, bool> {
   /// A provider for whether the configured equipment sections should have equal
   /// widths.
-  const ConfiguredEquipmentEqualWidthsProvider._()
+  ConfiguredEquipmentEqualWidthsProvider._()
     : super(
         from: null,
         argument: null,
@@ -184,7 +182,6 @@ abstract class _$ConfiguredEquipmentEqualWidths extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -194,7 +191,7 @@ abstract class _$ConfiguredEquipmentEqualWidths extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -202,7 +199,7 @@ abstract class _$ConfiguredEquipmentEqualWidths extends $Notifier<bool> {
 /// working widths.
 
 @ProviderFor(ConfiguredEquipmentEqualWorkingWidths)
-const configuredEquipmentEqualWorkingWidthsProvider =
+final configuredEquipmentEqualWorkingWidthsProvider =
     ConfiguredEquipmentEqualWorkingWidthsProvider._();
 
 /// A provider for whether the configured equipment sections should have equal
@@ -211,7 +208,7 @@ final class ConfiguredEquipmentEqualWorkingWidthsProvider
     extends $NotifierProvider<ConfiguredEquipmentEqualWorkingWidths, bool> {
   /// A provider for whether the configured equipment sections should have equal
   /// working widths.
-  const ConfiguredEquipmentEqualWorkingWidthsProvider._()
+  ConfiguredEquipmentEqualWorkingWidthsProvider._()
     : super(
         from: null,
         argument: null,
@@ -251,7 +248,6 @@ abstract class _$ConfiguredEquipmentEqualWorkingWidths extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -261,6 +257,6 @@ abstract class _$ConfiguredEquipmentEqualWorkingWidths extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

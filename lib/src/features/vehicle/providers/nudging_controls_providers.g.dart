@@ -11,13 +11,13 @@ part of 'nudging_controls_providers.dart';
 /// A provider for whether to show the vehicle nudging controls.
 
 @ProviderFor(ShowNudgingControls)
-const showNudgingControlsProvider = ShowNudgingControlsProvider._();
+final showNudgingControlsProvider = ShowNudgingControlsProvider._();
 
 /// A provider for whether to show the vehicle nudging controls.
 final class ShowNudgingControlsProvider
     extends $NotifierProvider<ShowNudgingControls, bool> {
   /// A provider for whether to show the vehicle nudging controls.
-  const ShowNudgingControlsProvider._()
+  ShowNudgingControlsProvider._()
     : super(
         from: null,
         argument: null,
@@ -54,7 +54,6 @@ abstract class _$ShowNudgingControls extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -64,20 +63,20 @@ abstract class _$ShowNudgingControls extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the step size of a nudge.
 
 @ProviderFor(NudgeStepSize)
-const nudgeStepSizeProvider = NudgeStepSizeProvider._();
+final nudgeStepSizeProvider = NudgeStepSizeProvider._();
 
 /// A provider for the step size of a nudge.
 final class NudgeStepSizeProvider
     extends $NotifierProvider<NudgeStepSize, double> {
   /// A provider for the step size of a nudge.
-  const NudgeStepSizeProvider._()
+  NudgeStepSizeProvider._()
     : super(
         from: null,
         argument: null,
@@ -113,7 +112,6 @@ abstract class _$NudgeStepSize extends $Notifier<double> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -123,20 +121,20 @@ abstract class _$NudgeStepSize extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the UI [Offset] for the nudging controls.
 
 @ProviderFor(NudgingControlsUiOffset)
-const nudgingControlsUiOffsetProvider = NudgingControlsUiOffsetProvider._();
+final nudgingControlsUiOffsetProvider = NudgingControlsUiOffsetProvider._();
 
 /// A provider for the UI [Offset] for the nudging controls.
 final class NudgingControlsUiOffsetProvider
     extends $NotifierProvider<NudgingControlsUiOffset, Offset> {
   /// A provider for the UI [Offset] for the nudging controls.
-  const NudgingControlsUiOffsetProvider._()
+  NudgingControlsUiOffsetProvider._()
     : super(
         from: null,
         argument: null,
@@ -173,7 +171,6 @@ abstract class _$NudgingControlsUiOffset extends $Notifier<Offset> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Offset, Offset>;
     final element =
         ref.element
@@ -183,6 +180,6 @@ abstract class _$NudgingControlsUiOffset extends $Notifier<Offset> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

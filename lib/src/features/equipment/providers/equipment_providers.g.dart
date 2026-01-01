@@ -12,7 +12,7 @@ part of 'equipment_providers.dart';
 /// fraction parameter that goes in [Equipment.sectionEdgePositions].
 
 @ProviderFor(EquipmentRecordPositionFraction)
-const equipmentRecordPositionFractionProvider =
+final equipmentRecordPositionFractionProvider =
     EquipmentRecordPositionFractionProvider._();
 
 /// A provider for how the [SectionEdgePositions] should be recorded, as the
@@ -21,7 +21,7 @@ final class EquipmentRecordPositionFractionProvider
     extends $NotifierProvider<EquipmentRecordPositionFraction, double?> {
   /// A provider for how the [SectionEdgePositions] should be recorded, as the
   /// fraction parameter that goes in [Equipment.sectionEdgePositions].
-  const EquipmentRecordPositionFractionProvider._()
+  EquipmentRecordPositionFractionProvider._()
     : super(
         from: null,
         argument: null,
@@ -59,7 +59,6 @@ abstract class _$EquipmentRecordPositionFraction extends $Notifier<double?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -69,20 +68,20 @@ abstract class _$EquipmentRecordPositionFraction extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the currently loaded equipment.
 
 @ProviderFor(LoadedEquipment)
-const loadedEquipmentProvider = LoadedEquipmentProvider._();
+final loadedEquipmentProvider = LoadedEquipmentProvider._();
 
 /// A provider for the currently loaded equipment.
 final class LoadedEquipmentProvider
     extends $NotifierProvider<LoadedEquipment, Equipment?> {
   /// A provider for the currently loaded equipment.
-  const LoadedEquipmentProvider._()
+  LoadedEquipmentProvider._()
     : super(
         from: null,
         argument: null,
@@ -118,7 +117,6 @@ abstract class _$LoadedEquipment extends $Notifier<Equipment?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Equipment?, Equipment?>;
     final element =
         ref.element
@@ -128,20 +126,20 @@ abstract class _$LoadedEquipment extends $Notifier<Equipment?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider that holds all of the equipments.
 
 @ProviderFor(AllEquipments)
-const allEquipmentsProvider = AllEquipmentsProvider._();
+final allEquipmentsProvider = AllEquipmentsProvider._();
 
 /// A provider that holds all of the equipments.
 final class AllEquipmentsProvider
     extends $NotifierProvider<AllEquipments, Map<String, Equipment>> {
   /// A provider that holds all of the equipments.
-  const AllEquipmentsProvider._()
+  AllEquipmentsProvider._()
     : super(
         from: null,
         argument: null,
@@ -177,7 +175,6 @@ abstract class _$AllEquipments extends $Notifier<Map<String, Equipment>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref as $Ref<Map<String, Equipment>, Map<String, Equipment>>;
     final element =
@@ -188,20 +185,20 @@ abstract class _$AllEquipments extends $Notifier<Map<String, Equipment>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for keeping the worked area for each equipment.
 
 @ProviderFor(EquipmentWorkedArea)
-const equipmentWorkedAreaProvider = EquipmentWorkedAreaProvider._();
+final equipmentWorkedAreaProvider = EquipmentWorkedAreaProvider._();
 
 /// A provider for keeping the worked area for each equipment.
 final class EquipmentWorkedAreaProvider
     extends $NotifierProvider<EquipmentWorkedArea, Map<String, double>> {
   /// A provider for keeping the worked area for each equipment.
-  const EquipmentWorkedAreaProvider._()
+  EquipmentWorkedAreaProvider._()
     : super(
         from: null,
         argument: null,
@@ -238,7 +235,6 @@ abstract class _$EquipmentWorkedArea extends $Notifier<Map<String, double>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Map<String, double>, Map<String, double>>;
     final element =
         ref.element
@@ -248,14 +244,14 @@ abstract class _$EquipmentWorkedArea extends $Notifier<Map<String, double>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for tracking the worked paths for the given equipment [uuid].
 
 @ProviderFor(EquipmentPaths)
-const equipmentPathsProvider = EquipmentPathsFamily._();
+final equipmentPathsProvider = EquipmentPathsFamily._();
 
 /// A provider for tracking the worked paths for the given equipment [uuid].
 final class EquipmentPathsProvider
@@ -265,7 +261,7 @@ final class EquipmentPathsProvider
           List<Map<int, List<SectionEdgePositions>?>>
         > {
   /// A provider for tracking the worked paths for the given equipment [uuid].
-  const EquipmentPathsProvider._({
+  EquipmentPathsProvider._({
     required EquipmentPathsFamily super.from,
     required String super.argument,
   }) : super(
@@ -327,7 +323,7 @@ final class EquipmentPathsFamily extends $Family
           List<Map<int, List<SectionEdgePositions>?>>,
           String
         > {
-  const EquipmentPathsFamily._()
+  EquipmentPathsFamily._()
     : super(
         retry: null,
         name: r'equipmentPathsProvider',
@@ -356,7 +352,6 @@ abstract class _$EquipmentPaths
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(_$args);
     final ref =
         this.ref
             as $Ref<
@@ -374,7 +369,7 @@ abstract class _$EquipmentPaths
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, () => build(_$args));
   }
 }
 
@@ -382,7 +377,7 @@ abstract class _$EquipmentPaths
 /// given UUID.
 
 @ProviderFor(EquipmentLogRecords)
-const equipmentLogRecordsProvider = EquipmentLogRecordsFamily._();
+final equipmentLogRecordsProvider = EquipmentLogRecordsFamily._();
 
 /// A provider for holding [EquipmentLogRecord] for the [Equipment] with the
 /// given UUID.
@@ -390,7 +385,7 @@ final class EquipmentLogRecordsProvider
     extends $NotifierProvider<EquipmentLogRecords, List<EquipmentLogRecord>?> {
   /// A provider for holding [EquipmentLogRecord] for the [Equipment] with the
   /// given UUID.
-  const EquipmentLogRecordsProvider._({
+  EquipmentLogRecordsProvider._({
     required EquipmentLogRecordsFamily super.from,
     required String super.argument,
   }) : super(
@@ -449,7 +444,7 @@ final class EquipmentLogRecordsFamily extends $Family
           List<EquipmentLogRecord>?,
           String
         > {
-  const EquipmentLogRecordsFamily._()
+  EquipmentLogRecordsFamily._()
     : super(
         retry: null,
         name: r'equipmentLogRecordsProvider',
@@ -480,7 +475,6 @@ abstract class _$EquipmentLogRecords
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(_$args);
     final ref =
         this.ref as $Ref<List<EquipmentLogRecord>?, List<EquipmentLogRecord>?>;
     final element =
@@ -491,14 +485,14 @@ abstract class _$EquipmentLogRecords
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, () => build(_$args));
   }
 }
 
 /// A provider for loading an [Equipment] from a file at [path], if it's valid.
 
 @ProviderFor(loadEquipmentFromFile)
-const loadEquipmentFromFileProvider = LoadEquipmentFromFileFamily._();
+final loadEquipmentFromFileProvider = LoadEquipmentFromFileFamily._();
 
 /// A provider for loading an [Equipment] from a file at [path], if it's valid.
 
@@ -511,7 +505,7 @@ final class LoadEquipmentFromFileProvider
         >
     with $FutureModifier<Equipment?>, $FutureProvider<Equipment?> {
   /// A provider for loading an [Equipment] from a file at [path], if it's valid.
-  const LoadEquipmentFromFileProvider._({
+  LoadEquipmentFromFileProvider._({
     required LoadEquipmentFromFileFamily super.from,
     required String super.argument,
   }) : super(
@@ -561,7 +555,7 @@ String _$loadEquipmentFromFileHash() =>
 
 final class LoadEquipmentFromFileFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<Equipment?>, String> {
-  const LoadEquipmentFromFileFamily._()
+  LoadEquipmentFromFileFamily._()
     : super(
         retry: null,
         name: r'loadEquipmentFromFileProvider',
@@ -584,7 +578,7 @@ final class LoadEquipmentFromFileFamily extends $Family
 /// Override the file name with [overrideName].
 
 @ProviderFor(saveEquipment)
-const saveEquipmentProvider = SaveEquipmentFamily._();
+final saveEquipmentProvider = SaveEquipmentFamily._();
 
 /// A provider for saving [equipment] to a file in the user file directory.
 ///
@@ -596,7 +590,7 @@ final class SaveEquipmentProvider
   /// A provider for saving [equipment] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
-  const SaveEquipmentProvider._({
+  SaveEquipmentProvider._({
     required SaveEquipmentFamily super.from,
     required (Equipment, {String? overrideName, bool downloadIfWeb})
     super.argument,
@@ -659,7 +653,7 @@ final class SaveEquipmentFamily extends $Family
           FutureOr<void>,
           (Equipment, {String? overrideName, bool downloadIfWeb})
         > {
-  const SaveEquipmentFamily._()
+  SaveEquipmentFamily._()
     : super(
         retry: null,
         name: r'saveEquipmentProvider',
@@ -694,7 +688,7 @@ final class SaveEquipmentFamily extends $Family
 /// Override the file name with [overrideName].
 
 @ProviderFor(exportEquipment)
-const exportEquipmentProvider = ExportEquipmentFamily._();
+final exportEquipmentProvider = ExportEquipmentFamily._();
 
 /// A provider for exporting [equipment] to a file.
 ///
@@ -706,7 +700,7 @@ final class ExportEquipmentProvider
   /// A provider for exporting [equipment] to a file.
   ///
   /// Override the file name with [overrideName].
-  const ExportEquipmentProvider._({
+  ExportEquipmentProvider._({
     required ExportEquipmentFamily super.from,
     required (Equipment, {String? overrideName, bool downloadIfWeb})
     super.argument,
@@ -769,7 +763,7 @@ final class ExportEquipmentFamily extends $Family
           FutureOr<void>,
           (Equipment, {String? overrideName, bool downloadIfWeb})
         > {
-  const ExportEquipmentFamily._()
+  ExportEquipmentFamily._()
     : super(
         retry: null,
         name: r'exportEquipmentProvider',
@@ -803,7 +797,7 @@ final class ExportEquipmentFamily extends $Family
 /// user file directory.
 
 @ProviderFor(savedEquipments)
-const savedEquipmentsProvider = SavedEquipmentsProvider._();
+final savedEquipmentsProvider = SavedEquipmentsProvider._();
 
 /// A provider for reading and holding all the saved [Equipment] in the
 /// user file directory.
@@ -818,7 +812,7 @@ final class SavedEquipmentsProvider
     with $FutureModifier<List<Equipment>>, $FutureProvider<List<Equipment>> {
   /// A provider for reading and holding all the saved [Equipment] in the
   /// user file directory.
-  const SavedEquipmentsProvider._()
+  SavedEquipmentsProvider._()
     : super(
         from: null,
         argument: null,
@@ -851,7 +845,7 @@ String _$savedEquipmentsHash() => r'039b1985239b14fc15ba46f72abf90002a8f5d2b';
 /// Override the file name with [overrideName].
 
 @ProviderFor(deleteEquipment)
-const deleteEquipmentProvider = DeleteEquipmentFamily._();
+final deleteEquipmentProvider = DeleteEquipmentFamily._();
 
 /// A provider for deleting [equipment] from the user file system.
 ///
@@ -863,7 +857,7 @@ final class DeleteEquipmentProvider
   /// A provider for deleting [equipment] from the user file system.
   ///
   /// Override the file name with [overrideName].
-  const DeleteEquipmentProvider._({
+  DeleteEquipmentProvider._({
     required DeleteEquipmentFamily super.from,
     required (Equipment, {String? overrideName}) super.argument,
   }) : super(
@@ -922,7 +916,7 @@ final class DeleteEquipmentFamily extends $Family
           FutureOr<void>,
           (Equipment, {String? overrideName})
         > {
-  const DeleteEquipmentFamily._()
+  DeleteEquipmentFamily._()
     : super(
         retry: null,
         name: r'deleteEquipmentProvider',
@@ -949,7 +943,7 @@ final class DeleteEquipmentFamily extends $Family
 /// it to the [ConfiguredEquipment] provider.
 
 @ProviderFor(importEquipment)
-const importEquipmentProvider = ImportEquipmentProvider._();
+final importEquipmentProvider = ImportEquipmentProvider._();
 
 /// A provider for importing a equipment configuration from a file and applying
 /// it to the [ConfiguredEquipment] provider.
@@ -964,7 +958,7 @@ final class ImportEquipmentProvider
     with $FutureModifier<Equipment?>, $FutureProvider<Equipment?> {
   /// A provider for importing a equipment configuration from a file and applying
   /// it to the [ConfiguredEquipment] provider.
-  const ImportEquipmentProvider._()
+  ImportEquipmentProvider._()
     : super(
         from: null,
         argument: null,
@@ -994,7 +988,7 @@ String _$importEquipmentHash() => r'23788a72e175496df6e300087a244ad146ac2e28';
 /// A provider for exporting all equipment files.
 
 @ProviderFor(exportEquipments)
-const exportEquipmentsProvider = ExportEquipmentsFamily._();
+final exportEquipmentsProvider = ExportEquipmentsFamily._();
 
 /// A provider for exporting all equipment files.
 
@@ -1002,7 +996,7 @@ final class ExportEquipmentsProvider
     extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
     with $FutureModifier<void>, $FutureProvider<void> {
   /// A provider for exporting all equipment files.
-  const ExportEquipmentsProvider._({
+  ExportEquipmentsProvider._({
     required ExportEquipmentsFamily super.from,
     required bool super.argument,
   }) : super(
@@ -1051,7 +1045,7 @@ String _$exportEquipmentsHash() => r'b901191f3ac54bfe593d9dadec5e5c17d4c37977';
 
 final class ExportEquipmentsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<void>, bool> {
-  const ExportEquipmentsFamily._()
+  ExportEquipmentsFamily._()
     : super(
         retry: null,
         name: r'exportEquipmentsProvider',

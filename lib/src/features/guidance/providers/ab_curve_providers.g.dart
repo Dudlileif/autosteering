@@ -11,13 +11,13 @@ part of 'ab_curve_providers.dart';
 /// A provider for the curve points for the AB-curve.
 
 @ProviderFor(ABCurvePoints)
-const aBCurvePointsProvider = ABCurvePointsProvider._();
+final aBCurvePointsProvider = ABCurvePointsProvider._();
 
 /// A provider for the curve points for the AB-curve.
 final class ABCurvePointsProvider
     extends $NotifierProvider<ABCurvePoints, List<guidance.WayPoint>?> {
   /// A provider for the curve points for the AB-curve.
-  const ABCurvePointsProvider._()
+  ABCurvePointsProvider._()
     : super(
         from: null,
         argument: null,
@@ -53,7 +53,6 @@ abstract class _$ABCurvePoints extends $Notifier<List<guidance.WayPoint>?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref as $Ref<List<guidance.WayPoint>?, List<guidance.WayPoint>?>;
     final element =
@@ -64,20 +63,20 @@ abstract class _$ABCurvePoints extends $Notifier<List<guidance.WayPoint>?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the AB-curve.
 
 @ProviderFor(ABCurve)
-const aBCurveProvider = ABCurveProvider._();
+final aBCurveProvider = ABCurveProvider._();
 
 /// A provider for the AB-curve.
 final class ABCurveProvider
     extends $AsyncNotifierProvider<ABCurve, guidance.ABCurve?> {
   /// A provider for the AB-curve.
-  const ABCurveProvider._()
+  ABCurveProvider._()
     : super(
         from: null,
         argument: null,
@@ -105,7 +104,6 @@ abstract class _$ABCurve extends $AsyncNotifier<guidance.ABCurve?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref as $Ref<AsyncValue<guidance.ABCurve?>, guidance.ABCurve?>;
     final element =
@@ -116,6 +114,6 @@ abstract class _$ABCurve extends $AsyncNotifier<guidance.ABCurve?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

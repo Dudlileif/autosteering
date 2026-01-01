@@ -11,13 +11,13 @@ part of 'editable_path_providers.dart';
 /// A provider for whether the editable path feature should be enabled.
 
 @ProviderFor(ActiveEditablePathType)
-const activeEditablePathTypeProvider = ActiveEditablePathTypeProvider._();
+final activeEditablePathTypeProvider = ActiveEditablePathTypeProvider._();
 
 /// A provider for whether the editable path feature should be enabled.
 final class ActiveEditablePathTypeProvider
     extends $NotifierProvider<ActiveEditablePathType, EditablePathType?> {
   /// A provider for whether the editable path feature should be enabled.
-  const ActiveEditablePathTypeProvider._()
+  ActiveEditablePathTypeProvider._()
     : super(
         from: null,
         argument: null,
@@ -54,7 +54,6 @@ abstract class _$ActiveEditablePathType extends $Notifier<EditablePathType?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<EditablePathType?, EditablePathType?>;
     final element =
         ref.element
@@ -64,20 +63,20 @@ abstract class _$ActiveEditablePathType extends $Notifier<EditablePathType?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the editable path points.
 
 @ProviderFor(EditablePathPoints)
-const editablePathPointsProvider = EditablePathPointsProvider._();
+final editablePathPointsProvider = EditablePathPointsProvider._();
 
 /// A provider for the editable path points.
 final class EditablePathPointsProvider
     extends $NotifierProvider<EditablePathPoints, List<Geographic>?> {
   /// A provider for the editable path points.
-  const EditablePathPointsProvider._()
+  EditablePathPointsProvider._()
     : super(
         from: null,
         argument: null,
@@ -114,7 +113,6 @@ abstract class _$EditablePathPoints extends $Notifier<List<Geographic>?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<List<Geographic>?, List<Geographic>?>;
     final element =
         ref.element
@@ -124,14 +122,14 @@ abstract class _$EditablePathPoints extends $Notifier<List<Geographic>?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider with [EditablePathPoints] converted to [WayPoint]s.
 
 @ProviderFor(editablePathAsWayPoints)
-const editablePathAsWayPointsProvider = EditablePathAsWayPointsProvider._();
+final editablePathAsWayPointsProvider = EditablePathAsWayPointsProvider._();
 
 /// A provider with [EditablePathPoints] converted to [WayPoint]s.
 
@@ -140,7 +138,7 @@ final class EditablePathAsWayPointsProvider
         $FunctionalProvider<List<WayPoint>?, List<WayPoint>?, List<WayPoint>?>
     with $Provider<List<WayPoint>?> {
   /// A provider with [EditablePathPoints] converted to [WayPoint]s.
-  const EditablePathAsWayPointsProvider._()
+  EditablePathAsWayPointsProvider._()
     : super(
         from: null,
         argument: null,

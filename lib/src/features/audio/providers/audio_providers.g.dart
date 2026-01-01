@@ -12,7 +12,7 @@ part of 'audio_providers.dart';
 /// and removes them after they are added.
 
 @ProviderFor(AudioQueue)
-const audioQueueProvider = AudioQueueProvider._();
+final audioQueueProvider = AudioQueueProvider._();
 
 /// A provider for a set queue of [AudioAsset]s, which also automatically plays
 /// and removes them after they are added.
@@ -20,7 +20,7 @@ final class AudioQueueProvider
     extends $NotifierProvider<AudioQueue, Set<AudioAsset>> {
   /// A provider for a set queue of [AudioAsset]s, which also automatically plays
   /// and removes them after they are added.
-  const AudioQueueProvider._()
+  AudioQueueProvider._()
     : super(
         from: null,
         argument: null,
@@ -57,7 +57,6 @@ abstract class _$AudioQueue extends $Notifier<Set<AudioAsset>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Set<AudioAsset>, Set<AudioAsset>>;
     final element =
         ref.element
@@ -67,20 +66,20 @@ abstract class _$AudioQueue extends $Notifier<Set<AudioAsset>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for all the audio volume levels.
 
 @ProviderFor(AudioVolume)
-const audioVolumeProvider = AudioVolumeProvider._();
+final audioVolumeProvider = AudioVolumeProvider._();
 
 /// A provider for all the audio volume levels.
 final class AudioVolumeProvider
     extends $NotifierProvider<AudioVolume, Map<AudioAsset, double>> {
   /// A provider for all the audio volume levels.
-  const AudioVolumeProvider._()
+  AudioVolumeProvider._()
     : super(
         from: null,
         argument: null,
@@ -116,7 +115,6 @@ abstract class _$AudioVolume extends $Notifier<Map<AudioAsset, double>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref as $Ref<Map<AudioAsset, double>, Map<AudioAsset, double>>;
     final element =
@@ -127,6 +125,6 @@ abstract class _$AudioVolume extends $Notifier<Map<AudioAsset, double>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

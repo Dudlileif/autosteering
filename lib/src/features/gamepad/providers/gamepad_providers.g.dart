@@ -11,13 +11,13 @@ part of 'gamepad_providers.dart';
 /// The currently active configuration of the gamepad.
 
 @ProviderFor(ActiveGamepadConfig)
-const activeGamepadConfigProvider = ActiveGamepadConfigProvider._();
+final activeGamepadConfigProvider = ActiveGamepadConfigProvider._();
 
 /// The currently active configuration of the gamepad.
 final class ActiveGamepadConfigProvider
     extends $NotifierProvider<ActiveGamepadConfig, GamepadConfig> {
   /// The currently active configuration of the gamepad.
-  const ActiveGamepadConfigProvider._()
+  ActiveGamepadConfigProvider._()
     : super(
         from: null,
         argument: null,
@@ -54,7 +54,6 @@ abstract class _$ActiveGamepadConfig extends $Notifier<GamepadConfig> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<GamepadConfig, GamepadConfig>;
     final element =
         ref.element
@@ -64,7 +63,7 @@ abstract class _$ActiveGamepadConfig extends $Notifier<GamepadConfig> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -72,7 +71,7 @@ abstract class _$ActiveGamepadConfig extends $Notifier<GamepadConfig> {
 /// input interface.
 
 @ProviderFor(gamepadInputEvents)
-const gamepadInputEventsProvider = GamepadInputEventsProvider._();
+final gamepadInputEventsProvider = GamepadInputEventsProvider._();
 
 /// A stream of the input events from the gamepad mapped to a more friendly
 /// input interface.
@@ -87,7 +86,7 @@ final class GamepadInputEventsProvider
     with $FutureModifier<GamepadInput>, $StreamProvider<GamepadInput> {
   /// A stream of the input events from the gamepad mapped to a more friendly
   /// input interface.
-  const GamepadInputEventsProvider._()
+  GamepadInputEventsProvider._()
     : super(
         from: null,
         argument: null,
@@ -119,7 +118,7 @@ String _$gamepadInputEventsHash() =>
 /// A provider for handling the inputs from the gamepad.
 
 @ProviderFor(handleGamepadInput)
-const handleGamepadInputProvider = HandleGamepadInputProvider._();
+final handleGamepadInputProvider = HandleGamepadInputProvider._();
 
 /// A provider for handling the inputs from the gamepad.
 
@@ -127,7 +126,7 @@ final class HandleGamepadInputProvider
     extends $FunctionalProvider<void, void, void>
     with $Provider<void> {
   /// A provider for handling the inputs from the gamepad.
-  const HandleGamepadInputProvider._()
+  HandleGamepadInputProvider._()
     : super(
         from: null,
         argument: null,

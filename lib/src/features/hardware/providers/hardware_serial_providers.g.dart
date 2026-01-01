@@ -11,7 +11,7 @@ part of 'hardware_serial_providers.dart';
 /// A provider for the available serial ports.
 
 @ProviderFor(availableSerialPorts)
-const availableSerialPortsProvider = AvailableSerialPortsProvider._();
+final availableSerialPortsProvider = AvailableSerialPortsProvider._();
 
 /// A provider for the available serial ports.
 
@@ -24,7 +24,7 @@ final class AvailableSerialPortsProvider
         >
     with $FutureModifier<List<SerialPort>>, $FutureProvider<List<SerialPort>> {
   /// A provider for the available serial ports.
-  const AvailableSerialPortsProvider._()
+  AvailableSerialPortsProvider._()
     : super(
         from: null,
         argument: null,
@@ -56,13 +56,13 @@ String _$availableSerialPortsHash() =>
 /// A provider for the baud rate for the [HardwareSerial] connection.
 
 @ProviderFor(HardwareSerialBaudRate)
-const hardwareSerialBaudRateProvider = HardwareSerialBaudRateProvider._();
+final hardwareSerialBaudRateProvider = HardwareSerialBaudRateProvider._();
 
 /// A provider for the baud rate for the [HardwareSerial] connection.
 final class HardwareSerialBaudRateProvider
     extends $NotifierProvider<HardwareSerialBaudRate, int> {
   /// A provider for the baud rate for the [HardwareSerial] connection.
-  const HardwareSerialBaudRateProvider._()
+  HardwareSerialBaudRateProvider._()
     : super(
         from: null,
         argument: null,
@@ -99,7 +99,6 @@ abstract class _$HardwareSerialBaudRate extends $Notifier<int> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<int, int>;
     final element =
         ref.element
@@ -109,20 +108,20 @@ abstract class _$HardwareSerialBaudRate extends $Notifier<int> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the hardware serial connection.
 
 @ProviderFor(HardwareSerial)
-const hardwareSerialProvider = HardwareSerialProvider._();
+final hardwareSerialProvider = HardwareSerialProvider._();
 
 /// A provider for the hardware serial connection.
 final class HardwareSerialProvider
     extends $NotifierProvider<HardwareSerial, SerialPort?> {
   /// A provider for the hardware serial connection.
-  const HardwareSerialProvider._()
+  HardwareSerialProvider._()
     : super(
         from: null,
         argument: null,
@@ -158,7 +157,6 @@ abstract class _$HardwareSerial extends $Notifier<SerialPort?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<SerialPort?, SerialPort?>;
     final element =
         ref.element
@@ -168,14 +166,14 @@ abstract class _$HardwareSerial extends $Notifier<SerialPort?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A stream of the incoming serial data from the connected hardware.
 
 @ProviderFor(hardwareSerialStream)
-const hardwareSerialStreamProvider = HardwareSerialStreamProvider._();
+final hardwareSerialStreamProvider = HardwareSerialStreamProvider._();
 
 /// A stream of the incoming serial data from the connected hardware.
 
@@ -183,7 +181,7 @@ final class HardwareSerialStreamProvider
     extends $FunctionalProvider<AsyncValue<String?>, String?, Stream<String?>>
     with $FutureModifier<String?>, $StreamProvider<String?> {
   /// A stream of the incoming serial data from the connected hardware.
-  const HardwareSerialStreamProvider._()
+  HardwareSerialStreamProvider._()
     : super(
         from: null,
         argument: null,
@@ -217,7 +215,7 @@ String _$hardwareSerialStreamHash() =>
 /// restart as false.
 
 @ProviderFor(HardwareSerialAlive)
-const hardwareSerialAliveProvider = HardwareSerialAliveProvider._();
+final hardwareSerialAliveProvider = HardwareSerialAliveProvider._();
 
 /// A provider for telling whether the [HardwareSerial] is receiving data.
 ///
@@ -229,7 +227,7 @@ final class HardwareSerialAliveProvider
   ///
   /// If not set to true in the last second, it will invalidate itself and
   /// restart as false.
-  const HardwareSerialAliveProvider._()
+  HardwareSerialAliveProvider._()
     : super(
         from: null,
         argument: null,
@@ -269,7 +267,6 @@ abstract class _$HardwareSerialAlive extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -279,6 +276,6 @@ abstract class _$HardwareSerialAlive extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

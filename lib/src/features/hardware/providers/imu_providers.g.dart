@@ -11,13 +11,13 @@ part of 'imu_providers.dart';
 /// A provider for the frequency of the IMU updates.
 
 @ProviderFor(ImuCurrentFrequency)
-const imuCurrentFrequencyProvider = ImuCurrentFrequencyProvider._();
+final imuCurrentFrequencyProvider = ImuCurrentFrequencyProvider._();
 
 /// A provider for the frequency of the IMU updates.
 final class ImuCurrentFrequencyProvider
     extends $NotifierProvider<ImuCurrentFrequency, double?> {
   /// A provider for the frequency of the IMU updates.
-  const ImuCurrentFrequencyProvider._()
+  ImuCurrentFrequencyProvider._()
     : super(
         from: null,
         argument: null,
@@ -54,7 +54,6 @@ abstract class _$ImuCurrentFrequency extends $Notifier<double?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -64,20 +63,20 @@ abstract class _$ImuCurrentFrequency extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the current raw [ImuReading] from the hardware.
 
 @ProviderFor(ImuCurrentReading)
-const imuCurrentReadingProvider = ImuCurrentReadingProvider._();
+final imuCurrentReadingProvider = ImuCurrentReadingProvider._();
 
 /// A provider for the current raw [ImuReading] from the hardware.
 final class ImuCurrentReadingProvider
     extends $NotifierProvider<ImuCurrentReading, ImuReading?> {
   /// A provider for the current raw [ImuReading] from the hardware.
-  const ImuCurrentReadingProvider._()
+  ImuCurrentReadingProvider._()
     : super(
         from: null,
         argument: null,
@@ -113,7 +112,6 @@ abstract class _$ImuCurrentReading extends $Notifier<ImuReading?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<ImuReading?, ImuReading?>;
     final element =
         ref.element
@@ -123,20 +121,20 @@ abstract class _$ImuCurrentReading extends $Notifier<ImuReading?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether to show the IMU configurator.
 
 @ProviderFor(ShowIMUConfig)
-const showIMUConfigProvider = ShowIMUConfigProvider._();
+final showIMUConfigProvider = ShowIMUConfigProvider._();
 
 /// Whether to show the IMU configurator.
 final class ShowIMUConfigProvider
     extends $NotifierProvider<ShowIMUConfig, bool> {
   /// Whether to show the IMU configurator.
-  const ShowIMUConfigProvider._()
+  ShowIMUConfigProvider._()
     : super(
         from: null,
         argument: null,
@@ -172,7 +170,6 @@ abstract class _$ShowIMUConfig extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -182,20 +179,20 @@ abstract class _$ShowIMUConfig extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the UI [Offset] for the IMU configurator.
 
 @ProviderFor(ImuConfiguratorUiOffset)
-const imuConfiguratorUiOffsetProvider = ImuConfiguratorUiOffsetProvider._();
+final imuConfiguratorUiOffsetProvider = ImuConfiguratorUiOffsetProvider._();
 
 /// A provider for the UI [Offset] for the IMU configurator.
 final class ImuConfiguratorUiOffsetProvider
     extends $NotifierProvider<ImuConfiguratorUiOffset, Offset> {
   /// A provider for the UI [Offset] for the IMU configurator.
-  const ImuConfiguratorUiOffsetProvider._()
+  ImuConfiguratorUiOffsetProvider._()
     : super(
         from: null,
         argument: null,
@@ -232,7 +229,6 @@ abstract class _$ImuConfiguratorUiOffset extends $Notifier<Offset> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Offset, Offset>;
     final element =
         ref.element
@@ -242,6 +238,6 @@ abstract class _$ImuConfiguratorUiOffset extends $Notifier<Offset> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

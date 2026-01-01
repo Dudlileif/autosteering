@@ -11,12 +11,12 @@ part of 'simulator_core_web_providers.dart';
 /// A provider for sending messages to the [SimulatorCore].
 
 @ProviderFor(SimInput)
-const simInputProvider = SimInputProvider._();
+final simInputProvider = SimInputProvider._();
 
 /// A provider for sending messages to the [SimulatorCore].
 final class SimInputProvider extends $NotifierProvider<SimInput, void> {
   /// A provider for sending messages to the [SimulatorCore].
-  const SimInputProvider._()
+  SimInputProvider._()
     : super(
         from: null,
         argument: null,
@@ -52,7 +52,6 @@ abstract class _$SimInput extends $Notifier<void> {
   @$mustCallSuper
   @override
   void runBuild() {
-    build();
     final ref = this.ref as $Ref<void, void>;
     final element =
         ref.element
@@ -62,7 +61,7 @@ abstract class _$SimInput extends $Notifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -70,7 +69,7 @@ abstract class _$SimInput extends $Notifier<void> {
 /// vehicle simulator when on the web platform.
 
 @ProviderFor(_SimCoreWebInput)
-const _simCoreWebInputProvider = _SimCoreWebInputProvider._();
+final _simCoreWebInputProvider = _SimCoreWebInputProvider._();
 
 /// A provider that creates a stream for sending vehicle inputs to the
 /// vehicle simulator when on the web platform.
@@ -78,7 +77,7 @@ final class _SimCoreWebInputProvider
     extends $NotifierProvider<_SimCoreWebInput, StreamController<dynamic>> {
   /// A provider that creates a stream for sending vehicle inputs to the
   /// vehicle simulator when on the web platform.
-  const _SimCoreWebInputProvider._()
+  _SimCoreWebInputProvider._()
     : super(
         from: null,
         argument: null,
@@ -115,7 +114,6 @@ abstract class _$SimCoreWebInput extends $Notifier<StreamController<dynamic>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref as $Ref<StreamController<dynamic>, StreamController<dynamic>>;
     final element =
@@ -126,7 +124,7 @@ abstract class _$SimCoreWebInput extends $Notifier<StreamController<dynamic>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -137,7 +135,7 @@ abstract class _$SimCoreWebInput extends $Notifier<StreamController<dynamic>> {
 /// update the vehicle gauge providers.
 
 @ProviderFor(simCoreWebStream)
-const simCoreWebStreamProvider = SimCoreWebStreamProvider._();
+final simCoreWebStreamProvider = SimCoreWebStreamProvider._();
 
 /// A provider that creates a stream and watches the vehicle simulator on the
 /// web platform.
@@ -154,7 +152,7 @@ final class SimCoreWebStreamProvider
   ///
   /// It will update the stream with vehicle updates from the simulator and also
   /// update the vehicle gauge providers.
-  const SimCoreWebStreamProvider._()
+  SimCoreWebStreamProvider._()
     : super(
         from: null,
         argument: null,
@@ -185,7 +183,7 @@ String _$simCoreWebStreamHash() => r'49195f61d91fcc66910d46b237bcd471f68125d4';
 /// position when necessary.
 
 @ProviderFor(simCoreVehicleDriving)
-const simCoreVehicleDrivingProvider = SimCoreVehicleDrivingProvider._();
+final simCoreVehicleDrivingProvider = SimCoreVehicleDrivingProvider._();
 
 /// A provider that watches the simulated vehicle and updates the map
 /// position when necessary.
@@ -195,7 +193,7 @@ final class SimCoreVehicleDrivingProvider
     with $Provider<void> {
   /// A provider that watches the simulated vehicle and updates the map
   /// position when necessary.
-  const SimCoreVehicleDrivingProvider._()
+  SimCoreVehicleDrivingProvider._()
     : super(
         from: null,
         argument: null,
@@ -234,7 +232,7 @@ String _$simCoreVehicleDrivingHash() =>
 /// A dummy provider for the web version.
 
 @ProviderFor(simCoreIsolateStream)
-const simCoreIsolateStreamProvider = SimCoreIsolateStreamProvider._();
+final simCoreIsolateStreamProvider = SimCoreIsolateStreamProvider._();
 
 /// A dummy provider for the web version.
 
@@ -242,7 +240,7 @@ final class SimCoreIsolateStreamProvider
     extends $FunctionalProvider<void, void, void>
     with $Provider<void> {
   /// A dummy provider for the web version.
-  const SimCoreIsolateStreamProvider._()
+  SimCoreIsolateStreamProvider._()
     : super(
         from: null,
         argument: null,

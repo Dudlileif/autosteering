@@ -12,7 +12,7 @@ part of 'combined_communication_providers.dart';
 /// watched.
 
 @ProviderFor(_combinedNativeNetwork)
-const _combinedNativeNetworkProvider = _CombinedNativeNetworkProvider._();
+final _combinedNativeNetworkProvider = _CombinedNativeNetworkProvider._();
 
 /// A provider for combining the native network providers that need to be
 /// watched.
@@ -22,7 +22,7 @@ final class _CombinedNativeNetworkProvider
     with $Provider<void> {
   /// A provider for combining the native network providers that need to be
   /// watched.
-  const _CombinedNativeNetworkProvider._()
+  _CombinedNativeNetworkProvider._()
     : super(
         from: null,
         argument: null,
@@ -61,7 +61,7 @@ String _$_combinedNativeNetworkHash() =>
 /// A provider for combining the serial providers that need to be watched.
 
 @ProviderFor(_combinedSerial)
-const _combinedSerialProvider = _CombinedSerialProvider._();
+final _combinedSerialProvider = _CombinedSerialProvider._();
 
 /// A provider for combining the serial providers that need to be watched.
 
@@ -69,7 +69,7 @@ final class _CombinedSerialProvider
     extends $FunctionalProvider<void, void, void>
     with $Provider<void> {
   /// A provider for combining the serial providers that need to be watched.
-  const _CombinedSerialProvider._()
+  _CombinedSerialProvider._()
     : super(
         from: null,
         argument: null,
@@ -108,7 +108,7 @@ String _$_combinedSerialHash() => r'6ec5620fc4b903429782dd75665f56b4584cac2c';
 /// providers that need to be watched.
 
 @ProviderFor(combinedCommunication)
-const combinedCommunicationProvider = CombinedCommunicationProvider._();
+final combinedCommunicationProvider = CombinedCommunicationProvider._();
 
 /// A provider for combining all the network and hardware communication
 /// providers that need to be watched.
@@ -118,7 +118,7 @@ final class CombinedCommunicationProvider
     with $Provider<void> {
   /// A provider for combining all the network and hardware communication
   /// providers that need to be watched.
-  const CombinedCommunicationProvider._()
+  CombinedCommunicationProvider._()
     : super(
         from: null,
         argument: null,
@@ -158,7 +158,7 @@ String _$combinedCommunicationHash() =>
 /// us.
 
 @ProviderFor(hardwareAlive)
-const hardwareAliveProvider = HardwareAliveProvider._();
+final hardwareAliveProvider = HardwareAliveProvider._();
 
 /// A provider for whether any hardware is connected and communicating with
 /// us.
@@ -167,7 +167,7 @@ final class HardwareAliveProvider extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// A provider for whether any hardware is connected and communicating with
   /// us.
-  const HardwareAliveProvider._()
+  HardwareAliveProvider._()
     : super(
         from: null,
         argument: null,

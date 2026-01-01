@@ -11,14 +11,14 @@ part of 'hardware_network_providers.dart';
 /// A provider for whether there is a connection with the steering hardware.
 
 @ProviderFor(SteeringHardwareNetworkAlive)
-const steeringHardwareNetworkAliveProvider =
+final steeringHardwareNetworkAliveProvider =
     SteeringHardwareNetworkAliveProvider._();
 
 /// A provider for whether there is a connection with the steering hardware.
 final class SteeringHardwareNetworkAliveProvider
     extends $NotifierProvider<SteeringHardwareNetworkAlive, bool> {
   /// A provider for whether there is a connection with the steering hardware.
-  const SteeringHardwareNetworkAliveProvider._()
+  SteeringHardwareNetworkAliveProvider._()
     : super(
         from: null,
         argument: null,
@@ -55,7 +55,6 @@ abstract class _$SteeringHardwareNetworkAlive extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -65,7 +64,7 @@ abstract class _$SteeringHardwareNetworkAlive extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -73,7 +72,7 @@ abstract class _$SteeringHardwareNetworkAlive extends $Notifier<bool> {
 /// hardware.
 
 @ProviderFor(RemoteControlHardwareNetworkAlive)
-const remoteControlHardwareNetworkAliveProvider =
+final remoteControlHardwareNetworkAliveProvider =
     RemoteControlHardwareNetworkAliveProvider._();
 
 /// A provider for whether there is a connection with the remote control
@@ -82,7 +81,7 @@ final class RemoteControlHardwareNetworkAliveProvider
     extends $NotifierProvider<RemoteControlHardwareNetworkAlive, bool> {
   /// A provider for whether there is a connection with the remote control
   /// hardware.
-  const RemoteControlHardwareNetworkAliveProvider._()
+  RemoteControlHardwareNetworkAliveProvider._()
     : super(
         from: null,
         argument: null,
@@ -122,7 +121,6 @@ abstract class _$RemoteControlHardwareNetworkAlive extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -132,20 +130,20 @@ abstract class _$RemoteControlHardwareNetworkAlive extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for all the
 
 @ProviderFor(NetworkInterfaces)
-const networkInterfacesProvider = NetworkInterfacesProvider._();
+final networkInterfacesProvider = NetworkInterfacesProvider._();
 
 /// A provider for all the
 final class NetworkInterfacesProvider
     extends $NotifierProvider<NetworkInterfaces, List<NetworkInterface>> {
   /// A provider for all the
-  const NetworkInterfacesProvider._()
+  NetworkInterfacesProvider._()
     : super(
         from: null,
         argument: null,
@@ -181,7 +179,6 @@ abstract class _$NetworkInterfaces extends $Notifier<List<NetworkInterface>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref as $Ref<List<NetworkInterface>, List<NetworkInterface>>;
     final element =
@@ -192,20 +189,20 @@ abstract class _$NetworkInterfaces extends $Notifier<List<NetworkInterface>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the wireless IP address of the device.
 
 @ProviderFor(DeviceIPAddressWlan)
-const deviceIPAddressWlanProvider = DeviceIPAddressWlanProvider._();
+final deviceIPAddressWlanProvider = DeviceIPAddressWlanProvider._();
 
 /// A provider for the wireless IP address of the device.
 final class DeviceIPAddressWlanProvider
     extends $NotifierProvider<DeviceIPAddressWlan, String?> {
   /// A provider for the wireless IP address of the device.
-  const DeviceIPAddressWlanProvider._()
+  DeviceIPAddressWlanProvider._()
     : super(
         from: null,
         argument: null,
@@ -242,7 +239,6 @@ abstract class _$DeviceIPAddressWlan extends $Notifier<String?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<String?, String?>;
     final element =
         ref.element
@@ -252,20 +248,20 @@ abstract class _$DeviceIPAddressWlan extends $Notifier<String?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the access point host IP address of the device.
 
 @ProviderFor(DeviceIPAddressAP)
-const deviceIPAddressAPProvider = DeviceIPAddressAPProvider._();
+final deviceIPAddressAPProvider = DeviceIPAddressAPProvider._();
 
 /// A provider for the access point host IP address of the device.
 final class DeviceIPAddressAPProvider
     extends $NotifierProvider<DeviceIPAddressAP, String?> {
   /// A provider for the access point host IP address of the device.
-  const DeviceIPAddressAPProvider._()
+  DeviceIPAddressAPProvider._()
     : super(
         from: null,
         argument: null,
@@ -301,7 +297,6 @@ abstract class _$DeviceIPAddressAP extends $Notifier<String?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<String?, String?>;
     final element =
         ref.element
@@ -311,20 +306,20 @@ abstract class _$DeviceIPAddressAP extends $Notifier<String?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the ethernet IP address of the device.
 
 @ProviderFor(DeviceIPAddressEthernet)
-const deviceIPAddressEthernetProvider = DeviceIPAddressEthernetProvider._();
+final deviceIPAddressEthernetProvider = DeviceIPAddressEthernetProvider._();
 
 /// A provider for the ethernet IP address of the device.
 final class DeviceIPAddressEthernetProvider
     extends $NotifierProvider<DeviceIPAddressEthernet, String?> {
   /// A provider for the ethernet IP address of the device.
-  const DeviceIPAddressEthernetProvider._()
+  DeviceIPAddressEthernetProvider._()
     : super(
         from: null,
         argument: null,
@@ -361,7 +356,6 @@ abstract class _$DeviceIPAddressEthernet extends $Notifier<String?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<String?, String?>;
     final element =
         ref.element
@@ -371,7 +365,7 @@ abstract class _$DeviceIPAddressEthernet extends $Notifier<String?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -379,7 +373,7 @@ abstract class _$DeviceIPAddressEthernet extends $Notifier<String?> {
 /// with.
 
 @ProviderFor(SteeringHardwareAddress)
-const steeringHardwareAddressProvider = SteeringHardwareAddressProvider._();
+final steeringHardwareAddressProvider = SteeringHardwareAddressProvider._();
 
 /// A provider for the IP adress of the steering hardware we want to communicate
 /// with.
@@ -387,7 +381,7 @@ final class SteeringHardwareAddressProvider
     extends $NotifierProvider<SteeringHardwareAddress, String> {
   /// A provider for the IP adress of the steering hardware we want to communicate
   /// with.
-  const SteeringHardwareAddressProvider._()
+  SteeringHardwareAddressProvider._()
     : super(
         from: null,
         argument: null,
@@ -425,7 +419,6 @@ abstract class _$SteeringHardwareAddress extends $Notifier<String> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<String, String>;
     final element =
         ref.element
@@ -435,7 +428,7 @@ abstract class _$SteeringHardwareAddress extends $Notifier<String> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -443,7 +436,7 @@ abstract class _$SteeringHardwareAddress extends $Notifier<String> {
 /// communicate with.
 
 @ProviderFor(RemoteControlHardwareAddress)
-const remoteControlHardwareAddressProvider =
+final remoteControlHardwareAddressProvider =
     RemoteControlHardwareAddressProvider._();
 
 /// A provider for the IP adress of the remote control hardware we want to
@@ -452,7 +445,7 @@ final class RemoteControlHardwareAddressProvider
     extends $NotifierProvider<RemoteControlHardwareAddress, String> {
   /// A provider for the IP adress of the remote control hardware we want to
   /// communicate with.
-  const RemoteControlHardwareAddressProvider._()
+  RemoteControlHardwareAddressProvider._()
     : super(
         from: null,
         argument: null,
@@ -490,7 +483,6 @@ abstract class _$RemoteControlHardwareAddress extends $Notifier<String> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<String, String>;
     final element =
         ref.element
@@ -500,20 +492,20 @@ abstract class _$RemoteControlHardwareAddress extends $Notifier<String> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the UDP receive port for the device.
 
 @ProviderFor(HardwareUDPReceivePort)
-const hardwareUDPReceivePortProvider = HardwareUDPReceivePortProvider._();
+final hardwareUDPReceivePortProvider = HardwareUDPReceivePortProvider._();
 
 /// A provider for the UDP receive port for the device.
 final class HardwareUDPReceivePortProvider
     extends $NotifierProvider<HardwareUDPReceivePort, int> {
   /// A provider for the UDP receive port for the device.
-  const HardwareUDPReceivePortProvider._()
+  HardwareUDPReceivePortProvider._()
     : super(
         from: null,
         argument: null,
@@ -550,7 +542,6 @@ abstract class _$HardwareUDPReceivePort extends $Notifier<int> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<int, int>;
     final element =
         ref.element
@@ -560,7 +551,7 @@ abstract class _$HardwareUDPReceivePort extends $Notifier<int> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -568,7 +559,7 @@ abstract class _$HardwareUDPReceivePort extends $Notifier<int> {
 /// the hardware in [SteeringHardwareAddress].
 
 @ProviderFor(HardwareUDPSendPort)
-const hardwareUDPSendPortProvider = HardwareUDPSendPortProvider._();
+final hardwareUDPSendPortProvider = HardwareUDPSendPortProvider._();
 
 /// A provider for the UDP send port for the device to send messages to
 /// the hardware in [SteeringHardwareAddress].
@@ -576,7 +567,7 @@ final class HardwareUDPSendPortProvider
     extends $NotifierProvider<HardwareUDPSendPort, int> {
   /// A provider for the UDP send port for the device to send messages to
   /// the hardware in [SteeringHardwareAddress].
-  const HardwareUDPSendPortProvider._()
+  HardwareUDPSendPortProvider._()
     : super(
         from: null,
         argument: null,
@@ -614,7 +605,6 @@ abstract class _$HardwareUDPSendPort extends $Notifier<int> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<int, int>;
     final element =
         ref.element
@@ -624,7 +614,7 @@ abstract class _$HardwareUDPSendPort extends $Notifier<int> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -634,7 +624,7 @@ abstract class _$HardwareUDPSendPort extends $Notifier<int> {
 /// The updated state is automatically sent to the
 
 @ProviderFor(hardwareCommunicationConfig)
-const hardwareCommunicationConfigProvider =
+final hardwareCommunicationConfigProvider =
     HardwareCommunicationConfigProvider._();
 
 /// A provider for the combined state of the [SteeringHardwareAddress],
@@ -677,7 +667,7 @@ final class HardwareCommunicationConfigProvider
   /// [HardwareUDPReceivePort] and [HardwareUDPSendPort].
   ///
   /// The updated state is automatically sent to the
-  const HardwareCommunicationConfigProvider._()
+  HardwareCommunicationConfigProvider._()
     : super(
         from: null,
         argument: null,
@@ -745,13 +735,13 @@ String _$hardwareCommunicationConfigHash() =>
 /// A provider for a TCP server for sending/receiving data via TCP.
 
 @ProviderFor(TcpServer)
-const tcpServerProvider = TcpServerProvider._();
+final tcpServerProvider = TcpServerProvider._();
 
 /// A provider for a TCP server for sending/receiving data via TCP.
 final class TcpServerProvider
     extends $AsyncNotifierProvider<TcpServer, Socket?> {
   /// A provider for a TCP server for sending/receiving data via TCP.
-  const TcpServerProvider._()
+  TcpServerProvider._()
     : super(
         from: null,
         argument: null,
@@ -779,7 +769,6 @@ abstract class _$TcpServer extends $AsyncNotifier<Socket?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<AsyncValue<Socket?>, Socket?>;
     final element =
         ref.element
@@ -789,7 +778,7 @@ abstract class _$TcpServer extends $AsyncNotifier<Socket?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -809,7 +798,7 @@ abstract class _$TcpServer extends $AsyncNotifier<Socket?> {
 /// subnets should be added to Disallowed IPs.
 
 @ProviderFor(NetworkAvailable)
-const networkAvailableProvider = NetworkAvailableProvider._();
+final networkAvailableProvider = NetworkAvailableProvider._();
 
 /// A provider for whether a network connection can be made.
 ///
@@ -841,7 +830,7 @@ final class NetworkAvailableProvider
   /// Copy the resulting Allowed IPs to the WireGuard client.
   /// On Android the subnet might change every time the device reboots, so more
   /// subnets should be added to Disallowed IPs.
-  const NetworkAvailableProvider._()
+  NetworkAvailableProvider._()
     : super(
         from: null,
         argument: null,
@@ -890,7 +879,6 @@ abstract class _$NetworkAvailable extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -900,6 +888,6 @@ abstract class _$NetworkAvailable extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

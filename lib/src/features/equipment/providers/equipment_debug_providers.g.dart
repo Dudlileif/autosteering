@@ -11,13 +11,13 @@ part of 'equipment_debug_providers.dart';
 /// Whether to show equipment turning debug features.
 
 @ProviderFor(DebugEquipmentTurning)
-const debugEquipmentTurningProvider = DebugEquipmentTurningProvider._();
+final debugEquipmentTurningProvider = DebugEquipmentTurningProvider._();
 
 /// Whether to show equipment turning debug features.
 final class DebugEquipmentTurningProvider
     extends $NotifierProvider<DebugEquipmentTurning, bool> {
   /// Whether to show equipment turning debug features.
-  const DebugEquipmentTurningProvider._()
+  DebugEquipmentTurningProvider._()
     : super(
         from: null,
         argument: null,
@@ -54,7 +54,6 @@ abstract class _$DebugEquipmentTurning extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -64,20 +63,20 @@ abstract class _$DebugEquipmentTurning extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether to show equipment trajectory debug features.
 
 @ProviderFor(DebugEquipmentTrajectory)
-const debugEquipmentTrajectoryProvider = DebugEquipmentTrajectoryProvider._();
+final debugEquipmentTrajectoryProvider = DebugEquipmentTrajectoryProvider._();
 
 /// Whether to show equipment trajectory debug features.
 final class DebugEquipmentTrajectoryProvider
     extends $NotifierProvider<DebugEquipmentTrajectory, bool> {
   /// Whether to show equipment trajectory debug features.
-  const DebugEquipmentTrajectoryProvider._()
+  DebugEquipmentTrajectoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -114,7 +113,6 @@ abstract class _$DebugEquipmentTrajectory extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -124,21 +122,21 @@ abstract class _$DebugEquipmentTrajectory extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether to show equipment travelled path debug.
 
 @ProviderFor(DebugEquipmentTravelledPath)
-const debugEquipmentTravelledPathProvider =
+final debugEquipmentTravelledPathProvider =
     DebugEquipmentTravelledPathProvider._();
 
 /// Whether to show equipment travelled path debug.
 final class DebugEquipmentTravelledPathProvider
     extends $NotifierProvider<DebugEquipmentTravelledPath, bool> {
   /// Whether to show equipment travelled path debug.
-  const DebugEquipmentTravelledPathProvider._()
+  DebugEquipmentTravelledPathProvider._()
     : super(
         from: null,
         argument: null,
@@ -175,7 +173,6 @@ abstract class _$DebugEquipmentTravelledPath extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -185,21 +182,21 @@ abstract class _$DebugEquipmentTravelledPath extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// The amount of points [DebugEquipmentTravelledPathList] should hold.
 
 @ProviderFor(DebugEquipmentTravelledPathSize)
-const debugEquipmentTravelledPathSizeProvider =
+final debugEquipmentTravelledPathSizeProvider =
     DebugEquipmentTravelledPathSizeProvider._();
 
 /// The amount of points [DebugEquipmentTravelledPathList] should hold.
 final class DebugEquipmentTravelledPathSizeProvider
     extends $NotifierProvider<DebugEquipmentTravelledPathSize, int> {
   /// The amount of points [DebugEquipmentTravelledPathList] should hold.
-  const DebugEquipmentTravelledPathSizeProvider._()
+  DebugEquipmentTravelledPathSizeProvider._()
     : super(
         from: null,
         argument: null,
@@ -236,7 +233,6 @@ abstract class _$DebugEquipmentTravelledPathSize extends $Notifier<int> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<int, int>;
     final element =
         ref.element
@@ -246,7 +242,7 @@ abstract class _$DebugEquipmentTravelledPathSize extends $Notifier<int> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -254,7 +250,7 @@ abstract class _$DebugEquipmentTravelledPathSize extends $Notifier<int> {
 /// equipments.
 
 @ProviderFor(DebugEquipmentTravelledPathList)
-const debugEquipmentTravelledPathListProvider =
+final debugEquipmentTravelledPathListProvider =
     DebugEquipmentTravelledPathListProvider._();
 
 /// A list of the last [DebugEquipmentTravelledPathSize] position points for the
@@ -267,7 +263,7 @@ final class DebugEquipmentTravelledPathListProvider
         > {
   /// A list of the last [DebugEquipmentTravelledPathSize] position points for the
   /// equipments.
-  const DebugEquipmentTravelledPathListProvider._()
+  DebugEquipmentTravelledPathListProvider._()
     : super(
         from: null,
         argument: null,
@@ -306,7 +302,6 @@ abstract class _$DebugEquipmentTravelledPathList
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref as $Ref<Map<String, List<LatLng>>, Map<String, List<LatLng>>>;
     final element =
@@ -317,20 +312,20 @@ abstract class _$DebugEquipmentTravelledPathList
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether to show equipment hitches debug.
 
 @ProviderFor(DebugEquipmentHitches)
-const debugEquipmentHitchesProvider = DebugEquipmentHitchesProvider._();
+final debugEquipmentHitchesProvider = DebugEquipmentHitchesProvider._();
 
 /// Whether to show equipment hitches debug.
 final class DebugEquipmentHitchesProvider
     extends $NotifierProvider<DebugEquipmentHitches, bool> {
   /// Whether to show equipment hitches debug.
-  const DebugEquipmentHitchesProvider._()
+  DebugEquipmentHitchesProvider._()
     : super(
         from: null,
         argument: null,
@@ -367,7 +362,6 @@ abstract class _$DebugEquipmentHitches extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -377,20 +371,20 @@ abstract class _$DebugEquipmentHitches extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether to show equipment section debug features.
 
 @ProviderFor(DebugEquipmentSections)
-const debugEquipmentSectionsProvider = DebugEquipmentSectionsProvider._();
+final debugEquipmentSectionsProvider = DebugEquipmentSectionsProvider._();
 
 /// Whether to show equipment section debug features.
 final class DebugEquipmentSectionsProvider
     extends $NotifierProvider<DebugEquipmentSections, bool> {
   /// Whether to show equipment section debug features.
-  const DebugEquipmentSectionsProvider._()
+  DebugEquipmentSectionsProvider._()
     : super(
         from: null,
         argument: null,
@@ -427,7 +421,6 @@ abstract class _$DebugEquipmentSections extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -437,21 +430,21 @@ abstract class _$DebugEquipmentSections extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// The amount of seconds equipment trajectories should predict.
 
 @ProviderFor(DebugEquipmentTrajectorySeconds)
-const debugEquipmentTrajectorySecondsProvider =
+final debugEquipmentTrajectorySecondsProvider =
     DebugEquipmentTrajectorySecondsProvider._();
 
 /// The amount of seconds equipment trajectories should predict.
 final class DebugEquipmentTrajectorySecondsProvider
     extends $NotifierProvider<DebugEquipmentTrajectorySeconds, double> {
   /// The amount of seconds equipment trajectories should predict.
-  const DebugEquipmentTrajectorySecondsProvider._()
+  DebugEquipmentTrajectorySecondsProvider._()
     : super(
         from: null,
         argument: null,
@@ -488,7 +481,6 @@ abstract class _$DebugEquipmentTrajectorySeconds extends $Notifier<double> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -498,21 +490,21 @@ abstract class _$DebugEquipmentTrajectorySeconds extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// The minimum length equipment trajectories should predict.
 
 @ProviderFor(DebugEquipmentTrajectoryMinLength)
-const debugEquipmentTrajectoryMinLengthProvider =
+final debugEquipmentTrajectoryMinLengthProvider =
     DebugEquipmentTrajectoryMinLengthProvider._();
 
 /// The minimum length equipment trajectories should predict.
 final class DebugEquipmentTrajectoryMinLengthProvider
     extends $NotifierProvider<DebugEquipmentTrajectoryMinLength, double> {
   /// The minimum length equipment trajectories should predict.
-  const DebugEquipmentTrajectoryMinLengthProvider._()
+  DebugEquipmentTrajectoryMinLengthProvider._()
     : super(
         from: null,
         argument: null,
@@ -551,7 +543,6 @@ abstract class _$DebugEquipmentTrajectoryMinLength extends $Notifier<double> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -561,6 +552,6 @@ abstract class _$DebugEquipmentTrajectoryMinLength extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

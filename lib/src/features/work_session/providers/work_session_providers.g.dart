@@ -11,13 +11,13 @@ part of 'work_session_providers.dart';
 /// A provider for holding the active [WorkSession].
 
 @ProviderFor(ActiveWorkSession)
-const activeWorkSessionProvider = ActiveWorkSessionProvider._();
+final activeWorkSessionProvider = ActiveWorkSessionProvider._();
 
 /// A provider for holding the active [WorkSession].
 final class ActiveWorkSessionProvider
     extends $NotifierProvider<ActiveWorkSession, WorkSession?> {
   /// A provider for holding the active [WorkSession].
-  const ActiveWorkSessionProvider._()
+  ActiveWorkSessionProvider._()
     : super(
         from: null,
         argument: null,
@@ -53,7 +53,6 @@ abstract class _$ActiveWorkSession extends $Notifier<WorkSession?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<WorkSession?, WorkSession?>;
     final element =
         ref.element
@@ -63,14 +62,14 @@ abstract class _$ActiveWorkSession extends $Notifier<WorkSession?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for loading a [WorkSession] from a file at [path], if it's valid.
 
 @ProviderFor(loadWorkSessionFromFile)
-const loadWorkSessionFromFileProvider = LoadWorkSessionFromFileFamily._();
+final loadWorkSessionFromFileProvider = LoadWorkSessionFromFileFamily._();
 
 /// A provider for loading a [WorkSession] from a file at [path], if it's valid.
 
@@ -83,7 +82,7 @@ final class LoadWorkSessionFromFileProvider
         >
     with $FutureModifier<WorkSession?>, $FutureProvider<WorkSession?> {
   /// A provider for loading a [WorkSession] from a file at [path], if it's valid.
-  const LoadWorkSessionFromFileProvider._({
+  LoadWorkSessionFromFileProvider._({
     required LoadWorkSessionFromFileFamily super.from,
     required String super.argument,
   }) : super(
@@ -135,7 +134,7 @@ String _$loadWorkSessionFromFileHash() =>
 
 final class LoadWorkSessionFromFileFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<WorkSession?>, String> {
-  const LoadWorkSessionFromFileFamily._()
+  LoadWorkSessionFromFileFamily._()
     : super(
         retry: null,
         name: r'loadWorkSessionFromFileProvider',
@@ -158,7 +157,7 @@ final class LoadWorkSessionFromFileFamily extends $Family
 /// Override the file name with [overrideName].
 
 @ProviderFor(saveWorkSession)
-const saveWorkSessionProvider = SaveWorkSessionFamily._();
+final saveWorkSessionProvider = SaveWorkSessionFamily._();
 
 /// A provider for saving [workSession] to a file in the user file directory.
 ///
@@ -170,7 +169,7 @@ final class SaveWorkSessionProvider
   /// A provider for saving [workSession] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
-  const SaveWorkSessionProvider._({
+  SaveWorkSessionProvider._({
     required SaveWorkSessionFamily super.from,
     required (WorkSession, {String? overrideName, bool downloadIfWeb})
     super.argument,
@@ -233,7 +232,7 @@ final class SaveWorkSessionFamily extends $Family
           FutureOr<void>,
           (WorkSession, {String? overrideName, bool downloadIfWeb})
         > {
-  const SaveWorkSessionFamily._()
+  SaveWorkSessionFamily._()
     : super(
         retry: null,
         name: r'saveWorkSessionProvider',
@@ -271,7 +270,7 @@ final class SaveWorkSessionFamily extends $Family
 /// be saved.
 
 @ProviderFor(saveWorkSessionEquipmentLogs)
-const saveWorkSessionEquipmentLogsProvider =
+final saveWorkSessionEquipmentLogsProvider =
     SaveWorkSessionEquipmentLogsFamily._();
 
 /// A provider for saving the [workSession]s [WorkSession.equipmentLogs] to
@@ -290,7 +289,7 @@ final class SaveWorkSessionEquipmentLogsProvider
   /// Set the [overwrite] parameter to false to preserve already existing files.
   /// [singleUuid] can be used to specify a single equipment's logs that should
   /// be saved.
-  const SaveWorkSessionEquipmentLogsProvider._({
+  SaveWorkSessionEquipmentLogsProvider._({
     required SaveWorkSessionEquipmentLogsFamily super.from,
     required (WorkSession, {bool overwrite, String? singleUuid}) super.argument,
   }) : super(
@@ -356,7 +355,7 @@ final class SaveWorkSessionEquipmentLogsFamily extends $Family
           FutureOr<void>,
           (WorkSession, {bool overwrite, String? singleUuid})
         > {
-  const SaveWorkSessionEquipmentLogsFamily._()
+  SaveWorkSessionEquipmentLogsFamily._()
     : super(
         retry: null,
         name: r'saveWorkSessionEquipmentLogsProvider',
@@ -390,7 +389,7 @@ final class SaveWorkSessionEquipmentLogsFamily extends $Family
 /// Override the file name with [overrideName].
 
 @ProviderFor(exportWorkSession)
-const exportWorkSessionProvider = ExportWorkSessionFamily._();
+final exportWorkSessionProvider = ExportWorkSessionFamily._();
 
 /// A provider for exporting [workSession] to a file.
 ///
@@ -402,7 +401,7 @@ final class ExportWorkSessionProvider
   /// A provider for exporting [workSession] to a file.
   ///
   /// Override the file name with [overrideName].
-  const ExportWorkSessionProvider._({
+  ExportWorkSessionProvider._({
     required ExportWorkSessionFamily super.from,
     required (
       WorkSession, {
@@ -481,7 +480,7 @@ final class ExportWorkSessionFamily extends $Family
             bool withEquipmentLogs,
           })
         > {
-  const ExportWorkSessionFamily._()
+  ExportWorkSessionFamily._()
     : super(
         retry: null,
         name: r'exportWorkSessionProvider',
@@ -517,7 +516,7 @@ final class ExportWorkSessionFamily extends $Family
 /// user file directory.
 
 @ProviderFor(savedWorkSessions)
-const savedWorkSessionsProvider = SavedWorkSessionsProvider._();
+final savedWorkSessionsProvider = SavedWorkSessionsProvider._();
 
 /// A provider for reading and holding all the saved [WorkSession]s in the
 /// user file directory.
@@ -534,7 +533,7 @@ final class SavedWorkSessionsProvider
         $FutureProvider<List<WorkSession>> {
   /// A provider for reading and holding all the saved [WorkSession]s in the
   /// user file directory.
-  const SavedWorkSessionsProvider._()
+  SavedWorkSessionsProvider._()
     : super(
         from: null,
         argument: null,
@@ -567,7 +566,7 @@ String _$savedWorkSessionsHash() => r'd7d697d33348282646e7be9a6fdc9a52079b4384';
 /// Override the directory name with [overrideName].
 
 @ProviderFor(deleteWorkSession)
-const deleteWorkSessionProvider = DeleteWorkSessionFamily._();
+final deleteWorkSessionProvider = DeleteWorkSessionFamily._();
 
 /// A provider for deleting [workSession] from the user file system.
 ///
@@ -579,7 +578,7 @@ final class DeleteWorkSessionProvider
   /// A provider for deleting [workSession] from the user file system.
   ///
   /// Override the directory name with [overrideName].
-  const DeleteWorkSessionProvider._({
+  DeleteWorkSessionProvider._({
     required DeleteWorkSessionFamily super.from,
     required (WorkSession, {String? overrideName}) super.argument,
   }) : super(
@@ -638,7 +637,7 @@ final class DeleteWorkSessionFamily extends $Family
           FutureOr<void>,
           (WorkSession, {String? overrideName})
         > {
-  const DeleteWorkSessionFamily._()
+  DeleteWorkSessionFamily._()
     : super(
         retry: null,
         name: r'deleteWorkSessionProvider',
@@ -667,7 +666,7 @@ final class DeleteWorkSessionFamily extends $Family
 /// to the [ActiveWorkSession] provider.
 
 @ProviderFor(importWorkSession)
-const importWorkSessionProvider = ImportWorkSessionProvider._();
+final importWorkSessionProvider = ImportWorkSessionProvider._();
 
 /// A provider for importing a work session from a file and applying it
 /// to the [ActiveWorkSession] provider.
@@ -682,7 +681,7 @@ final class ImportWorkSessionProvider
     with $FutureModifier<WorkSession?>, $FutureProvider<WorkSession?> {
   /// A provider for importing a work session from a file and applying it
   /// to the [ActiveWorkSession] provider.
-  const ImportWorkSessionProvider._()
+  ImportWorkSessionProvider._()
     : super(
         from: null,
         argument: null,
@@ -713,7 +712,7 @@ String _$importWorkSessionHash() => r'e5dbb7652642dd8cbcb98e6a03dae4bf1eefcee5';
 /// A provider for exporting all work session files.
 
 @ProviderFor(exportWorkSessions)
-const exportWorkSessionsProvider = ExportWorkSessionsFamily._();
+final exportWorkSessionsProvider = ExportWorkSessionsFamily._();
 
 /// A provider for exporting all work session files.
 
@@ -721,7 +720,7 @@ final class ExportWorkSessionsProvider
     extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
     with $FutureModifier<void>, $FutureProvider<void> {
   /// A provider for exporting all work session files.
-  const ExportWorkSessionsProvider._({
+  ExportWorkSessionsProvider._({
     required ExportWorkSessionsFamily super.from,
     required bool super.argument,
   }) : super(
@@ -771,7 +770,7 @@ String _$exportWorkSessionsHash() =>
 
 final class ExportWorkSessionsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<void>, bool> {
-  const ExportWorkSessionsFamily._()
+  ExportWorkSessionsFamily._()
     : super(
         retry: null,
         name: r'exportWorkSessionsProvider',

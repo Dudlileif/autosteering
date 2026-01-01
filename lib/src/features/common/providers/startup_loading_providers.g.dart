@@ -12,7 +12,7 @@ part of 'startup_loading_providers.dart';
 /// properly load without it.
 
 @ProviderFor(webArtificialStartupDelay)
-const webArtificialStartupDelayProvider = WebArtificialStartupDelayProvider._();
+final webArtificialStartupDelayProvider = WebArtificialStartupDelayProvider._();
 
 /// A provider for adding an artificial startup delay on web, as it won't
 /// properly load without it.
@@ -22,7 +22,7 @@ final class WebArtificialStartupDelayProvider
     with $FutureModifier<void>, $FutureProvider<void> {
   /// A provider for adding an artificial startup delay on web, as it won't
   /// properly load without it.
-  const WebArtificialStartupDelayProvider._()
+  WebArtificialStartupDelayProvider._()
     : super(
         from: null,
         argument: null,
@@ -55,7 +55,7 @@ String _$webArtificialStartupDelayHash() =>
 /// Returns true whilst loading and false when all files have been loaded.
 
 @ProviderFor(startupLoading)
-const startupLoadingProvider = StartupLoadingProvider._();
+final startupLoadingProvider = StartupLoadingProvider._();
 
 /// A provider for handling the initial loading of saved user files.
 ///
@@ -66,7 +66,7 @@ final class StartupLoadingProvider extends $FunctionalProvider<bool, bool, bool>
   /// A provider for handling the initial loading of saved user files.
   ///
   /// Returns true whilst loading and false when all files have been loaded.
-  const StartupLoadingProvider._()
+  StartupLoadingProvider._()
     : super(
         from: null,
         argument: null,

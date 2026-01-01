@@ -11,13 +11,13 @@ part of 'logging_providers.dart';
 /// A provider for the number of log files to keep in the logs directory.
 
 @ProviderFor(DaysToKeepLogFiles)
-const daysToKeepLogFilesProvider = DaysToKeepLogFilesProvider._();
+final daysToKeepLogFilesProvider = DaysToKeepLogFilesProvider._();
 
 /// A provider for the number of log files to keep in the logs directory.
 final class DaysToKeepLogFilesProvider
     extends $NotifierProvider<DaysToKeepLogFiles, int> {
   /// A provider for the number of log files to keep in the logs directory.
-  const DaysToKeepLogFilesProvider._()
+  DaysToKeepLogFilesProvider._()
     : super(
         from: null,
         argument: null,
@@ -54,7 +54,6 @@ abstract class _$DaysToKeepLogFiles extends $Notifier<int> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<int, int>;
     final element =
         ref.element
@@ -64,14 +63,14 @@ abstract class _$DaysToKeepLogFiles extends $Notifier<int> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for creating a logging file for the session.
 
 @ProviderFor(loggingFile)
-const loggingFileProvider = LoggingFileProvider._();
+final loggingFileProvider = LoggingFileProvider._();
 
 /// A provider for creating a logging file for the session.
 
@@ -79,7 +78,7 @@ final class LoggingFileProvider
     extends $FunctionalProvider<AsyncValue<File?>, File?, FutureOr<File?>>
     with $FutureModifier<File?>, $FutureProvider<File?> {
   /// A provider for creating a logging file for the session.
-  const LoggingFileProvider._()
+  LoggingFileProvider._()
     : super(
         from: null,
         argument: null,
@@ -110,7 +109,7 @@ String _$loggingFileHash() => r'6003cea7133df2cf0f96fd49d6ff65983dad336d';
 /// if on native platforms.
 
 @ProviderFor(logging)
-const loggingProvider = LoggingProvider._();
+final loggingProvider = LoggingProvider._();
 
 /// A provider for the [Logger] that prints the logs to console and a file
 /// if on native platforms.
@@ -119,7 +118,7 @@ final class LoggingProvider extends $FunctionalProvider<Logger, Logger, Logger>
     with $Provider<Logger> {
   /// A provider for the [Logger] that prints the logs to console and a file
   /// if on native platforms.
-  const LoggingProvider._()
+  LoggingProvider._()
     : super(
         from: null,
         argument: null,
@@ -157,7 +156,7 @@ String _$loggingHash() => r'e7501a1b838141081caeb41f09ad98c3119e6a52';
 /// A provider for exporting all log files.
 
 @ProviderFor(exportLogs)
-const exportLogsProvider = ExportLogsFamily._();
+final exportLogsProvider = ExportLogsFamily._();
 
 /// A provider for exporting all log files.
 
@@ -165,7 +164,7 @@ final class ExportLogsProvider
     extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
     with $FutureModifier<void>, $FutureProvider<void> {
   /// A provider for exporting all log files.
-  const ExportLogsProvider._({
+  ExportLogsProvider._({
     required ExportLogsFamily super.from,
     required bool super.argument,
   }) : super(
@@ -214,7 +213,7 @@ String _$exportLogsHash() => r'1a0452517f5ccf79309ad6c8e13cce8434e22cc5';
 
 final class ExportLogsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<void>, bool> {
-  const ExportLogsFamily._()
+  ExportLogsFamily._()
     : super(
         retry: null,
         name: r'exportLogsProvider',

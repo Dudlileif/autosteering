@@ -11,13 +11,13 @@ part of 'path_recording_providers.dart';
 /// Whether the path recording menu should be shown.
 
 @ProviderFor(ShowPathRecordingMenu)
-const showPathRecordingMenuProvider = ShowPathRecordingMenuProvider._();
+final showPathRecordingMenuProvider = ShowPathRecordingMenuProvider._();
 
 /// Whether the path recording menu should be shown.
 final class ShowPathRecordingMenuProvider
     extends $NotifierProvider<ShowPathRecordingMenu, bool> {
   /// Whether the path recording menu should be shown.
-  const ShowPathRecordingMenuProvider._()
+  ShowPathRecordingMenuProvider._()
     : super(
         from: null,
         argument: null,
@@ -54,7 +54,6 @@ abstract class _$ShowPathRecordingMenu extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -64,20 +63,20 @@ abstract class _$ShowPathRecordingMenu extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether the path recorder is enabled.
 
 @ProviderFor(EnablePathRecorder)
-const enablePathRecorderProvider = EnablePathRecorderProvider._();
+final enablePathRecorderProvider = EnablePathRecorderProvider._();
 
 /// Whether the path recorder is enabled.
 final class EnablePathRecorderProvider
     extends $NotifierProvider<EnablePathRecorder, bool> {
   /// Whether the path recorder is enabled.
-  const EnablePathRecorderProvider._()
+  EnablePathRecorderProvider._()
     : super(
         from: null,
         argument: null,
@@ -114,7 +113,6 @@ abstract class _$EnablePathRecorder extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -124,21 +122,21 @@ abstract class _$EnablePathRecorder extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether the automatic path recorder is enabled.
 
 @ProviderFor(EnableAutomaticPathRecorder)
-const enableAutomaticPathRecorderProvider =
+final enableAutomaticPathRecorderProvider =
     EnableAutomaticPathRecorderProvider._();
 
 /// Whether the automatic path recorder is enabled.
 final class EnableAutomaticPathRecorderProvider
     extends $NotifierProvider<EnableAutomaticPathRecorder, bool> {
   /// Whether the automatic path recorder is enabled.
-  const EnableAutomaticPathRecorderProvider._()
+  EnableAutomaticPathRecorderProvider._()
     : super(
         from: null,
         argument: null,
@@ -175,7 +173,6 @@ abstract class _$EnableAutomaticPathRecorder extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -185,7 +182,7 @@ abstract class _$EnableAutomaticPathRecorder extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -193,7 +190,7 @@ abstract class _$EnableAutomaticPathRecorder extends $Notifier<bool> {
 /// should be recorded.
 
 @ProviderFor(ActivePathRecordingSettings)
-const activePathRecordingSettingsProvider =
+final activePathRecordingSettingsProvider =
     ActivePathRecordingSettingsProvider._();
 
 /// A provider for the [PathRecordingSettings] which configures how paths
@@ -203,7 +200,7 @@ final class ActivePathRecordingSettingsProvider
         $NotifierProvider<ActivePathRecordingSettings, PathRecordingSettings> {
   /// A provider for the [PathRecordingSettings] which configures how paths
   /// should be recorded.
-  const ActivePathRecordingSettingsProvider._()
+  ActivePathRecordingSettingsProvider._()
     : super(
         from: null,
         argument: null,
@@ -242,7 +239,6 @@ abstract class _$ActivePathRecordingSettings
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<PathRecordingSettings, PathRecordingSettings>;
     final element =
         ref.element
@@ -252,20 +248,20 @@ abstract class _$ActivePathRecordingSettings
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether the path recording menu should be shown.
 
 @ProviderFor(ActivePathRecordingTarget)
-const activePathRecordingTargetProvider = ActivePathRecordingTargetProvider._();
+final activePathRecordingTargetProvider = ActivePathRecordingTargetProvider._();
 
 /// Whether the path recording menu should be shown.
 final class ActivePathRecordingTargetProvider
     extends $NotifierProvider<ActivePathRecordingTarget, PathRecordingTarget> {
   /// Whether the path recording menu should be shown.
-  const ActivePathRecordingTargetProvider._()
+  ActivePathRecordingTargetProvider._()
     : super(
         from: null,
         argument: null,
@@ -303,7 +299,6 @@ abstract class _$ActivePathRecordingTarget
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<PathRecordingTarget, PathRecordingTarget>;
     final element =
         ref.element
@@ -313,14 +308,14 @@ abstract class _$ActivePathRecordingTarget
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for watching to keep the automatic path recording going.
 
 @ProviderFor(automaticPathRecording)
-const automaticPathRecordingProvider = AutomaticPathRecordingProvider._();
+final automaticPathRecordingProvider = AutomaticPathRecordingProvider._();
 
 /// A provider for watching to keep the automatic path recording going.
 
@@ -328,7 +323,7 @@ final class AutomaticPathRecordingProvider
     extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
     with $FutureModifier<void>, $FutureProvider<void> {
   /// A provider for watching to keep the automatic path recording going.
-  const AutomaticPathRecordingProvider._()
+  AutomaticPathRecordingProvider._()
     : super(
         from: null,
         argument: null,
@@ -359,13 +354,13 @@ String _$automaticPathRecordingHash() =>
 /// A list of the currently recording points.
 
 @ProviderFor(PathRecordingList)
-const pathRecordingListProvider = PathRecordingListProvider._();
+final pathRecordingListProvider = PathRecordingListProvider._();
 
 /// A list of the currently recording points.
 final class PathRecordingListProvider
     extends $NotifierProvider<PathRecordingList, List<WayPoint>> {
   /// A list of the currently recording points.
-  const PathRecordingListProvider._()
+  PathRecordingListProvider._()
     : super(
         from: null,
         argument: null,
@@ -401,7 +396,6 @@ abstract class _$PathRecordingList extends $Notifier<List<WayPoint>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<List<WayPoint>, List<WayPoint>>;
     final element =
         ref.element
@@ -411,20 +405,20 @@ abstract class _$PathRecordingList extends $Notifier<List<WayPoint>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A list of path points for the last finished recording.
 
 @ProviderFor(FinishedPathRecordingList)
-const finishedPathRecordingListProvider = FinishedPathRecordingListProvider._();
+final finishedPathRecordingListProvider = FinishedPathRecordingListProvider._();
 
 /// A list of path points for the last finished recording.
 final class FinishedPathRecordingListProvider
     extends $NotifierProvider<FinishedPathRecordingList, List<WayPoint>?> {
   /// A list of path points for the last finished recording.
-  const FinishedPathRecordingListProvider._()
+  FinishedPathRecordingListProvider._()
     : super(
         from: null,
         argument: null,
@@ -461,7 +455,6 @@ abstract class _$FinishedPathRecordingList extends $Notifier<List<WayPoint>?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<List<WayPoint>?, List<WayPoint>?>;
     final element =
         ref.element
@@ -471,20 +464,20 @@ abstract class _$FinishedPathRecordingList extends $Notifier<List<WayPoint>?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether to show the last fininshed path recording.
 
 @ProviderFor(ShowFinishedPath)
-const showFinishedPathProvider = ShowFinishedPathProvider._();
+final showFinishedPathProvider = ShowFinishedPathProvider._();
 
 /// Whether to show the last fininshed path recording.
 final class ShowFinishedPathProvider
     extends $NotifierProvider<ShowFinishedPath, bool> {
   /// Whether to show the last fininshed path recording.
-  const ShowFinishedPathProvider._()
+  ShowFinishedPathProvider._()
     : super(
         from: null,
         argument: null,
@@ -520,7 +513,6 @@ abstract class _$ShowFinishedPath extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -530,20 +522,20 @@ abstract class _$ShowFinishedPath extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether to activate editing of the last finished path recording.
 
 @ProviderFor(EditFinishedPath)
-const editFinishedPathProvider = EditFinishedPathProvider._();
+final editFinishedPathProvider = EditFinishedPathProvider._();
 
 /// Whether to activate editing of the last finished path recording.
 final class EditFinishedPathProvider
     extends $NotifierProvider<EditFinishedPath, bool> {
   /// Whether to activate editing of the last finished path recording.
-  const EditFinishedPathProvider._()
+  EditFinishedPathProvider._()
     : super(
         from: null,
         argument: null,
@@ -579,7 +571,6 @@ abstract class _$EditFinishedPath extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -589,20 +580,20 @@ abstract class _$EditFinishedPath extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the UI [Offset] for the path recording configurator.
 
 @ProviderFor(PathRecordingMenuUiOffset)
-const pathRecordingMenuUiOffsetProvider = PathRecordingMenuUiOffsetProvider._();
+final pathRecordingMenuUiOffsetProvider = PathRecordingMenuUiOffsetProvider._();
 
 /// A provider for the UI [Offset] for the path recording configurator.
 final class PathRecordingMenuUiOffsetProvider
     extends $NotifierProvider<PathRecordingMenuUiOffset, Offset> {
   /// A provider for the UI [Offset] for the path recording configurator.
-  const PathRecordingMenuUiOffsetProvider._()
+  PathRecordingMenuUiOffsetProvider._()
     : super(
         from: null,
         argument: null,
@@ -639,7 +630,6 @@ abstract class _$PathRecordingMenuUiOffset extends $Notifier<Offset> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Offset, Offset>;
     final element =
         ref.element
@@ -649,6 +639,6 @@ abstract class _$PathRecordingMenuUiOffset extends $Notifier<Offset> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

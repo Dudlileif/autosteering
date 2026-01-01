@@ -11,13 +11,13 @@ part of 'simulator_core_providers.dart';
 /// A provider for the target simulation update frequency.
 
 @ProviderFor(SimulatorUpdateFrequency)
-const simulatorUpdateFrequencyProvider = SimulatorUpdateFrequencyProvider._();
+final simulatorUpdateFrequencyProvider = SimulatorUpdateFrequencyProvider._();
 
 /// A provider for the target simulation update frequency.
 final class SimulatorUpdateFrequencyProvider
     extends $NotifierProvider<SimulatorUpdateFrequency, int> {
   /// A provider for the target simulation update frequency.
-  const SimulatorUpdateFrequencyProvider._()
+  SimulatorUpdateFrequencyProvider._()
     : super(
         from: null,
         argument: null,
@@ -54,7 +54,6 @@ abstract class _$SimulatorUpdateFrequency extends $Notifier<int> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<int, int>;
     final element =
         ref.element
@@ -64,14 +63,14 @@ abstract class _$SimulatorUpdateFrequency extends $Notifier<int> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Sends initial parameters to  the sim core.
 
 @ProviderFor(initializeSimCore)
-const initializeSimCoreProvider = InitializeSimCoreProvider._();
+final initializeSimCoreProvider = InitializeSimCoreProvider._();
 
 /// Sends initial parameters to  the sim core.
 
@@ -79,7 +78,7 @@ final class InitializeSimCoreProvider
     extends $FunctionalProvider<void, void, void>
     with $Provider<void> {
   /// Sends initial parameters to  the sim core.
-  const InitializeSimCoreProvider._()
+  InitializeSimCoreProvider._()
     : super(
         from: null,
         argument: null,
@@ -118,7 +117,7 @@ String _$initializeSimCoreHash() => r'a84ba908eb9e30e7e1c6dd59f769b118fc5cc473';
 /// simulation.
 
 @ProviderFor(commonSimCoreMessageHandler)
-const commonSimCoreMessageHandlerProvider =
+final commonSimCoreMessageHandlerProvider =
     CommonSimCoreMessageHandlerFamily._();
 
 /// A provider for handling the common sim core messages for the state of the
@@ -129,7 +128,7 @@ final class CommonSimCoreMessageHandlerProvider
     with $Provider<void> {
   /// A provider for handling the common sim core messages for the state of the
   /// simulation.
-  const CommonSimCoreMessageHandlerProvider._({
+  CommonSimCoreMessageHandlerProvider._({
     required CommonSimCoreMessageHandlerFamily super.from,
     required ({
       ABTracking? abTracking,
@@ -220,7 +219,7 @@ final class CommonSimCoreMessageHandlerFamily extends $Family
             num velocity,
           })
         > {
-  const CommonSimCoreMessageHandlerFamily._()
+  CommonSimCoreMessageHandlerFamily._()
     : super(
         retry: null,
         name: r'commonSimCoreMessageHandlerProvider',
@@ -254,7 +253,7 @@ final class CommonSimCoreMessageHandlerFamily extends $Family
 /// debug mode.
 
 @ProviderFor(SimCoreDebugAllowLongBreaks)
-const simCoreDebugAllowLongBreaksProvider =
+final simCoreDebugAllowLongBreaksProvider =
     SimCoreDebugAllowLongBreaksProvider._();
 
 /// A provider for whether long breaks in the program (i.e. when using
@@ -265,7 +264,7 @@ final class SimCoreDebugAllowLongBreaksProvider
   /// A provider for whether long breaks in the program (i.e. when using
   /// breakpoints) should be allowed and not restart the sim core in
   /// debug mode.
-  const SimCoreDebugAllowLongBreaksProvider._()
+  SimCoreDebugAllowLongBreaksProvider._()
     : super(
         from: null,
         argument: null,
@@ -304,7 +303,6 @@ abstract class _$SimCoreDebugAllowLongBreaks extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -314,7 +312,7 @@ abstract class _$SimCoreDebugAllowLongBreaks extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -322,7 +320,7 @@ abstract class _$SimCoreDebugAllowLongBreaks extends $Notifier<bool> {
 /// user, i.e. not only sensors from the vehicle.
 
 @ProviderFor(SimCoreAllowManualInput)
-const simCoreAllowManualInputProvider = SimCoreAllowManualInputProvider._();
+final simCoreAllowManualInputProvider = SimCoreAllowManualInputProvider._();
 
 /// A provider for whether the sim core should allow manual inputs from the
 /// user, i.e. not only sensors from the vehicle.
@@ -330,7 +328,7 @@ final class SimCoreAllowManualInputProvider
     extends $NotifierProvider<SimCoreAllowManualInput, bool> {
   /// A provider for whether the sim core should allow manual inputs from the
   /// user, i.e. not only sensors from the vehicle.
-  const SimCoreAllowManualInputProvider._()
+  SimCoreAllowManualInputProvider._()
     : super(
         from: null,
         argument: null,
@@ -368,7 +366,6 @@ abstract class _$SimCoreAllowManualInput extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -378,7 +375,7 @@ abstract class _$SimCoreAllowManualInput extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -386,7 +383,7 @@ abstract class _$SimCoreAllowManualInput extends $Notifier<bool> {
 /// between the hardware GNSS updates.
 
 @ProviderFor(SimCoreAllowInterpolation)
-const simCoreAllowInterpolationProvider = SimCoreAllowInterpolationProvider._();
+final simCoreAllowInterpolationProvider = SimCoreAllowInterpolationProvider._();
 
 /// A provider for whether the sim core should allow interpolation steps
 /// between the hardware GNSS updates.
@@ -394,7 +391,7 @@ final class SimCoreAllowInterpolationProvider
     extends $NotifierProvider<SimCoreAllowInterpolation, bool> {
   /// A provider for whether the sim core should allow interpolation steps
   /// between the hardware GNSS updates.
-  const SimCoreAllowInterpolationProvider._()
+  SimCoreAllowInterpolationProvider._()
     : super(
         from: null,
         argument: null,
@@ -432,7 +429,6 @@ abstract class _$SimCoreAllowInterpolation extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -442,7 +438,7 @@ abstract class _$SimCoreAllowInterpolation extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -450,7 +446,7 @@ abstract class _$SimCoreAllowInterpolation extends $Notifier<bool> {
 /// no input is provided.
 
 @ProviderFor(SimCoreVehicleAutoCenterSteering)
-const simCoreVehicleAutoCenterSteeringProvider =
+final simCoreVehicleAutoCenterSteeringProvider =
     SimCoreVehicleAutoCenterSteeringProvider._();
 
 /// A provider for whether the steering automatically should recenter when
@@ -459,7 +455,7 @@ final class SimCoreVehicleAutoCenterSteeringProvider
     extends $NotifierProvider<SimCoreVehicleAutoCenterSteering, bool> {
   /// A provider for whether the steering automatically should recenter when
   /// no input is provided.
-  const SimCoreVehicleAutoCenterSteeringProvider._()
+  SimCoreVehicleAutoCenterSteeringProvider._()
     : super(
         from: null,
         argument: null,
@@ -498,7 +494,6 @@ abstract class _$SimCoreVehicleAutoCenterSteering extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -508,7 +503,7 @@ abstract class _$SimCoreVehicleAutoCenterSteering extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -516,7 +511,7 @@ abstract class _$SimCoreVehicleAutoCenterSteering extends $Notifier<bool> {
 /// provided.
 
 @ProviderFor(SimCoreVehicleAutoSlowDown)
-const simCoreVehicleAutoSlowDownProvider =
+final simCoreVehicleAutoSlowDownProvider =
     SimCoreVehicleAutoSlowDownProvider._();
 
 /// A provider for whether the vehicle should slow down when no input is
@@ -525,7 +520,7 @@ final class SimCoreVehicleAutoSlowDownProvider
     extends $NotifierProvider<SimCoreVehicleAutoSlowDown, bool> {
   /// A provider for whether the vehicle should slow down when no input is
   /// provided.
-  const SimCoreVehicleAutoSlowDownProvider._()
+  SimCoreVehicleAutoSlowDownProvider._()
     : super(
         from: null,
         argument: null,
@@ -563,7 +558,6 @@ abstract class _$SimCoreVehicleAutoSlowDown extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -573,6 +567,6 @@ abstract class _$SimCoreVehicleAutoSlowDown extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

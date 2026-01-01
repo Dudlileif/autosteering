@@ -11,7 +11,7 @@ part of 'settings_providers.dart';
 /// A provider for the main settings file for the application.
 
 @ProviderFor(settingsFile)
-const settingsFileProvider = SettingsFileProvider._();
+final settingsFileProvider = SettingsFileProvider._();
 
 /// A provider for the main settings file for the application.
 
@@ -19,7 +19,7 @@ final class SettingsFileProvider
     extends $FunctionalProvider<AsyncValue<File>, File, FutureOr<File>>
     with $FutureModifier<File>, $FutureProvider<File> {
   /// A provider for the main settings file for the application.
-  const SettingsFileProvider._()
+  SettingsFileProvider._()
     : super(
         from: null,
         argument: null,
@@ -50,7 +50,7 @@ String _$settingsFileHash() => r'98b93957cd675ecf3d627bbbb3d6a77ff40beda5';
 /// application.
 
 @ProviderFor(webLocalStorage)
-const webLocalStorageProvider = WebLocalStorageProvider._();
+final webLocalStorageProvider = WebLocalStorageProvider._();
 
 /// A provider for the local storage data map for the web version of the
 /// application.
@@ -60,7 +60,7 @@ final class WebLocalStorageProvider
     with $Provider<Storage> {
   /// A provider for the local storage data map for the web version of the
   /// application.
-  const WebLocalStorageProvider._()
+  WebLocalStorageProvider._()
     : super(
         from: null,
         argument: null,
@@ -98,13 +98,13 @@ String _$webLocalStorageHash() => r'50d83eb101a9fb85659a1001a54480b4c30a3c85';
 /// A provider for the settings map for the application.
 
 @ProviderFor(Settings)
-const settingsProvider = SettingsProvider._();
+final settingsProvider = SettingsProvider._();
 
 /// A provider for the settings map for the application.
 final class SettingsProvider
     extends $NotifierProvider<Settings, SplayTreeMap<String, dynamic>> {
   /// A provider for the settings map for the application.
-  const SettingsProvider._()
+  SettingsProvider._()
     : super(
         from: null,
         argument: null,
@@ -142,7 +142,6 @@ abstract class _$Settings extends $Notifier<SplayTreeMap<String, dynamic>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref
             as $Ref<
@@ -160,20 +159,20 @@ abstract class _$Settings extends $Notifier<SplayTreeMap<String, dynamic>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for whether the debug features and switches should be shown.
 
 @ProviderFor(EnableDebugMode)
-const enableDebugModeProvider = EnableDebugModeProvider._();
+final enableDebugModeProvider = EnableDebugModeProvider._();
 
 /// A provider for whether the debug features and switches should be shown.
 final class EnableDebugModeProvider
     extends $NotifierProvider<EnableDebugMode, bool> {
   /// A provider for whether the debug features and switches should be shown.
-  const EnableDebugModeProvider._()
+  EnableDebugModeProvider._()
     : super(
         from: null,
         argument: null,
@@ -209,7 +208,6 @@ abstract class _$EnableDebugMode extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -219,7 +217,7 @@ abstract class _$EnableDebugMode extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -227,7 +225,7 @@ abstract class _$EnableDebugMode extends $Notifier<bool> {
 /// of advanced features that might be confusing.
 
 @ProviderFor(EnableDadMode)
-const enableDadModeProvider = EnableDadModeProvider._();
+final enableDadModeProvider = EnableDadModeProvider._();
 
 /// A provider for whether dad mode should be active. This will hide a lot
 /// of advanced features that might be confusing.
@@ -235,7 +233,7 @@ final class EnableDadModeProvider
     extends $NotifierProvider<EnableDadMode, bool> {
   /// A provider for whether dad mode should be active. This will hide a lot
   /// of advanced features that might be confusing.
-  const EnableDadModeProvider._()
+  EnableDadModeProvider._()
     : super(
         from: null,
         argument: null,
@@ -272,7 +270,6 @@ abstract class _$EnableDadMode extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -282,14 +279,14 @@ abstract class _$EnableDadMode extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for exporting [Settings] to a file.
 
 @ProviderFor(exportSettings)
-const exportSettingsProvider = ExportSettingsFamily._();
+final exportSettingsProvider = ExportSettingsFamily._();
 
 /// A provider for exporting [Settings] to a file.
 
@@ -297,7 +294,7 @@ final class ExportSettingsProvider
     extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
     with $FutureModifier<void>, $FutureProvider<void> {
   /// A provider for exporting [Settings] to a file.
-  const ExportSettingsProvider._({
+  ExportSettingsProvider._({
     required ExportSettingsFamily super.from,
     required ({
       String? overrideName,
@@ -366,7 +363,7 @@ final class ExportSettingsFamily extends $Family
           FutureOr<void>,
           ({String? overrideName, bool downloadIfWeb, bool removeSensitiveData})
         > {
-  const ExportSettingsFamily._()
+  ExportSettingsFamily._()
     : super(
         retry: null,
         name: r'exportSettingsProvider',
@@ -397,7 +394,7 @@ final class ExportSettingsFamily extends $Family
 /// A provider for importing [Settings] from a file.
 
 @ProviderFor(importSettings)
-const importSettingsProvider = ImportSettingsProvider._();
+final importSettingsProvider = ImportSettingsProvider._();
 
 /// A provider for importing [Settings] from a file.
 
@@ -412,7 +409,7 @@ final class ImportSettingsProvider
         $FutureModifier<Map<String, dynamic>?>,
         $FutureProvider<Map<String, dynamic>?> {
   /// A provider for importing [Settings] from a file.
-  const ImportSettingsProvider._()
+  ImportSettingsProvider._()
     : super(
         from: null,
         argument: null,
@@ -444,7 +441,7 @@ String _$importSettingsHash() => r'915992cf797b53b2cbe104e37e9c16f4b51ef9d2';
 /// build method.
 
 @ProviderFor(reloadAllSettings)
-const reloadAllSettingsProvider = ReloadAllSettingsProvider._();
+final reloadAllSettingsProvider = ReloadAllSettingsProvider._();
 
 /// A provider for rebuilding all providers that reads [Settings] during the
 /// build method.
@@ -454,7 +451,7 @@ final class ReloadAllSettingsProvider
     with $Provider<String> {
   /// A provider for rebuilding all providers that reads [Settings] during the
   /// build method.
-  const ReloadAllSettingsProvider._()
+  ReloadAllSettingsProvider._()
     : super(
         from: null,
         argument: null,

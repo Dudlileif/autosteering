@@ -11,13 +11,13 @@ part of 'vehicle_debug_providers.dart';
 /// Whether to show vehicle debug polygons.
 
 @ProviderFor(DebugVehiclePolygons)
-const debugVehiclePolygonsProvider = DebugVehiclePolygonsProvider._();
+final debugVehiclePolygonsProvider = DebugVehiclePolygonsProvider._();
 
 /// Whether to show vehicle debug polygons.
 final class DebugVehiclePolygonsProvider
     extends $NotifierProvider<DebugVehiclePolygons, bool> {
   /// Whether to show vehicle debug polygons.
-  const DebugVehiclePolygonsProvider._()
+  DebugVehiclePolygonsProvider._()
     : super(
         from: null,
         argument: null,
@@ -54,7 +54,6 @@ abstract class _$DebugVehiclePolygons extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -64,20 +63,20 @@ abstract class _$DebugVehiclePolygons extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether to show vehicle steering debug features.
 
 @ProviderFor(DebugVehicleSteering)
-const debugVehicleSteeringProvider = DebugVehicleSteeringProvider._();
+final debugVehicleSteeringProvider = DebugVehicleSteeringProvider._();
 
 /// Whether to show vehicle steering debug features.
 final class DebugVehicleSteeringProvider
     extends $NotifierProvider<DebugVehicleSteering, bool> {
   /// Whether to show vehicle steering debug features.
-  const DebugVehicleSteeringProvider._()
+  DebugVehicleSteeringProvider._()
     : super(
         from: null,
         argument: null,
@@ -114,7 +113,6 @@ abstract class _$DebugVehicleSteering extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -124,20 +122,20 @@ abstract class _$DebugVehicleSteering extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether to show vehicle trajectory debug features.
 
 @ProviderFor(DebugVehicleTrajectory)
-const debugVehicleTrajectoryProvider = DebugVehicleTrajectoryProvider._();
+final debugVehicleTrajectoryProvider = DebugVehicleTrajectoryProvider._();
 
 /// Whether to show vehicle trajectory debug features.
 final class DebugVehicleTrajectoryProvider
     extends $NotifierProvider<DebugVehicleTrajectory, bool> {
   /// Whether to show vehicle trajectory debug features.
-  const DebugVehicleTrajectoryProvider._()
+  DebugVehicleTrajectoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -174,7 +172,6 @@ abstract class _$DebugVehicleTrajectory extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -184,20 +181,20 @@ abstract class _$DebugVehicleTrajectory extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether to show vehicle travelled path debug.
 
 @ProviderFor(DebugVehicleTravelledPath)
-const debugVehicleTravelledPathProvider = DebugVehicleTravelledPathProvider._();
+final debugVehicleTravelledPathProvider = DebugVehicleTravelledPathProvider._();
 
 /// Whether to show vehicle travelled path debug.
 final class DebugVehicleTravelledPathProvider
     extends $NotifierProvider<DebugVehicleTravelledPath, bool> {
   /// Whether to show vehicle travelled path debug.
-  const DebugVehicleTravelledPathProvider._()
+  DebugVehicleTravelledPathProvider._()
     : super(
         from: null,
         argument: null,
@@ -234,7 +231,6 @@ abstract class _$DebugVehicleTravelledPath extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -244,21 +240,21 @@ abstract class _$DebugVehicleTravelledPath extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// The amount of points [DebugVehicleTravelledPathList] should hold.
 
 @ProviderFor(DebugVehicleTravelledPathSize)
-const debugVehicleTravelledPathSizeProvider =
+final debugVehicleTravelledPathSizeProvider =
     DebugVehicleTravelledPathSizeProvider._();
 
 /// The amount of points [DebugVehicleTravelledPathList] should hold.
 final class DebugVehicleTravelledPathSizeProvider
     extends $NotifierProvider<DebugVehicleTravelledPathSize, int> {
   /// The amount of points [DebugVehicleTravelledPathList] should hold.
-  const DebugVehicleTravelledPathSizeProvider._()
+  DebugVehicleTravelledPathSizeProvider._()
     : super(
         from: null,
         argument: null,
@@ -295,7 +291,6 @@ abstract class _$DebugVehicleTravelledPathSize extends $Notifier<int> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<int, int>;
     final element =
         ref.element
@@ -305,7 +300,7 @@ abstract class _$DebugVehicleTravelledPathSize extends $Notifier<int> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -313,7 +308,7 @@ abstract class _$DebugVehicleTravelledPathSize extends $Notifier<int> {
 /// vehicle.
 
 @ProviderFor(DebugVehicleTravelledPathList)
-const debugVehicleTravelledPathListProvider =
+final debugVehicleTravelledPathListProvider =
     DebugVehicleTravelledPathListProvider._();
 
 /// A list of the last [DebugVehicleTravelledPathSize] position points for the
@@ -322,7 +317,7 @@ final class DebugVehicleTravelledPathListProvider
     extends $NotifierProvider<DebugVehicleTravelledPathList, List<LatLng>> {
   /// A list of the last [DebugVehicleTravelledPathSize] position points for the
   /// vehicle.
-  const DebugVehicleTravelledPathListProvider._()
+  DebugVehicleTravelledPathListProvider._()
     : super(
         from: null,
         argument: null,
@@ -360,7 +355,6 @@ abstract class _$DebugVehicleTravelledPathList extends $Notifier<List<LatLng>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<List<LatLng>, List<LatLng>>;
     final element =
         ref.element
@@ -370,20 +364,20 @@ abstract class _$DebugVehicleTravelledPathList extends $Notifier<List<LatLng>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether to show vehicle hitches debug.
 
 @ProviderFor(DebugVehicleHitches)
-const debugVehicleHitchesProvider = DebugVehicleHitchesProvider._();
+final debugVehicleHitchesProvider = DebugVehicleHitchesProvider._();
 
 /// Whether to show vehicle hitches debug.
 final class DebugVehicleHitchesProvider
     extends $NotifierProvider<DebugVehicleHitches, bool> {
   /// Whether to show vehicle hitches debug.
-  const DebugVehicleHitchesProvider._()
+  DebugVehicleHitchesProvider._()
     : super(
         from: null,
         argument: null,
@@ -420,7 +414,6 @@ abstract class _$DebugVehicleHitches extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -430,21 +423,21 @@ abstract class _$DebugVehicleHitches extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether to show vehicle antenna position debug.
 
 @ProviderFor(DebugVehicleAntennaPosition)
-const debugVehicleAntennaPositionProvider =
+final debugVehicleAntennaPositionProvider =
     DebugVehicleAntennaPositionProvider._();
 
 /// Whether to show vehicle antenna position debug.
 final class DebugVehicleAntennaPositionProvider
     extends $NotifierProvider<DebugVehicleAntennaPosition, bool> {
   /// Whether to show vehicle antenna position debug.
-  const DebugVehicleAntennaPositionProvider._()
+  DebugVehicleAntennaPositionProvider._()
     : super(
         from: null,
         argument: null,
@@ -481,7 +474,6 @@ abstract class _$DebugVehicleAntennaPosition extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -491,21 +483,21 @@ abstract class _$DebugVehicleAntennaPosition extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// The amount of seconds vehicle trajectories should predict.
 
 @ProviderFor(DebugVehicleTrajectorySeconds)
-const debugVehicleTrajectorySecondsProvider =
+final debugVehicleTrajectorySecondsProvider =
     DebugVehicleTrajectorySecondsProvider._();
 
 /// The amount of seconds vehicle trajectories should predict.
 final class DebugVehicleTrajectorySecondsProvider
     extends $NotifierProvider<DebugVehicleTrajectorySeconds, double> {
   /// The amount of seconds vehicle trajectories should predict.
-  const DebugVehicleTrajectorySecondsProvider._()
+  DebugVehicleTrajectorySecondsProvider._()
     : super(
         from: null,
         argument: null,
@@ -542,7 +534,6 @@ abstract class _$DebugVehicleTrajectorySeconds extends $Notifier<double> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -552,21 +543,21 @@ abstract class _$DebugVehicleTrajectorySeconds extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// The minimum length vehicle trajectories should predict.
 
 @ProviderFor(DebugVehicleTrajectoryMinLength)
-const debugVehicleTrajectoryMinLengthProvider =
+final debugVehicleTrajectoryMinLengthProvider =
     DebugVehicleTrajectoryMinLengthProvider._();
 
 /// The minimum length vehicle trajectories should predict.
 final class DebugVehicleTrajectoryMinLengthProvider
     extends $NotifierProvider<DebugVehicleTrajectoryMinLength, double> {
   /// The minimum length vehicle trajectories should predict.
-  const DebugVehicleTrajectoryMinLengthProvider._()
+  DebugVehicleTrajectoryMinLengthProvider._()
     : super(
         from: null,
         argument: null,
@@ -603,7 +594,6 @@ abstract class _$DebugVehicleTrajectoryMinLength extends $Notifier<double> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -613,6 +603,6 @@ abstract class _$DebugVehicleTrajectoryMinLength extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

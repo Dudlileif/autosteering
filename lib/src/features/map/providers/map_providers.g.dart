@@ -11,12 +11,12 @@ part of 'map_providers.dart';
 /// Whether the map is ready to be shown or not.
 
 @ProviderFor(MapReady)
-const mapReadyProvider = MapReadyProvider._();
+final mapReadyProvider = MapReadyProvider._();
 
 /// Whether the map is ready to be shown or not.
 final class MapReadyProvider extends $NotifierProvider<MapReady, bool> {
   /// Whether the map is ready to be shown or not.
-  const MapReadyProvider._()
+  MapReadyProvider._()
     : super(
         from: null,
         argument: null,
@@ -52,7 +52,6 @@ abstract class _$MapReady extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -62,7 +61,7 @@ abstract class _$MapReady extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -70,7 +69,7 @@ abstract class _$MapReady extends $Notifier<bool> {
 /// outside the widget code itself.
 
 @ProviderFor(MainMapController)
-const mainMapControllerProvider = MainMapControllerProvider._();
+final mainMapControllerProvider = MainMapControllerProvider._();
 
 /// The main [MapController] provider, which allows controlling the map from
 /// outside the widget code itself.
@@ -78,7 +77,7 @@ final class MainMapControllerProvider
     extends $NotifierProvider<MainMapController, MapController> {
   /// The main [MapController] provider, which allows controlling the map from
   /// outside the widget code itself.
-  const MainMapControllerProvider._()
+  MainMapControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -115,7 +114,6 @@ abstract class _$MainMapController extends $Notifier<MapController> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<MapController, MapController>;
     final element =
         ref.element
@@ -125,20 +123,20 @@ abstract class _$MainMapController extends $Notifier<MapController> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// The home position of the vehicle, i.e. where the vehicle will reset to.
 
 @ProviderFor(HomePosition)
-const homePositionProvider = HomePositionProvider._();
+final homePositionProvider = HomePositionProvider._();
 
 /// The home position of the vehicle, i.e. where the vehicle will reset to.
 final class HomePositionProvider
     extends $NotifierProvider<HomePosition, LatLng> {
   /// The home position of the vehicle, i.e. where the vehicle will reset to.
-  const HomePositionProvider._()
+  HomePositionProvider._()
     : super(
         from: null,
         argument: null,
@@ -174,7 +172,6 @@ abstract class _$HomePosition extends $Notifier<LatLng> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<LatLng, LatLng>;
     final element =
         ref.element
@@ -184,20 +181,20 @@ abstract class _$HomePosition extends $Notifier<LatLng> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether the map should center on the vehicle or if it could be moved freely.
 
 @ProviderFor(CenterMapOnVehicle)
-const centerMapOnVehicleProvider = CenterMapOnVehicleProvider._();
+final centerMapOnVehicleProvider = CenterMapOnVehicleProvider._();
 
 /// Whether the map should center on the vehicle or if it could be moved freely.
 final class CenterMapOnVehicleProvider
     extends $NotifierProvider<CenterMapOnVehicle, bool> {
   /// Whether the map should center on the vehicle or if it could be moved freely.
-  const CenterMapOnVehicleProvider._()
+  CenterMapOnVehicleProvider._()
     : super(
         from: null,
         argument: null,
@@ -234,7 +231,6 @@ abstract class _$CenterMapOnVehicle extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -244,7 +240,7 @@ abstract class _$CenterMapOnVehicle extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -253,7 +249,7 @@ abstract class _$CenterMapOnVehicle extends $Notifier<bool> {
 /// The map will keep zooming in/out while the button is held down.
 
 @ProviderFor(ZoomTimerController)
-const zoomTimerControllerProvider = ZoomTimerControllerProvider._();
+final zoomTimerControllerProvider = ZoomTimerControllerProvider._();
 
 /// A provider for controlling the zoom when a gamepad button is held down.
 ///
@@ -263,7 +259,7 @@ final class ZoomTimerControllerProvider
   /// A provider for controlling the zoom when a gamepad button is held down.
   ///
   /// The map will keep zooming in/out while the button is held down.
-  const ZoomTimerControllerProvider._()
+  ZoomTimerControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -302,7 +298,6 @@ abstract class _$ZoomTimerController extends $Notifier<Timer?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Timer?, Timer?>;
     final element =
         ref.element
@@ -312,14 +307,14 @@ abstract class _$ZoomTimerController extends $Notifier<Timer?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// How much the map center should be offset from the vehicle.
 
 @ProviderFor(mapOffset)
-const mapOffsetProvider = MapOffsetProvider._();
+final mapOffsetProvider = MapOffsetProvider._();
 
 /// How much the map center should be offset from the vehicle.
 
@@ -328,7 +323,7 @@ final class MapOffsetProvider
         $FunctionalProvider<MapCenterOffset, MapCenterOffset, MapCenterOffset>
     with $Provider<MapCenterOffset> {
   /// How much the map center should be offset from the vehicle.
-  const MapOffsetProvider._()
+  MapOffsetProvider._()
     : super(
         from: null,
         argument: null,
@@ -367,7 +362,7 @@ String _$mapOffsetHash() => r'b8bbceca43463ca497cded9989ed80bc93c1fc98';
 /// 2D view.
 
 @ProviderFor(MapOffset2D)
-const mapOffset2DProvider = MapOffset2DProvider._();
+final mapOffset2DProvider = MapOffset2DProvider._();
 
 /// How much the map center should be offset from the vehicle when using
 /// 2D view.
@@ -375,7 +370,7 @@ final class MapOffset2DProvider
     extends $NotifierProvider<MapOffset2D, MapCenterOffset> {
   /// How much the map center should be offset from the vehicle when using
   /// 2D view.
-  const MapOffset2DProvider._()
+  MapOffset2DProvider._()
     : super(
         from: null,
         argument: null,
@@ -412,7 +407,6 @@ abstract class _$MapOffset2D extends $Notifier<MapCenterOffset> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<MapCenterOffset, MapCenterOffset>;
     final element =
         ref.element
@@ -422,7 +416,7 @@ abstract class _$MapOffset2D extends $Notifier<MapCenterOffset> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -430,7 +424,7 @@ abstract class _$MapOffset2D extends $Notifier<MapCenterOffset> {
 /// 3D view.
 
 @ProviderFor(MapOffset3D)
-const mapOffset3DProvider = MapOffset3DProvider._();
+final mapOffset3DProvider = MapOffset3DProvider._();
 
 /// How much the map center should be offset from the vehicle when using
 /// 3D view.
@@ -438,7 +432,7 @@ final class MapOffset3DProvider
     extends $NotifierProvider<MapOffset3D, MapCenterOffset> {
   /// How much the map center should be offset from the vehicle when using
   /// 3D view.
-  const MapOffset3DProvider._()
+  MapOffset3DProvider._()
     : super(
         from: null,
         argument: null,
@@ -475,7 +469,6 @@ abstract class _$MapOffset3D extends $Notifier<MapCenterOffset> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<MapCenterOffset, MapCenterOffset>;
     final element =
         ref.element
@@ -485,7 +478,7 @@ abstract class _$MapOffset3D extends $Notifier<MapCenterOffset> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -493,7 +486,7 @@ abstract class _$MapOffset3D extends $Notifier<MapCenterOffset> {
 /// actual center position of the map.
 
 @ProviderFor(offsetVehiclePosition)
-const offsetVehiclePositionProvider = OffsetVehiclePositionProvider._();
+final offsetVehiclePositionProvider = OffsetVehiclePositionProvider._();
 
 /// The map center offset applied to the vehicle position, contains the
 /// actual center position of the map.
@@ -503,7 +496,7 @@ final class OffsetVehiclePositionProvider
     with $Provider<LatLng> {
   /// The map center offset applied to the vehicle position, contains the
   /// actual center position of the map.
-  const OffsetVehiclePositionProvider._()
+  OffsetVehiclePositionProvider._()
     : super(
         from: null,
         argument: null,
@@ -542,13 +535,13 @@ String _$offsetVehiclePositionHash() =>
 /// Whether the map always should point to the north and not rotate.
 
 @ProviderFor(AlwaysPointNorth)
-const alwaysPointNorthProvider = AlwaysPointNorthProvider._();
+final alwaysPointNorthProvider = AlwaysPointNorthProvider._();
 
 /// Whether the map always should point to the north and not rotate.
 final class AlwaysPointNorthProvider
     extends $NotifierProvider<AlwaysPointNorth, bool> {
   /// Whether the map always should point to the north and not rotate.
-  const AlwaysPointNorthProvider._()
+  AlwaysPointNorthProvider._()
     : super(
         from: null,
         argument: null,
@@ -584,7 +577,6 @@ abstract class _$AlwaysPointNorth extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -594,7 +586,7 @@ abstract class _$AlwaysPointNorth extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -602,7 +594,7 @@ abstract class _$AlwaysPointNorth extends $Notifier<bool> {
 /// view is used.
 
 @ProviderFor(MapUse3DPerspective)
-const mapUse3DPerspectiveProvider = MapUse3DPerspectiveProvider._();
+final mapUse3DPerspectiveProvider = MapUse3DPerspectiveProvider._();
 
 /// Whether to enable a 3D perspective for the map, otherwise an orthogonal
 /// view is used.
@@ -610,7 +602,7 @@ final class MapUse3DPerspectiveProvider
     extends $NotifierProvider<MapUse3DPerspective, bool> {
   /// Whether to enable a 3D perspective for the map, otherwise an orthogonal
   /// view is used.
-  const MapUse3DPerspectiveProvider._()
+  MapUse3DPerspectiveProvider._()
     : super(
         from: null,
         argument: null,
@@ -648,7 +640,6 @@ abstract class _$MapUse3DPerspective extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -658,7 +649,7 @@ abstract class _$MapUse3DPerspective extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -666,7 +657,7 @@ abstract class _$MapUse3DPerspective extends $Notifier<bool> {
 /// from the orthogonal view.
 
 @ProviderFor(Map3DPerspectiveAngle)
-const map3DPerspectiveAngleProvider = Map3DPerspectiveAngleProvider._();
+final map3DPerspectiveAngleProvider = Map3DPerspectiveAngleProvider._();
 
 /// The angle that the 3D perspective should be seen from, as in radians
 /// from the orthogonal view.
@@ -674,7 +665,7 @@ final class Map3DPerspectiveAngleProvider
     extends $NotifierProvider<Map3DPerspectiveAngle, double> {
   /// The angle that the 3D perspective should be seen from, as in radians
   /// from the orthogonal view.
-  const Map3DPerspectiveAngleProvider._()
+  Map3DPerspectiveAngleProvider._()
     : super(
         from: null,
         argument: null,
@@ -712,7 +703,6 @@ abstract class _$Map3DPerspectiveAngle extends $Notifier<double> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -722,19 +712,19 @@ abstract class _$Map3DPerspectiveAngle extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// The zoom value that the map should use when being created.
 
 @ProviderFor(MapZoom)
-const mapZoomProvider = MapZoomProvider._();
+final mapZoomProvider = MapZoomProvider._();
 
 /// The zoom value that the map should use when being created.
 final class MapZoomProvider extends $NotifierProvider<MapZoom, double> {
   /// The zoom value that the map should use when being created.
-  const MapZoomProvider._()
+  MapZoomProvider._()
     : super(
         from: null,
         argument: null,
@@ -770,7 +760,6 @@ abstract class _$MapZoom extends $Notifier<double> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -780,7 +769,7 @@ abstract class _$MapZoom extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -788,7 +777,7 @@ abstract class _$MapZoom extends $Notifier<double> {
 /// at the given [path].
 
 @ProviderFor(mapCacheDate)
-const mapCacheDateProvider = MapCacheDateFamily._();
+final mapCacheDateProvider = MapCacheDateFamily._();
 
 /// A provider for finding the first cache date of the map layer cache
 /// at the given [path].
@@ -803,7 +792,7 @@ final class MapCacheDateProvider
     with $FutureModifier<DateTime?>, $FutureProvider<DateTime?> {
   /// A provider for finding the first cache date of the map layer cache
   /// at the given [path].
-  const MapCacheDateProvider._({
+  MapCacheDateProvider._({
     required MapCacheDateFamily super.from,
     required String super.argument,
   }) : super(
@@ -853,7 +842,7 @@ String _$mapCacheDateHash() => r'18cbbbeec7b58f48dcd447634fc9cffd0dcbd75a';
 
 final class MapCacheDateFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<DateTime?>, String> {
-  const MapCacheDateFamily._()
+  MapCacheDateFamily._()
     : super(
         retry: null,
         name: r'mapCacheDateProvider',
@@ -875,7 +864,7 @@ final class MapCacheDateFamily extends $Family
 /// A provider for listing all the map layer cache folders.
 
 @ProviderFor(mapCacheDirectories)
-const mapCacheDirectoriesProvider = MapCacheDirectoriesProvider._();
+final mapCacheDirectoriesProvider = MapCacheDirectoriesProvider._();
 
 /// A provider for listing all the map layer cache folders.
 
@@ -888,7 +877,7 @@ final class MapCacheDirectoriesProvider
         >
     with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
   /// A provider for listing all the map layer cache folders.
-  const MapCacheDirectoriesProvider._()
+  MapCacheDirectoriesProvider._()
     : super(
         from: null,
         argument: null,
@@ -920,13 +909,13 @@ String _$mapCacheDirectoriesHash() =>
 /// Whether the map should be allowed to download tiles over the internet.
 
 @ProviderFor(MapAllowDownload)
-const mapAllowDownloadProvider = MapAllowDownloadProvider._();
+final mapAllowDownloadProvider = MapAllowDownloadProvider._();
 
 /// Whether the map should be allowed to download tiles over the internet.
 final class MapAllowDownloadProvider
     extends $NotifierProvider<MapAllowDownload, bool> {
   /// Whether the map should be allowed to download tiles over the internet.
-  const MapAllowDownloadProvider._()
+  MapAllowDownloadProvider._()
     : super(
         from: null,
         argument: null,
@@ -962,7 +951,6 @@ abstract class _$MapAllowDownload extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -972,20 +960,20 @@ abstract class _$MapAllowDownload extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// The size of the currently displayed map grid.
 
 @ProviderFor(MapGridSize)
-const mapGridSizeProvider = MapGridSizeProvider._();
+final mapGridSizeProvider = MapGridSizeProvider._();
 
 /// The size of the currently displayed map grid.
 final class MapGridSizeProvider
     extends $NotifierProvider<MapGridSize, double?> {
   /// The size of the currently displayed map grid.
-  const MapGridSizeProvider._()
+  MapGridSizeProvider._()
     : super(
         from: null,
         argument: null,
@@ -1021,7 +1009,6 @@ abstract class _$MapGridSize extends $Notifier<double?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -1031,20 +1018,20 @@ abstract class _$MapGridSize extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether the grid size indicator should be shown.
 
 @ProviderFor(ShowGridSizeIndicator)
-const showGridSizeIndicatorProvider = ShowGridSizeIndicatorProvider._();
+final showGridSizeIndicatorProvider = ShowGridSizeIndicatorProvider._();
 
 /// Whether the grid size indicator should be shown.
 final class ShowGridSizeIndicatorProvider
     extends $NotifierProvider<ShowGridSizeIndicator, bool> {
   /// Whether the grid size indicator should be shown.
-  const ShowGridSizeIndicatorProvider._()
+  ShowGridSizeIndicatorProvider._()
     : super(
         from: null,
         argument: null,
@@ -1081,7 +1068,6 @@ abstract class _$ShowGridSizeIndicator extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -1091,6 +1077,6 @@ abstract class _$ShowGridSizeIndicator extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

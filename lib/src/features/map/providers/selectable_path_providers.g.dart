@@ -11,13 +11,13 @@ part of 'selectable_path_providers.dart';
 /// A provider for whether the selectable path feature should be enabled.
 
 @ProviderFor(EnableSelectablePath)
-const enableSelectablePathProvider = EnableSelectablePathProvider._();
+final enableSelectablePathProvider = EnableSelectablePathProvider._();
 
 /// A provider for whether the selectable path feature should be enabled.
 final class EnableSelectablePathProvider
     extends $NotifierProvider<EnableSelectablePath, bool> {
   /// A provider for whether the selectable path feature should be enabled.
-  const EnableSelectablePathProvider._()
+  EnableSelectablePathProvider._()
     : super(
         from: null,
         argument: null,
@@ -54,7 +54,6 @@ abstract class _$EnableSelectablePath extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -64,20 +63,20 @@ abstract class _$EnableSelectablePath extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the index of the start point of the selected path.
 
 @ProviderFor(SelectablePathIndexStart)
-const selectablePathIndexStartProvider = SelectablePathIndexStartProvider._();
+final selectablePathIndexStartProvider = SelectablePathIndexStartProvider._();
 
 /// A provider for the index of the start point of the selected path.
 final class SelectablePathIndexStartProvider
     extends $NotifierProvider<SelectablePathIndexStart, int?> {
   /// A provider for the index of the start point of the selected path.
-  const SelectablePathIndexStartProvider._()
+  SelectablePathIndexStartProvider._()
     : super(
         from: null,
         argument: null,
@@ -114,7 +113,6 @@ abstract class _$SelectablePathIndexStart extends $Notifier<int?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<int?, int?>;
     final element =
         ref.element
@@ -124,20 +122,20 @@ abstract class _$SelectablePathIndexStart extends $Notifier<int?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the index of the end point of the selected path.
 
 @ProviderFor(SelectablePathIndexEnd)
-const selectablePathIndexEndProvider = SelectablePathIndexEndProvider._();
+final selectablePathIndexEndProvider = SelectablePathIndexEndProvider._();
 
 /// A provider for the index of the end point of the selected path.
 final class SelectablePathIndexEndProvider
     extends $NotifierProvider<SelectablePathIndexEnd, int?> {
   /// A provider for the index of the end point of the selected path.
-  const SelectablePathIndexEndProvider._()
+  SelectablePathIndexEndProvider._()
     : super(
         from: null,
         argument: null,
@@ -174,7 +172,6 @@ abstract class _$SelectablePathIndexEnd extends $Notifier<int?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<int?, int?>;
     final element =
         ref.element
@@ -184,20 +181,20 @@ abstract class _$SelectablePathIndexEnd extends $Notifier<int?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the selectable path to get indices from.
 
 @ProviderFor(SelectablePathPoints)
-const selectablePathPointsProvider = SelectablePathPointsProvider._();
+final selectablePathPointsProvider = SelectablePathPointsProvider._();
 
 /// A provider for the selectable path to get indices from.
 final class SelectablePathPointsProvider
     extends $NotifierProvider<SelectablePathPoints, Iterable<Geographic>?> {
   /// A provider for the selectable path to get indices from.
-  const SelectablePathPointsProvider._()
+  SelectablePathPointsProvider._()
     : super(
         from: null,
         argument: null,
@@ -234,7 +231,6 @@ abstract class _$SelectablePathPoints extends $Notifier<Iterable<Geographic>?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Iterable<Geographic>?, Iterable<Geographic>?>;
     final element =
         ref.element
@@ -244,14 +240,14 @@ abstract class _$SelectablePathPoints extends $Notifier<Iterable<Geographic>?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for several segment selections on the selectable path.
 
 @ProviderFor(SelectablePathIndexSegments)
-const selectablePathIndexSegmentsProvider =
+final selectablePathIndexSegmentsProvider =
     SelectablePathIndexSegmentsProvider._();
 
 /// A provider for several segment selections on the selectable path.
@@ -262,7 +258,7 @@ final class SelectablePathIndexSegmentsProvider
           Iterable<Iterable<int>>?
         > {
   /// A provider for several segment selections on the selectable path.
-  const SelectablePathIndexSegmentsProvider._()
+  SelectablePathIndexSegmentsProvider._()
     : super(
         from: null,
         argument: null,
@@ -300,7 +296,6 @@ abstract class _$SelectablePathIndexSegments
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref as $Ref<Iterable<Iterable<int>>?, Iterable<Iterable<int>>?>;
     final element =
@@ -311,7 +306,7 @@ abstract class _$SelectablePathIndexSegments
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -319,7 +314,7 @@ abstract class _$SelectablePathIndexSegments
 /// [SelectablePathIndexStart] and [SelectablePathIndexEnd].
 
 @ProviderFor(selectablePathIndices)
-const selectablePathIndicesProvider = SelectablePathIndicesProvider._();
+final selectablePathIndicesProvider = SelectablePathIndicesProvider._();
 
 /// A provider for the indices of the [SelectablePathPoints] that lie between
 /// [SelectablePathIndexStart] and [SelectablePathIndexEnd].
@@ -329,7 +324,7 @@ final class SelectablePathIndicesProvider
     with $Provider<Iterable<int>?> {
   /// A provider for the indices of the [SelectablePathPoints] that lie between
   /// [SelectablePathIndexStart] and [SelectablePathIndexEnd].
-  const SelectablePathIndicesProvider._()
+  SelectablePathIndicesProvider._()
     : super(
         from: null,
         argument: null,
@@ -369,7 +364,7 @@ String _$selectablePathIndicesHash() =>
 /// [SelectablePathIndexStart] and [SelectablePathIndexEnd].
 
 @ProviderFor(selectablePathStartToEnd)
-const selectablePathStartToEndProvider = SelectablePathStartToEndProvider._();
+final selectablePathStartToEndProvider = SelectablePathStartToEndProvider._();
 
 /// A provider for the points of the [SelectablePathPoints] that lie between
 /// [SelectablePathIndexStart] and [SelectablePathIndexEnd].
@@ -384,7 +379,7 @@ final class SelectablePathStartToEndProvider
     with $Provider<Iterable<Geographic>?> {
   /// A provider for the points of the [SelectablePathPoints] that lie between
   /// [SelectablePathIndexStart] and [SelectablePathIndexEnd].
-  const SelectablePathStartToEndProvider._()
+  SelectablePathStartToEndProvider._()
     : super(
         from: null,
         argument: null,

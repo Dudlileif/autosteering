@@ -11,7 +11,7 @@ part of 'file_providers.dart';
 /// A provider for the main user file directory for the application.
 
 @ProviderFor(fileDirectory)
-const fileDirectoryProvider = FileDirectoryProvider._();
+final fileDirectoryProvider = FileDirectoryProvider._();
 
 /// A provider for the main user file directory for the application.
 
@@ -24,7 +24,7 @@ final class FileDirectoryProvider
         >
     with $FutureModifier<Directory>, $FutureProvider<Directory> {
   /// A provider for the main user file directory for the application.
-  const FileDirectoryProvider._()
+  FileDirectoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -56,7 +56,7 @@ String _$fileDirectoryHash() => r'de03bf7973f971ec08ab41dca91e128bdf1cde67';
 /// Returns the size in number of bytes.
 
 @ProviderFor(directorySize)
-const directorySizeProvider = DirectorySizeFamily._();
+final directorySizeProvider = DirectorySizeFamily._();
 
 /// A provider for finding the size of the [Directory] at [path].
 ///
@@ -68,7 +68,7 @@ final class DirectorySizeProvider
   /// A provider for finding the size of the [Directory] at [path].
   ///
   /// Returns the size in number of bytes.
-  const DirectorySizeProvider._({
+  DirectorySizeProvider._({
     required DirectorySizeFamily super.from,
     required String super.argument,
   }) : super(
@@ -119,7 +119,7 @@ String _$directorySizeHash() => r'b90c199175380fd44b557570d59b9d1d5b227d54';
 
 final class DirectorySizeFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<int?>, String> {
-  const DirectorySizeFamily._()
+  DirectorySizeFamily._()
     : super(
         retry: null,
         name: r'directorySizeProvider',
@@ -144,7 +144,7 @@ final class DirectorySizeFamily extends $Family
 /// Returns true if the directory no longer exists.
 
 @ProviderFor(directoryDelete)
-const directoryDeleteProvider = DirectoryDeleteFamily._();
+final directoryDeleteProvider = DirectoryDeleteFamily._();
 
 /// A provider for deleting the [Directory] at [path].
 ///
@@ -156,7 +156,7 @@ final class DirectoryDeleteProvider
   /// A provider for deleting the [Directory] at [path].
   ///
   /// Returns true if the directory no longer exists.
-  const DirectoryDeleteProvider._({
+  DirectoryDeleteProvider._({
     required DirectoryDeleteFamily super.from,
     required String super.argument,
   }) : super(
@@ -207,7 +207,7 @@ String _$directoryDeleteHash() => r'90572cbddfc04c88c20660db40dc9e98ce7cd066';
 
 final class DirectoryDeleteFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<bool>, String> {
-  const DirectoryDeleteFamily._()
+  DirectoryDeleteFamily._()
     : super(
         retry: null,
         name: r'directoryDeleteProvider',
@@ -233,7 +233,7 @@ final class DirectoryDeleteFamily extends $Family
 /// Caution: Expects [object] to have a .toJson() method implemented.
 
 @ProviderFor(saveJsonToFileDirectory)
-const saveJsonToFileDirectoryProvider = SaveJsonToFileDirectoryFamily._();
+final saveJsonToFileDirectoryProvider = SaveJsonToFileDirectoryFamily._();
 
 /// A provider for saving [object] to [fileName].json to a file in the [folder]
 /// in the file drectory.
@@ -247,7 +247,7 @@ final class SaveJsonToFileDirectoryProvider
   /// in the file drectory.
   ///
   /// Caution: Expects [object] to have a .toJson() method implemented.
-  const SaveJsonToFileDirectoryProvider._({
+  SaveJsonToFileDirectoryProvider._({
     required SaveJsonToFileDirectoryFamily super.from,
     required ({
       dynamic object,
@@ -333,7 +333,7 @@ final class SaveJsonToFileDirectoryFamily extends $Family
             bool downloadIfWeb,
           })
         > {
-  const SaveJsonToFileDirectoryFamily._()
+  SaveJsonToFileDirectoryFamily._()
     : super(
         retry: null,
         name: r'saveJsonToFileDirectoryProvider',
@@ -374,7 +374,7 @@ final class SaveJsonToFileDirectoryFamily extends $Family
 /// Caution: Expects [object] to have a .toJson() method implemented.
 
 @ProviderFor(exportJsonToFileDirectory)
-const exportJsonToFileDirectoryProvider = ExportJsonToFileDirectoryFamily._();
+final exportJsonToFileDirectoryProvider = ExportJsonToFileDirectoryFamily._();
 
 /// A provider for saving [object] to [fileName].json to a file in the [folder]
 /// in the file drectory.
@@ -388,7 +388,7 @@ final class ExportJsonToFileDirectoryProvider
   /// in the file drectory.
   ///
   /// Caution: Expects [object] to have a .toJson() method implemented.
-  const ExportJsonToFileDirectoryProvider._({
+  ExportJsonToFileDirectoryProvider._({
     required ExportJsonToFileDirectoryFamily super.from,
     required ({
       dynamic object,
@@ -474,7 +474,7 @@ final class ExportJsonToFileDirectoryFamily extends $Family
             bool downloadIfWeb,
           })
         > {
-  const ExportJsonToFileDirectoryFamily._()
+  ExportJsonToFileDirectoryFamily._()
     : super(
         retry: null,
         name: r'exportJsonToFileDirectoryProvider',
@@ -513,7 +513,7 @@ final class ExportJsonToFileDirectoryFamily extends $Family
 /// the given type in the in the user file directory.
 
 @ProviderFor(savedFiles)
-const savedFilesProvider = SavedFilesFamily._();
+final savedFilesProvider = SavedFilesFamily._();
 
 /// A provider for reading and holding all the saved objects of
 /// the given type in the in the user file directory.
@@ -528,7 +528,7 @@ final class SavedFilesProvider
     with $FutureModifier<List<dynamic>>, $FutureProvider<List<dynamic>> {
   /// A provider for reading and holding all the saved objects of
   /// the given type in the in the user file directory.
-  const SavedFilesProvider._({
+  SavedFilesProvider._({
     required SavedFilesFamily super.from,
     required ({
       dynamic Function(Map<String, dynamic> json) fromJson,
@@ -607,7 +607,7 @@ final class SavedFilesFamily extends $Family
             bool elementsInSubFolders,
           })
         > {
-  const SavedFilesFamily._()
+  SavedFilesFamily._()
     : super(
         retry: null,
         name: r'savedFilesProvider',
@@ -642,7 +642,7 @@ final class SavedFilesFamily extends $Family
 /// the given type in the in the user file directory.
 
 @ProviderFor(savedFilesInSubDirectories)
-const savedFilesInSubDirectoriesProvider = SavedFilesInSubDirectoriesFamily._();
+final savedFilesInSubDirectoriesProvider = SavedFilesInSubDirectoriesFamily._();
 
 /// A provider for reading and holding all the saved objects of
 /// the given type in the in the user file directory.
@@ -657,7 +657,7 @@ final class SavedFilesInSubDirectoriesProvider
     with $FutureModifier<List<dynamic>>, $FutureProvider<List<dynamic>> {
   /// A provider for reading and holding all the saved objects of
   /// the given type in the in the user file directory.
-  const SavedFilesInSubDirectoriesProvider._({
+  SavedFilesInSubDirectoriesProvider._({
     required SavedFilesInSubDirectoriesFamily super.from,
     required ({
       dynamic Function(Map<String, dynamic> json) fromJson,
@@ -734,7 +734,7 @@ final class SavedFilesInSubDirectoriesFamily extends $Family
             bool rebuildOnFileModification,
           })
         > {
-  const SavedFilesInSubDirectoriesFamily._()
+  SavedFilesInSubDirectoriesFamily._()
     : super(
         retry: null,
         name: r'savedFilesInSubDirectoriesProvider',
@@ -766,7 +766,7 @@ final class SavedFilesInSubDirectoriesFamily extends $Family
 /// A provider for deleting the [fileName] in [folder] if it exists.
 
 @ProviderFor(deleteJsonFromFileDirectory)
-const deleteJsonFromFileDirectoryProvider =
+final deleteJsonFromFileDirectoryProvider =
     DeleteJsonFromFileDirectoryFamily._();
 
 /// A provider for deleting the [fileName] in [folder] if it exists.
@@ -775,7 +775,7 @@ final class DeleteJsonFromFileDirectoryProvider
     extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
     with $FutureModifier<void>, $FutureProvider<void> {
   /// A provider for deleting the [fileName] in [folder] if it exists.
-  const DeleteJsonFromFileDirectoryProvider._({
+  DeleteJsonFromFileDirectoryProvider._({
     required DeleteJsonFromFileDirectoryFamily super.from,
     required ({String fileName, String folder}) super.argument,
   }) : super(
@@ -834,7 +834,7 @@ final class DeleteJsonFromFileDirectoryFamily extends $Family
           FutureOr<void>,
           ({String fileName, String folder})
         > {
-  const DeleteJsonFromFileDirectoryFamily._()
+  DeleteJsonFromFileDirectoryFamily._()
     : super(
         retry: null,
         name: r'deleteJsonFromFileDirectoryProvider',
@@ -860,7 +860,7 @@ final class DeleteJsonFromFileDirectoryFamily extends $Family
 /// A provider for deleting the [directoryName] in [folder] if it exists.
 
 @ProviderFor(deleteDirectoryFromFileDirectory)
-const deleteDirectoryFromFileDirectoryProvider =
+final deleteDirectoryFromFileDirectoryProvider =
     DeleteDirectoryFromFileDirectoryFamily._();
 
 /// A provider for deleting the [directoryName] in [folder] if it exists.
@@ -869,7 +869,7 @@ final class DeleteDirectoryFromFileDirectoryProvider
     extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
     with $FutureModifier<void>, $FutureProvider<void> {
   /// A provider for deleting the [directoryName] in [folder] if it exists.
-  const DeleteDirectoryFromFileDirectoryProvider._({
+  DeleteDirectoryFromFileDirectoryProvider._({
     required DeleteDirectoryFromFileDirectoryFamily super.from,
     required ({String directoryName, String folder}) super.argument,
   }) : super(
@@ -928,7 +928,7 @@ final class DeleteDirectoryFromFileDirectoryFamily extends $Family
           FutureOr<void>,
           ({String directoryName, String folder})
         > {
-  const DeleteDirectoryFromFileDirectoryFamily._()
+  DeleteDirectoryFromFileDirectoryFamily._()
     : super(
         retry: null,
         name: r'deleteDirectoryFromFileDirectoryProvider',
@@ -954,7 +954,7 @@ final class DeleteDirectoryFromFileDirectoryFamily extends $Family
 /// A provider for exporting the whole file directory to a ZIP file.
 
 @ProviderFor(exportWholeFileDirectory)
-const exportWholeFileDirectoryProvider = ExportWholeFileDirectoryProvider._();
+final exportWholeFileDirectoryProvider = ExportWholeFileDirectoryProvider._();
 
 /// A provider for exporting the whole file directory to a ZIP file.
 
@@ -962,7 +962,7 @@ final class ExportWholeFileDirectoryProvider
     extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
     with $FutureModifier<void>, $FutureProvider<void> {
   /// A provider for exporting the whole file directory to a ZIP file.
-  const ExportWholeFileDirectoryProvider._()
+  ExportWholeFileDirectoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -994,7 +994,7 @@ String _$exportWholeFileDirectoryHash() =>
 /// one.
 
 @ProviderFor(ExportProgress)
-const exportProgressProvider = ExportProgressProvider._();
+final exportProgressProvider = ExportProgressProvider._();
 
 /// A provider for the progress of the currently ongoing export, if there is
 /// one.
@@ -1002,7 +1002,7 @@ final class ExportProgressProvider
     extends $NotifierProvider<ExportProgress, double?> {
   /// A provider for the progress of the currently ongoing export, if there is
   /// one.
-  const ExportProgressProvider._()
+  ExportProgressProvider._()
     : super(
         from: null,
         argument: null,
@@ -1039,7 +1039,6 @@ abstract class _$ExportProgress extends $Notifier<double?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -1049,14 +1048,14 @@ abstract class _$ExportProgress extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for exporting all files in a [directory].
 
 @ProviderFor(exportAll)
-const exportAllProvider = ExportAllFamily._();
+final exportAllProvider = ExportAllFamily._();
 
 /// A provider for exporting all files in a [directory].
 
@@ -1064,7 +1063,7 @@ final class ExportAllProvider
     extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
     with $FutureModifier<void>, $FutureProvider<void> {
   /// A provider for exporting all files in a [directory].
-  const ExportAllProvider._({
+  ExportAllProvider._({
     required ExportAllFamily super.from,
     required ({String directory, bool zip}) super.argument,
   }) : super(
@@ -1117,7 +1116,7 @@ final class ExportAllFamily extends $Family
           FutureOr<void>,
           ({String directory, bool zip})
         > {
-  const ExportAllFamily._()
+  ExportAllFamily._()
     : super(
         retry: null,
         name: r'exportAllProvider',
@@ -1142,7 +1141,7 @@ final class ExportAllFamily extends $Family
 /// one.
 
 @ProviderFor(ImportProgress)
-const importProgressProvider = ImportProgressProvider._();
+final importProgressProvider = ImportProgressProvider._();
 
 /// A provider for the progress of the currently ongoing import, if there is
 /// one.
@@ -1150,7 +1149,7 @@ final class ImportProgressProvider
     extends $NotifierProvider<ImportProgress, double?> {
   /// A provider for the progress of the currently ongoing import, if there is
   /// one.
-  const ImportProgressProvider._()
+  ImportProgressProvider._()
     : super(
         from: null,
         argument: null,
@@ -1187,7 +1186,6 @@ abstract class _$ImportProgress extends $Notifier<double?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -1197,14 +1195,14 @@ abstract class _$ImportProgress extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for importing all directory files from a zip file.
 
 @ProviderFor(importWholeFileDirectory)
-const importWholeFileDirectoryProvider = ImportWholeFileDirectoryProvider._();
+final importWholeFileDirectoryProvider = ImportWholeFileDirectoryProvider._();
 
 /// A provider for importing all directory files from a zip file.
 
@@ -1212,7 +1210,7 @@ final class ImportWholeFileDirectoryProvider
     extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
     with $FutureModifier<void>, $FutureProvider<void> {
   /// A provider for importing all directory files from a zip file.
-  const ImportWholeFileDirectoryProvider._()
+  ImportWholeFileDirectoryProvider._()
     : super(
         from: null,
         argument: null,

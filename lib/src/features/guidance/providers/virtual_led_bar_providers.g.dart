@@ -11,13 +11,13 @@ part of 'virtual_led_bar_providers.dart';
 /// A provider for whether the virtual led bar should be enabled/shown.
 
 @ProviderFor(VirtualLedBarEnabled)
-const virtualLedBarEnabledProvider = VirtualLedBarEnabledProvider._();
+final virtualLedBarEnabledProvider = VirtualLedBarEnabledProvider._();
 
 /// A provider for whether the virtual led bar should be enabled/shown.
 final class VirtualLedBarEnabledProvider
     extends $NotifierProvider<VirtualLedBarEnabled, bool> {
   /// A provider for whether the virtual led bar should be enabled/shown.
-  const VirtualLedBarEnabledProvider._()
+  VirtualLedBarEnabledProvider._()
     : super(
         from: null,
         argument: null,
@@ -54,7 +54,6 @@ abstract class _$VirtualLedBarEnabled extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -64,21 +63,21 @@ abstract class _$VirtualLedBarEnabled extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for storing the configuration for the virtual led bar.
 
 @ProviderFor(VirtualLedBarConfiguration)
-const virtualLedBarConfigurationProvider =
+final virtualLedBarConfigurationProvider =
     VirtualLedBarConfigurationProvider._();
 
 /// A provider for storing the configuration for the virtual led bar.
 final class VirtualLedBarConfigurationProvider
     extends $NotifierProvider<VirtualLedBarConfiguration, LedBarConfig> {
   /// A provider for storing the configuration for the virtual led bar.
-  const VirtualLedBarConfigurationProvider._()
+  VirtualLedBarConfigurationProvider._()
     : super(
         from: null,
         argument: null,
@@ -115,7 +114,6 @@ abstract class _$VirtualLedBarConfiguration extends $Notifier<LedBarConfig> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<LedBarConfig, LedBarConfig>;
     final element =
         ref.element
@@ -125,7 +123,7 @@ abstract class _$VirtualLedBarConfiguration extends $Notifier<LedBarConfig> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -133,7 +131,7 @@ abstract class _$VirtualLedBarConfiguration extends $Notifier<LedBarConfig> {
 /// [VirtualLedBarTestingDistance].
 
 @ProviderFor(VirtualLedBarTesting)
-const virtualLedBarTestingProvider = VirtualLedBarTestingProvider._();
+final virtualLedBarTestingProvider = VirtualLedBarTestingProvider._();
 
 /// A provider for whether we're testing the virtual LED bar with
 /// [VirtualLedBarTestingDistance].
@@ -141,7 +139,7 @@ final class VirtualLedBarTestingProvider
     extends $NotifierProvider<VirtualLedBarTesting, bool> {
   /// A provider for whether we're testing the virtual LED bar with
   /// [VirtualLedBarTestingDistance].
-  const VirtualLedBarTestingProvider._()
+  VirtualLedBarTestingProvider._()
     : super(
         from: null,
         argument: null,
@@ -179,7 +177,6 @@ abstract class _$VirtualLedBarTesting extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -189,21 +186,21 @@ abstract class _$VirtualLedBarTesting extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for a testing cross track distance for the virtual LED bar.
 
 @ProviderFor(VirtualLedBarTestingDistance)
-const virtualLedBarTestingDistanceProvider =
+final virtualLedBarTestingDistanceProvider =
     VirtualLedBarTestingDistanceProvider._();
 
 /// A provider for a testing cross track distance for the virtual LED bar.
 final class VirtualLedBarTestingDistanceProvider
     extends $NotifierProvider<VirtualLedBarTestingDistance, double?> {
   /// A provider for a testing cross track distance for the virtual LED bar.
-  const VirtualLedBarTestingDistanceProvider._()
+  VirtualLedBarTestingDistanceProvider._()
     : super(
         from: null,
         argument: null,
@@ -240,7 +237,6 @@ abstract class _$VirtualLedBarTestingDistance extends $Notifier<double?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -250,7 +246,7 @@ abstract class _$VirtualLedBarTestingDistance extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -258,7 +254,7 @@ abstract class _$VirtualLedBarTestingDistance extends $Notifier<double?> {
 /// guidance, otherwise 0.
 
 @ProviderFor(virtualLedBarPerpendicularDistance)
-const virtualLedBarPerpendicularDistanceProvider =
+final virtualLedBarPerpendicularDistanceProvider =
     VirtualLedBarPerpendicularDistanceProvider._();
 
 /// A provider for the perpendicular distance to the currently active
@@ -269,7 +265,7 @@ final class VirtualLedBarPerpendicularDistanceProvider
     with $Provider<double?> {
   /// A provider for the perpendicular distance to the currently active
   /// guidance, otherwise 0.
-  const VirtualLedBarPerpendicularDistanceProvider._()
+  VirtualLedBarPerpendicularDistanceProvider._()
     : super(
         from: null,
         argument: null,

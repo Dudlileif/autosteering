@@ -12,7 +12,7 @@ part of 'remote_control_providers.dart';
 /// shuld map to.
 
 @ProviderFor(RemoteControlButtonActions)
-const remoteControlButtonActionsProvider =
+final remoteControlButtonActionsProvider =
     RemoteControlButtonActionsProvider._();
 
 /// A provider for which [RemoteControlButtonAction]s the remote control buttons
@@ -25,7 +25,7 @@ final class RemoteControlButtonActionsProvider
         > {
   /// A provider for which [RemoteControlButtonAction]s the remote control buttons
   /// shuld map to.
-  const RemoteControlButtonActionsProvider._()
+  RemoteControlButtonActionsProvider._()
     : super(
         from: null,
         argument: null,
@@ -65,7 +65,6 @@ abstract class _$RemoteControlButtonActions
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref
             as $Ref<
@@ -83,7 +82,7 @@ abstract class _$RemoteControlButtonActions
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -91,7 +90,7 @@ abstract class _$RemoteControlButtonActions
 /// the mapped [RemoteControlButtonActions] to the remote controller.
 
 @ProviderFor(sendRemoteControlLedState)
-const sendRemoteControlLedStateProvider = SendRemoteControlLedStateProvider._();
+final sendRemoteControlLedStateProvider = SendRemoteControlLedStateProvider._();
 
 /// A provider for sending the current state of the features corresponding of
 /// the mapped [RemoteControlButtonActions] to the remote controller.
@@ -101,7 +100,7 @@ final class SendRemoteControlLedStateProvider
     with $Provider<void> {
   /// A provider for sending the current state of the features corresponding of
   /// the mapped [RemoteControlButtonActions] to the remote controller.
-  const SendRemoteControlLedStateProvider._()
+  SendRemoteControlLedStateProvider._()
     : super(
         from: null,
         argument: null,

@@ -11,13 +11,13 @@ part of 'vehicle_providers.dart';
 /// The main provider for the vehicle state.
 
 @ProviderFor(MainVehicle)
-const mainVehicleProvider = MainVehicleProvider._();
+final mainVehicleProvider = MainVehicleProvider._();
 
 /// The main provider for the vehicle state.
 final class MainVehicleProvider
     extends $NotifierProvider<MainVehicle, Vehicle> {
   /// The main provider for the vehicle state.
-  const MainVehicleProvider._()
+  MainVehicleProvider._()
     : super(
         from: null,
         argument: null,
@@ -53,7 +53,6 @@ abstract class _$MainVehicle extends $Notifier<Vehicle> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Vehicle, Vehicle>;
     final element =
         ref.element
@@ -63,20 +62,20 @@ abstract class _$MainVehicle extends $Notifier<Vehicle> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the active [AutosteeringState] of the vehicle.
 
 @ProviderFor(ActiveAutosteeringState)
-const activeAutosteeringStateProvider = ActiveAutosteeringStateProvider._();
+final activeAutosteeringStateProvider = ActiveAutosteeringStateProvider._();
 
 /// A provider for the active [AutosteeringState] of the vehicle.
 final class ActiveAutosteeringStateProvider
     extends $NotifierProvider<ActiveAutosteeringState, AutosteeringState> {
   /// A provider for the active [AutosteeringState] of the vehicle.
-  const ActiveAutosteeringStateProvider._()
+  ActiveAutosteeringStateProvider._()
     : super(
         from: null,
         argument: null,
@@ -113,7 +112,6 @@ abstract class _$ActiveAutosteeringState extends $Notifier<AutosteeringState> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<AutosteeringState, AutosteeringState>;
     final element =
         ref.element
@@ -123,7 +121,7 @@ abstract class _$ActiveAutosteeringState extends $Notifier<AutosteeringState> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -132,7 +130,7 @@ abstract class _$ActiveAutosteeringState extends $Notifier<AutosteeringState> {
 /// Override the file name with [overrideName].
 
 @ProviderFor(saveVehicle)
-const saveVehicleProvider = SaveVehicleFamily._();
+final saveVehicleProvider = SaveVehicleFamily._();
 
 /// A provider for saving [vehicle] to a file in the user file directory.
 ///
@@ -144,7 +142,7 @@ final class SaveVehicleProvider
   /// A provider for saving [vehicle] to a file in the user file directory.
   ///
   /// Override the file name with [overrideName].
-  const SaveVehicleProvider._({
+  SaveVehicleProvider._({
     required SaveVehicleFamily super.from,
     required (Vehicle, {String? overrideName, bool downloadIfWeb})
     super.argument,
@@ -206,7 +204,7 @@ final class SaveVehicleFamily extends $Family
           FutureOr<void>,
           (Vehicle, {String? overrideName, bool downloadIfWeb})
         > {
-  const SaveVehicleFamily._()
+  SaveVehicleFamily._()
     : super(
         retry: null,
         name: r'saveVehicleProvider',
@@ -241,7 +239,7 @@ final class SaveVehicleFamily extends $Family
 /// Override the file name with [overrideName].
 
 @ProviderFor(exportVehicle)
-const exportVehicleProvider = ExportVehicleFamily._();
+final exportVehicleProvider = ExportVehicleFamily._();
 
 /// A provider for saving [vehicle] to a file.
 ///
@@ -253,7 +251,7 @@ final class ExportVehicleProvider
   /// A provider for saving [vehicle] to a file.
   ///
   /// Override the file name with [overrideName].
-  const ExportVehicleProvider._({
+  ExportVehicleProvider._({
     required ExportVehicleFamily super.from,
     required (Vehicle, {String? overrideName, bool downloadIfWeb})
     super.argument,
@@ -315,7 +313,7 @@ final class ExportVehicleFamily extends $Family
           FutureOr<void>,
           (Vehicle, {String? overrideName, bool downloadIfWeb})
         > {
-  const ExportVehicleFamily._()
+  ExportVehicleFamily._()
     : super(
         retry: null,
         name: r'exportVehicleProvider',
@@ -349,7 +347,7 @@ final class ExportVehicleFamily extends $Family
 /// user file directory.
 
 @ProviderFor(savedVehicles)
-const savedVehiclesProvider = SavedVehiclesProvider._();
+final savedVehiclesProvider = SavedVehiclesProvider._();
 
 /// A provider for reading and holding all the saved [Vehicle]s in the
 /// user file directory.
@@ -364,7 +362,7 @@ final class SavedVehiclesProvider
     with $FutureModifier<List<Vehicle>>, $FutureProvider<List<Vehicle>> {
   /// A provider for reading and holding all the saved [Vehicle]s in the
   /// user file directory.
-  const SavedVehiclesProvider._()
+  SavedVehiclesProvider._()
     : super(
         from: null,
         argument: null,
@@ -397,7 +395,7 @@ String _$savedVehiclesHash() => r'3aaba3bb1dcc7019f369f7dc7c79b772728e572f';
 /// Override the file name with [overrideName].
 
 @ProviderFor(deleteVehicle)
-const deleteVehicleProvider = DeleteVehicleFamily._();
+final deleteVehicleProvider = DeleteVehicleFamily._();
 
 /// A provider for deleting [vehicle] from the user file system.
 ///
@@ -409,7 +407,7 @@ final class DeleteVehicleProvider
   /// A provider for deleting [vehicle] from the user file system.
   ///
   /// Override the file name with [overrideName].
-  const DeleteVehicleProvider._({
+  DeleteVehicleProvider._({
     required DeleteVehicleFamily super.from,
     required (Vehicle, {String? overrideName}) super.argument,
   }) : super(
@@ -464,7 +462,7 @@ final class DeleteVehicleFamily extends $Family
           FutureOr<void>,
           (Vehicle, {String? overrideName})
         > {
-  const DeleteVehicleFamily._()
+  DeleteVehicleFamily._()
     : super(
         retry: null,
         name: r'deleteVehicleProvider',
@@ -490,7 +488,7 @@ final class DeleteVehicleFamily extends $Family
 /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
 
 @ProviderFor(loadVehicleFromFile)
-const loadVehicleFromFileProvider = LoadVehicleFromFileFamily._();
+final loadVehicleFromFileProvider = LoadVehicleFromFileFamily._();
 
 /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
 
@@ -499,7 +497,7 @@ final class LoadVehicleFromFileProvider
         $FunctionalProvider<AsyncValue<Vehicle?>, Vehicle?, FutureOr<Vehicle?>>
     with $FutureModifier<Vehicle?>, $FutureProvider<Vehicle?> {
   /// A provider for loading a [Vehicle] from a file at [path], if it's valid.
-  const LoadVehicleFromFileProvider._({
+  LoadVehicleFromFileProvider._({
     required LoadVehicleFromFileFamily super.from,
     required String super.argument,
   }) : super(
@@ -549,7 +547,7 @@ String _$loadVehicleFromFileHash() =>
 
 final class LoadVehicleFromFileFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<Vehicle?>, String> {
-  const LoadVehicleFromFileFamily._()
+  LoadVehicleFromFileFamily._()
     : super(
         retry: null,
         name: r'loadVehicleFromFileProvider',
@@ -573,7 +571,7 @@ final class LoadVehicleFromFileFamily extends $Family
 /// property.
 
 @ProviderFor(lastUsedVehicle)
-const lastUsedVehicleProvider = LastUsedVehicleProvider._();
+final lastUsedVehicleProvider = LastUsedVehicleProvider._();
 
 /// A provider for the most recently used [Vehicle].
 ///
@@ -592,7 +590,7 @@ final class LastUsedVehicleProvider
   ///
   /// The vehicle is found by sorting the saved vehicles by their last used
   /// property.
-  const LastUsedVehicleProvider._()
+  LastUsedVehicleProvider._()
     : super(
         from: null,
         argument: null,
@@ -632,7 +630,7 @@ String _$lastUsedVehicleHash() => r'286f2c8f04bb4d0b06c044bd219d21348cd4e3ca';
 /// the gauge velocity and bearing values.
 
 @ProviderFor(GaugesAverageCount)
-const gaugesAverageCountProvider = GaugesAverageCountProvider._();
+final gaugesAverageCountProvider = GaugesAverageCountProvider._();
 
 /// A provider for the number of previous positions to use for calculating
 /// the gauge velocity and bearing values.
@@ -640,7 +638,7 @@ final class GaugesAverageCountProvider
     extends $NotifierProvider<GaugesAverageCount, int> {
   /// A provider for the number of previous positions to use for calculating
   /// the gauge velocity and bearing values.
-  const GaugesAverageCountProvider._()
+  GaugesAverageCountProvider._()
     : super(
         from: null,
         argument: null,
@@ -678,7 +676,6 @@ abstract class _$GaugesAverageCount extends $Notifier<int> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<int, int>;
     final element =
         ref.element
@@ -688,21 +685,21 @@ abstract class _$GaugesAverageCount extends $Notifier<int> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the target steering angle when using guidance.
 
 @ProviderFor(VehicleSteeringAngleTarget)
-const vehicleSteeringAngleTargetProvider =
+final vehicleSteeringAngleTargetProvider =
     VehicleSteeringAngleTargetProvider._();
 
 /// A provider for the target steering angle when using guidance.
 final class VehicleSteeringAngleTargetProvider
     extends $NotifierProvider<VehicleSteeringAngleTarget, double?> {
   /// A provider for the target steering angle when using guidance.
-  const VehicleSteeringAngleTargetProvider._()
+  VehicleSteeringAngleTargetProvider._()
     : super(
         from: null,
         argument: null,
@@ -739,7 +736,6 @@ abstract class _$VehicleSteeringAngleTarget extends $Notifier<double?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -749,7 +745,7 @@ abstract class _$VehicleSteeringAngleTarget extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -757,7 +753,7 @@ abstract class _$VehicleSteeringAngleTarget extends $Notifier<double?> {
 /// to the [ConfiguredVehicle] provider.
 
 @ProviderFor(importVehicle)
-const importVehicleProvider = ImportVehicleProvider._();
+final importVehicleProvider = ImportVehicleProvider._();
 
 /// A provider for importing a vehicle configuration from a file and applying it
 /// to the [ConfiguredVehicle] provider.
@@ -768,7 +764,7 @@ final class ImportVehicleProvider
     with $FutureModifier<Vehicle?>, $FutureProvider<Vehicle?> {
   /// A provider for importing a vehicle configuration from a file and applying it
   /// to the [ConfiguredVehicle] provider.
-  const ImportVehicleProvider._()
+  ImportVehicleProvider._()
     : super(
         from: null,
         argument: null,
@@ -798,13 +794,13 @@ String _$importVehicleHash() => r'9424f72c9aa7ec7efc5cbf08fb8a67e3e9e31858';
 /// A provider for whether widgets for overriding the steering should be shown.
 
 @ProviderFor(ShowOverrideSteering)
-const showOverrideSteeringProvider = ShowOverrideSteeringProvider._();
+final showOverrideSteeringProvider = ShowOverrideSteeringProvider._();
 
 /// A provider for whether widgets for overriding the steering should be shown.
 final class ShowOverrideSteeringProvider
     extends $NotifierProvider<ShowOverrideSteering, bool> {
   /// A provider for whether widgets for overriding the steering should be shown.
-  const ShowOverrideSteeringProvider._()
+  ShowOverrideSteeringProvider._()
     : super(
         from: null,
         argument: null,
@@ -841,7 +837,6 @@ abstract class _$ShowOverrideSteering extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -851,7 +846,7 @@ abstract class _$ShowOverrideSteering extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -859,7 +854,7 @@ abstract class _$ShowOverrideSteering extends $Notifier<bool> {
 /// steering motor and WAS together.
 
 @ProviderFor(OverrideSteering)
-const overrideSteeringProvider = OverrideSteeringProvider._();
+final overrideSteeringProvider = OverrideSteeringProvider._();
 
 /// Whether the steering should be overridden. Usually used to test the
 /// steering motor and WAS together.
@@ -867,7 +862,7 @@ final class OverrideSteeringProvider
     extends $NotifierProvider<OverrideSteering, bool> {
   /// Whether the steering should be overridden. Usually used to test the
   /// steering motor and WAS together.
-  const OverrideSteeringProvider._()
+  OverrideSteeringProvider._()
     : super(
         from: null,
         argument: null,
@@ -904,7 +899,6 @@ abstract class _$OverrideSteering extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -914,20 +908,20 @@ abstract class _$OverrideSteering extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the steering angle to override with.
 
 @ProviderFor(OverrideSteeringAngle)
-const overrideSteeringAngleProvider = OverrideSteeringAngleProvider._();
+final overrideSteeringAngleProvider = OverrideSteeringAngleProvider._();
 
 /// A provider for the steering angle to override with.
 final class OverrideSteeringAngleProvider
     extends $NotifierProvider<OverrideSteeringAngle, double> {
   /// A provider for the steering angle to override with.
-  const OverrideSteeringAngleProvider._()
+  OverrideSteeringAngleProvider._()
     : super(
         from: null,
         argument: null,
@@ -964,7 +958,6 @@ abstract class _$OverrideSteeringAngle extends $Notifier<double> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -974,14 +967,14 @@ abstract class _$OverrideSteeringAngle extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for exporting all vehicle files.
 
 @ProviderFor(exportVehicles)
-const exportVehiclesProvider = ExportVehiclesFamily._();
+final exportVehiclesProvider = ExportVehiclesFamily._();
 
 /// A provider for exporting all vehicle files.
 
@@ -989,7 +982,7 @@ final class ExportVehiclesProvider
     extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
     with $FutureModifier<void>, $FutureProvider<void> {
   /// A provider for exporting all vehicle files.
-  const ExportVehiclesProvider._({
+  ExportVehiclesProvider._({
     required ExportVehiclesFamily super.from,
     required bool super.argument,
   }) : super(
@@ -1038,7 +1031,7 @@ String _$exportVehiclesHash() => r'1791fa257813e56b8d158ef9b2323726810d183f';
 
 final class ExportVehiclesFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<void>, bool> {
-  const ExportVehiclesFamily._()
+  ExportVehiclesFamily._()
     : super(
         retry: null,
         name: r'exportVehiclesProvider',

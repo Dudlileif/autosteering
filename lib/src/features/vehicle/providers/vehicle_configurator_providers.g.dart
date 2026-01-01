@@ -12,7 +12,7 @@ part of 'vehicle_configurator_providers.dart';
 /// dialog.
 
 @ProviderFor(VehicleConfiguratorIndex)
-const vehicleConfiguratorIndexProvider = VehicleConfiguratorIndexProvider._();
+final vehicleConfiguratorIndexProvider = VehicleConfiguratorIndexProvider._();
 
 /// A provider for the index of the naviagtion rail of the vehicle configurator
 /// dialog.
@@ -20,7 +20,7 @@ final class VehicleConfiguratorIndexProvider
     extends $NotifierProvider<VehicleConfiguratorIndex, int> {
   /// A provider for the index of the naviagtion rail of the vehicle configurator
   /// dialog.
-  const VehicleConfiguratorIndexProvider._()
+  VehicleConfiguratorIndexProvider._()
     : super(
         from: null,
         argument: null,
@@ -58,7 +58,6 @@ abstract class _$VehicleConfiguratorIndex extends $Notifier<int> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<int, int>;
     final element =
         ref.element
@@ -68,20 +67,20 @@ abstract class _$VehicleConfiguratorIndex extends $Notifier<int> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the vehicle from the configurator.
 
 @ProviderFor(ConfiguredVehicle)
-const configuredVehicleProvider = ConfiguredVehicleProvider._();
+final configuredVehicleProvider = ConfiguredVehicleProvider._();
 
 /// A provider for the vehicle from the configurator.
 final class ConfiguredVehicleProvider
     extends $NotifierProvider<ConfiguredVehicle, Vehicle> {
   /// A provider for the vehicle from the configurator.
-  const ConfiguredVehicleProvider._()
+  ConfiguredVehicleProvider._()
     : super(
         from: null,
         argument: null,
@@ -117,7 +116,6 @@ abstract class _$ConfiguredVehicle extends $Notifier<Vehicle> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Vehicle, Vehicle>;
     final element =
         ref.element
@@ -127,7 +125,7 @@ abstract class _$ConfiguredVehicle extends $Notifier<Vehicle> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -135,7 +133,7 @@ abstract class _$ConfiguredVehicle extends $Notifier<Vehicle> {
 /// vehicle configurator.
 
 @ProviderFor(ConfiguredVehicleNameTextController)
-const configuredVehicleNameTextControllerProvider =
+final configuredVehicleNameTextControllerProvider =
     ConfiguredVehicleNameTextControllerProvider._();
 
 /// A provider for the [TextEditingController] for the name in the
@@ -148,7 +146,7 @@ final class ConfiguredVehicleNameTextControllerProvider
         > {
   /// A provider for the [TextEditingController] for the name in the
   /// vehicle configurator.
-  const ConfiguredVehicleNameTextControllerProvider._()
+  ConfiguredVehicleNameTextControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -189,7 +187,6 @@ abstract class _$ConfiguredVehicleNameTextController
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref
             as $Ref<Raw<TextEditingController>, Raw<TextEditingController>>;
@@ -204,6 +201,6 @@ abstract class _$ConfiguredVehicleNameTextController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

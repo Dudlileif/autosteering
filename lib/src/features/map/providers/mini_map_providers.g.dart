@@ -11,12 +11,12 @@ part of 'mini_map_providers.dart';
 /// Whether the mini map should be shown.
 
 @ProviderFor(ShowMiniMap)
-const showMiniMapProvider = ShowMiniMapProvider._();
+final showMiniMapProvider = ShowMiniMapProvider._();
 
 /// Whether the mini map should be shown.
 final class ShowMiniMapProvider extends $NotifierProvider<ShowMiniMap, bool> {
   /// Whether the mini map should be shown.
-  const ShowMiniMapProvider._()
+  ShowMiniMapProvider._()
     : super(
         from: null,
         argument: null,
@@ -52,7 +52,6 @@ abstract class _$ShowMiniMap extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -62,19 +61,19 @@ abstract class _$ShowMiniMap extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether the map is ready to be shown or not.
 
 @ProviderFor(MiniMapReady)
-const miniMapReadyProvider = MiniMapReadyProvider._();
+final miniMapReadyProvider = MiniMapReadyProvider._();
 
 /// Whether the map is ready to be shown or not.
 final class MiniMapReadyProvider extends $NotifierProvider<MiniMapReady, bool> {
   /// Whether the map is ready to be shown or not.
-  const MiniMapReadyProvider._()
+  MiniMapReadyProvider._()
     : super(
         from: null,
         argument: null,
@@ -110,7 +109,6 @@ abstract class _$MiniMapReady extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -120,7 +118,7 @@ abstract class _$MiniMapReady extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
@@ -128,7 +126,7 @@ abstract class _$MiniMapReady extends $Notifier<bool> {
 /// map from outside the widget code itself.
 
 @ProviderFor(MiniMapController)
-const miniMapControllerProvider = MiniMapControllerProvider._();
+final miniMapControllerProvider = MiniMapControllerProvider._();
 
 /// The mini map [MapController] provider, which allows controlling the
 /// map from outside the widget code itself.
@@ -136,7 +134,7 @@ final class MiniMapControllerProvider
     extends $NotifierProvider<MiniMapController, MapController> {
   /// The mini map [MapController] provider, which allows controlling the
   /// map from outside the widget code itself.
-  const MiniMapControllerProvider._()
+  MiniMapControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -173,7 +171,6 @@ abstract class _$MiniMapController extends $Notifier<MapController> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<MapController, MapController>;
     final element =
         ref.element
@@ -183,20 +180,20 @@ abstract class _$MiniMapController extends $Notifier<MapController> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether the mini map always should point to the north and not rotate.
 
 @ProviderFor(MiniMapLockToField)
-const miniMapLockToFieldProvider = MiniMapLockToFieldProvider._();
+final miniMapLockToFieldProvider = MiniMapLockToFieldProvider._();
 
 /// Whether the mini map always should point to the north and not rotate.
 final class MiniMapLockToFieldProvider
     extends $NotifierProvider<MiniMapLockToField, bool> {
   /// Whether the mini map always should point to the north and not rotate.
-  const MiniMapLockToFieldProvider._()
+  MiniMapLockToFieldProvider._()
     : super(
         from: null,
         argument: null,
@@ -233,7 +230,6 @@ abstract class _$MiniMapLockToField extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -243,20 +239,20 @@ abstract class _$MiniMapLockToField extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether the mini map always should point to the north and not rotate.
 
 @ProviderFor(MiniMapAlwaysPointNorth)
-const miniMapAlwaysPointNorthProvider = MiniMapAlwaysPointNorthProvider._();
+final miniMapAlwaysPointNorthProvider = MiniMapAlwaysPointNorthProvider._();
 
 /// Whether the mini map always should point to the north and not rotate.
 final class MiniMapAlwaysPointNorthProvider
     extends $NotifierProvider<MiniMapAlwaysPointNorth, bool> {
   /// Whether the mini map always should point to the north and not rotate.
-  const MiniMapAlwaysPointNorthProvider._()
+  MiniMapAlwaysPointNorthProvider._()
     : super(
         from: null,
         argument: null,
@@ -293,7 +289,6 @@ abstract class _$MiniMapAlwaysPointNorth extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -303,19 +298,19 @@ abstract class _$MiniMapAlwaysPointNorth extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether the mini map always should point to the north and not rotate.
 
 @ProviderFor(MiniMapSize)
-const miniMapSizeProvider = MiniMapSizeProvider._();
+final miniMapSizeProvider = MiniMapSizeProvider._();
 
 /// Whether the mini map always should point to the north and not rotate.
 final class MiniMapSizeProvider extends $NotifierProvider<MiniMapSize, double> {
   /// Whether the mini map always should point to the north and not rotate.
-  const MiniMapSizeProvider._()
+  MiniMapSizeProvider._()
     : super(
         from: null,
         argument: null,
@@ -351,7 +346,6 @@ abstract class _$MiniMapSize extends $Notifier<double> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -361,6 +355,6 @@ abstract class _$MiniMapSize extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

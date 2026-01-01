@@ -11,14 +11,14 @@ part of 'autosteering_parameter_providers.dart';
 /// Whether to show the autosteering parameter configurator.
 
 @ProviderFor(ShowAutosteeringParameterConfig)
-const showAutosteeringParameterConfigProvider =
+final showAutosteeringParameterConfigProvider =
     ShowAutosteeringParameterConfigProvider._();
 
 /// Whether to show the autosteering parameter configurator.
 final class ShowAutosteeringParameterConfigProvider
     extends $NotifierProvider<ShowAutosteeringParameterConfig, bool> {
   /// Whether to show the autosteering parameter configurator.
-  const ShowAutosteeringParameterConfigProvider._()
+  ShowAutosteeringParameterConfigProvider._()
     : super(
         from: null,
         argument: null,
@@ -55,7 +55,6 @@ abstract class _$ShowAutosteeringParameterConfig extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -65,21 +64,21 @@ abstract class _$ShowAutosteeringParameterConfig extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the UI [Offset] for the autosteering configurator.
 
 @ProviderFor(AutosteeringConfiguratorUiOffset)
-const autosteeringConfiguratorUiOffsetProvider =
+final autosteeringConfiguratorUiOffsetProvider =
     AutosteeringConfiguratorUiOffsetProvider._();
 
 /// A provider for the UI [Offset] for the autosteering configurator.
 final class AutosteeringConfiguratorUiOffsetProvider
     extends $NotifierProvider<AutosteeringConfiguratorUiOffset, Offset> {
   /// A provider for the UI [Offset] for the autosteering configurator.
-  const AutosteeringConfiguratorUiOffsetProvider._()
+  AutosteeringConfiguratorUiOffsetProvider._()
     : super(
         from: null,
         argument: null,
@@ -117,7 +116,6 @@ abstract class _$AutosteeringConfiguratorUiOffset extends $Notifier<Offset> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Offset, Offset>;
     final element =
         ref.element
@@ -127,6 +125,6 @@ abstract class _$AutosteeringConfiguratorUiOffset extends $Notifier<Offset> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

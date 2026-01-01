@@ -11,13 +11,13 @@ part of 'dubins_path_debug_providers.dart';
 /// Whether the Dubins path feature should be debugged.
 
 @ProviderFor(EnableDubinsPathDebug)
-const enableDubinsPathDebugProvider = EnableDubinsPathDebugProvider._();
+final enableDubinsPathDebugProvider = EnableDubinsPathDebugProvider._();
 
 /// Whether the Dubins path feature should be debugged.
 final class EnableDubinsPathDebugProvider
     extends $NotifierProvider<EnableDubinsPathDebug, bool> {
   /// Whether the Dubins path feature should be debugged.
-  const EnableDubinsPathDebugProvider._()
+  EnableDubinsPathDebugProvider._()
     : super(
         from: null,
         argument: null,
@@ -54,7 +54,6 @@ abstract class _$EnableDubinsPathDebug extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -64,21 +63,21 @@ abstract class _$EnableDubinsPathDebug extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether to show the turning circles for the Dubins path.
 
 @ProviderFor(ShowDubinsPathDebugCircles)
-const showDubinsPathDebugCirclesProvider =
+final showDubinsPathDebugCirclesProvider =
     ShowDubinsPathDebugCirclesProvider._();
 
 /// Whether to show the turning circles for the Dubins path.
 final class ShowDubinsPathDebugCirclesProvider
     extends $NotifierProvider<ShowDubinsPathDebugCircles, bool> {
   /// Whether to show the turning circles for the Dubins path.
-  const ShowDubinsPathDebugCirclesProvider._()
+  ShowDubinsPathDebugCirclesProvider._()
     : super(
         from: null,
         argument: null,
@@ -115,7 +114,6 @@ abstract class _$ShowDubinsPathDebugCircles extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -125,20 +123,20 @@ abstract class _$ShowDubinsPathDebugCircles extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// The starting point for the Dubins path.
 
 @ProviderFor(DubinsPathDebugStartPoint)
-const dubinsPathDebugStartPointProvider = DubinsPathDebugStartPointProvider._();
+final dubinsPathDebugStartPointProvider = DubinsPathDebugStartPointProvider._();
 
 /// The starting point for the Dubins path.
 final class DubinsPathDebugStartPointProvider
     extends $NotifierProvider<DubinsPathDebugStartPoint, WayPoint?> {
   /// The starting point for the Dubins path.
-  const DubinsPathDebugStartPointProvider._()
+  DubinsPathDebugStartPointProvider._()
     : super(
         from: null,
         argument: null,
@@ -175,7 +173,6 @@ abstract class _$DubinsPathDebugStartPoint extends $Notifier<WayPoint?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<WayPoint?, WayPoint?>;
     final element =
         ref.element
@@ -185,20 +182,20 @@ abstract class _$DubinsPathDebugStartPoint extends $Notifier<WayPoint?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// The ending point for the Dubins path.
 
 @ProviderFor(DubinsPathDebugEndPoint)
-const dubinsPathDebugEndPointProvider = DubinsPathDebugEndPointProvider._();
+final dubinsPathDebugEndPointProvider = DubinsPathDebugEndPointProvider._();
 
 /// The ending point for the Dubins path.
 final class DubinsPathDebugEndPointProvider
     extends $NotifierProvider<DubinsPathDebugEndPoint, WayPoint?> {
   /// The ending point for the Dubins path.
-  const DubinsPathDebugEndPointProvider._()
+  DubinsPathDebugEndPointProvider._()
     : super(
         from: null,
         argument: null,
@@ -235,7 +232,6 @@ abstract class _$DubinsPathDebugEndPoint extends $Notifier<WayPoint?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<WayPoint?, WayPoint?>;
     final element =
         ref.element
@@ -245,20 +241,20 @@ abstract class _$DubinsPathDebugEndPoint extends $Notifier<WayPoint?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Which type of Dubins path to debug/draw.
 
 @ProviderFor(DubinsPathDebugPathType)
-const dubinsPathDebugPathTypeProvider = DubinsPathDebugPathTypeProvider._();
+final dubinsPathDebugPathTypeProvider = DubinsPathDebugPathTypeProvider._();
 
 /// Which type of Dubins path to debug/draw.
 final class DubinsPathDebugPathTypeProvider
     extends $NotifierProvider<DubinsPathDebugPathType, DubinsPathType?> {
   /// Which type of Dubins path to debug/draw.
-  const DubinsPathDebugPathTypeProvider._()
+  DubinsPathDebugPathTypeProvider._()
     : super(
         from: null,
         argument: null,
@@ -295,7 +291,6 @@ abstract class _$DubinsPathDebugPathType extends $Notifier<DubinsPathType?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<DubinsPathType?, DubinsPathType?>;
     final element =
         ref.element
@@ -305,14 +300,14 @@ abstract class _$DubinsPathDebugPathType extends $Notifier<DubinsPathType?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// The current [DubinsPath] object that we can debug.
 
 @ProviderFor(debugDubinsPath)
-const debugDubinsPathProvider = DebugDubinsPathProvider._();
+final debugDubinsPathProvider = DebugDubinsPathProvider._();
 
 /// The current [DubinsPath] object that we can debug.
 
@@ -320,7 +315,7 @@ final class DebugDubinsPathProvider
     extends $FunctionalProvider<DubinsPath?, DubinsPath?, DubinsPath?>
     with $Provider<DubinsPath?> {
   /// The current [DubinsPath] object that we can debug.
-  const DebugDubinsPathProvider._()
+  DebugDubinsPathProvider._()
     : super(
         from: null,
         argument: null,
@@ -358,13 +353,13 @@ String _$debugDubinsPathHash() => r'068a0465a7cf1281bb525158fa27f300d88c13f5';
 /// Which type of Dubins path to debug/draw.
 
 @ProviderFor(DubinsPathDebugStepSize)
-const dubinsPathDebugStepSizeProvider = DubinsPathDebugStepSizeProvider._();
+final dubinsPathDebugStepSizeProvider = DubinsPathDebugStepSizeProvider._();
 
 /// Which type of Dubins path to debug/draw.
 final class DubinsPathDebugStepSizeProvider
     extends $NotifierProvider<DubinsPathDebugStepSize, double> {
   /// Which type of Dubins path to debug/draw.
-  const DubinsPathDebugStepSizeProvider._()
+  DubinsPathDebugStepSizeProvider._()
     : super(
         from: null,
         argument: null,
@@ -401,7 +396,6 @@ abstract class _$DubinsPathDebugStepSize extends $Notifier<double> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -411,6 +405,6 @@ abstract class _$DubinsPathDebugStepSize extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

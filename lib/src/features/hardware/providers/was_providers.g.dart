@@ -11,13 +11,13 @@ part of 'was_providers.dart';
 /// A provider for the frequency of the WAS updates.
 
 @ProviderFor(WasCurrentFrequency)
-const wasCurrentFrequencyProvider = WasCurrentFrequencyProvider._();
+final wasCurrentFrequencyProvider = WasCurrentFrequencyProvider._();
 
 /// A provider for the frequency of the WAS updates.
 final class WasCurrentFrequencyProvider
     extends $NotifierProvider<WasCurrentFrequency, double?> {
   /// A provider for the frequency of the WAS updates.
-  const WasCurrentFrequencyProvider._()
+  WasCurrentFrequencyProvider._()
     : super(
         from: null,
         argument: null,
@@ -54,7 +54,6 @@ abstract class _$WasCurrentFrequency extends $Notifier<double?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -64,20 +63,20 @@ abstract class _$WasCurrentFrequency extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// A provider for the current raw [WasReading] from the hardware.
 
 @ProviderFor(WasCurrentReading)
-const wasCurrentReadingProvider = WasCurrentReadingProvider._();
+final wasCurrentReadingProvider = WasCurrentReadingProvider._();
 
 /// A provider for the current raw [WasReading] from the hardware.
 final class WasCurrentReadingProvider
     extends $NotifierProvider<WasCurrentReading, WasReading?> {
   /// A provider for the current raw [WasReading] from the hardware.
-  const WasCurrentReadingProvider._()
+  WasCurrentReadingProvider._()
     : super(
         from: null,
         argument: null,
@@ -113,7 +112,6 @@ abstract class _$WasCurrentReading extends $Notifier<WasReading?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<WasReading?, WasReading?>;
     final element =
         ref.element
@@ -123,21 +121,21 @@ abstract class _$WasCurrentReading extends $Notifier<WasReading?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Whether to show the steering hardware configurator.
 
 @ProviderFor(ShowSteeringHardwareConfig)
-const showSteeringHardwareConfigProvider =
+final showSteeringHardwareConfigProvider =
     ShowSteeringHardwareConfigProvider._();
 
 /// Whether to show the steering hardware configurator.
 final class ShowSteeringHardwareConfigProvider
     extends $NotifierProvider<ShowSteeringHardwareConfig, bool> {
   /// Whether to show the steering hardware configurator.
-  const ShowSteeringHardwareConfigProvider._()
+  ShowSteeringHardwareConfigProvider._()
     : super(
         from: null,
         argument: null,
@@ -174,7 +172,6 @@ abstract class _$ShowSteeringHardwareConfig extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -184,6 +181,6 @@ abstract class _$ShowSteeringHardwareConfig extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
