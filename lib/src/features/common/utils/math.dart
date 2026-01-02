@@ -67,14 +67,12 @@ double circularAverageWeighted({
     angles.length == weights.length,
     'angles and weights must have the same length',
   );
-  final cosSum =
-      angles
-          .mapIndexed((index, angle) => weights.elementAt(index) * cos(angle))
-          .sum;
-  final sinSum =
-      angles
-          .mapIndexed((index, angle) => weights.elementAt(index) * sin(angle))
-          .sum;
+  final cosSum = angles
+      .mapIndexed((index, angle) => weights.elementAt(index) * cos(angle))
+      .sum;
+  final sinSum = angles
+      .mapIndexed((index, angle) => weights.elementAt(index) * sin(angle))
+      .sum;
 
   final radAvg = atan2(sinSum, cosSum);
   return radAvg;

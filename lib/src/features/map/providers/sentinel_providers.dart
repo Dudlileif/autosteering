@@ -70,10 +70,9 @@ class AvailableSentinelLayers extends _$AvailableSentinelLayers {
       if (ref
           .read(settingsProvider.notifier)
           .containsKey(SettingsKey.mapLayersSentinelSorted)) {
-        final layerList =
-            ref
-                .read(settingsProvider.notifier)
-                .getList(SettingsKey.mapLayersSentinelSorted)!;
+        final layerList = ref
+            .read(settingsProvider.notifier)
+            .getList(SettingsKey.mapLayersSentinelSorted)!;
 
         return List<String>.from(layerList)
             .map(
@@ -164,10 +163,9 @@ class EnabledSentinelLayers extends _$EnabledSentinelLayers {
       if (ref
           .read(settingsProvider.notifier)
           .containsKey(SettingsKey.mapLayersSentinelEnabled)) {
-        final layerList =
-            ref
-                .read(settingsProvider.notifier)
-                .getList(SettingsKey.mapLayersSentinelEnabled)!;
+        final layerList = ref
+            .read(settingsProvider.notifier)
+            .getList(SettingsKey.mapLayersSentinelEnabled)!;
 
         for (final layerId in List<String>.from(layerList)) {
           final layerType = SentinelLayerType.values.firstWhereOrNull(
@@ -251,10 +249,9 @@ class SentinelLayerOpacities extends _$SentinelLayerOpacities {
     if (ref
         .read(settingsProvider.notifier)
         .containsKey(SettingsKey.mapLayersSentinelOpacities)) {
-      final layerMap =
-          ref
-              .read(settingsProvider.notifier)
-              .getMap(SettingsKey.mapLayersSentinelOpacities)!;
+      final layerMap = ref
+          .read(settingsProvider.notifier)
+          .getMap(SettingsKey.mapLayersSentinelOpacities)!;
       Map<String, double>.from(layerMap).forEach((key, value) {
         final layerType = SentinelLayerType.values.firstWhereOrNull(
           (element) => element.id == key,

@@ -37,26 +37,23 @@ class EquipmentSetup {
     final name = json['name'] as String;
     final lastUsed = DateTime.tryParse(json['last_used'] as String);
 
-    final frontFixedChild =
-        json['front_fixed_child'] != null
-            ? Equipment.fromJson(
-              Map<String, dynamic>.from(json['front_fixed_child'] as Map),
-            )
-            : null;
+    final frontFixedChild = json['front_fixed_child'] != null
+        ? Equipment.fromJson(
+            Map<String, dynamic>.from(json['front_fixed_child'] as Map),
+          )
+        : null;
 
-    final rearFixedChild =
-        json['rear_fixed_child'] != null
-            ? Equipment.fromJson(
-              Map<String, dynamic>.from(json['rear_fixed_child'] as Map),
-            )
-            : null;
+    final rearFixedChild = json['rear_fixed_child'] != null
+        ? Equipment.fromJson(
+            Map<String, dynamic>.from(json['rear_fixed_child'] as Map),
+          )
+        : null;
 
-    final rearTowbarChild =
-        json['rear_towbar_child'] != null
-            ? Equipment.fromJson(
-              Map<String, dynamic>.from(json['rear_towbar_child'] as Map),
-            )
-            : null;
+    final rearTowbarChild = json['rear_towbar_child'] != null
+        ? Equipment.fromJson(
+            Map<String, dynamic>.from(json['rear_towbar_child'] as Map),
+          )
+        : null;
 
     return EquipmentSetup(
       name: name,
@@ -99,28 +96,28 @@ class EquipmentSetup {
   bool updateChild(Hitchable child) {
     var updated = false;
     if (frontFixedChild?.uuid == child.uuid) {
-      frontFixedChild =
-          child..copyWith(
-            hitchFrontFixedChild: frontFixedChild!.hitchFrontFixedChild,
-            hitchRearFixedChild: frontFixedChild!.hitchRearFixedChild,
-            hitchRearTowbarChild: frontFixedChild!.hitchRearTowbarChild,
-          );
+      frontFixedChild = child
+        ..copyWith(
+          hitchFrontFixedChild: frontFixedChild!.hitchFrontFixedChild,
+          hitchRearFixedChild: frontFixedChild!.hitchRearFixedChild,
+          hitchRearTowbarChild: frontFixedChild!.hitchRearTowbarChild,
+        );
       updated = true;
     } else if (rearFixedChild?.uuid == child.uuid) {
-      rearFixedChild =
-          child..copyWith(
-            hitchFrontFixedChild: rearFixedChild!.hitchFrontFixedChild,
-            hitchRearFixedChild: rearFixedChild!.hitchRearFixedChild,
-            hitchRearTowbarChild: rearFixedChild!.hitchRearTowbarChild,
-          );
+      rearFixedChild = child
+        ..copyWith(
+          hitchFrontFixedChild: rearFixedChild!.hitchFrontFixedChild,
+          hitchRearFixedChild: rearFixedChild!.hitchRearFixedChild,
+          hitchRearTowbarChild: rearFixedChild!.hitchRearTowbarChild,
+        );
       updated = true;
     } else if (rearTowbarChild?.uuid == child.uuid) {
-      rearTowbarChild =
-          child..copyWith(
-            hitchFrontFixedChild: rearTowbarChild!.hitchFrontFixedChild,
-            hitchRearFixedChild: rearTowbarChild!.hitchRearFixedChild,
-            hitchRearTowbarChild: rearTowbarChild!.hitchRearTowbarChild,
-          );
+      rearTowbarChild = child
+        ..copyWith(
+          hitchFrontFixedChild: rearTowbarChild!.hitchFrontFixedChild,
+          hitchRearFixedChild: rearTowbarChild!.hitchRearFixedChild,
+          hitchRearTowbarChild: rearTowbarChild!.hitchRearTowbarChild,
+        );
       updated = true;
     } else {
       updated =

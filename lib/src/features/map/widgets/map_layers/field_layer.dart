@@ -74,18 +74,18 @@ class FieldLayer extends ConsumerWidget {
                   ),
                 if (showFieldBoundingBox)
                   Polygon(
-                    points:
-                        field.mapBoundingBox((point) => point.latLng).toList(),
+                    points: field
+                        .mapBoundingBox((point) => point.latLng)
+                        .toList(),
                     borderStrokeWidth: 1,
                     borderColor: darkModeEnabled ? Colors.white : Colors.black,
                     color: Colors.transparent,
                   ),
                 if (showBufferedFieldBoundingBox)
                   Polygon(
-                    points:
-                        bufferedField
-                            .mapBoundingBox((point) => point.latLng)
-                            .toList(),
+                    points: bufferedField
+                        .mapBoundingBox((point) => point.latLng)
+                        .toList(),
                     borderStrokeWidth: 1,
                     color: Colors.transparent,
                     borderColor: Colors.red,
@@ -138,10 +138,9 @@ class FieldLayer extends ConsumerWidget {
             polygons: [
               if (recordingExteriorRing != null)
                 Polygon(
-                  points:
-                      recordingExteriorRing
-                          .map((point) => point.latLng)
-                          .toList(),
+                  points: recordingExteriorRing
+                      .map((point) => point.latLng)
+                      .toList(),
                   borderStrokeWidth: 1,
                   borderColor: darkModeEnabled ? Colors.white : Colors.black,
                 ),

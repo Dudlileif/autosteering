@@ -82,7 +82,8 @@ enum SettingsKey {
     'ui.steering_hardware_configurator_offset',
   ),
   virtualLedBarConfig('virtual_led_bar.config'),
-  virtualLedBarEnabled('virtual_led_bar.enabled');
+  virtualLedBarEnabled('virtual_led_bar.enabled')
+  ;
 
   const SettingsKey(this.name);
 

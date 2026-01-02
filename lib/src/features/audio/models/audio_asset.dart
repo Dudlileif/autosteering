@@ -27,7 +27,8 @@ enum AudioAsset {
   autosteeringStandby('autosteering_standby'),
 
   /// Audio asset for RTK lost alarm.
-  rtkLostAlarm('rtk_lost_alarm');
+  rtkLostAlarm('rtk_lost_alarm')
+  ;
 
   const AudioAsset(this.path);
 

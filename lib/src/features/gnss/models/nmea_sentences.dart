@@ -75,10 +75,9 @@ mixin ChecksumMixin on NmeaSentence {
 
   /// Reads the checksum contained in the raw string source. If the sentence
   /// does not contain a checksum, an empty string is returned.
-  String get checksum =>
-      hasChecksum
-          ? _checksum ??= raw.split(nmeaChecksumSeparator).last
-          : ''; // MAYBE: uppercase the checksum even if it was not uppercase
+  String get checksum => hasChecksum
+      ? _checksum ??= raw.split(nmeaChecksumSeparator).last
+      : ''; // MAYBE: uppercase the checksum even if it was not uppercase
 
   String? _actualChecksum;
 
@@ -101,12 +100,10 @@ mixin ChecksumMixin on NmeaSentence {
   /// This is the actual sentence, without any fixtures, which is used to
   /// calculate the checksum.
   @override
-  String get rawWithoutFixtures =>
-      _rawWithoutFixtures ??=
-          (hasChecksum
-              // remove the checksum + separator character
-              ? super.rawWithoutFixtures.split(nmeaChecksumSeparator).first
-              : super.rawWithoutFixtures);
+  String get rawWithoutFixtures => _rawWithoutFixtures ??= (hasChecksum
+      // remove the checksum + separator character
+      ? super.rawWithoutFixtures.split(nmeaChecksumSeparator).first
+      : super.rawWithoutFixtures);
 }
 
 /// An abstract implementation class for an interface to interchangeably use the
@@ -147,23 +144,23 @@ mixin GnssPositionCommonSentence on NmeaSentence {
   /// fields[field+1].
   double? _latitudeFromField(int field) =>
       fields.length > field + 1 && fields[field].length >= 10
-          ? DegreeConverter.decimalDegreesFromDegreeMinutes(fields[field]) *
-              switch (fields[field + 1]) {
-                'S' => -1,
-                _ => 1,
-              }
-          : null;
+      ? DegreeConverter.decimalDegreesFromDegreeMinutes(fields[field]) *
+            switch (fields[field + 1]) {
+              'S' => -1,
+              _ => 1,
+            }
+      : null;
 
   /// Finds the longitude of fields[field] if it and the E/W flag exists at
   /// fields[field+1].
   double? _longitudeFromField(int field) =>
       fields.length > field + 1 && fields[field].length >= 11
-          ? DegreeConverter.decimalDegreesFromDegreeMinutes(fields[field]) *
-              switch (fields[field + 1]) {
-                'W' => -1,
-                _ => 1,
-              }
-          : null;
+      ? DegreeConverter.decimalDegreesFromDegreeMinutes(fields[field]) *
+            switch (fields[field + 1]) {
+              'W' => -1,
+              _ => 1,
+            }
+      : null;
 
   /// The creation time of the message.
   DateTime? get utc => _utcFromField(1);
@@ -372,18 +369,17 @@ class GNSSentence extends TalkerSentence with GnssPositionCommonSentence {
   String? get navStatus => fields.elementAtOrNull(13);
 
   @override
-  GnssFixQuality? get fixQuality =>
-      (posMode?.split('') ?? [])
-          .map(
-            (e) => GnssFixQuality.values.firstWhereOrNull(
-              (element) => element.nmeaGNSPosMode == e,
-            ),
-          )
-          .sortedByCompare(
-            (element) => element?.index ?? 100,
-            (a, b) => a < b ? -1 : 1,
-          )
-          .firstOrNull;
+  GnssFixQuality? get fixQuality => (posMode?.split('') ?? [])
+      .map(
+        (e) => GnssFixQuality.values.firstWhereOrNull(
+          (element) => element.nmeaGNSPosMode == e,
+        ),
+      )
+      .sortedByCompare(
+        (element) => element?.index ?? 100,
+        (a, b) => a < b ? -1 : 1,
+      )
+      .firstOrNull;
 }
 
 /// An NMEA message for pseudo range error statistics.
@@ -571,9 +567,10 @@ class PUBXSentence extends ProprietarySentence
   }
 
   @override
-  String get rawWithoutFixtures =>
-      _rawWithoutFixtures ??=
-          raw.replaceFirst(r'$', '').split(nmeaChecksumSeparator).first;
+  String get rawWithoutFixtures => _rawWithoutFixtures ??= raw
+      .replaceFirst(r'$', '')
+      .split(nmeaChecksumSeparator)
+      .first;
 
   /// An identifier for which type of message this is.
   String? get messageIdentifier => fields.elementAtOrNull(1);

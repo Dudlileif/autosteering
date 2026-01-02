@@ -140,11 +140,12 @@ class CommonMessageHandler {
             .update(message.motorActualRPM);
       }
     } else if (message is ({bool motorEnabled})) {
-      _ref.read(steeringMotorStatusProvider.notifier).update(switch (message
-          .motorEnabled) {
-        true => MotorStatus.running,
-        false => MotorStatus.disabled,
-      });
+      _ref.read(steeringMotorStatusProvider.notifier).update(
+        switch (message.motorEnabled) {
+          true => MotorStatus.running,
+          false => MotorStatus.disabled,
+        },
+      );
     } else if (message is ({bool motorStalled})) {
       if (message.motorStalled) {
         _ref.read(simInputProvider.notifier).send((

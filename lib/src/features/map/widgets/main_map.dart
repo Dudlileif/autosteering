@@ -43,10 +43,9 @@ class MainMap extends ConsumerWidget {
         minZoom: 4,
         maxZoom: 22,
         interactionOptions: InteractionOptions(
-          flags:
-              ref.watch(centerMapOnVehicleProvider)
-                  ? InteractiveFlag.pinchZoom | InteractiveFlag.doubleTapZoom
-                  : InteractiveFlag.all,
+          flags: ref.watch(centerMapOnVehicleProvider)
+              ? InteractiveFlag.pinchZoom | InteractiveFlag.doubleTapZoom
+              : InteractiveFlag.all,
         ),
         onMapEvent: (event) {
           // Force scrolling zoom events to keep position when the map

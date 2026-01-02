@@ -70,20 +70,18 @@ class AckermannSteering {
   double get ackermannAngleDegrees => ackermannAngle.toDegrees();
 
   /// Degrees
-  double get idealLeftAngle =>
-      atan(
-        wheelBase *
-            tan(ackermannAngle) /
-            (wheelBase + 0.5 * trackWidth * tan(ackermannAngle)),
-      ).toDegrees();
+  double get idealLeftAngle => atan(
+    wheelBase *
+        tan(ackermannAngle) /
+        (wheelBase + 0.5 * trackWidth * tan(ackermannAngle)),
+  ).toDegrees();
 
   /// Degrees
-  double get idealRightAngle =>
-      atan(
-        wheelBase *
-            tan(ackermannAngle) /
-            (wheelBase - 0.5 * trackWidth * tan(ackermannAngle)),
-      ).toDegrees();
+  double get idealRightAngle => atan(
+    wheelBase *
+        tan(ackermannAngle) /
+        (wheelBase - 0.5 * trackWidth * tan(ackermannAngle)),
+  ).toDegrees();
 
   /// Meters
   double get turningRadius => tan(pi / 2 - ackermannAngle).abs() * wheelBase;
@@ -110,7 +108,8 @@ class AckermannSteering {
   };
 
   @override
-  String toString() => '''
+  String toString() =>
+      '''
   Ackermann steering:
   Steering angle: $steeringAngle  
   Ackermann angle: ${ackermannAngle.toDegrees()}

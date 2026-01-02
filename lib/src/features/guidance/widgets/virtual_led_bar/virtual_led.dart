@@ -56,12 +56,11 @@ class VirtualLed extends StatelessWidget {
         duration: Durations.short2,
         curve: Curves.easeInOutSine,
         child: SizedBox.square(
-          dimension:
-              active
-                  ? size
-                  : showWhenInactive
-                  ? 12
-                  : 0,
+          dimension: active
+              ? size
+              : showWhenInactive
+              ? 12
+              : 0,
         ),
       ),
     ),

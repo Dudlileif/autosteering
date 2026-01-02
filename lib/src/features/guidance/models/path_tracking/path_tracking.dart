@@ -36,7 +36,8 @@ enum PathTrackingMode {
   purePursuit,
 
   /// Use Stanley path tracking to control the steering.
-  stanley;
+  stanley
+  ;
 
   /// Converts the enumerator value to a json compatible string.
   String toJson() => name;
@@ -56,7 +57,8 @@ enum PathTrackingLoopMode {
   straight,
 
   /// Loop to the start point by using a Dubins path from the end point.
-  dubins;
+  dubins
+  ;
 
   /// Converts the enumerator value to a json compatible string.
   String toJson() => name;
@@ -92,10 +94,9 @@ sealed class PathTracking {
 
   factory PathTracking.fromJson(Map<String, dynamic> json) {
     final mode = PathTrackingMode.fromJson(json['mode'] as String);
-    final wayPoints =
-        List<Map<String, dynamic>>.from(
-          json['points'] as List,
-        ).map(WayPoint.fromJson).toList();
+    final wayPoints = List<Map<String, dynamic>>.from(
+      json['points'] as List,
+    ).map(WayPoint.fromJson).toList();
     final interpolationDistance = json['interpolation_distance'] as double;
     final loopMode = PathTrackingLoopMode.fromJson(json['loop_mode'] as String);
 
@@ -248,13 +249,12 @@ sealed class PathTracking {
     }
 
     if (loopMode == PathTrackingLoopMode.dubins) {
-      final dubinsPath =
-          DubinsPath(
-            start: path.last,
-            end: path.first,
-            turningRadius: 6,
-            stepSize: (interpolationDistance ?? 4) / 3,
-          ).bestDubinsPathPlan?.wayPoints;
+      final dubinsPath = DubinsPath(
+        start: path.last,
+        end: path.first,
+        turningRadius: 6,
+        stepSize: (interpolationDistance ?? 4) / 3,
+      ).bestDubinsPathPlan?.wayPoints;
 
       if (dubinsPath != null) {
         // Skip the first and last point of the dubins path to avoid duplicates
@@ -363,25 +363,25 @@ sealed class PathTracking {
   /// The distance from the vehicle to the [perpendicularIntersect] point.
   ///
   /// The value is negative if the vehicle is to the left of the line.
-  double perpendicularDistance(Vehicle vehicle) => switch (vehicle
-      .isReversing) {
-    true => vehicle.pathTrackingPoint.spherical.crossTrackDistanceTo(
-      start: nextReversingWayPoint(vehicle).position,
-      end: currentWayPoint(vehicle).position,
-    ),
-    false => vehicle.pathTrackingPoint.spherical.crossTrackDistanceTo(
-      start: currentWayPoint(vehicle).position,
-      end: nextForwardWayPoint(vehicle).position,
-    ),
-  };
+  double perpendicularDistance(Vehicle vehicle) =>
+      switch (vehicle.isReversing) {
+        true => vehicle.pathTrackingPoint.spherical.crossTrackDistanceTo(
+          start: nextReversingWayPoint(vehicle).position,
+          end: currentWayPoint(vehicle).position,
+        ),
+        false => vehicle.pathTrackingPoint.spherical.crossTrackDistanceTo(
+          start: currentWayPoint(vehicle).position,
+          end: nextForwardWayPoint(vehicle).position,
+        ),
+      };
 
   /// The waypoint in [path] that is closest to the [vehicle].
   WayPoint closestWayPoint(Vehicle vehicle) => path.reduce(
     (value, element) =>
         element.position.rhumb.distanceTo(vehicle.pathTrackingPoint) <
-                value.position.rhumb.distanceTo(vehicle.pathTrackingPoint)
-            ? element
-            : value,
+            value.position.rhumb.distanceTo(vehicle.pathTrackingPoint)
+        ? element
+        : value,
   );
 
   /// The index of the [closestWayPoint].

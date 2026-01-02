@@ -108,8 +108,9 @@ class VehicleAntennaPage extends ConsumerWidget {
                     .read(configuredVehicleProvider.notifier)
                     .update(
                       vehicle.copyWith(
-                        antennaToSolidAxleDistance:
-                            (vehicle is Harvester) ? -distance : distance,
+                        antennaToSolidAxleDistance: (vehicle is Harvester)
+                            ? -distance
+                            : distance,
                       ),
                     );
               }
@@ -130,9 +131,8 @@ class VehicleAntennaPage extends ConsumerWidget {
             ),
             initialValue: ref.read(
               configuredVehicleProvider.select(
-                (value) =>
-                    (value as ArticulatedTractor).antennaToPivotDistance
-                        .toString(),
+                (value) => (value as ArticulatedTractor).antennaToPivotDistance
+                    .toString(),
               ),
             ),
             onChanged: (value) {
@@ -151,15 +151,14 @@ class VehicleAntennaPage extends ConsumerWidget {
       child: Align(
         alignment: Alignment.topCenter,
         child: Column(
-          children:
-              children
-                  .map(
-                    (widget) => Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: SizedBox(width: 400, child: widget),
-                    ),
-                  )
-                  .toList(),
+          children: children
+              .map(
+                (widget) => Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: SizedBox(width: 400, child: widget),
+                ),
+              )
+              .toList(),
         ),
       ),
     );

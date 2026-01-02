@@ -43,7 +43,8 @@ enum GnssFixQuality {
   simulation('Simulation mode', 8, 'S', null),
 
   /// No fix.
-  notAvailable('Not available', 0, 'N', 'NF');
+  notAvailable('Not available', 0, 'N', 'NF')
+  ;
 
   const GnssFixQuality(
     this.name,

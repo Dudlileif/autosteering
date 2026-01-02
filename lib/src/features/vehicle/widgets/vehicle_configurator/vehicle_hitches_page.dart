@@ -47,9 +47,9 @@ class VehicleHitchesPage extends ConsumerWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
-                (value) =>
-                    (value as AxleSteeredVehicle).solidAxleToFrontHitchDistance
-                        ?.toString(),
+                (value) => (value as AxleSteeredVehicle)
+                    .solidAxleToFrontHitchDistance
+                    ?.toString(),
               ),
             ),
             onChanged: (value) {
@@ -75,9 +75,9 @@ class VehicleHitchesPage extends ConsumerWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
-                (value) =>
-                    (value as AxleSteeredVehicle).solidAxleToRearHitchDistance
-                        ?.toString(),
+                (value) => (value as AxleSteeredVehicle)
+                    .solidAxleToRearHitchDistance
+                    ?.toString(),
               ),
             ),
             onChanged: (value) {
@@ -103,9 +103,9 @@ class VehicleHitchesPage extends ConsumerWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
-                (value) =>
-                    (value as AxleSteeredVehicle).solidAxleToRearTowbarDistance
-                        ?.toString(),
+                (value) => (value as AxleSteeredVehicle)
+                    .solidAxleToRearTowbarDistance
+                    ?.toString(),
               ),
             ),
             onChanged: (value) {
@@ -129,9 +129,9 @@ class VehicleHitchesPage extends ConsumerWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
-                (value) =>
-                    (value as ArticulatedTractor).frontAxleToHitchDistance
-                        ?.toString(),
+                (value) => (value as ArticulatedTractor)
+                    .frontAxleToHitchDistance
+                    ?.toString(),
               ),
             ),
             onChanged: (value) {
@@ -151,9 +151,8 @@ class VehicleHitchesPage extends ConsumerWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
-                (value) =>
-                    (value as ArticulatedTractor).rearAxleToHitchDistance
-                        ?.toString(),
+                (value) => (value as ArticulatedTractor).rearAxleToHitchDistance
+                    ?.toString(),
               ),
             ),
             onChanged: (value) {
@@ -173,9 +172,9 @@ class VehicleHitchesPage extends ConsumerWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
-                (value) =>
-                    (value as ArticulatedTractor).rearAxleToTowbarDistance
-                        ?.toString(),
+                (value) => (value as ArticulatedTractor)
+                    .rearAxleToTowbarDistance
+                    ?.toString(),
               ),
             ),
             onChanged: (value) {
@@ -194,15 +193,14 @@ class VehicleHitchesPage extends ConsumerWidget {
       child: Align(
         alignment: Alignment.topCenter,
         child: Column(
-          children:
-              children
-                  .map(
-                    (widget) => Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: SizedBox(width: 400, child: widget),
-                    ),
-                  )
-                  .toList(),
+          children: children
+              .map(
+                (widget) => Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: SizedBox(width: 400, child: widget),
+                ),
+              )
+              .toList(),
         ),
       ),
     );

@@ -32,20 +32,17 @@ class HardwareStatusIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer(
-      builder:
-          (context, ref, child) => Tooltip(
-            message:
-                ref.watch(hardwareAliveProvider)
-                    ? 'HW connected'
-                    : 'HW not connected',
-            child: Icon(
-              Icons.router,
-              size: size,
-              color:
-                  ref.watch(hardwareAliveProvider) ? Colors.green : Colors.red,
-              shadows: const [Shadow(offset: Offset(0, 1))],
-            ),
-          ),
+      builder: (context, ref, child) => Tooltip(
+        message: ref.watch(hardwareAliveProvider)
+            ? 'HW connected'
+            : 'HW not connected',
+        child: Icon(
+          Icons.router,
+          size: size,
+          color: ref.watch(hardwareAliveProvider) ? Colors.green : Colors.red,
+          shadows: const [Shadow(offset: Offset(0, 1))],
+        ),
+      ),
     );
   }
 }

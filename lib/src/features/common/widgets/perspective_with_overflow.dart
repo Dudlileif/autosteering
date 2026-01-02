@@ -56,10 +56,9 @@ class PerspectiveWithOverflow extends StatelessWidget {
     return Transform(
       filterQuality: FilterQuality.low,
       alignment: Alignment.center,
-      transform:
-          Matrix4.identity()
-            ..setEntry(3, 2, 0.001) // Perspective narrowing modifier
-            ..rotateX(-perspectiveAngle.toRadians()),
+      transform: Matrix4.identity()
+        ..setEntry(3, 2, 0.001) // Perspective narrowing modifier
+        ..rotateX(-perspectiveAngle.toRadians()),
       child: FractionallySizedBox(
         heightFactor: heightFactor,
         widthFactor: widthFactor,

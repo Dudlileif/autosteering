@@ -144,10 +144,9 @@ class Imu {
       );
 
   /// Sets the [config] zero value for bearing to [bearingZero].
-  void setBearingZeroTo(num bearingZero) =>
-      config = config.copyWith(
-        zeroValues: config.zeroValues.copyWith(bearingZero: bearingZero),
-      );
+  void setBearingZeroTo(num bearingZero) => config = config.copyWith(
+    zeroValues: config.zeroValues.copyWith(bearingZero: bearingZero),
+  );
 
   /// Sets the [config] zero values for pitch and roll to the current [reading]
   /// values.

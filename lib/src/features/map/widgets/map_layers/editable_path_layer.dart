@@ -33,72 +33,67 @@ class EditablePathLayer extends ConsumerWidget {
     final points = ref.watch(editablePathPointsProvider);
 
     return Stack(
-      children:
-          points != null && points.length >= 2
-              ? [
-                PolylineLayer(
-                  polylines: [
-                    Polyline(
-                      points: [...points.map((point) => point.latLng)],
-                      color: Colors.blue,
-                      strokeWidth: 2,
-                    ),
-                  ],
-                ),
-                MarkerLayer(
-                  markers: [
-                    ...points.mapIndexed((index, point) {
-                      final nextPoint =
-                          index == points.length - 1
-                              ? points.first
-                              : points.elementAt(index + 1);
+      children: points != null && points.length >= 2
+          ? [
+              PolylineLayer(
+                polylines: [
+                  Polyline(
+                    points: [...points.map((point) => point.latLng)],
+                    color: Colors.blue,
+                    strokeWidth: 2,
+                  ),
+                ],
+              ),
+              MarkerLayer(
+                markers: [
+                  ...points.mapIndexed((index, point) {
+                    final nextPoint = index == points.length - 1
+                        ? points.first
+                        : points.elementAt(index + 1);
 
-                      final midPoint = point.spherical.intermediatePointTo(
-                        nextPoint,
-                        fraction: 0.5,
-                      );
+                    final midPoint = point.spherical.intermediatePointTo(
+                      nextPoint,
+                      fraction: 0.5,
+                    );
 
-                      return Marker(
-                        point: midPoint.latLng,
-                        child: AddPointMarker(
-                          alwaysVisible: Device.isMobile,
-                          point: midPoint,
+                    return Marker(
+                      point: midPoint.latLng,
+                      child: AddPointMarker(
+                        alwaysVisible: Device.isMobile,
+                        point: midPoint,
+                        radius: 5,
+                        onTap: () => ref
+                            .read(editablePathPointsProvider.notifier)
+                            .insert(index + 1, midPoint),
+                      ),
+                    );
+                  }),
+                  ...points.mapIndexed(
+                    (index, point) => Marker(
+                      point: point.latLng,
+                      child: GestureDetector(
+                        onDoubleTap: () => ref
+                            .read(editablePathPointsProvider.notifier)
+                            .remove(index),
+                        onSecondaryTap: () => ref
+                            .read(editablePathPointsProvider.notifier)
+                            .remove(index),
+                        child: MovableMapMarker(
+                          point: point,
                           radius: 5,
-                          onTap:
-                              () => ref
-                                  .read(editablePathPointsProvider.notifier)
-                                  .insert(index + 1, midPoint),
-                        ),
-                      );
-                    }),
-                    ...points.mapIndexed(
-                      (index, point) => Marker(
-                        point: point.latLng,
-                        child: GestureDetector(
-                          onDoubleTap:
-                              () => ref
-                                  .read(editablePathPointsProvider.notifier)
-                                  .remove(index),
-                          onSecondaryTap:
-                              () => ref
-                                  .read(editablePathPointsProvider.notifier)
-                                  .remove(index),
-                          child: MovableMapMarker(
-                            point: point,
-                            radius: 5,
-                            onMoved: (position) {
-                              ref
-                                  .read(editablePathPointsProvider.notifier)
-                                  .movePoint(index, position);
-                            },
-                          ),
+                          onMoved: (position) {
+                            ref
+                                .read(editablePathPointsProvider.notifier)
+                                .movePoint(index, position);
+                          },
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ]
-              : const [],
+                  ),
+                ],
+              ),
+            ]
+          : const [],
     );
   }
 }

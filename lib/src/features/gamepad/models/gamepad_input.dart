@@ -104,12 +104,11 @@ class GamepadInput {
 
     // Set all values in deadzone to deadzone values.
     // -1...0...1 -> -deadZoneMax...-deadZoneMin|+deadZoneMin...deadZoneMax
-    final deadZoneAdjusted =
-        normalized.abs() < deadZoneMin
-            ? sign * deadZoneMin
-            : normalized.abs() > deadZoneMax
-            ? sign * deadZoneMax
-            : normalized;
+    final deadZoneAdjusted = normalized.abs() < deadZoneMin
+        ? sign * deadZoneMin
+        : normalized.abs() > deadZoneMax
+        ? sign * deadZoneMax
+        : normalized;
 
     // Normalize to the full range again so that we start at 0 when
     // passing deadZoneMin and end at +/- 1 when passing deadZoneMax.
@@ -143,12 +142,11 @@ class GamepadInput {
 
     // Set all values in deadzone to deadzone values.
     // 0...1 -> deadZoneMin...deadZoneMax
-    final deadZoneAdjusted =
-        normalized < deadZoneMin
-            ? deadZoneMin
-            : normalized > deadZoneMax
-            ? deadZoneMax
-            : normalized;
+    final deadZoneAdjusted = normalized < deadZoneMin
+        ? deadZoneMin
+        : normalized > deadZoneMax
+        ? deadZoneMax
+        : normalized;
 
     // Normalize to the full range again so that we start at 0 when
     // passing deadZoneMin and end at 1 when passing deadZoneMax.
@@ -177,7 +175,8 @@ enum GamepadButtonInput {
   rightStickButton('button-11'),
   home('button-12'),
   touchpad('button-13'),
-  unknown(null);
+  unknown(null)
+  ;
 
   const GamepadButtonInput(this.id);
 
@@ -200,7 +199,8 @@ enum GamepadAnalogInput {
   rightTrigger('dwUpos'),
   leftTrigger('dwVpos'),
   pov('pov'),
-  unknown(null);
+  unknown(null)
+  ;
 
   const GamepadAnalogInput(this.id);
 
@@ -223,7 +223,8 @@ enum GamepadPovInput {
   downLeft(22500),
   left(27000),
   upLeft(31500),
-  released(65535);
+  released(65535)
+  ;
 
   const GamepadPovInput(this.value);
 

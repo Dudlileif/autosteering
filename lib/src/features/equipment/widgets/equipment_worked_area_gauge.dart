@@ -51,7 +51,8 @@ class EquipmentWorkedAreaGauge extends ConsumerWidget {
         ),
         title: TextWithStroke(
           switch (fieldArea != null) {
-            true => '''
+            true =>
+              '''
 ${area != null ? (area / 1e4).toStringAsFixed(2) : '-'} / ${(fieldArea! / 1e4).toStringAsFixed(2)} ha
 ${area != null ? '${clampDouble(100 * area / fieldArea, 0, 100).toStringAsFixed(1)}%' : ''}''',
             false => '${(area! / 1e4).toStringAsFixed(2)} ha',

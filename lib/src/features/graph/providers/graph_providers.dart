@@ -114,79 +114,78 @@ Set<GraphData> graphActiveData(Ref ref) {
       ),
     ),
   );
-  final graphData =
-      parameters
-          .map(
-            (parameter) => switch (parameter) {
-              GraphParameter.imuBearing => const GraphData(
-                min: 0,
-                max: 360,
-                parameter: GraphParameter.imuBearing,
-              ),
-              GraphParameter.imuPitch => const GraphData(
-                min: -180,
-                max: 180,
-                parameter: GraphParameter.imuPitch,
-              ),
-              GraphParameter.imuRoll => const GraphData(
-                min: -180,
-                max: 180,
-                parameter: GraphParameter.imuRoll,
-              ),
-              GraphParameter.imuLongitudinalCorrection => const GraphData(
-                min: -2,
-                max: 2,
-                parameter: GraphParameter.imuLongitudinalCorrection,
-              ),
-              GraphParameter.imuLateralCorrection => const GraphData(
-                min: -2,
-                max: 2,
-                parameter: GraphParameter.imuLateralCorrection,
-              ),
-              GraphParameter.imuAccelerationX => const GraphData(
-                min: 0,
-                max: 10,
-                parameter: GraphParameter.imuAccelerationX,
-              ),
-              GraphParameter.imuAccelerationY => const GraphData(
-                min: 0,
-                max: 10,
-                parameter: GraphParameter.imuAccelerationY,
-              ),
-              GraphParameter.imuAccelerationZ => const GraphData(
-                min: 0,
-                max: 10,
-                parameter: GraphParameter.imuAccelerationZ,
-              ),
-              GraphParameter.steeringAngle => GraphData(
-                min: -vehicle.steeringAngleMax,
-                max: vehicle.steeringAngleMax,
-                parameter: parameter,
-              ),
-              GraphParameter.steeringAngleTarget => GraphData(
-                min: -vehicle.steeringAngleMax,
-                max: vehicle.steeringAngleMax,
-                parameter: parameter,
-              ),
-              GraphParameter.steeringWas => GraphData(
-                min: vehicle.hardware.wasMin,
-                max: vehicle.hardware.wasMax,
-                parameter: parameter,
-              ),
-              GraphParameter.steeringWasTarget => GraphData(
-                min: vehicle.hardware.wasMin,
-                max: vehicle.hardware.wasMax,
-                parameter: parameter,
-              ),
-              GraphParameter.perpendicularDistance => GraphData(
-                min: -1,
-                max: 1,
-                parameter: parameter,
-              ),
-            },
-          )
-          .nonNulls
-          .toSet();
+  final graphData = parameters
+      .map(
+        (parameter) => switch (parameter) {
+          GraphParameter.imuBearing => const GraphData(
+            min: 0,
+            max: 360,
+            parameter: GraphParameter.imuBearing,
+          ),
+          GraphParameter.imuPitch => const GraphData(
+            min: -180,
+            max: 180,
+            parameter: GraphParameter.imuPitch,
+          ),
+          GraphParameter.imuRoll => const GraphData(
+            min: -180,
+            max: 180,
+            parameter: GraphParameter.imuRoll,
+          ),
+          GraphParameter.imuLongitudinalCorrection => const GraphData(
+            min: -2,
+            max: 2,
+            parameter: GraphParameter.imuLongitudinalCorrection,
+          ),
+          GraphParameter.imuLateralCorrection => const GraphData(
+            min: -2,
+            max: 2,
+            parameter: GraphParameter.imuLateralCorrection,
+          ),
+          GraphParameter.imuAccelerationX => const GraphData(
+            min: 0,
+            max: 10,
+            parameter: GraphParameter.imuAccelerationX,
+          ),
+          GraphParameter.imuAccelerationY => const GraphData(
+            min: 0,
+            max: 10,
+            parameter: GraphParameter.imuAccelerationY,
+          ),
+          GraphParameter.imuAccelerationZ => const GraphData(
+            min: 0,
+            max: 10,
+            parameter: GraphParameter.imuAccelerationZ,
+          ),
+          GraphParameter.steeringAngle => GraphData(
+            min: -vehicle.steeringAngleMax,
+            max: vehicle.steeringAngleMax,
+            parameter: parameter,
+          ),
+          GraphParameter.steeringAngleTarget => GraphData(
+            min: -vehicle.steeringAngleMax,
+            max: vehicle.steeringAngleMax,
+            parameter: parameter,
+          ),
+          GraphParameter.steeringWas => GraphData(
+            min: vehicle.hardware.wasMin,
+            max: vehicle.hardware.wasMax,
+            parameter: parameter,
+          ),
+          GraphParameter.steeringWasTarget => GraphData(
+            min: vehicle.hardware.wasMin,
+            max: vehicle.hardware.wasMax,
+            parameter: parameter,
+          ),
+          GraphParameter.perpendicularDistance => GraphData(
+            min: -1,
+            max: 1,
+            parameter: parameter,
+          ),
+        },
+      )
+      .nonNulls
+      .toSet();
   return graphData;
 }
 

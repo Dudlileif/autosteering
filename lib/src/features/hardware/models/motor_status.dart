@@ -35,7 +35,8 @@ enum MotorStatus {
   /// The motor is disabled, but will be enabled automatically, usually used
   /// when stationary but with autosteer engaged, which will then enable the
   /// motor when moving again.
-  standby('Motor is disabled, but will be enabled automatically');
+  standby('Motor is disabled, but will be enabled automatically')
+  ;
 
   const MotorStatus(this.text);
 

@@ -92,12 +92,11 @@ class Grid {
     final exponent = (log(diagonal) / ln10).ceil().clamp(3, 8);
 
     final leading = diagonal.truncate() ~/ pow(10, exponent - 1);
-    final multiplier =
-        switch (leading) {
-          > 5 => 5,
-          > 2 => 2,
-          _ => 1,
-        }.toDouble();
+    final multiplier = switch (leading) {
+      > 5 => 5,
+      > 2 => 2,
+      _ => 1,
+    }.toDouble();
 
     final spacing = multiplier * pow(10, exponent - 2);
     return spacing;

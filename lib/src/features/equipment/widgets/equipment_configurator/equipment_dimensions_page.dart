@@ -95,10 +95,9 @@ class EquipmentDimensionsPage extends ConsumerWidget {
             equipment.workingAreaLength,
           );
 
-          final fraction =
-              equipment.workingAreaLength > 0
-                  ? 1 - (length / equipment.workingAreaLength)
-                  : 1.0;
+          final fraction = equipment.workingAreaLength > 0
+              ? 1 - (length / equipment.workingAreaLength)
+              : 1.0;
           ref
               .read(configuredEquipmentProvider.notifier)
               .update(equipment.copyWith(recordingPositionFraction: fraction));
@@ -131,18 +130,17 @@ class EquipmentDimensionsPage extends ConsumerWidget {
 
     return SingleChildScrollView(
       child: Column(
-        children:
-            children
-                .map(
-                  (widget) => ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 400),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: widget,
-                    ),
-                  ),
-                )
-                .toList(),
+        children: children
+            .map(
+              (widget) => ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: widget,
+                ),
+              ),
+            )
+            .toList(),
       ),
     );
   }

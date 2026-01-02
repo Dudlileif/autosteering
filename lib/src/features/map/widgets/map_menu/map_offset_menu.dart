@@ -46,15 +46,11 @@ class MapOffsetMenu extends ConsumerWidget {
             Text('X: ${offset.x} m', style: textStyle),
             Slider(
               value: offset.x,
-              onChanged:
-                  (value) => switch (using3D) {
-                    true => ref
-                        .read(mapOffset3DProvider.notifier)
-                        .update(x: value),
-                    false => ref
-                        .read(mapOffset2DProvider.notifier)
-                        .update(x: value),
-                  },
+              onChanged: (value) => switch (using3D) {
+                true => ref.read(mapOffset3DProvider.notifier).update(x: value),
+                false =>
+                  ref.read(mapOffset2DProvider.notifier).update(x: value),
+              },
               min: -40,
               max: 40,
               divisions: 80,
@@ -67,15 +63,11 @@ class MapOffsetMenu extends ConsumerWidget {
             Text('Y: ${offset.y} m', style: textStyle),
             Slider(
               value: offset.y,
-              onChanged:
-                  (value) => switch (using3D) {
-                    true => ref
-                        .read(mapOffset3DProvider.notifier)
-                        .update(y: value),
-                    false => ref
-                        .read(mapOffset2DProvider.notifier)
-                        .update(y: value),
-                  },
+              onChanged: (value) => switch (using3D) {
+                true => ref.read(mapOffset3DProvider.notifier).update(y: value),
+                false =>
+                  ref.read(mapOffset2DProvider.notifier).update(y: value),
+              },
               min: -40,
               max: 40,
               divisions: 80,

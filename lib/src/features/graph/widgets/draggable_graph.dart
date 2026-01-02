@@ -40,51 +40,45 @@ class GraphWithSelector extends ConsumerWidget {
             title: const Text('Graph'),
             actions: [
               MenuAnchor(
-                builder:
-                    (context, menuController, child) => IconButton(
-                      icon: const Icon(Icons.arrow_drop_down_circle_outlined),
-                      onPressed:
-                          () => switch (menuController.isOpen) {
-                            true => menuController.close(),
-                            false => menuController.open(),
-                          },
+                builder: (context, menuController, child) => IconButton(
+                  icon: const Icon(Icons.arrow_drop_down_circle_outlined),
+                  onPressed: () => switch (menuController.isOpen) {
+                    true => menuController.close(),
+                    false => menuController.open(),
+                  },
+                ),
+                menuChildren: GraphParameter.values.map((parameter) {
+                  final data = ref.watch(
+                    graphActiveParametersProvider.select(
+                      (value) => (
+                        index: value.toList().indexOf(parameter),
+                        length: value.length,
+                      ),
                     ),
-                menuChildren:
-                    GraphParameter.values.map((parameter) {
-                      final data = ref.watch(
-                        graphActiveParametersProvider.select(
-                          (value) => (
-                            index: value.toList().indexOf(parameter),
-                            length: value.length,
-                          ),
-                        ),
-                      );
-                      final evenlySpreadIndex =
-                          (Colors.primaries.length *
-                                  data.index /
-                                  (data.length.clamp(1, double.infinity)))
-                              .round();
-                      return CheckboxListTile(
-                        value: data.index >= 0,
-                        selected: data.index >= 0,
-                        onChanged:
-                            (value) => ref
-                                .read(graphActiveParametersProvider.notifier)
-                                .updateParameter(parameter, value: value),
-                        title: Text(parameter.name),
-                        activeColor:
-                            Colors.primaries[evenlySpreadIndex %
-                                Colors.primaries.length],
-                      );
-                    }).toList(),
+                  );
+                  final evenlySpreadIndex =
+                      (Colors.primaries.length *
+                              data.index /
+                              (data.length.clamp(1, double.infinity)))
+                          .round();
+                  return CheckboxListTile(
+                    value: data.index >= 0,
+                    selected: data.index >= 0,
+                    onChanged: (value) => ref
+                        .read(graphActiveParametersProvider.notifier)
+                        .updateParameter(parameter, value: value),
+                    title: Text(parameter.name),
+                    activeColor: Colors
+                        .primaries[evenlySpreadIndex % Colors.primaries.length],
+                  );
+                }).toList(),
               ),
               Consumer(
                 builder: (context, ref, child) {
                   return CloseButton(
-                    onPressed:
-                        () => ref
-                            .read(showDraggableGraphProvider.notifier)
-                            .update(value: false),
+                    onPressed: () => ref
+                        .read(showDraggableGraphProvider.notifier)
+                        .update(value: false),
                   );
                 },
               ),

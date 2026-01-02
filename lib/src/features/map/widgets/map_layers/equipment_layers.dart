@@ -87,16 +87,15 @@ class EquipmentDebugLayer extends ConsumerWidget {
               if (debugTrajectory) ...[
                 ...equipments.map(
                   (e) => Polyline(
-                    points:
-                        e
-                            .trajectory(
-                              seconds: trajectorySeconds,
-                              minLength: trajectoryMinLength,
-                            )
-                            .chain
-                            .toGeographicPositions
-                            .map((e) => e.latLng)
-                            .toList(),
+                    points: e
+                        .trajectory(
+                          seconds: trajectorySeconds,
+                          minLength: trajectoryMinLength,
+                        )
+                        .chain
+                        .toGeographicPositions
+                        .map((e) => e.latLng)
+                        .toList(),
                     strokeWidth: 2,
                     color: Colors.orange,
                   ),
@@ -106,36 +105,32 @@ class EquipmentDebugLayer extends ConsumerWidget {
                     if (equipment.sections.isEmpty) {
                       return <Polyline>[];
                     }
-                    final leftMost =
-                        equipment
-                            .sectionEdgeTrajectories(
-                              0,
-                              seconds: trajectorySeconds,
-                              minLength: trajectoryMinLength,
-                            )
-                            .left;
-                    final rightMost =
-                        equipment
-                            .sectionEdgeTrajectories(
-                              equipment.sections.length - 1,
-                              seconds: trajectorySeconds,
-                              minLength: trajectoryMinLength,
-                            )
-                            .right;
+                    final leftMost = equipment
+                        .sectionEdgeTrajectories(
+                          0,
+                          seconds: trajectorySeconds,
+                          minLength: trajectoryMinLength,
+                        )
+                        .left;
+                    final rightMost = equipment
+                        .sectionEdgeTrajectories(
+                          equipment.sections.length - 1,
+                          seconds: trajectorySeconds,
+                          minLength: trajectoryMinLength,
+                        )
+                        .right;
                     return <Polyline>[
                       Polyline(
-                        points:
-                            leftMost.chain.toGeographicPositions
-                                .map((e) => e.latLng)
-                                .toList(),
+                        points: leftMost.chain.toGeographicPositions
+                            .map((e) => e.latLng)
+                            .toList(),
                         strokeWidth: 2,
                         color: Colors.red,
                       ),
                       Polyline(
-                        points:
-                            rightMost.chain.toGeographicPositions
-                                .map((e) => e.latLng)
-                                .toList(),
+                        points: rightMost.chain.toGeographicPositions
+                            .map((e) => e.latLng)
+                            .toList(),
                         strokeWidth: 2,
                         color: Colors.red,
                       ),
@@ -160,10 +155,9 @@ class EquipmentDebugLayer extends ConsumerWidget {
                       (equipment) => CircleMarker(
                         point: equipment.turningRadiusCenter!.latLng,
                         radius: equipment.currentTurningRadius!,
-                        color:
-                            darkTheme
-                                ? Colors.white.withValues(alpha: 0.1)
-                                : Colors.black.withValues(alpha: 0.1),
+                        color: darkTheme
+                            ? Colors.white.withValues(alpha: 0.1)
+                            : Colors.black.withValues(alpha: 0.1),
                         useRadiusInMeter: true,
                       ),
                     ),

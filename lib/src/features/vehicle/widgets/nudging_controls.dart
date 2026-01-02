@@ -44,13 +44,11 @@ class NudgingControls extends StatelessWidget {
             primary: false,
             actions: [
               Consumer(
-                builder:
-                    (context, ref, child) => CloseButton(
-                      onPressed:
-                          () => ref
-                              .read(showNudgingControlsProvider.notifier)
-                              .update(value: false),
-                    ),
+                builder: (context, ref, child) => CloseButton(
+                  onPressed: () => ref
+                      .read(showNudgingControlsProvider.notifier)
+                      .update(value: false),
+                ),
               ),
             ],
           ),
@@ -88,21 +86,19 @@ class NudgingControls extends StatelessWidget {
                         },
                       ),
                       Consumer(
-                        builder:
-                            (context, ref, child) => FilledButton(
-                              onPressed:
-                                  () => ref
-                                      .read(simInputProvider.notifier)
-                                      .send((nudgeDistance: 0)),
-                              child: TextWithStroke(
-                                'Reset',
-                                style: GoogleFonts.robotoMono(
-                                  color: Colors.white,
-                                  textStyle: theme.textTheme.titleMedium,
-                                ),
-                                strokeWidth: 3.5,
-                              ),
+                        builder: (context, ref, child) => FilledButton(
+                          onPressed: () => ref
+                              .read(simInputProvider.notifier)
+                              .send((nudgeDistance: 0)),
+                          child: TextWithStroke(
+                            'Reset',
+                            style: GoogleFonts.robotoMono(
+                              color: Colors.white,
+                              textStyle: theme.textTheme.titleMedium,
                             ),
+                            strokeWidth: 3.5,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -121,8 +117,8 @@ class NudgingControls extends StatelessWidget {
                         strokeWidth: 3.5,
                       ),
                       Consumer(
-                        builder:
-                            (context, ref, child) => SegmentedButton<double>(
+                        builder: (context, ref, child) =>
+                            SegmentedButton<double>(
                               segments: [
                                 ButtonSegment(
                                   value: 0.01,
@@ -159,10 +155,9 @@ class NudgingControls extends StatelessWidget {
                                 ),
                               ],
                               selected: {ref.watch(nudgeStepSizeProvider)},
-                              onSelectionChanged:
-                                  (values) => ref
-                                      .read(nudgeStepSizeProvider.notifier)
-                                      .update(values.first),
+                              onSelectionChanged: (values) => ref
+                                  .read(nudgeStepSizeProvider.notifier)
+                                  .update(values.first),
                             ),
                       ),
                     ],
@@ -174,59 +169,50 @@ class NudgingControls extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Consumer(
-                        builder:
-                            (context, ref, child) => IconButton.filled(
-                              icon: const Icon(
-                                Icons.keyboard_double_arrow_left,
-                              ),
-                              onPressed:
-                                  () =>
-                                      ref.read(simInputProvider.notifier).send((
-                                        nudgeIncrement:
-                                            2 *
-                                            -ref.watch(nudgeStepSizeProvider),
-                                      )),
-                            ),
+                        builder: (context, ref, child) => IconButton.filled(
+                          icon: const Icon(
+                            Icons.keyboard_double_arrow_left,
+                          ),
+                          onPressed: () =>
+                              ref.read(simInputProvider.notifier).send((
+                                nudgeIncrement:
+                                    2 * -ref.watch(nudgeStepSizeProvider),
+                              )),
+                        ),
                       ),
                       Consumer(
-                        builder:
-                            (context, ref, child) => IconButton.filled(
-                              icon: const Icon(Icons.keyboard_arrow_left),
-                              onPressed:
-                                  () =>
-                                      ref.read(simInputProvider.notifier).send((
-                                        nudgeIncrement:
-                                            -ref.watch(nudgeStepSizeProvider),
-                                      )),
-                            ),
+                        builder: (context, ref, child) => IconButton.filled(
+                          icon: const Icon(Icons.keyboard_arrow_left),
+                          onPressed: () =>
+                              ref.read(simInputProvider.notifier).send((
+                                nudgeIncrement: -ref.watch(
+                                  nudgeStepSizeProvider,
+                                ),
+                              )),
+                        ),
                       ),
                       Consumer(
-                        builder:
-                            (context, ref, child) => IconButton.filled(
-                              icon: const Icon(Icons.keyboard_arrow_right),
-                              onPressed:
-                                  () =>
-                                      ref.read(simInputProvider.notifier).send((
-                                        nudgeIncrement: ref.watch(
-                                          nudgeStepSizeProvider,
-                                        ),
-                                      )),
-                            ),
+                        builder: (context, ref, child) => IconButton.filled(
+                          icon: const Icon(Icons.keyboard_arrow_right),
+                          onPressed: () =>
+                              ref.read(simInputProvider.notifier).send((
+                                nudgeIncrement: ref.watch(
+                                  nudgeStepSizeProvider,
+                                ),
+                              )),
+                        ),
                       ),
                       Consumer(
-                        builder:
-                            (context, ref, child) => IconButton.filled(
-                              icon: const Icon(
-                                Icons.keyboard_double_arrow_right,
-                              ),
-                              onPressed:
-                                  () =>
-                                      ref.read(simInputProvider.notifier).send((
-                                        nudgeIncrement:
-                                            2 *
-                                            ref.watch(nudgeStepSizeProvider),
-                                      )),
-                            ),
+                        builder: (context, ref, child) => IconButton.filled(
+                          icon: const Icon(
+                            Icons.keyboard_double_arrow_right,
+                          ),
+                          onPressed: () =>
+                              ref.read(simInputProvider.notifier).send((
+                                nudgeIncrement:
+                                    2 * ref.watch(nudgeStepSizeProvider),
+                              )),
+                        ),
                       ),
                     ],
                   ),
@@ -253,8 +239,8 @@ class NudgingControls extends StatelessWidget {
                       }
 
                       return FilledButton(
-                        onPressed:
-                            () => ref.read(simInputProvider.notifier).send((
+                        onPressed: () =>
+                            ref.read(simInputProvider.notifier).send((
                               nudgeDistance: currentDistance!,
                             )),
                         child: TextWithStroke(

@@ -37,26 +37,20 @@ class NtripMenu extends ConsumerWidget {
     return MenuButtonWithChildren(
       text: 'NTRIP (RTK)',
       iconOverrideWidget: Consumer(
-        builder:
-            (context, ref, child) => Icon(
-              Icons.straighten,
-              color: ref.watch(ntripAliveProvider) ? Colors.green : null,
-            ),
+        builder: (context, ref, child) => Icon(
+          Icons.straighten,
+          color: ref.watch(ntripAliveProvider) ? Colors.green : null,
+        ),
       ),
       menuChildren: [
         Consumer(
-          builder:
-              (context, ref, child) => CheckboxListTile(
-                value: ref.watch(ntripEnabledProvider),
-                onChanged:
-                    (value) =>
-                        value != null
-                            ? ref
-                                .read(ntripEnabledProvider.notifier)
-                                .update(value: value)
-                            : null,
-                secondary: Text('Enabled', style: textStyle),
-              ),
+          builder: (context, ref, child) => CheckboxListTile(
+            value: ref.watch(ntripEnabledProvider),
+            onChanged: (value) => value != null
+                ? ref.read(ntripEnabledProvider.notifier).update(value: value)
+                : null,
+            secondary: Text('Enabled', style: textStyle),
+          ),
         ),
 
         if (ref.watch(
@@ -73,88 +67,79 @@ class NtripMenu extends ConsumerWidget {
             ListTile(
               title: Text('Edit profile', style: textStyle),
               leading: const Icon(Icons.edit),
-              onTap:
-                  () => showDialog<void>(
-                    context: context,
-                    builder:
-                        (context) => _NtripProfileDialog(
-                          profile: ref.watch(activeNtripProfileProvider),
-                        ),
-                  ),
+              onTap: () => showDialog<void>(
+                context: context,
+                builder: (context) => _NtripProfileDialog(
+                  profile: ref.watch(activeNtripProfileProvider),
+                ),
+              ),
             ),
         ],
         if (!dadMode)
           ListTile(
             title: Text('Add profile', style: textStyle),
             leading: const Icon(Icons.add),
-            onTap:
-                () => showDialog<void>(
-                  context: context,
-                  builder: (context) => const _NtripProfileDialog(),
-                ),
+            onTap: () => showDialog<void>(
+              context: context,
+              builder: (context) => const _NtripProfileDialog(),
+            ),
           ),
         if (ref.watch(
           ntripProfilesProvider.select((value) => value.isNotEmpty),
         ))
           Consumer(
-            builder:
-                (context, ref, child) => MenuButtonWithChildren(
-                  text: 'Load profile',
-                  icon: Icons.history,
-                  menuChildren:
-                      ref
-                          .watch(ntripProfilesProvider)
-                          .map(
-                            (profile) => ConstrainedBox(
-                              constraints: const BoxConstraints(minWidth: 200),
-                              child: ListTile(
-                                selectedTileColor: Theme.of(context)
-                                    .menuButtonTheme
-                                    .style
-                                    ?.overlayColor
-                                    ?.resolve({WidgetState.selected}),
-                                selected:
-                                    profile ==
-                                    ref.watch(activeNtripProfileProvider),
-                                title: Text(profile.name, style: textStyle),
-                                onTap:
-                                    () => ref
-                                        .read(
-                                          activeNtripProfileProvider.notifier,
-                                        )
-                                        .update(profile),
-                                trailing: switch (Device.isNative && !dadMode) {
-                                  true => IconButton(
-                                    onPressed: () async {
-                                      await showDialog<bool>(
-                                        context: context,
-                                        builder: (context) {
-                                          return Consumer(
-                                            builder: (context, ref, child) {
-                                              return DeleteDialog(
-                                                name: profile.name,
-                                                onDelete:
-                                                    () async => ref
-                                                        .read(
-                                                          ntripProfilesProvider
-                                                              .notifier,
-                                                        )
-                                                        .remove(profile),
-                                              );
-                                            },
-                                          );
-                                        },
+            builder: (context, ref, child) => MenuButtonWithChildren(
+              text: 'Load profile',
+              icon: Icons.history,
+              menuChildren: ref
+                  .watch(ntripProfilesProvider)
+                  .map(
+                    (profile) => ConstrainedBox(
+                      constraints: const BoxConstraints(minWidth: 200),
+                      child: ListTile(
+                        selectedTileColor: Theme.of(context)
+                            .menuButtonTheme
+                            .style
+                            ?.overlayColor
+                            ?.resolve({WidgetState.selected}),
+                        selected:
+                            profile == ref.watch(activeNtripProfileProvider),
+                        title: Text(profile.name, style: textStyle),
+                        onTap: () => ref
+                            .read(
+                              activeNtripProfileProvider.notifier,
+                            )
+                            .update(profile),
+                        trailing: switch (Device.isNative && !dadMode) {
+                          true => IconButton(
+                            onPressed: () async {
+                              await showDialog<bool>(
+                                context: context,
+                                builder: (context) {
+                                  return Consumer(
+                                    builder: (context, ref, child) {
+                                      return DeleteDialog(
+                                        name: profile.name,
+                                        onDelete: () async => ref
+                                            .read(
+                                              ntripProfilesProvider.notifier,
+                                            )
+                                            .remove(profile),
                                       );
                                     },
-                                    icon: const Icon(Icons.delete),
-                                  ),
-                                  _ => null,
+                                  );
                                 },
-                              ),
-                            ),
-                          )
-                          .toList(),
-                ),
+                              );
+                            },
+                            icon: const Icon(Icons.delete),
+                          ),
+                          _ => null,
+                        },
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
           ),
         Consumer(
           builder: (context, ref, child) {
@@ -249,69 +234,63 @@ class _NtripSourcetableDialogState extends State<_NtripSourcetableDialog> {
       ),
       children: [
         Consumer(
-          builder:
-              (context, ref, child) => ref
-                  .watch(
-                    ntripMountPointsSortedProvider(
-                      host: widget.host,
-                      port: widget.port,
-                      username: widget.username,
-                      password: widget.password,
-                    ),
-                  )
-                  .when(
-                    data: (data) {
-                      if (data != null && data.isNotEmpty) {
-                        final entries = data.entries.take(10);
+          builder: (context, ref, child) => ref
+              .watch(
+                ntripMountPointsSortedProvider(
+                  host: widget.host,
+                  port: widget.port,
+                  username: widget.username,
+                  password: widget.password,
+                ),
+              )
+              .when(
+                data: (data) {
+                  if (data != null && data.isNotEmpty) {
+                    final entries = data.entries.take(10);
 
-                        return MenuItemButton(
-                          closeOnActivate: false,
-                          child: DropdownMenu(
-                            initialSelection: entries.first,
-                            onSelected:
-                                (value) => setState(
-                                  () => selectedMountPoint = value?.key.name,
-                                ),
-                            dropdownMenuEntries:
-                                entries.map((station) {
-                                  final label = <String>[];
-                                  final name = station.key.name ?? 'No name';
-                                  label.add(name);
-                                  final identifier = station.key.identifier;
-                                  if (identifier != null) {
-                                    label.add(identifier);
-                                  }
-                                  final country = station.key.country;
-                                  if (country != null &&
-                                      country != identifier) {
-                                    label.add(country);
-                                  }
-                                  final distance =
-                                      station.value != null
-                                          ? '''${(station.value! / 1000).toStringAsFixed(1)} km'''
-                                          : null;
-                                  if (distance != null) {
-                                    label.add(distance);
-                                  }
-
-                                  return DropdownMenuEntry<
-                                    MapEntry<NtripMountPointStream, double?>
-                                  >(value: station, label: label.join(', '));
-                                }).toList(),
-                          ),
-                        );
-                      }
-                      return Text(
-                        'No sourcetable found at the host.',
-                        style: textStyle,
-                      );
-                    },
-                    error: (error, stackTrace) => ErrorWidget(error),
-                    loading:
-                        () => const Column(
-                          children: [CircularProgressIndicator()],
+                    return MenuItemButton(
+                      closeOnActivate: false,
+                      child: DropdownMenu(
+                        initialSelection: entries.first,
+                        onSelected: (value) => setState(
+                          () => selectedMountPoint = value?.key.name,
                         ),
-                  ),
+                        dropdownMenuEntries: entries.map((station) {
+                          final label = <String>[];
+                          final name = station.key.name ?? 'No name';
+                          label.add(name);
+                          final identifier = station.key.identifier;
+                          if (identifier != null) {
+                            label.add(identifier);
+                          }
+                          final country = station.key.country;
+                          if (country != null && country != identifier) {
+                            label.add(country);
+                          }
+                          final distance = station.value != null
+                              ? '''${(station.value! / 1000).toStringAsFixed(1)} km'''
+                              : null;
+                          if (distance != null) {
+                            label.add(distance);
+                          }
+
+                          return DropdownMenuEntry<
+                            MapEntry<NtripMountPointStream, double?>
+                          >(value: station, label: label.join(', '));
+                        }).toList(),
+                      ),
+                    );
+                  }
+                  return Text(
+                    'No sourcetable found at the host.',
+                    style: textStyle,
+                  );
+                },
+                error: (error, stackTrace) => ErrorWidget(error),
+                loading: () => const Column(
+                  children: [CircularProgressIndicator()],
+                ),
+              ),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 16),
@@ -328,14 +307,13 @@ class _NtripSourcetableDialogState extends State<_NtripSourcetableDialog> {
                 ),
                 if (selectedMountPoint != null)
                   Consumer(
-                    builder:
-                        (context, ref, child) => FilledButton.icon(
-                          onPressed: () {
-                            Navigator.of(context).pop(selectedMountPoint);
-                          },
-                          icon: const Icon(Icons.check),
-                          label: Text('Use $selectedMountPoint'),
-                        ),
+                    builder: (context, ref, child) => FilledButton.icon(
+                      onPressed: () {
+                        Navigator.of(context).pop(selectedMountPoint);
+                      },
+                      icon: const Icon(Icons.check),
+                      label: Text('Use $selectedMountPoint'),
+                    ),
                   ),
               ],
             ),
@@ -472,16 +450,15 @@ class __NtripProfileDialogState extends State<_NtripProfileDialog> {
               return Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: ElevatedButton(
-                  onPressed:
-                      () => showDialog<String?>(
+                  onPressed: () =>
+                      showDialog<String?>(
                         context: context,
-                        builder:
-                            (context) => _NtripSourcetableDialog(
-                              host: hostAddress.text,
-                              port: int.tryParse(port.text) ?? 2101,
-                              username: username.text,
-                              password: password.text,
-                            ),
+                        builder: (context) => _NtripSourcetableDialog(
+                          host: hostAddress.text,
+                          port: int.tryParse(port.text) ?? 2101,
+                          username: username.text,
+                          password: password.text,
+                        ),
                       ).then((value) {
                         if (value != null) {
                           setState(() => mountPoint.text = value);
@@ -541,50 +518,48 @@ class __NtripProfileDialogState extends State<_NtripProfileDialog> {
                         hostAddress,
                         mountPoint,
                       ]),
-                      builder:
-                          (context, child) => FilledButton.icon(
-                            onPressed:
-                                name.text.isNotEmpty &&
-                                        hostAddress.text.isNotEmpty &&
-                                        mountPoint.text.isNotEmpty
-                                    ? () {
-                                      final profile = NtripProfile(
-                                        name: name.text,
-                                        hostAddress: hostAddress.text,
-                                        port: int.tryParse(port.text) ?? 2101,
-                                        mountPoint: mountPoint.text,
-                                        username: username.text,
-                                        password: password.text,
-                                        ggaSendingInterval: int.tryParse(
-                                          ggaSendingInterval.text,
-                                        ),
-                                      );
+                      builder: (context, child) => FilledButton.icon(
+                        onPressed:
+                            name.text.isNotEmpty &&
+                                hostAddress.text.isNotEmpty &&
+                                mountPoint.text.isNotEmpty
+                            ? () {
+                                final profile = NtripProfile(
+                                  name: name.text,
+                                  hostAddress: hostAddress.text,
+                                  port: int.tryParse(port.text) ?? 2101,
+                                  mountPoint: mountPoint.text,
+                                  username: username.text,
+                                  password: password.text,
+                                  ggaSendingInterval: int.tryParse(
+                                    ggaSendingInterval.text,
+                                  ),
+                                );
 
-                                      ref
-                                          .read(ntripProfilesProvider.notifier)
-                                          .replace(profile);
-                                      if (ref.read(
-                                        activeNtripProfileProvider.select(
-                                          (value) =>
-                                              value == null ||
-                                              value.name == name.text,
-                                        ),
-                                      )) {
-                                        ref
-                                            .read(
-                                              activeNtripProfileProvider
-                                                  .notifier,
-                                            )
-                                            .update(profile);
-                                      }
-                                      Navigator.of(context).pop();
-                                    }
-                                    : null,
-                            icon: const Icon(Icons.check),
-                            label: Text(
-                              widget.profile != null ? 'Update' : 'Create',
-                            ),
-                          ),
+                                ref
+                                    .read(ntripProfilesProvider.notifier)
+                                    .replace(profile);
+                                if (ref.read(
+                                  activeNtripProfileProvider.select(
+                                    (value) =>
+                                        value == null ||
+                                        value.name == name.text,
+                                  ),
+                                )) {
+                                  ref
+                                      .read(
+                                        activeNtripProfileProvider.notifier,
+                                      )
+                                      .update(profile);
+                                }
+                                Navigator.of(context).pop();
+                              }
+                            : null,
+                        icon: const Icon(Icons.check),
+                        label: Text(
+                          widget.profile != null ? 'Update' : 'Create',
+                        ),
+                      ),
                     );
                   },
                 ),

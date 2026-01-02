@@ -33,7 +33,8 @@ enum RemoteControlButtonAction {
   ),
 
   /// Reset nudge distance to 0.
-  resetNudgeDistance('Reset nudge distance to 0', Symbols.exposure_zero);
+  resetNudgeDistance('Reset nudge distance to 0', Symbols.exposure_zero)
+  ;
 
   const RemoteControlButtonAction(this.description, [this.icon]);
 

@@ -219,11 +219,10 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
                     distance = 0;
                   }
 
-                  var number =
-                      (distance.abs() * 100)
-                          .truncate()
-                          .clamp(-99, 99)
-                          .toString();
+                  var number = (distance.abs() * 100)
+                      .truncate()
+                      .clamp(-99, 99)
+                      .toString();
                   if (distance.abs() >= 1) {
                     number = distance.abs().clamp(0, 99).toStringAsFixed(1);
                   }

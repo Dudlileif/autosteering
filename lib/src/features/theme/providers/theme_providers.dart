@@ -54,12 +54,11 @@ class ActiveThemeMode extends _$ActiveThemeMode {
   /// Cycle throught the available states by going to the next one after the
   /// current [state].
   void cycle() => Future(
-    () =>
-        state = switch (state) {
-          ThemeMode.light => ThemeMode.system,
-          ThemeMode.system => ThemeMode.dark,
-          ThemeMode.dark => ThemeMode.light,
-        },
+    () => state = switch (state) {
+      ThemeMode.light => ThemeMode.system,
+      ThemeMode.system => ThemeMode.dark,
+      ThemeMode.dark => ThemeMode.light,
+    },
   );
 }
 
@@ -141,14 +140,13 @@ class ColorSchemeInheritFromVehicle extends _$ColorSchemeInheritFromVehicle {
 /// for the options changes.
 @riverpod
 AppTheme appTheme(Ref ref) {
-  final manufacturerColors =
-      ref.watch(colorSchemeInheritFromVehicleProvider)
-          ? ref.watch(
-            configuredVehicleProvider.select(
-              (value) => value.manufacturerColors,
-            ),
-          )
-          : ref.watch(manufacturerProvider);
+  final manufacturerColors = ref.watch(colorSchemeInheritFromVehicleProvider)
+      ? ref.watch(
+          configuredVehicleProvider.select(
+            (value) => value.manufacturerColors,
+          ),
+        )
+      : ref.watch(manufacturerProvider);
 
   return AppTheme(
     lightColors: ManufacturerSchemes.scheme(

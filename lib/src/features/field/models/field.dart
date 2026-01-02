@@ -54,10 +54,9 @@ class Field {
     final uuid = json['uuid'] as String?;
     final lastUsed = DateTime.tryParse(json['last_used'] as String);
     final polygon = Polygon.parse(json['polygon'] as String);
-    final boundingBox =
-        polygon.exterior != null
-            ? GeoBox.from(polygon.exterior!.toGeographicPositions)
-            : null;
+    final boundingBox = polygon.exterior != null
+        ? GeoBox.from(polygon.exterior!.toGeographicPositions)
+        : null;
     return Field(
       name: name,
       uuid: uuid,
@@ -88,21 +87,17 @@ class Field {
 
   /// A map-ready polygon for the field
   map.Polygon get mapPolygon => map.Polygon(
-    points:
-        polygon.exterior != null
-            ? polygon.exterior!.toGeographicPositions
-                .map((point) => point.latLng)
-                .toList()
-            : [],
-    holePointsList:
-        polygon.interior
-            .map(
-              (hole) =>
-                  hole.toGeographicPositions
-                      .map((point) => point.latLng)
-                      .toList(),
-            )
-            .toList(),
+    points: polygon.exterior != null
+        ? polygon.exterior!.toGeographicPositions
+              .map((point) => point.latLng)
+              .toList()
+        : [],
+    holePointsList: polygon.interior
+        .map(
+          (hole) =>
+              hole.toGeographicPositions.map((point) => point.latLng).toList(),
+        )
+        .toList(),
     borderStrokeWidth: 1,
     color: Colors.transparent,
   );
@@ -110,8 +105,8 @@ class Field {
   /// Map the [polygon]'s exterior ring points with [map].
   Iterable<T> mapExteriorPoints<T>(T Function(Geographic point) map) =>
       polygon.exterior != null
-          ? polygon.exterior!.toGeographicPositions.map((point) => map(point))
-          : [];
+      ? polygon.exterior!.toGeographicPositions.map((point) => map(point))
+      : [];
 
   /// Map the [polygon]'s interior rings' points with [map].
   Iterable<Iterable<T>> mapInteriorPoints<T>(
@@ -123,18 +118,17 @@ class Field {
   /// Map the [boundingBox] corner points with [map].
   Iterable<T> mapBoundingBox<T>(T Function(Geographic point) map) =>
       boundingBox != null
-          ? boundingBox!.corners2D.map((point) => map(point))
-          : [];
+      ? boundingBox!.corners2D.map((point) => map(point))
+      : [];
 
   /// Map the [polygon]'s exterior ring points and their index with [map].
   Iterable<T> mapIndexedExteriorPoints<T>(
     T Function(int index, Geographic point) map,
-  ) =>
-      polygon.exterior != null
-          ? polygon.exterior!.toGeographicPositions.mapIndexed(
-            (index, point) => map(index, point),
-          )
-          : [];
+  ) => polygon.exterior != null
+      ? polygon.exterior!.toGeographicPositions.mapIndexed(
+          (index, point) => map(index, point),
+        )
+      : [];
 
   /// Map the [polygon]'s interior rings' points and their index with [map].
   Iterable<Iterable<T>> mapIndexedInteriorPoints<T>(
@@ -148,12 +142,11 @@ class Field {
   /// Map the [boundingBox] corner points and their index with [map].
   Iterable<T> mapIndexedBoundingBox<T>(
     T Function(int index, Geographic point) map,
-  ) =>
-      boundingBox != null
-          ? boundingBox!.corners2D.mapIndexed(
-            (index, point) => map(index, point),
-          )
-          : [];
+  ) => boundingBox != null
+      ? boundingBox!.corners2D.mapIndexed(
+          (index, point) => map(index, point),
+        )
+      : [];
 
   /// The area of the whole field.
   ///
@@ -247,7 +240,8 @@ enum FieldBufferDistanceType {
   distance(Icons.straighten, 'Distance in m'),
 
   /// A multiple of widths of the current equipment.
-  equipmentWidths(Icons.handyman, 'Multiple of equipment widths');
+  equipmentWidths(Icons.handyman, 'Multiple of equipment widths')
+  ;
 
   const FieldBufferDistanceType(this.icon, this.tooltip);
 

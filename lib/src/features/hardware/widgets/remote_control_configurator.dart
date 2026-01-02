@@ -73,31 +73,27 @@ class RemoteControlConfigurator extends ConsumerWidget {
                                         fill: 1,
                                         weight: 1000,
                                       ),
-                                      trailingIcon:
-                                          action == actions[button]
-                                              ? const Icon(Icons.check)
-                                              : null,
+                                      trailingIcon: action == actions[button]
+                                          ? const Icon(Icons.check)
+                                          : null,
                                     ),
                                   )
                                   .toList(),
-                          onSelected:
-                              (action) => ref
-                                  .read(
-                                    remoteControlButtonActionsProvider.notifier,
-                                  )
-                                  .updateButton(button, action),
+                          onSelected: (action) => ref
+                              .read(
+                                remoteControlButtonActionsProvider.notifier,
+                              )
+                              .updateButton(button, action),
                         ),
                       ),
                       IconButton(
-                        onPressed:
-                            actions.length - 1 == button
-                                ? () => ref
-                                    .read(
-                                      remoteControlButtonActionsProvider
-                                          .notifier,
-                                    )
-                                    .update(actions..remove(button))
-                                : null,
+                        onPressed: actions.length - 1 == button
+                            ? () => ref
+                                  .read(
+                                    remoteControlButtonActionsProvider.notifier,
+                                  )
+                                  .update(actions..remove(button))
+                            : null,
                         icon: const Icon(Icons.delete),
                       ),
                     ],
@@ -109,16 +105,15 @@ class RemoteControlConfigurator extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.only(top: 16),
           child: ElevatedButton.icon(
-            onPressed:
-                () => ref
-                    .read(remoteControlButtonActionsProvider.notifier)
-                    .update(
-                      actions..update(
-                        actions.length,
-                        (value) => null,
-                        ifAbsent: () => null,
-                      ),
-                    ),
+            onPressed: () => ref
+                .read(remoteControlButtonActionsProvider.notifier)
+                .update(
+                  actions..update(
+                    actions.length,
+                    (value) => null,
+                    ifAbsent: () => null,
+                  ),
+                ),
             icon: const Icon(Icons.add),
             label: const Text('Add button'),
           ),

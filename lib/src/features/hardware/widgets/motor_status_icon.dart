@@ -132,11 +132,10 @@ class _MotorStatusIconState extends ConsumerState<MotorStatusIcon>
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap:
-          () => switch (portalController.isShowing) {
-            true => portalController.hide(),
-            false => portalController.show(),
-          },
+      onTap: () => switch (portalController.isShowing) {
+        true => portalController.hide(),
+        false => portalController.show(),
+      },
       child: OverlayPortal(
         controller: portalController,
         overlayChildBuilder: (context) {

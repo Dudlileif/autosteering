@@ -66,19 +66,18 @@ class _SimCoreWebInput extends _$SimCoreWebInput {
 Stream<Vehicle?> simCoreWebStream(Ref ref) {
   ref.onDispose(() => Logger.instance.i('Simulator Core shut down.'));
   final commonMessageHandler = CommonMessageHandler(ref);
-  final updateMainStreamController =
-      StreamController<dynamic>()
-        ..stream.listen((event) {
-          if (!commonMessageHandler.attemptToHandleMessage(event)) {
-            if (event is ({int logReplayIndex})) {
-              if (ref.exists(logReplayIndexProvider)) {
-                ref
-                    .read(logReplayIndexProvider.notifier)
-                    .update(event.logReplayIndex);
-              }
-            }
+  final updateMainStreamController = StreamController<dynamic>()
+    ..stream.listen((event) {
+      if (!commonMessageHandler.attemptToHandleMessage(event)) {
+        if (event is ({int logReplayIndex})) {
+          if (ref.exists(logReplayIndexProvider)) {
+            ref
+                .read(logReplayIndexProvider.notifier)
+                .update(event.logReplayIndex);
           }
-        });
+        }
+      }
+    });
 
   final stream = SimulatorCore.webWorker(
     ref.watch(_simCoreWebInputProvider.notifier).stream(),

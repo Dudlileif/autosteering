@@ -58,16 +58,16 @@ class SelectablePathLayer extends ConsumerWidget {
             ],
             color:
                 selected.contains(i) &&
-                        selected.contains((i + 1) % path.length) &&
-                        highlightSelectedPath
-                    ? Colors.green
-                    : Colors.black,
+                    selected.contains((i + 1) % path.length) &&
+                    highlightSelectedPath
+                ? Colors.green
+                : Colors.black,
             strokeWidth:
                 selected.contains(i) &&
-                        selected.contains((i + 1) % path.length) &&
-                        highlightSelectedPath
-                    ? 6
-                    : 3,
+                    selected.contains((i + 1) % path.length) &&
+                    highlightSelectedPath
+                ? 6
+                : 3,
           ),
         );
       }

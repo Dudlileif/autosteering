@@ -91,17 +91,16 @@ class FileCachedTileProvider extends TileProvider {
       fallbackUrl: getTileFallbackUrl(coordinates, options),
       headers: headers,
       httpClient: httpClient,
-      cacheFile:
-          layerDirectory != null
-              ? File(
-                path.join(
-                  layerDirectory.path,
-                  '${coordinates.z}',
-                  '${coordinates.y}',
-                  '${coordinates.x}.png',
-                ),
-              )
-              : null,
+      cacheFile: layerDirectory != null
+          ? File(
+              path.join(
+                layerDirectory.path,
+                '${coordinates.z}',
+                '${coordinates.y}',
+                '${coordinates.x}.png',
+              ),
+            )
+          : null,
       allowDownload: allowDownloads,
     );
   }

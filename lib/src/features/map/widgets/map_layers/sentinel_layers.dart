@@ -47,29 +47,29 @@ class SentinelLayers extends ConsumerWidget {
     final opacities = ref.watch(sentinelLayerOpacitiesProvider);
 
     return Stack(
-      children:
-          layers
-              .map(
-                (layer) => Opacity(
-                  opacity: opacities[layer.layerType] ?? 0.5,
-                  child: TileLayer(
-                    urlTemplate: layer.urlTemplate(maxCloudCoveragePercent),
-                    maxNativeZoom: 18,
-                    userAgentPackageName: 'autosteering',
-                    maxZoom: 22,
-                    tileProvider: switch (Device.isNative) {
-                      true => FileCachedTileProvider(
-                        layer: layer.layerData,
-                        fileDirectory:
-                            ref.watch(fileDirectoryProvider).requireValue,
-                        allowDownloads: ref.watch(mapAllowDownloadProvider),
-                      ),
-                      false => null,
-                    },
+      children: layers
+          .map(
+            (layer) => Opacity(
+              opacity: opacities[layer.layerType] ?? 0.5,
+              child: TileLayer(
+                urlTemplate: layer.urlTemplate(maxCloudCoveragePercent),
+                maxNativeZoom: 18,
+                userAgentPackageName: 'autosteering',
+                maxZoom: 22,
+                tileProvider: switch (Device.isNative) {
+                  true => FileCachedTileProvider(
+                    layer: layer.layerData,
+                    fileDirectory: ref
+                        .watch(fileDirectoryProvider)
+                        .requireValue,
+                    allowDownloads: ref.watch(mapAllowDownloadProvider),
                   ),
-                ),
-              )
-              .toList(),
+                  false => null,
+                },
+              ),
+            ),
+          )
+          .toList(),
     );
   }
 }

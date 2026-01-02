@@ -30,7 +30,8 @@ enum ABLimitMode {
   /// A turn will be placed at the A and B points of the line so that the whole
   /// line will be straight and then a turn will be placed after the A or B
   /// points.
-  limitedTurnOutside;
+  limitedTurnOutside
+  ;
 
   /// A json compatible string for this enumerator.
   String toJson() => name;

@@ -37,21 +37,20 @@ class VehicleSteeringPage extends ConsumerWidget {
           icon: const Icon(Icons.looks),
           labelText: 'Minimum turning radius',
           suffixText: 'm',
-          counter:
-              vehicle is AxleSteeredVehicle
-                  ? Consumer(
-                    builder: (context, ref, child) {
-                      final value = ref.watch(
-                        configuredVehicleProvider.select(
-                          (value) => (value as AxleSteeredVehicle)
-                              .minTurningRadiusTheoretic
-                              .toStringAsFixed(2),
-                        ),
-                      );
-                      return Text('''Theoretical: $value m''');
-                    },
-                  )
-                  : null,
+          counter: vehicle is AxleSteeredVehicle
+              ? Consumer(
+                  builder: (context, ref, child) {
+                    final value = ref.watch(
+                      configuredVehicleProvider.select(
+                        (value) => (value as AxleSteeredVehicle)
+                            .minTurningRadiusTheoretic
+                            .toStringAsFixed(2),
+                      ),
+                    );
+                    return Text('''Theoretical: $value m''');
+                  },
+                )
+              : null,
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
@@ -76,11 +75,10 @@ class VehicleSteeringPage extends ConsumerWidget {
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
           configuredVehicleProvider.select(
-            (value) =>
-                switch (value is AxleSteeredVehicle) {
-                  true => (value as AxleSteeredVehicle).steeringAngleMaxRaw,
-                  false => value.steeringAngleMax,
-                }.toString(),
+            (value) => switch (value is AxleSteeredVehicle) {
+              true => (value as AxleSteeredVehicle).steeringAngleMaxRaw,
+              false => value.steeringAngleMax,
+            }.toString(),
           ),
         ),
         onFieldSubmitted: (value) {
@@ -126,10 +124,9 @@ class VehicleSteeringPage extends ConsumerWidget {
           ),
           initialValue: ref.read(
             configuredVehicleProvider.select(
-              (value) =>
-                  (value as AxleSteeredVehicle).ackermannPercentage
-                      .round()
-                      .toString(),
+              (value) => (value as AxleSteeredVehicle).ackermannPercentage
+                  .round()
+                  .toString(),
             ),
           ),
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -149,15 +146,14 @@ class VehicleSteeringPage extends ConsumerWidget {
       child: Align(
         alignment: Alignment.topCenter,
         child: Column(
-          children:
-              children
-                  .map(
-                    (widget) => Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: SizedBox(width: 400, child: widget),
-                    ),
-                  )
-                  .toList(),
+          children: children
+              .map(
+                (widget) => Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: SizedBox(width: 400, child: widget),
+                ),
+              )
+              .toList(),
         ),
       ),
     );

@@ -45,70 +45,62 @@ class SimCoreMenu extends ConsumerWidget {
         if (!dadMode)
           Consumer(
             child: Text('Manual simulation mode', style: textStyle),
-            builder:
-                (context, ref, child) => CheckboxListTile(
-                  secondary: const Icon(Icons.gamepad),
-                  title: child,
-                  value: ref.watch(simCoreAllowManualInputProvider),
-                  onChanged:
-                      (value) =>
-                          value != null
-                              ? ref
-                                  .read(
-                                    simCoreAllowManualInputProvider.notifier,
-                                  )
-                                  .update(value: value)
-                              : null,
-                ),
+            builder: (context, ref, child) => CheckboxListTile(
+              secondary: const Icon(Icons.gamepad),
+              title: child,
+              value: ref.watch(simCoreAllowManualInputProvider),
+              onChanged: (value) => value != null
+                  ? ref
+                        .read(
+                          simCoreAllowManualInputProvider.notifier,
+                        )
+                        .update(value: value)
+                  : null,
+            ),
           ),
         if (!manualSimulationMode && !dadMode)
           Consumer(
             child: Text('Allow sim interpolation', style: textStyle),
-            builder:
-                (context, ref, child) => CheckboxListTile(
-                  secondary: const Icon(Icons.timer_outlined),
-                  title: child,
-                  subtitle: const Text('Interpolation between GNSS updates'),
-                  value: ref.watch(simCoreAllowInterpolationProvider),
-                  onChanged:
-                      (value) =>
-                          value != null
-                              ? ref
-                                  .read(
-                                    simCoreAllowInterpolationProvider.notifier,
-                                  )
-                                  .update(value: value)
-                              : null,
-                ),
+            builder: (context, ref, child) => CheckboxListTile(
+              secondary: const Icon(Icons.timer_outlined),
+              title: child,
+              subtitle: const Text('Interpolation between GNSS updates'),
+              value: ref.watch(simCoreAllowInterpolationProvider),
+              onChanged: (value) => value != null
+                  ? ref
+                        .read(
+                          simCoreAllowInterpolationProvider.notifier,
+                        )
+                        .update(value: value)
+                  : null,
+            ),
           ),
         if (manualSimulationMode) const VehicleSimMenu(),
         Consumer(
           child: Text('Reset position', style: textStyle),
-          builder:
-              (context, ref, child) => ListTile(
-                onTap: () {
-                  // The simulation has to have a stationary vehicle for the
-                  // reset to work.
-                  ref.read(simInputProvider.notifier).send((velocity: 0));
-                  ref.read(simInputProvider.notifier).send((steeringAngle: 0));
+          builder: (context, ref, child) => ListTile(
+            onTap: () {
+              // The simulation has to have a stationary vehicle for the
+              // reset to work.
+              ref.read(simInputProvider.notifier).send((velocity: 0));
+              ref.read(simInputProvider.notifier).send((steeringAngle: 0));
 
-                  ref.read(simInputProvider.notifier).send((
-                    position: ref.watch(homePositionProvider).geoPosition,
-                  ));
-                },
-                leading: const Icon(Icons.replay),
-                title: child,
-              ),
+              ref.read(simInputProvider.notifier).send((
+                position: ref.watch(homePositionProvider).geoPosition,
+              ));
+            },
+            leading: const Icon(Icons.replay),
+            title: child,
+          ),
         ),
         if (Device.isNative)
           Consumer(
             child: Text('Restart sim core', style: textStyle),
-            builder:
-                (context, ref, child) => ListTile(
-                  onTap: () => ref.invalidate(simCoreIsolateStreamProvider),
-                  leading: const Icon(Icons.replay),
-                  title: child,
-                ),
+            builder: (context, ref, child) => ListTile(
+              onTap: () => ref.invalidate(simCoreIsolateStreamProvider),
+              leading: const Icon(Icons.replay),
+              title: child,
+            ),
           ),
         if (kDebugMode)
           Consumer(
@@ -118,20 +110,17 @@ class SimCoreMenu extends ConsumerWidget {
                 simCoreDebugAllowLongBreaksProvider,
               );
               return CheckboxListTile(
-                secondary:
-                    allowBreaks
-                        ? const Icon(Icons.timer_off_outlined)
-                        : const Icon(Icons.timer_outlined),
+                secondary: allowBreaks
+                    ? const Icon(Icons.timer_off_outlined)
+                    : const Icon(Icons.timer_outlined),
                 value: allowBreaks,
-                onChanged:
-                    (value) =>
-                        value != null
-                            ? ref
-                                .read(
-                                  simCoreDebugAllowLongBreaksProvider.notifier,
-                                )
-                                .update(value: value)
-                            : null,
+                onChanged: (value) => value != null
+                    ? ref
+                          .read(
+                            simCoreDebugAllowLongBreaksProvider.notifier,
+                          )
+                          .update(value: value)
+                    : null,
                 title: child,
               );
             },
@@ -158,11 +147,9 @@ class SimCoreMenu extends ConsumerWidget {
                       Slider(
                         value: index.toDouble(),
 
-                        onChanged:
-                            dadMode
-                                ? null
-                                : (value) =>
-                                    setState(() => index = value.round()),
+                        onChanged: dadMode
+                            ? null
+                            : (value) => setState(() => index = value.round()),
                         onChangeEnd: (value) {
                           final oldValue = ref.read(
                             simulatorUpdateFrequencyProvider,
@@ -207,18 +194,16 @@ class SimCoreMenu extends ConsumerWidget {
                       const Text('Effective on restart'),
                       Slider(
                         value: value.toDouble(),
-                        onChanged:
-                            dadMode
-                                ? null
-                                : (newValue) =>
-                                    setState(() => value = newValue.round()),
+                        onChanged: dadMode
+                            ? null
+                            : (newValue) =>
+                                  setState(() => value = newValue.round()),
                         min: 1,
                         max: 30,
                         divisions: 29,
-                        onChangeEnd:
-                            (value) => ref
-                                .read(daysToKeepLogFilesProvider.notifier)
-                                .update(value.round()),
+                        onChangeEnd: (value) => ref
+                            .read(daysToKeepLogFilesProvider.notifier)
+                            .update(value.round()),
                       ),
                     ],
                   ),

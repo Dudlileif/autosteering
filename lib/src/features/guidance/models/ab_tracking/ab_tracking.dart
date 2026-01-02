@@ -43,7 +43,8 @@ enum ABTrackingType {
   abLine('AB Line'),
 
   /// AB curve
-  abCurve('AB Curve');
+  abCurve('AB Curve')
+  ;
 
   const ABTrackingType(this.name);
 

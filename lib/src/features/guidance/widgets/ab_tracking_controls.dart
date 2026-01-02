@@ -46,90 +46,84 @@ class ABTrackingControls extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.only(top: 8),
             child: Consumer(
-              builder:
-                  (context, ref, child) => FilterChip(
-                    label: TextWithStroke(
-                      'SNAP',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        color: Colors.white,
-                      ),
-                      strokeWidth: 3.5,
-                    ),
-                    checkmarkColor: Colors.white,
-                    selectedColor: theme.primaryColor,
-                    selected: abTracking.snapToClosestLine,
-                    onSelected:
-                        (value) => ref
-                            .read(aBSnapToClosestLineProvider.notifier)
-                            .update(value: value),
+              builder: (context, ref, child) => FilterChip(
+                label: TextWithStroke(
+                  'SNAP',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: Colors.white,
                   ),
+                  strokeWidth: 3.5,
+                ),
+                checkmarkColor: Colors.white,
+                selectedColor: theme.primaryColor,
+                selected: abTracking.snapToClosestLine,
+                onSelected: (value) => ref
+                    .read(aBSnapToClosestLineProvider.notifier)
+                    .update(value: value),
+              ),
             ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Consumer(
-                builder:
-                    (context, ref, child) => IconButton(
-                      onPressed:
-                          () => ref.read(simInputProvider.notifier).send((
-                            abMoveOffset: -1,
-                          )),
-                      icon: SizedBox.square(
-                        dimension: 40,
-                        child: Transform.flip(
-                          flipX: true,
-                          child: Stack(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/icons/arrow_move_right.svg',
-                                height: 46,
-                                width: 46,
-                              ),
-                              SvgPicture.asset(
-                                'assets/icons/arrow_move_right.svg',
-                                height: 40,
-                                width: 40,
-                                colorFilter: const ColorFilter.mode(
-                                  Colors.white,
-                                  BlendMode.srcIn,
-                                ),
-                              ),
-                            ],
+                builder: (context, ref, child) => IconButton(
+                  onPressed: () => ref.read(simInputProvider.notifier).send((
+                    abMoveOffset: -1,
+                  )),
+                  icon: SizedBox.square(
+                    dimension: 40,
+                    child: Transform.flip(
+                      flipX: true,
+                      child: Stack(
+                        children: [
+                          SvgPicture.asset(
+                            'assets/icons/arrow_move_right.svg',
+                            height: 46,
+                            width: 46,
                           ),
-                        ),
+                          SvgPicture.asset(
+                            'assets/icons/arrow_move_right.svg',
+                            height: 40,
+                            width: 40,
+                            colorFilter: const ColorFilter.mode(
+                              Colors.white,
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
+                  ),
+                ),
               ),
               Consumer(
-                builder:
-                    (context, ref, child) => IconButton(
-                      onPressed:
-                          () => ref.read(simInputProvider.notifier).send((
-                            abMoveOffset: 1,
-                          )),
-                      icon: SizedBox.square(
-                        dimension: 40,
-                        child: Stack(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/icons/arrow_move_right.svg',
-                              height: 46,
-                              width: 46,
-                            ),
-                            SvgPicture.asset(
-                              'assets/icons/arrow_move_right.svg',
-                              height: 40,
-                              width: 40,
-                              colorFilter: const ColorFilter.mode(
-                                Colors.white,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                          ],
+                builder: (context, ref, child) => IconButton(
+                  onPressed: () => ref.read(simInputProvider.notifier).send((
+                    abMoveOffset: 1,
+                  )),
+                  icon: SizedBox.square(
+                    dimension: 40,
+                    child: Stack(
+                      children: [
+                        SvgPicture.asset(
+                          'assets/icons/arrow_move_right.svg',
+                          height: 46,
+                          width: 46,
                         ),
-                      ),
+                        SvgPicture.asset(
+                          'assets/icons/arrow_move_right.svg',
+                          height: 40,
+                          width: 40,
+                          colorFilter: const ColorFilter.mode(
+                            Colors.white,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                      ],
                     ),
+                  ),
+                ),
               ),
             ],
           ),
@@ -139,17 +133,17 @@ class ABTrackingControls extends ConsumerWidget {
             ),
           ))
             Consumer(
-              builder:
-                  (context, ref, child) => IconButton(
-                    onPressed:
-                        ref.read(aBOffsetOppositeTurnProvider.notifier).toggle,
-                    icon: const Icon(
-                      Icons.compare_arrows,
-                      color: Colors.white,
-                      size: 50,
-                      shadows: [Shadow(offset: Offset(2, 2))],
-                    ),
-                  ),
+              builder: (context, ref, child) => IconButton(
+                onPressed: ref
+                    .read(aBOffsetOppositeTurnProvider.notifier)
+                    .toggle,
+                icon: const Icon(
+                  Icons.compare_arrows,
+                  color: Colors.white,
+                  size: 50,
+                  shadows: [Shadow(offset: Offset(2, 2))],
+                ),
+              ),
             ),
         ],
       );

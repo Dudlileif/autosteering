@@ -929,29 +929,25 @@ class SimulatorCoreState {
           );
         }
 
-        final prevGnssUpdatesOfSameQuality =
-            prevGnssUpdates
-                .where((e) => e.quality == gnssUpdate!.quality)
-                .toList();
+        final prevGnssUpdatesOfSameQuality = prevGnssUpdates
+            .where((e) => e.quality == gnssUpdate!.quality)
+            .toList();
 
-        var distances =
-            prevGnssUpdatesOfSameQuality
-                .map(
-                  (e) =>
-                      e.gnssPosition.rhumb.distanceTo(gnssUpdate!.gnssPosition),
-                )
-                .toList();
+        var distances = prevGnssUpdatesOfSameQuality
+            .map(
+              (e) => e.gnssPosition.rhumb.distanceTo(gnssUpdate!.gnssPosition),
+            )
+            .toList();
 
         if (prevDistanceCalcGnssUpdate?.quality != gnssUpdate!.quality) {
           prevDistanceCalcGnssUpdate = null;
         }
 
-        final distanceToLastGaugePoint =
-            prevDistanceCalcGnssUpdate != null
-                ? gnssUpdate!.gnssPosition.rhumb.distanceTo(
-                  prevDistanceCalcGnssUpdate!.gnssPosition,
-                )
-                : 0.0;
+        final distanceToLastGaugePoint = prevDistanceCalcGnssUpdate != null
+            ? gnssUpdate!.gnssPosition.rhumb.distanceTo(
+                prevDistanceCalcGnssUpdate!.gnssPosition,
+              )
+            : 0.0;
         if (distanceToLastGaugePoint > minBearingUpdateDistance / 5) {
           distance = distanceToLastGaugePoint;
           prevDistanceCalcGnssUpdate = gnssUpdate;
@@ -1016,30 +1012,28 @@ class SimulatorCoreState {
               receiveTime: gnssUpdate!.receiveTime,
               quality: gnssUpdate!.quality,
             );
-            prevGnssUpdates =
-                prevGnssUpdates
-                    .map(
-                      (e) => (
-                        gnssPosition: vehicle!.correctPositionForRollAndPitch(
-                          e.gnssPosition,
-                        ),
-                        gnssTime: e.gnssTime,
-                        receiveTime: e.receiveTime,
-                        quality: e.quality,
-                      ),
-                    )
-                    .toList();
+            prevGnssUpdates = prevGnssUpdates
+                .map(
+                  (e) => (
+                    gnssPosition: vehicle!.correctPositionForRollAndPitch(
+                      e.gnssPosition,
+                    ),
+                    gnssTime: e.gnssTime,
+                    receiveTime: e.receiveTime,
+                    quality: e.quality,
+                  ),
+                )
+                .toList();
 
             // Update the distances and velocities based on the corrected
             // positions.
-            distances =
-                prevGnssUpdates
-                    .map(
-                      (e) => e.gnssPosition.rhumb.distanceTo(
-                        gnssUpdate!.gnssPosition,
-                      ),
-                    )
-                    .toList();
+            distances = prevGnssUpdates
+                .map(
+                  (e) => e.gnssPosition.rhumb.distanceTo(
+                    gnssUpdate!.gnssPosition,
+                  ),
+                )
+                .toList();
 
             velocities = prevGnssUpdates.mapIndexed(
               (index, element) =>
@@ -1086,11 +1080,11 @@ class SimulatorCoreState {
                 false => 1,
               };
 
-          final directionCorrectedBearing = switch (drivingDirectionSign
-              .isNegative) {
-            true => (bearing + 180).wrap360(),
-            false => bearing,
-          };
+          final directionCorrectedBearing =
+              switch (drivingDirectionSign.isNegative) {
+                true => (bearing + 180).wrap360(),
+                false => bearing,
+              };
 
           // A moving weighted average for zeroing the IMU bearing to prevent
           // drift, the GNSS bearing is weighted 1/40 and the rest is the

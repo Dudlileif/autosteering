@@ -54,7 +54,8 @@ enum GraphParameter {
   steeringAngle('Steering angle'),
 
   /// Vehicle steering angle target for autosteering.
-  steeringAngleTarget('Steering angle target');
+  steeringAngleTarget('Steering angle target')
+  ;
 
   const GraphParameter(this.name);
 
@@ -87,13 +88,12 @@ class GraphData {
   /// Normalizes [value] to the range [0-1].
   double? valueNormalized(num? value) => switch (value) {
     null => null,
-    _ =>
-      () {
-        final range = max - min;
-        if (range <= 0) {
-          return null;
-        }
-        return (value.clamp(min, max) - min) / range;
-      }.call(),
+    _ => () {
+      final range = max - min;
+      if (range <= 0) {
+        return null;
+      }
+      return (value.clamp(min, max) - min) / range;
+    }.call(),
   };
 }

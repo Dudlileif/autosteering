@@ -74,7 +74,8 @@ enum SentinelLayerType {
   agriculture('AGRICULTURE'),
 
   /// An index that shows how much vegetation there is.
-  ndvi('VEGETATION_INDEX');
+  ndvi('VEGETATION_INDEX')
+  ;
 
   const SentinelLayerType(this.id);
 

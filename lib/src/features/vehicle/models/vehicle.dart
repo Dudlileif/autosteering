@@ -794,7 +794,8 @@ enum VehicleType {
   articulatedTractor('Articulated tractor'),
 
   /// Harvester or vehicle with rear axle steering.
-  harvester('Harvester');
+  harvester('Harvester')
+  ;
 
   const VehicleType(this.name);
 

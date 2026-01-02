@@ -51,9 +51,8 @@ class VehicleWheelsPage extends ConsumerWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
-                (value) =>
-                    (value as AxleSteeredVehicle).steeringAxleWheelWidth
-                        .toString(),
+                (value) => (value as AxleSteeredVehicle).steeringAxleWheelWidth
+                    .toString(),
               ),
             ),
             onChanged: (value) {
@@ -80,9 +79,8 @@ class VehicleWheelsPage extends ConsumerWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
-                (value) =>
-                    (value as AxleSteeredVehicle).solidAxleWheelWidth
-                        .toString(),
+                (value) => (value as AxleSteeredVehicle).solidAxleWheelWidth
+                    .toString(),
               ),
             ),
             onChanged: (value) {
@@ -108,9 +106,9 @@ class VehicleWheelsPage extends ConsumerWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
-                (value) =>
-                    (value as AxleSteeredVehicle).steeringAxleWheelDiameter
-                        .toString(),
+                (value) => (value as AxleSteeredVehicle)
+                    .steeringAxleWheelDiameter
+                    .toString(),
               ),
             ),
             onChanged: (value) {
@@ -138,9 +136,8 @@ class VehicleWheelsPage extends ConsumerWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
-                (value) =>
-                    (value as AxleSteeredVehicle).solidAxleWheelDiameter
-                        .toString(),
+                (value) => (value as AxleSteeredVehicle).solidAxleWheelDiameter
+                    .toString(),
               ),
             ),
             onChanged: (value) {
@@ -213,18 +210,16 @@ or triple wheels'''),
             ),
             showSelectedIcon: false,
             selected: {vehicle.numWheels},
-            segments:
-                List.generate(
-                  3,
-                  (index) => ButtonSegment(
-                    value: index + 1,
-                    label: Text('${index + 1}'),
-                  ),
-                ).toList(),
-            onSelectionChanged:
-                (values) => ref
-                    .read(configuredVehicleProvider.notifier)
-                    .update(vehicle.copyWith(numWheels: values.first)),
+            segments: List.generate(
+              3,
+              (index) => ButtonSegment(
+                value: index + 1,
+                label: Text('${index + 1}'),
+              ),
+            ).toList(),
+            onSelectionChanged: (values) => ref
+                .read(configuredVehicleProvider.notifier)
+                .update(vehicle.copyWith(numWheels: values.first)),
           ),
         ],
       ),
@@ -255,15 +250,14 @@ or triple wheels'''),
       child: Align(
         alignment: Alignment.topCenter,
         child: Column(
-          children:
-              children
-                  .map(
-                    (widget) => Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: SizedBox(width: 400, child: widget),
-                    ),
-                  )
-                  .toList(),
+          children: children
+              .map(
+                (widget) => Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: SizedBox(width: 400, child: widget),
+                ),
+              )
+              .toList(),
         ),
       ),
     );

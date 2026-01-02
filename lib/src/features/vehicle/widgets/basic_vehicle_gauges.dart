@@ -36,34 +36,31 @@ class BasicVehicleGauges extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Consumer(
-          builder:
-              (context, ref, child) => ListTile(
-                leading: const Icon(
-                  Icons.straighten,
-                  color: Colors.white,
-                  shadows: [Shadow(offset: Offset(2, 2))],
-                ),
-                onTap:
-                    () =>
-                        ref
-                          ..invalidate(gaugeTravelledDistanceProvider)
-                          ..invalidate(debugVehicleTravelledPathListProvider),
-                title: TextWithStroke(
-                  '''${ref.watch(gaugeTravelledDistanceProvider).toStringAsFixed(1).padLeft(5)} m''',
-                  style: GoogleFonts.robotoMono(
-                    color: Colors.white,
-                    textStyle: theme.textTheme.titleMedium,
-                  ),
-                  strokeWidth: 3.5,
-                ),
-                subtitle: TextWithStroke(
-                  'Tap to reset',
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    color: Colors.white,
-                  ),
-                  strokeWidth: 2,
-                ),
+          builder: (context, ref, child) => ListTile(
+            leading: const Icon(
+              Icons.straighten,
+              color: Colors.white,
+              shadows: [Shadow(offset: Offset(2, 2))],
+            ),
+            onTap: () => ref
+              ..invalidate(gaugeTravelledDistanceProvider)
+              ..invalidate(debugVehicleTravelledPathListProvider),
+            title: TextWithStroke(
+              '''${ref.watch(gaugeTravelledDistanceProvider).toStringAsFixed(1).padLeft(5)} m''',
+              style: GoogleFonts.robotoMono(
+                color: Colors.white,
+                textStyle: theme.textTheme.titleMedium,
               ),
+              strokeWidth: 3.5,
+            ),
+            subtitle: TextWithStroke(
+              'Tap to reset',
+              style: theme.textTheme.titleSmall?.copyWith(
+                color: Colors.white,
+              ),
+              strokeWidth: 2,
+            ),
+          ),
         ),
         ListTile(
           leading: const Icon(
@@ -72,15 +69,14 @@ class BasicVehicleGauges extends StatelessWidget {
             shadows: [Shadow(offset: Offset(2, 2))],
           ),
           title: Consumer(
-            builder:
-                (context, ref, child) => TextWithStroke(
-                  '''${(ref.watch(gaugeVelocityProvider) * 3.6).toStringAsFixed(1).padLeft(4)} km/h''',
-                  style: GoogleFonts.robotoMono(
-                    color: Colors.white,
-                    textStyle: theme.textTheme.titleMedium,
-                  ),
-                  strokeWidth: 3.5,
-                ),
+            builder: (context, ref, child) => TextWithStroke(
+              '''${(ref.watch(gaugeVelocityProvider) * 3.6).toStringAsFixed(1).padLeft(4)} km/h''',
+              style: GoogleFonts.robotoMono(
+                color: Colors.white,
+                textStyle: theme.textTheme.titleMedium,
+              ),
+              strokeWidth: 3.5,
+            ),
           ),
         ),
         ListTile(
@@ -90,15 +86,14 @@ class BasicVehicleGauges extends StatelessWidget {
             shadows: [Shadow(offset: Offset(2, 2))],
           ),
           title: Consumer(
-            builder:
-                (context, ref, child) => TextWithStroke(
-                  '''${ref.watch(gaugeBearingProvider).toStringAsFixed(1).padLeft(5)}º''',
-                  style: GoogleFonts.robotoMono(
-                    color: Colors.white,
-                    textStyle: theme.textTheme.titleMedium,
-                  ),
-                  strokeWidth: 3.5,
-                ),
+            builder: (context, ref, child) => TextWithStroke(
+              '''${ref.watch(gaugeBearingProvider).toStringAsFixed(1).padLeft(5)}º''',
+              style: GoogleFonts.robotoMono(
+                color: Colors.white,
+                textStyle: theme.textTheme.titleMedium,
+              ),
+              strokeWidth: 3.5,
+            ),
           ),
         ),
       ],

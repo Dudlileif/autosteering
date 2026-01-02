@@ -47,38 +47,33 @@ class WorkSession {
 
   /// Creates a work session object from the [json] object.
   factory WorkSession.fromJson(Map<String, dynamic> json) {
-    final field =
-        json['field'] != null
-            ? Field.fromJson(Map<String, dynamic>.from(json['field'] as Map))
-            : null;
+    final field = json['field'] != null
+        ? Field.fromJson(Map<String, dynamic>.from(json['field'] as Map))
+        : null;
 
-    final vehicle =
-        json['vehicle'] != null
-            ? Vehicle.fromJson(
-              Map<String, dynamic>.from(json['vehicle'] as Map),
-            )
-            : null;
+    final vehicle = json['vehicle'] != null
+        ? Vehicle.fromJson(
+            Map<String, dynamic>.from(json['vehicle'] as Map),
+          )
+        : null;
 
-    final equipmentSetup =
-        json['equipment_setup'] != null
-            ? EquipmentSetup.fromJson(
-              Map<String, dynamic>.from(json['equipment_setup'] as Map),
-            )
-            : null;
+    final equipmentSetup = json['equipment_setup'] != null
+        ? EquipmentSetup.fromJson(
+            Map<String, dynamic>.from(json['equipment_setup'] as Map),
+          )
+        : null;
 
-    final abTracking =
-        json['ab_tracking'] != null
-            ? List<Map<String, dynamic>>.from(
-              json['ab_tracking'] as List,
-            ).map(ABTracking.fromJson).toList()
-            : <ABTracking>[];
+    final abTracking = json['ab_tracking'] != null
+        ? List<Map<String, dynamic>>.from(
+            json['ab_tracking'] as List,
+          ).map(ABTracking.fromJson).toList()
+        : <ABTracking>[];
 
-    final pathTracking =
-        json['path_tracking'] != null
-            ? List<Map<String, dynamic>>.from(
-              json['path_tracking'] as List,
-            ).map(PathTracking.fromJson).toList()
-            : <PathTracking>[];
+    final pathTracking = json['path_tracking'] != null
+        ? List<Map<String, dynamic>>.from(
+            json['path_tracking'] as List,
+          ).map(PathTracking.fromJson).toList()
+        : <PathTracking>[];
 
     final info = Map<String, dynamic>.from(json['info'] as Map);
 
@@ -88,28 +83,27 @@ class WorkSession {
 
     final time = Map<String, dynamic>.from(json['time'] as Map);
 
-    final start =
-        time['start'] != null
-            ? DateTime.tryParse(time['start'] as String)
-            : null;
-    final end =
-        time['end'] != null ? DateTime.tryParse(time['end'] as String) : null;
+    final start = time['start'] != null
+        ? DateTime.tryParse(time['start'] as String)
+        : null;
+    final end = time['end'] != null
+        ? DateTime.tryParse(time['end'] as String)
+        : null;
 
-    final equipmentLogs =
-        json['equipment_logs'] != null
-            ? Map<String, dynamic>.from(json['equipment_logs'] as Map).map(
-              (uuid, log) => MapEntry(
-                uuid,
-                List<String>.from(log as List)
-                    .map(
-                      (line) => EquipmentLogRecord.fromJson(
-                        Map<String, dynamic>.from(jsonDecode(line) as Map),
-                      ),
-                    )
-                    .toList(),
-              ),
-            )
-            : null;
+    final equipmentLogs = json['equipment_logs'] != null
+        ? Map<String, dynamic>.from(json['equipment_logs'] as Map).map(
+            (uuid, log) => MapEntry(
+              uuid,
+              List<String>.from(log as List)
+                  .map(
+                    (line) => EquipmentLogRecord.fromJson(
+                      Map<String, dynamic>.from(jsonDecode(line) as Map),
+                    ),
+                  )
+                  .toList(),
+            ),
+          )
+        : null;
 
     return WorkSession(
       field: field,

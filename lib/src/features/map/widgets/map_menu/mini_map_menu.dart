@@ -52,11 +52,9 @@ class _ShowMiniMapTile extends ConsumerWidget {
       style: Theme.of(context).menuButtonWithChildrenText,
     ),
     value: ref.watch(showMiniMapProvider),
-    onChanged:
-        (value) =>
-            value != null
-                ? ref.read(showMiniMapProvider.notifier).update(value: value)
-                : null,
+    onChanged: (value) => value != null
+        ? ref.read(showMiniMapProvider.notifier).update(value: value)
+        : null,
   );
 }
 
@@ -89,22 +87,20 @@ class _MiniMapLockToFieldTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) =>
       ref.watch(activeFieldProvider) != null
-          ? CheckboxListTile(
-            secondary: const Stack(
-              children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
-            ),
-            title: Text(
-              'Lock to field',
-              style: Theme.of(context).menuButtonWithChildrenText,
-            ),
-            value: ref.watch(miniMapLockToFieldProvider),
-            onChanged:
-                (value) =>
-                    value != null
-                        ? ref
-                            .read(miniMapLockToFieldProvider.notifier)
-                            .update(value: value)
-                        : null,
-          )
-          : const SizedBox.shrink();
+      ? CheckboxListTile(
+          secondary: const Stack(
+            children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
+          ),
+          title: Text(
+            'Lock to field',
+            style: Theme.of(context).menuButtonWithChildrenText,
+          ),
+          value: ref.watch(miniMapLockToFieldProvider),
+          onChanged: (value) => value != null
+              ? ref
+                    .read(miniMapLockToFieldProvider.notifier)
+                    .update(value: value)
+              : null,
+        )
+      : const SizedBox.shrink();
 }

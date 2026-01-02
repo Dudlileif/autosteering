@@ -49,7 +49,8 @@ enum DubinsPathType {
   lsl(DubinsSection.l, DubinsSection.s, DubinsSection.l),
 
   /// Left - Right - Left
-  lrl(DubinsSection.l, DubinsSection.r, DubinsSection.l);
+  lrl(DubinsSection.l, DubinsSection.r, DubinsSection.l)
+  ;
 
   const DubinsPathType(this.start, this.mid, this.end);
 

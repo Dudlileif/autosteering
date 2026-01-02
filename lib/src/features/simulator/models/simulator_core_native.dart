@@ -49,14 +49,13 @@ class SimulatorCore {
     sendPort.send(commandPort.sendPort);
 
     // A stream controller for sending messages to the main thread.
-    final updateMainThreadStream =
-        StreamController<dynamic>()
-          ..stream.listen((event) {
-            sendPort.send(event);
-          })
-          ..add(
-            LogEvent(Level.info, 'Simulator Core isolate spawn confirmation'),
-          );
+    final updateMainThreadStream = StreamController<dynamic>()
+      ..stream.listen((event) {
+        sendPort.send(event);
+      })
+      ..add(
+        LogEvent(Level.info, 'Simulator Core isolate spawn confirmation'),
+      );
 
     // Heartbeat signal to show that the simulator isolate is alive.
     Timer.periodic(const Duration(milliseconds: 250), (timer) {
@@ -241,8 +240,9 @@ class SimulatorCore {
 
     Future<void> setupSteeringSendUdp() async {
       try {
-        final steeringHardwareIp =
-            (await InternetAddress.lookup(steeringHardwareAddress)).firstOrNull;
+        final steeringHardwareIp = (await InternetAddress.lookup(
+          steeringHardwareAddress,
+        )).firstOrNull;
         if (steeringHardwareIp != null) {
           udpHeartbeatTimer.cancel();
 
@@ -289,10 +289,9 @@ class SimulatorCore {
 
     Future<void> setupRemoteControlSendUdp() async {
       try {
-        final remoteControlIp =
-            (await InternetAddress.lookup(
-              remoteControlHardwareAddress,
-            )).firstOrNull;
+        final remoteControlIp = (await InternetAddress.lookup(
+          remoteControlHardwareAddress,
+        )).firstOrNull;
         if (remoteControlIp != null) {
           udpHeartbeatTimer.cancel();
 

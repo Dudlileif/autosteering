@@ -128,11 +128,10 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
 
   @override
   Widget build(BuildContext context) => InkWell(
-    onTap:
-        () => switch (portalController.isShowing) {
-          true => portalController.hide(),
-          false => portalController.show(),
-        },
+    onTap: () => switch (portalController.isShowing) {
+      true => portalController.hide(),
+      false => portalController.show(),
+    },
     child: OverlayPortal(
       controller: portalController,
       overlayChildBuilder: (context) {
@@ -177,8 +176,8 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
             backgroundColor: color,
             textColor:
                 ThemeData.estimateBrightnessForColor(color) == Brightness.dark
-                    ? Colors.white
-                    : Colors.black,
+                ? Colors.white
+                : Colors.black,
             child: Transform.flip(
               flipX: true,
               child: Icon(

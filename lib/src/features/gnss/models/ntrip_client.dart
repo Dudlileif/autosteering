@@ -36,7 +36,8 @@ class NtripClient {
     final auth = const Base64Encoder().convert(
       '${profile.username}:${profile.password}'.codeUnits,
     );
-    final message = '''
+    final message =
+        '''
 GET /${profile.mountPoint} HTTP/1.1\r
 User-Agent: NTRIP NTRIPClient/0.1\r
 Authorization: Basic $auth\r

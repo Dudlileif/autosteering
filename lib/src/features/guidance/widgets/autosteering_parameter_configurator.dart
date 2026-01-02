@@ -58,13 +58,11 @@ class AutosteeringParameterConfigurator extends StatelessWidget {
                   child: Consumer(
                     builder: (context, ref, child) {
                       return CloseButton(
-                        onPressed:
-                            () => ref
-                                .read(
-                                  showAutosteeringParameterConfigProvider
-                                      .notifier,
-                                )
-                                .update(value: false),
+                        onPressed: () => ref
+                            .read(
+                              showAutosteeringParameterConfigProvider.notifier,
+                            )
+                            .update(value: false),
                       );
                     },
                   ),
@@ -420,8 +418,9 @@ class DraggableAutosteeringParameterConfigurator extends ConsumerWidget {
     maxHeight: 350,
     maxWidthFraction: 0.7,
     maxHeightFraction: 1,
-    onDragEnd:
-        ref.read(autosteeringConfiguratorUiOffsetProvider.notifier).update,
+    onDragEnd: ref
+        .read(autosteeringConfiguratorUiOffsetProvider.notifier)
+        .update,
     child: const AutosteeringParameterConfigurator(),
   );
 }

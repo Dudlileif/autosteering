@@ -197,14 +197,14 @@ class RingBuffer {
     return getRawPoints
         ? resultRing
         : findAndInsertIntersections(
-          originalRing: ring,
-          bufferedRing: resultRing,
-          distance: distance,
-          joinType: joinType,
-          extendEnds: extendEnds,
-          filtered: filteredIntersections,
-          getIntersectionsOnly: getIntersectionsOnly,
-        );
+            originalRing: ring,
+            bufferedRing: resultRing,
+            distance: distance,
+            joinType: joinType,
+            extendEnds: extendEnds,
+            filtered: filteredIntersections,
+            getIntersectionsOnly: getIntersectionsOnly,
+          );
   }
 
   /// Finds all the intersections in [bufferedRing].
@@ -321,10 +321,9 @@ class RingBuffer {
       // From few to many.
       filteredIntersections.sortByCompare((element) {
         final length = element.end - element.begin;
-        final lengthAroundStart =
-            includeEnds
-                ? bufferedRing.length - element.end + element.begin
-                : double.maxFinite.floor();
+        final lengthAroundStart = includeEnds
+            ? bufferedRing.length - element.end + element.begin
+            : double.maxFinite.floor();
         final min = [length, lengthAroundStart].min;
         return min;
       }, (a, b) => a.compareTo(b));
@@ -366,20 +365,20 @@ class RingBuffer {
     // number of indices from begin to end.
     for (final replacement in intersectionList) {
       final length = replacement.end - replacement.begin;
-      final lengthAroundStart =
-          extendEnds
-              ? resultRing.length - replacement.end + replacement.begin
-              : double.maxFinite.floor();
+      final lengthAroundStart = extendEnds
+          ? resultRing.length - replacement.end + replacement.begin
+          : double.maxFinite.floor();
 
       // Wraps around the end of the ring
       if (lengthAroundStart < length) {
         // From end to last index.
-        final indices = List.generate(
-            lengthAroundStart - replacement.begin,
-            (index) => replacement.end + index,
-          )
-          // From 0 to begin.
-          ..addAll(List.generate(replacement.begin, (index) => index));
+        final indices =
+            List.generate(
+                lengthAroundStart - replacement.begin,
+                (index) => replacement.end + index,
+              )
+              // From 0 to begin.
+              ..addAll(List.generate(replacement.begin, (index) => index));
 
         for (final index in indices) {
           resultRing[index] = replacement.intersection;

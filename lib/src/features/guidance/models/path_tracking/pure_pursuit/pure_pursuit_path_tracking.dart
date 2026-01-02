@@ -264,24 +264,22 @@ final class PurePursuitPathTracking extends PathTracking {
   ///
   /// https://thomasfermi.github.io/Algorithms-for-Automated-Driving/Control/PurePursuit.html
   double _nextSteeringAngleLookAhead(Vehicle vehicle) {
-    final lookAheadPoint =
-        findLookAheadCirclePoints(
-          vehicle,
-          vehicle.lookAheadDistance,
-        ).best.position;
+    final lookAheadPoint = findLookAheadCirclePoints(
+      vehicle,
+      vehicle.lookAheadDistance,
+    ).best.position;
 
     final bearingToPoint = vehicle.lookAheadStartPosition.rhumb
         .initialBearingTo(lookAheadPoint);
 
     final angle = signedBearingDifference(vehicle.bearing, bearingToPoint);
 
-    final steeringAngle =
-        atan(
-          2 *
-              vehicle.wheelBase *
-              sin(angle.toRadians()) /
-              vehicle.lookAheadDistance,
-        ).toDegrees();
+    final steeringAngle = atan(
+      2 *
+          vehicle.wheelBase *
+          sin(angle.toRadians()) /
+          vehicle.lookAheadDistance,
+    ).toDegrees();
 
     return clampDouble(
       steeringAngle,
