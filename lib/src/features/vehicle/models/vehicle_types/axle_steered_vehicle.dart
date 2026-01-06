@@ -47,7 +47,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     super.pathTrackingMode,
     super.imu,
     super.was,
-    super.autosteeringThresholdVelocity,
+    super.thresholdVelocities,
     super.steeringHardwareConfig,
     super.purePursuitParameters,
     super.stanleyParameters,
@@ -310,6 +310,22 @@ sealed class AxleSteeredVehicle extends Vehicle {
           }.wrap360(),
         )
       : null;
+
+  @override
+  double steeringAngleFromAngularVelocity(double angularVelocity) {
+    if (angularVelocity == 0 || velocity == 0) {
+      return 0;
+    }
+    final turningRadius = velocity.abs() / (angularVelocity.abs() * pi) * 180;
+
+    return AckermannSteeringFromTurningRadius(
+      turningRadius: turningRadius,
+      wheelBase: wheelBase,
+      trackWidth: trackWidth,
+      ackermannPercentage: ackermannPercentage,
+      steeringRatio: ackermannSteeringRatio,
+    ).steeringAngle;
+  }
 
   @override
   ({Geographic position, double bearing}) updatedPositionAndBearingTurning(
@@ -690,7 +706,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     double? wheelSpacing,
     Imu? imu,
     Was? was,
-    double? autosteeringThresholdVelocity,
+    ThresholdVelocities? thresholdVelocities,
     SteeringHardwareConfig? steeringHardwareConfig,
     PathTrackingMode? pathTrackingMode,
     PurePursuitParameters? purePursuitParameters,

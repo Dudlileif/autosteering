@@ -25,6 +25,7 @@ import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/features/vehicle/models/threshold_velocities.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as map;
@@ -57,7 +58,7 @@ sealed class Vehicle extends Hitchable {
     this.wheelsRolledDistance = 0,
     this.antennaPosition = const Geographic(lon: 0, lat: 0),
     this.pathTrackingMode = PathTrackingMode.purePursuit,
-    this.autosteeringThresholdVelocity = 0.05,
+    this.thresholdVelocities = const ThresholdVelocities(),
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
     super.hitchRearTowbarChild,
@@ -153,11 +154,18 @@ sealed class Vehicle extends Hitchable {
             ),
           )
         : Was();
+
     final steeringHardwareConfig = steering.containsKey('hardware_config')
         ? SteeringHardwareConfig.fromJson(
             Map<String, dynamic>.from(steering['hardware_config'] as Map),
           )
         : const SteeringHardwareConfig();
+
+    final thresholdVelocities = steering.containsKey('thresold_velocities')
+        ? ThresholdVelocities.fromJson(
+            Map<String, dynamic>.from(steering['thresold_velocities'] as Map),
+          )
+        : const ThresholdVelocities();
 
     final purePursuitParameters =
         steering.containsKey('pure_pursuit_parameters')
@@ -183,9 +191,8 @@ sealed class Vehicle extends Hitchable {
     return vehicle.copyWith(
       imu: imu,
       was: was,
-      autosteeringThresholdVelocity:
-          steering['autosteering_threshold_velocity'] as double?,
       steeringHardwareConfig: steeringHardwareConfig,
+      thresholdVelocities: thresholdVelocities,
       purePursuitParameters: purePursuitParameters,
       stanleyParameters: stanleyParameters,
       manufacturerColors: manufacturerColors,
@@ -244,8 +251,8 @@ sealed class Vehicle extends Hitchable {
   /// Which steering mode the path tracking should use.
   PathTrackingMode pathTrackingMode;
 
-  /// The minimum required velocity to engage autosteering.
-  double autosteeringThresholdVelocity;
+  /// The threshold velocities for using autosteering with this vehicle.
+  ThresholdVelocities thresholdVelocities;
 
   /// The sideways distance to nudge the vehicle from the path tracking line.
   /// Positive means to the right in the driving direction.
@@ -513,7 +520,7 @@ sealed class Vehicle extends Hitchable {
     double.infinity,
   );
 
-  /// A [WayPoint] for the vehicle in it's current state, i.e. position, bearing
+  /// A [WayPoint] for the vehicle in its current state, i.e. position, bearing
   /// and velocity.
   WayPoint get wayPoint =>
       WayPoint(position: position, bearing: bearing, velocity: velocity);
@@ -555,12 +562,18 @@ sealed class Vehicle extends Hitchable {
     if (currentTurningRadius == null) {
       return null;
     }
-    var value = (velocity / (2 * pi * currentTurningRadius!)) * 360;
+    var value = (velocity / (pi * currentTurningRadius!)) * 180;
     if (isTurningLeft) {
       value *= -1;
     }
     return value;
   }
+
+  /// Helper method to get the steering angle for a given angular velocity
+  /// with the current [velocity].
+  double steeringAngleFromAngularVelocity(
+    double angularVelocity,
+  );
 
   /// The projected trajectory for the moving vehicle.
   ///
@@ -722,7 +735,7 @@ sealed class Vehicle extends Hitchable {
     double? wheelSpacing,
     Was? was,
     Imu? imu,
-    double? autosteeringThresholdVelocity,
+    ThresholdVelocities? thresholdVelocities,
     SteeringHardwareConfig? steeringHardwareConfig,
     PathTrackingMode? pathTrackingMode,
     PurePursuitParameters? purePursuitParameters,
@@ -772,7 +785,7 @@ sealed class Vehicle extends Hitchable {
       'min_turning_radius': minTurningRadius,
       'path_tracking_mode': pathTrackingMode,
       'steering_angle_max': steeringAngleMax,
-      'autosteering_threshold_velocity': autosteeringThresholdVelocity,
+      'threshold_velocities': thresholdVelocities.toJson(),
       'hardware_config': steeringHardwareConfig,
       'was_config': was.config,
       'pure_pursuit_parameters': purePursuitParameters,

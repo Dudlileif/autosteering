@@ -22,6 +22,7 @@ import 'dart:ui';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/simulator/providers/providers.dart';
+import 'package:autosteering/src/features/vehicle/models/threshold_velocities.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -308,43 +309,19 @@ class _MotorPage extends ConsumerWidget {
           secondary: child,
         ),
       ),
-      // Threshold velocity
-      _SteeringHardwareConfigListTile(
-        initialValue: ref.read(
-          mainVehicleProvider.select(
-            (value) => value.autosteeringThresholdVelocity,
+      // Threshold velocities
+      Consumer(
+        child: Text(
+          'Threshold velocities',
+          style: theme.textTheme.bodyLarge,
+        ),
+        builder: (context, ref, child) => ListTile(
+          title: child,
+          onTap: () => showDialog<void>(
+            context: context,
+            builder: (context) => const _ThresholdVelocitiesDialog(),
           ),
         ),
-        resetValue: 0.05,
-        text: (value) =>
-            '''Steering threshold: ${value.toStringAsFixed(2)} m/s''',
-        subtitle: 'Minimum velocity for autosteering',
-        onChangeEnd: (value) {
-          final oldValue = ref.read(
-            mainVehicleProvider.select(
-              (value) => value.autosteeringThresholdVelocity,
-            ),
-          );
-          ref
-              .read(simInputProvider.notifier)
-              .send(
-                ref
-                    .read(mainVehicleProvider)
-                    .copyWith(autosteeringThresholdVelocity: value),
-              );
-          // Wait a short while before saving the
-          // hopefully updated vehicle.
-          Timer(const Duration(milliseconds: 100), () {
-            final vehicle = ref.watch(mainVehicleProvider);
-            ref.read(saveVehicleProvider(vehicle));
-            Logger.instance.i(
-              '''Updated vehicle motor config threshold velocity: $oldValue -> ${vehicle.autosteeringThresholdVelocity}''',
-            );
-          });
-        },
-        min: 0.01,
-        max: 0.4,
-        divisions: 39,
       ),
       // Motor max RPM
       _SteeringHardwareConfigListTile(
@@ -1617,6 +1594,175 @@ class _PidPage extends ConsumerWidget {
               ],
             );
           },
+        ),
+      ],
+    );
+  }
+}
+
+class _ThresholdVelocitiesDialog extends ConsumerStatefulWidget {
+  const _ThresholdVelocitiesDialog();
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      __ThresholdVelocitiesDialogState();
+}
+
+class __ThresholdVelocitiesDialogState
+    extends ConsumerState<_ThresholdVelocitiesDialog> {
+  late ThresholdVelocities thresholdVelocities = ref.read(
+    mainVehicleProvider.select((vehicle) => vehicle.thresholdVelocities),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = TextTheme.of(context);
+    return SimpleDialog(
+      title: const Text('Threshold velocities'),
+      children: [
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Min velocity: ${(thresholdVelocities.minVelocity * 3.6).toStringAsFixed(1)} km/h',
+              style: textTheme.bodyLarge,
+            ),
+            Text(
+              'Autosteering disabled below threshold.',
+              style: textTheme.bodySmall,
+            ),
+            Slider(
+              value: thresholdVelocities.minVelocity,
+              max: 2,
+              divisions: 100,
+              onChanged: (value) => setState(
+                () {
+                  thresholdVelocities = thresholdVelocities.copyWith(
+                    minVelocity: value,
+                    maxVelocity: thresholdVelocities.maxVelocity < value
+                        ? value
+                        : thresholdVelocities.maxVelocity,
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Max velocity: ${(thresholdVelocities.maxVelocity * 3.6).toStringAsFixed(1)} km/h',
+              style: textTheme.bodyLarge,
+            ),
+            Text(
+              'Autosteering disabled above threshold.',
+              style: textTheme.bodySmall,
+            ),
+            Slider(
+              value: thresholdVelocities.maxVelocity,
+              min: thresholdVelocities.minVelocity,
+              max: 5,
+              divisions: 60,
+              onChanged: (value) => setState(
+                () => thresholdVelocities = thresholdVelocities.copyWith(
+                  maxVelocity: value,
+                ),
+              ),
+            ),
+          ],
+        ),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Max reversing velocity: ${(thresholdVelocities.maxReversingVelocity * 3.6).toStringAsFixed(1)} km/h',
+              style: textTheme.bodyLarge,
+            ),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 300),
+              child: Text(
+                '''Autosteering disabled above threshold. Set to 0 to completely disable in reverse.''',
+                style: textTheme.bodySmall,
+                textAlign: .center,
+              ),
+            ),
+            Slider(
+              value: thresholdVelocities.maxReversingVelocity,
+              max: 2,
+              divisions: 100,
+              onChanged: (value) => setState(
+                () => thresholdVelocities = thresholdVelocities.copyWith(
+                  maxReversingVelocity: value,
+                ),
+              ),
+            ),
+          ],
+        ),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Max angular velocity: ${thresholdVelocities.maxAngularVelocity.round()} °/s',
+              style: textTheme.bodyLarge,
+            ),
+            Text(
+              'Autosteering limits steering to stay below this.',
+              style: textTheme.bodySmall,
+            ),
+            Slider(
+              value: thresholdVelocities.maxAngularVelocity,
+              max: 50,
+              min: 10,
+              divisions: 40,
+              onChanged: (value) => setState(
+                () => thresholdVelocities = thresholdVelocities.copyWith(
+                  maxAngularVelocity: value,
+                ),
+              ),
+            ),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 16),
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                ElevatedButton.icon(
+                  label: const Text('Cancel'),
+                  icon: const Icon(Icons.clear),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+                FilledButton.icon(
+                  label: const Text('Confirm'),
+                  icon: const Icon(Icons.check),
+                  onPressed: () {
+                    final oldValues = ref.read(
+                      mainVehicleProvider.select(
+                        (value) => value.thresholdVelocities,
+                      ),
+                    );
+                    ref
+                        .read(simInputProvider.notifier)
+                        .send(thresholdVelocities);
+                    // Wait a short while before saving the hopefully
+                    // updated vehicle.
+                    Timer(const Duration(milliseconds: 100), () {
+                      final vehicle = ref.watch(mainVehicleProvider);
+                      ref.read(saveVehicleProvider(vehicle));
+                      Logger.instance.i(
+                        '''Updated vehicle threshold velocities: $oldValues -> ${vehicle.thresholdVelocities}''',
+                      );
+                    });
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
         ),
       ],
     );

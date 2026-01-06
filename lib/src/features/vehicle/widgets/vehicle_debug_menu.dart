@@ -167,7 +167,7 @@ class VehicleTrajectoryButton extends StatelessWidget {
       icon: Icons.straight,
       menuChildren: [
         ConstrainedBox(
-          constraints: const BoxConstraints(minWidth: 320),
+          constraints: const BoxConstraints(minWidth: 350),
           child: Consumer(
             child: Text('Trajectory', style: textStyle),
             builder: (context, ref, child) => CheckboxListTile(

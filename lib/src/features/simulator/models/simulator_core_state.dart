@@ -27,6 +27,7 @@ import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
+import 'package:autosteering/src/features/vehicle/models/threshold_velocities.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
@@ -266,6 +267,10 @@ class SimulatorCoreState {
     else if (message is SteeringHardwareConfig) {
       vehicle?.steeringHardwareConfig = message;
     }
+    // Update the autosteering threshold velocities of the vehicle.
+    else if (message is ThresholdVelocities) {
+      vehicle?.thresholdVelocities = message;
+    }
     // Update bearing
     else if (message is ({double bearing})) {
       vehicle?.bearing = message.bearing;
@@ -344,9 +349,9 @@ class SimulatorCoreState {
         );
 
         if (abTracking != null || pathTracking != null) {
-          autosteeringState = AutosteeringState.enabled;
+          autosteeringState = AutosteeringState.standby;
           mainThreadSendStream.add(
-            LogEvent(Level.warning, 'Autosteer enabled!'),
+            LogEvent(Level.warning, 'Autosteer standby!'),
           );
         } else {
           autosteeringState = AutosteeringState.disabled;
@@ -671,7 +676,7 @@ class SimulatorCoreState {
       }
 
       // The steering rate of the vehicle, deg/s
-      const steeringRate = 30.0;
+      const steeringRate = 15.0;
 
       if (!receivingManualInput &&
           steeringAngleTarget != null &&
@@ -806,10 +811,23 @@ class SimulatorCoreState {
         }
       }
 
+      // Clamp steering target to within safe range given by max angular
+      // velocity with some margin.
+      final maxSteeringAngle = vehicle!.steeringAngleFromAngularVelocity(
+        vehicle!.thresholdVelocities.maxAngularVelocity * 0.95,
+      );
+      steeringAngleTarget = switch (steeringAngleTarget!) {
+        final target when target.abs() > maxSteeringAngle =>
+          target.sign * maxSteeringAngle,
+        final target => target,
+      };
+
       if (autosteeringState != AutosteeringState.disabled &&
           !receivingManualInput &&
           !motorCalibrationEnabled) {
-        if (vehicle!.velocity.abs() > vehicle!.autosteeringThresholdVelocity) {
+        final withinVelocityThresholds = _checkVelocityThresholds(vehicle!);
+
+        if (withinVelocityThresholds) {
           wasTarget = vehicle!.wasTargetFromSteeringAngle(steeringAngleTarget!);
           steeringHardwareSendStream?.add(
             const Utf8Encoder().convert(
@@ -853,6 +871,85 @@ class SimulatorCoreState {
         ..add(LogEvent(Level.info, 'No guidance available.'))
         ..add(LogEvent(Level.warning, 'Autosteer disabled!'));
     }
+  }
+
+  /// Checks whether the [vehicle] is within its threshold velocities when
+  /// autosteering is enabled or in standby.
+  bool _checkVelocityThresholds(Vehicle vehicle) {
+    switch ((
+      vehicle.velocity,
+      vehicle.angularVelocity?.abs(),
+    )) {
+      case (final velocity, _)
+          when velocity > vehicle.thresholdVelocities.maxVelocity:
+        if (autosteeringState == AutosteeringState.enabled) {
+          mainThreadSendStream.add(
+            LogEvent(
+              Level.warning,
+              [
+                '''Autosteer standby! Max velocity threshold exceeded: ''',
+                '${velocity.toStringAsFixed(2)} / ${vehicle.thresholdVelocities.maxVelocity.toStringAsFixed(2)} m/s',
+              ].join(),
+            ),
+          );
+        }
+        return false;
+      case (_, final double angularVelocity)
+          when angularVelocity > vehicle.thresholdVelocities.maxAngularVelocity:
+        if (autosteeringState == AutosteeringState.enabled) {
+          mainThreadSendStream.add(
+            LogEvent(
+              Level.warning,
+              [
+                '''Autosteer standby! Max angular velocity threshold exceeded: ''',
+                '${angularVelocity.toStringAsFixed(2)} / ${vehicle.thresholdVelocities.maxAngularVelocity.toStringAsFixed(2)} °/s',
+              ].join(),
+            ),
+          );
+        }
+        return false;
+      case (final velocity, _)
+          when velocity < 0 &&
+              velocity.abs() > vehicle.thresholdVelocities.maxReversingVelocity:
+        if (autosteeringState == AutosteeringState.enabled) {
+          mainThreadSendStream.add(
+            LogEvent(
+              Level.warning,
+              [
+                '''Autosteer standby! Max reversing velocity threshold exceeded: ''',
+                '${velocity.toStringAsFixed(2)} / ${vehicle.thresholdVelocities.maxReversingVelocity.toStringAsFixed(2)} m/s',
+              ].join(),
+            ),
+          );
+        }
+        return false;
+      case (final velocity, _)
+          when velocity.abs() < vehicle.thresholdVelocities.minVelocity:
+        if (autosteeringState != AutosteeringState.standby) {
+          mainThreadSendStream.add(
+            LogEvent(
+              Level.warning,
+              [
+                '''Autosteer standby! Below min velocity threshold: ''',
+                '${velocity.toStringAsFixed(2)} / ${vehicle.thresholdVelocities.minVelocity.toStringAsFixed(2)} m/s',
+              ].join(),
+            ),
+          );
+        }
+        return false;
+      case (final velocity, _)
+          when velocity.abs() > vehicle.thresholdVelocities.minVelocity:
+        if (autosteeringState != AutosteeringState.enabled) {
+          mainThreadSendStream.add(
+            LogEvent(
+              Level.warning,
+              'Autosteer enabled! Velocities within thresholds.',
+            ),
+          );
+        }
+        return true;
+    }
+    return false;
   }
 
   /// Updates the calculated gauges for the vehicle state only by the

@@ -47,7 +47,7 @@ final class ArticulatedTractor extends Vehicle {
     super.pathTrackingMode,
     super.imu,
     super.was,
-    super.autosteeringThresholdVelocity,
+    super.thresholdVelocities,
     super.steeringHardwareConfig,
     super.purePursuitParameters = const PurePursuitParameters(
       lookAheadMinDistance: 1,
@@ -500,6 +500,21 @@ final class ArticulatedTractor extends Vehicle {
             sin(degToRadian(steeringAngle.abs()))
       : null;
 
+  // NOTE: Rough approximation with bicyle model for now.
+  @override
+  double steeringAngleFromAngularVelocity(double angularVelocity) {
+    if (angularVelocity == 0 || velocity == 0) {
+      return 0;
+    }
+    final turningRadius = velocity.abs() / (angularVelocity.abs() * pi) * 180;
+
+    final steeringAngle = (atan(turningRadius / wheelBase) - pi / 2)
+        .abs()
+        .toDegrees();
+
+    return steeringAngle;
+  }
+
   /// The center point of which the [currentTurningRadius] revolves around.
   @override
   Geographic? get turningRadiusCenter => currentTurningRadius != null
@@ -792,7 +807,7 @@ final class ArticulatedTractor extends Vehicle {
     int? numWheels,
     Imu? imu,
     Was? was,
-    double? autosteeringThresholdVelocity,
+    ThresholdVelocities? thresholdVelocities,
     SteeringHardwareConfig? steeringHardwareConfig,
     PathTrackingMode? pathTrackingMode,
     StanleyParameters? stanleyParameters,
@@ -838,8 +853,7 @@ final class ArticulatedTractor extends Vehicle {
         rearAxleToTowbarDistance ?? this.rearAxleToTowbarDistance,
     imu: imu ?? this.imu,
     was: was ?? this.was,
-    autosteeringThresholdVelocity:
-        autosteeringThresholdVelocity ?? this.autosteeringThresholdVelocity,
+    thresholdVelocities: thresholdVelocities ?? this.thresholdVelocities,
     steeringHardwareConfig:
         steeringHardwareConfig ?? this.steeringHardwareConfig,
     pathTrackingMode: pathTrackingMode ?? this.pathTrackingMode,

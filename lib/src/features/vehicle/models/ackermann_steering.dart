@@ -185,3 +185,104 @@ class WheelAngleToAckermann {
   /// The rurning radius for this wheel angle.
   double get turningRadius => tan(pi / 2 - ackermannAngle).abs() * wheelBase;
 }
+
+/// A class used to simulate Ackermann steering geometry with basis in the
+/// turning radius to find the corresponding steering angle.
+class AckermannSteeringFromTurningRadius {
+  /// A class used to simulate Ackermann steering geometry with basis in the
+  /// turning radius to find the corresponding steering angle.
+  ///
+  /// [turningRadius] is the input turning radius in meters.
+  ///
+  /// [wheelBase] is the distance between the steering and the non-steering
+  /// solid axle.
+  ///
+  /// [trackWidth] is the distance between the wheels on the same axle.
+  ///
+  /// [steeringRatio] is a ratio to change how fast the steering turns.
+  ///
+  /// [ackermannPercentage] is a modifier to adjust the outside wheel angle by
+  /// ```outsideAngle = innerAngle -
+  ///   ackermannPercentage*(innerAngle-ackermannAngle)```
+  const AckermannSteeringFromTurningRadius({
+    required this.turningRadius,
+    required this.wheelBase,
+    required this.trackWidth,
+    this.steeringRatio = 1,
+    this.ackermannPercentage = 100,
+  });
+
+  /// The input turning radius.
+  final double turningRadius;
+
+  /// The distance between the wheel axles.
+  final double wheelBase;
+
+  /// The distance between the wheels on the same axle.
+  final double trackWidth;
+
+  /// A modifier to increase/decrease how fast the steering turns.
+  final double steeringRatio;
+
+  /// A modifier to adjust the outside wheel angle by
+  /// ```outsideAngle = innerAngle -
+  ///   ackermannPercentage*(innerAngle-ackermannAngle)```
+  final double ackermannPercentage;
+
+  /// Degrees, the steering angle that corresponds to this turning radius.
+  double get steeringAngle => ackermannAngle.abs().toDegrees() * steeringRatio;
+
+  /// Radians, the angle of an envisioned steering wheel at the center of the
+  /// steering axle.
+  double get ackermannAngle => atan(turningRadius / wheelBase) - pi / 2;
+
+  /// Degrees
+  double get ackermannAngleDegrees => ackermannAngle.toDegrees();
+
+  /// Degrees
+  double get idealLeftAngle => atan(
+    wheelBase *
+        tan(ackermannAngle) /
+        (wheelBase + 0.5 * trackWidth * tan(ackermannAngle)),
+  ).toDegrees();
+
+  /// Degrees
+  double get idealRightAngle => atan(
+    wheelBase *
+        tan(ackermannAngle) /
+        (wheelBase - 0.5 * trackWidth * tan(ackermannAngle)),
+  ).toDegrees();
+
+  /// Degrees
+  double get innerAngle =>
+      ackermannAngle < 0 ? idealLeftAngle : idealRightAngle;
+
+  /// Degrees
+  double get outerAngle =>
+      innerAngle -
+      (ackermannPercentage / 100) * (innerAngle - ackermannAngle.toDegrees());
+
+  /// Degrees
+  double get leftAngle => switch (ackermannAngle < 0) {
+    true => innerAngle,
+    false => outerAngle,
+  };
+
+  /// Degrees
+  double get rightAngle => switch (ackermannAngle < 0) {
+    true => outerAngle,
+    false => innerAngle,
+  };
+
+  @override
+  String toString() =>
+      '''
+  Ackermann steering from turning radius:
+  Steering angle: $steeringAngle  
+  Ackermann angle: ${ackermannAngle.toDegrees()}
+  Ackermann ratio: $steeringRatio
+  Ackermann percentage: $ackermannPercentage
+  Ideal left angle -> left angle: $idealLeftAngle -> $leftAngle
+  Ideal right angle -> right angle: $idealRightAngle -> $rightAngle
+  Turning radius: $turningRadius''';
+}

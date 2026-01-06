@@ -43,7 +43,7 @@ final class Tractor extends AxleSteeredVehicle {
     super.pathTrackingMode,
     super.imu,
     super.was,
-    super.autosteeringThresholdVelocity,
+    super.thresholdVelocities,
     super.steeringHardwareConfig,
     super.purePursuitParameters,
     super.stanleyParameters,
@@ -180,7 +180,7 @@ final class Tractor extends AxleSteeredVehicle {
     double? wheelSpacing,
     Imu? imu,
     Was? was,
-    double? autosteeringThresholdVelocity,
+    ThresholdVelocities? thresholdVelocities,
     SteeringHardwareConfig? steeringHardwareConfig,
     PathTrackingMode? pathTrackingMode,
     PidParameters? pidParameters,
@@ -234,8 +234,7 @@ final class Tractor extends AxleSteeredVehicle {
     wheelSpacing: wheelSpacing ?? this.wheelSpacing,
     imu: imu ?? this.imu,
     was: was ?? this.was,
-    autosteeringThresholdVelocity:
-        autosteeringThresholdVelocity ?? this.autosteeringThresholdVelocity,
+    thresholdVelocities: thresholdVelocities ?? this.thresholdVelocities,
     steeringHardwareConfig:
         steeringHardwareConfig ?? this.steeringHardwareConfig,
     pathTrackingMode: pathTrackingMode ?? this.pathTrackingMode,
