@@ -47,6 +47,9 @@ class SteeringMotorActualRPM extends _$SteeringMotorActualRPM {
 
   @override
   double? build() {
+    ref.onDispose(() {
+      _resetTimer?.cancel();
+    });
     listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
@@ -68,6 +71,9 @@ class SteeringMotorStatus extends _$SteeringMotorStatus {
 
   @override
   MotorStatus? build() {
+    ref.onDispose(() {
+      _resetTimer?.cancel();
+    });
     listenSelf((previous, next) {
       if (previous != next) {
         if (ref.read(activeAutosteeringStateProvider) ==
@@ -110,6 +116,9 @@ class SteeringMotorCurrentScale extends _$SteeringMotorCurrentScale {
 
   @override
   int? build() {
+    ref.onDispose(() {
+      _resetTimer?.cancel();
+    });
     listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
@@ -131,6 +140,9 @@ class SteeringMotorStallguard extends _$SteeringMotorStallguard {
 
   @override
   int? build() {
+    ref.onDispose(() {
+      _resetTimer?.cancel();
+    });
     listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
@@ -171,6 +183,9 @@ class SteeringMotorRotation extends _$SteeringMotorRotation {
 
   @override
   double? build() {
+    ref.onDispose(() {
+      _resetTimer?.cancel();
+    });
     listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
@@ -193,6 +208,9 @@ class SteeringMotorTargetRotation extends _$SteeringMotorTargetRotation {
 
   @override
   double? build() {
+    ref.onDispose(() {
+      _resetTimer?.cancel();
+    });
     listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
@@ -216,6 +234,9 @@ class SteeringMotorStepsPerWasIncrementMinToCenter
 
   @override
   double? build() {
+    ref.onDispose(() {
+      _resetTimer?.cancel();
+    });
     listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
@@ -239,6 +260,9 @@ class SteeringMotorStepsPerWasIncrementCenterToMax
 
   @override
   double? build() {
+    ref.onDispose(() {
+      _resetTimer?.cancel();
+    });
     listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(

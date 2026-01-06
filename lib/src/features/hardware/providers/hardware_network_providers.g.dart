@@ -46,7 +46,7 @@ final class SteeringHardwareNetworkAliveProvider
 }
 
 String _$steeringHardwareNetworkAliveHash() =>
-    r'e68b0de191f2f1c5cfdd51810d8f36000619e83f';
+    r'f598a220ea9ad2e2f862c83681c5bb18458696b6';
 
 /// A provider for whether there is a connection with the steering hardware.
 
@@ -111,7 +111,7 @@ final class RemoteControlHardwareNetworkAliveProvider
 }
 
 String _$remoteControlHardwareNetworkAliveHash() =>
-    r'08ff67c407ee215a57f4d72b6bdaf19d4fb802c6';
+    r'3f8ca1b3130dc0bf228534ef09d8255335c1ecc8';
 
 /// A provider for whether there is a connection with the remote control
 /// hardware.

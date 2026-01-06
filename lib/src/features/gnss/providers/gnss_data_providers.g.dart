@@ -46,7 +46,7 @@ final class GnssCurrentSentenceProvider
 }
 
 String _$gnssCurrentSentenceHash() =>
-    r'ca68c8fac86fb77318ff5aa0b21f6122afe0d3b9';
+    r'546d03ba5dc9fed55018508605ac36cfbbf0d28d';
 
 /// A provider for the quality of last GNSS position update.
 
@@ -111,7 +111,7 @@ final class GnssCurrentFrequencyProvider
 }
 
 String _$gnssCurrentFrequencyHash() =>
-    r'a8fc1a0c70aab7c4c84054d15bc0a6ec2959f8c9';
+    r'4b8f1340185af6374be892c35af870a4e69009be';
 
 /// A provider for the frequency of the GNSS updates.
 
@@ -266,7 +266,7 @@ final class GnssPrecisionErrorProvider
 }
 
 String _$gnssPrecisionErrorHash() =>
-    r'39a03ac359f2b51e31bce7937b8275137ffb483f';
+    r'4944db0f98c53ce51ad099924c151981cc5b726a';
 
 /// A provider for the precision error of the last GNSS update.
 

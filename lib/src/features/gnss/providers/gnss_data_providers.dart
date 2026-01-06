@@ -31,6 +31,9 @@ class GnssCurrentSentence extends _$GnssCurrentSentence {
 
   @override
   GnssPositionCommonSentence? build() {
+    ref.onDispose(() {
+      _resetTimer?.cancel();
+    });
     listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(const Duration(milliseconds: 350), () {
@@ -84,6 +87,9 @@ class GnssCurrentFrequency extends _$GnssCurrentFrequency {
 
   @override
   double? build() {
+    ref.onDispose(() {
+      _resetTimer?.cancel();
+    });
     listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
@@ -119,6 +125,9 @@ class GnssPrecisionError extends _$GnssPrecisionError {
   @override
   ({double? latitudeError, double? longitudeError, double? altitudeError})?
   build() {
+    ref.onDispose(() {
+      _resetTimer?.cancel();
+    });
     listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(

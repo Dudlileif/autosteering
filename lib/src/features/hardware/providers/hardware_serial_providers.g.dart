@@ -255,7 +255,7 @@ final class HardwareSerialAliveProvider
 }
 
 String _$hardwareSerialAliveHash() =>
-    r'8e130768da3e3c2eaa24d25165f9c07bcae90822';
+    r'eae0e9a3fa31b3cdf352ca1e5c333d0b9434d928';
 
 /// A provider for telling whether the [HardwareSerial] is receiving data.
 ///

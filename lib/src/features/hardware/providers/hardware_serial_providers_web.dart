@@ -90,6 +90,9 @@ class HardwareSerialAlive extends _$HardwareSerialAlive {
 
   @override
   bool build() {
+    ref.onDispose(() {
+      _resetTimer?.cancel();
+    });
     listenSelf((previous, next) {
       if (next) {
         _resetTimer?.cancel();

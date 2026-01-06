@@ -32,6 +32,9 @@ class ImuCurrentFrequency extends _$ImuCurrentFrequency {
 
   @override
   double? build() {
+    ref.onDispose(() {
+      _resetTimer?.cancel();
+    });
     listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
@@ -54,6 +57,9 @@ class ImuCurrentReading extends _$ImuCurrentReading {
 
   @override
   ImuReading? build() {
+    ref.onDispose(() {
+      _resetTimer?.cancel();
+    });
     listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(

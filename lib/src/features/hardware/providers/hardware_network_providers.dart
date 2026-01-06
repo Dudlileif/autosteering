@@ -34,6 +34,9 @@ class SteeringHardwareNetworkAlive extends _$SteeringHardwareNetworkAlive {
 
   @override
   bool build() {
+    ref.onDispose(() {
+      _resetTimer?.cancel();
+    });
     listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
@@ -57,6 +60,9 @@ class RemoteControlHardwareNetworkAlive
 
   @override
   bool build() {
+    ref.onDispose(() {
+      _resetTimer?.cancel();
+    });
     listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(const Duration(seconds: 2), ref.invalidateSelf);

@@ -45,7 +45,7 @@ final class WasCurrentFrequencyProvider
 }
 
 String _$wasCurrentFrequencyHash() =>
-    r'f6b74cd2a414e6274cc3690c8115b96e5ab69e1f';
+    r'e63f556656ff1ed31210c6d6a3b0139038fdf9bf';
 
 /// A provider for the frequency of the WAS updates.
 
@@ -103,7 +103,7 @@ final class WasCurrentReadingProvider
   }
 }
 
-String _$wasCurrentReadingHash() => r'657c28334eb4a6873b3e07cd3ec3c803fd581a4f';
+String _$wasCurrentReadingHash() => r'af178a665123e20c4bdf5ca41a91bb69fdd093e6';
 
 /// A provider for the current raw [WasReading] from the hardware.
 

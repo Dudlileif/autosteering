@@ -29,6 +29,9 @@ class WasCurrentFrequency extends _$WasCurrentFrequency {
 
   @override
   double? build() {
+    ref.onDispose(() {
+      _resetTimer?.cancel();
+    });
     listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(
@@ -51,6 +54,9 @@ class WasCurrentReading extends _$WasCurrentReading {
 
   @override
   WasReading? build() {
+    ref.onDispose(() {
+      _resetTimer?.cancel();
+    });
     listenSelf((previous, next) {
       _resetTimer?.cancel();
       _resetTimer = Timer(

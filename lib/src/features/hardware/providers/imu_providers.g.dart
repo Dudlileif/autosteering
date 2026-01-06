@@ -45,7 +45,7 @@ final class ImuCurrentFrequencyProvider
 }
 
 String _$imuCurrentFrequencyHash() =>
-    r'94f8f1cf76c7c72495570b54a23b1e78e15fa18b';
+    r'd112870aa7825e526bf952a301069f32cb1d3300';
 
 /// A provider for the frequency of the IMU updates.
 
@@ -103,7 +103,7 @@ final class ImuCurrentReadingProvider
   }
 }
 
-String _$imuCurrentReadingHash() => r'e1948ef2417c3db42821de475076825d7b40d762';
+String _$imuCurrentReadingHash() => r'070a568db893b517e501acd6245fd20555b388fe';
 
 /// A provider for the current raw [ImuReading] from the hardware.
 

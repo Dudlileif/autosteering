@@ -104,7 +104,7 @@ final class SteeringMotorActualRPMProvider
 }
 
 String _$steeringMotorActualRPMHash() =>
-    r'fd0c697e905907f448c1a8f2bedd21117c27cc48';
+    r'c4f3c88a8606b80852fb178dd15c8b0ad9ad1188';
 
 /// A provider for the actual current steering motor rpm when using guidance.
 
@@ -163,7 +163,7 @@ final class SteeringMotorStatusProvider
 }
 
 String _$steeringMotorStatusHash() =>
-    r'8f8122085fa4bd0dfb71d341dfb997184c2505c5';
+    r'dc98d7275246421dfa6cbb3ddf4c7ebb78c1d5a4';
 
 /// A provider for the steering motor is enabled when using guidance.
 
@@ -222,7 +222,7 @@ final class SteeringMotorCurrentScaleProvider
 }
 
 String _$steeringMotorCurrentScaleHash() =>
-    r'230eeaca47163718a89ca86d5c0dbae430036ab3';
+    r'385d48e3ca2429af7f1306d07dfe1091cd033711';
 
 /// A provider for the steering motor Stallguard reading.
 
@@ -281,7 +281,7 @@ final class SteeringMotorStallguardProvider
 }
 
 String _$steeringMotorStallguardHash() =>
-    r'e31f31120e10956d54b5eb5551e6c3bb0e9b2c52';
+    r'8b9286afc47a92a44a3f2ea13ad31d9fdb19473f';
 
 /// A provider for the steering motor Stallguard reading.
 
@@ -400,7 +400,7 @@ final class SteeringMotorRotationProvider
 }
 
 String _$steeringMotorRotationHash() =>
-    r'c9287d0e93e6259bf17cbea3a355e62aa1d22cfb';
+    r'01574ee0d54a7e626ce64e64227e43cf28bb2491';
 
 /// A provider for the current rotational position of the steering motor.
 
@@ -463,7 +463,7 @@ final class SteeringMotorTargetRotationProvider
 }
 
 String _$steeringMotorTargetRotationHash() =>
-    r'f2b6a3763c3413fbafc36be6322c16e425985446';
+    r'5027b7447f3ec20ce598291b7d4497c3a6413768';
 
 /// A provider for target rotational position of the steering motor,
 /// only used in calibration mode.
@@ -533,7 +533,7 @@ final class SteeringMotorStepsPerWasIncrementMinToCenterProvider
 }
 
 String _$steeringMotorStepsPerWasIncrementMinToCenterHash() =>
-    r'a4550c9b069a5d02d0891a2d10f65eaaa9a0b897';
+    r'b79b35df72bf991cede0a94cd76f04d0a1b2a3ec';
 
 /// A provider for the motor steps per WAS increment between WAS min and center
 /// value.
@@ -604,7 +604,7 @@ final class SteeringMotorStepsPerWasIncrementCenterToMaxProvider
 }
 
 String _$steeringMotorStepsPerWasIncrementCenterToMaxHash() =>
-    r'8cfdf066aa195f80b253d076abf91fcde7e64eef';
+    r'bdfe3257ed0fdd08b4dfa13b7f32b4b97e1aeb52';
 
 /// A provider for the motor steps per WAS increment between WAS center and max
 /// value.
