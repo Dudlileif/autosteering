@@ -179,133 +179,106 @@ class MapAndGaugeStackView extends ConsumerWidget {
         ? KeyboardListener(
             autofocus: true,
             onKeyEvent: (event) async {
-              switch (event.logicalKey) {
-                case LogicalKeyboardKey.shiftLeft:
-                  if (event is KeyDownEvent) {
-                    shiftModifier = true;
-                  } else if (event is KeyUpEvent) {
-                    shiftModifier = false;
-                  }
+              switch (event) {
+                case KeyDownEvent(logicalKey: .shiftLeft):
+                  shiftModifier = true;
+                case KeyUpEvent(logicalKey: .shiftLeft):
+                  shiftModifier = false;
 
-                case LogicalKeyboardKey.altLeft:
-                  if (event is KeyDownEvent) {
-                    altModifier = true;
-                  } else if (event is KeyUpEvent) {
-                    altModifier = false;
-                  }
+                case KeyDownEvent(logicalKey: .altLeft):
+                  altModifier = true;
+                case KeyUpEvent(logicalKey: .altLeft):
+                  altModifier = false;
 
-                case LogicalKeyboardKey.minus:
-                  if (event is KeyUpEvent) {
-                    ref.read(zoomTimerControllerProvider.notifier).cancel();
-                  } else if (event is KeyDownEvent) {
-                    ref.read(zoomTimerControllerProvider.notifier).zoomOut();
-                  }
+                case KeyDownEvent(logicalKey: .minus):
+                  ref.read(zoomTimerControllerProvider.notifier).zoomOut();
+                case KeyUpEvent(logicalKey: .minus):
+                  ref.read(zoomTimerControllerProvider.notifier).cancel();
 
-                case LogicalKeyboardKey.add || LogicalKeyboardKey.equal:
-                  if (event is KeyUpEvent) {
-                    ref.read(zoomTimerControllerProvider.notifier).cancel();
-                  } else if (event is KeyDownEvent) {
-                    ref.read(zoomTimerControllerProvider.notifier).zoomIn();
-                  }
+                case KeyDownEvent(logicalKey: .add || .equal):
+                  ref.read(zoomTimerControllerProvider.notifier).zoomIn();
+                case KeyUpEvent(logicalKey: .add || .equal):
+                  ref.read(zoomTimerControllerProvider.notifier).cancel();
 
-                case LogicalKeyboardKey.enter:
-                  if (Device.isDesktop &&
-                      altModifier &&
-                      event is KeyDownEvent) {
-                    await windowManager.setFullScreen(
-                      !await windowManager.isFullScreen(),
-                    );
-                  }
+                case KeyDownEvent(logicalKey: .enter)
+                    when altModifier && Device.isDesktop:
+                  await windowManager.setFullScreen(
+                    !await windowManager.isFullScreen(),
+                  );
 
-                case LogicalKeyboardKey.f11:
-                  if (Device.isDesktop && event is KeyDownEvent) {
-                    await windowManager.setFullScreen(
-                      !await windowManager.isFullScreen(),
-                    );
-                  }
+                case KeyDownEvent(logicalKey: .f11) when Device.isDesktop:
+                  await windowManager.setFullScreen(
+                    !await windowManager.isFullScreen(),
+                  );
 
-                case LogicalKeyboardKey.space:
-                  if (event is KeyDownEvent) {
-                    ref.read(simInputProvider.notifier).send(
-                      switch (shiftModifier) {
-                        false => const (velocityChange: SimInputChange.reset),
-                        true => const (steeringChange: SimInputChange.reset),
-                      },
-                    );
-                  }
+                case KeyDownEvent(logicalKey: .space) when shiftModifier:
+                  ref.read(simInputProvider.notifier).send(
+                    const (steeringChange: SimInputChange.reset),
+                  );
+                case KeyDownEvent(logicalKey: .space) when !shiftModifier:
+                  ref.read(simInputProvider.notifier).send(
+                    const (velocityChange: SimInputChange.reset),
+                  );
 
-                case LogicalKeyboardKey.keyV:
-                  if (event is KeyDownEvent) {
-                    final equipments = ref.read(
-                      allEquipmentsProvider.select(
-                        (value) => value.values.where(
-                          (element) => element.sections.isNotEmpty,
-                        ),
+                case KeyDownEvent(logicalKey: .keyV):
+                  final equipments = ref.read(
+                    allEquipmentsProvider.select(
+                      (value) => value.values.where(
+                        (element) => element.sections.isNotEmpty,
                       ),
-                    );
-                    for (final equipment in equipments) {
-                      ref.read(simInputProvider.notifier).send((
-                        uuid: equipment.uuid,
-                        activeSections:
-                            (equipment
-                                  ..toggleAll(deactivateAllIfAnyActive: true))
-                                .sectionActivationStatus,
-                      ));
-                    }
-                  }
-
-                case LogicalKeyboardKey.keyB:
-                  if (event is KeyDownEvent) {
+                    ),
+                  );
+                  for (final equipment in equipments) {
                     ref.read(simInputProvider.notifier).send((
-                      enableAutoSteer:
-                          ref.read(activeAutosteeringStateProvider) ==
-                          AutosteeringState.disabled,
+                      uuid: equipment.uuid,
+                      activeSections:
+                          (equipment..toggleAll(deactivateAllIfAnyActive: true))
+                              .sectionActivationStatus,
                     ));
                   }
 
-                case LogicalKeyboardKey.keyW || LogicalKeyboardKey.arrowUp:
-                  if (event is KeyDownEvent) {
-                    ref.read(simInputProvider.notifier).send((
-                      velocityChange: SimInputChange.increase,
-                    ));
-                  } else if (event is KeyUpEvent) {
-                    ref.read(simInputProvider.notifier).send((
-                      velocityChange: SimInputChange.hold,
-                    ));
-                  }
+                case KeyDownEvent(logicalKey: .keyB):
+                  ref.read(simInputProvider.notifier).send((
+                    enableAutoSteer:
+                        ref.read(activeAutosteeringStateProvider) ==
+                        AutosteeringState.disabled,
+                  ));
 
-                case LogicalKeyboardKey.keyS || LogicalKeyboardKey.arrowDown:
-                  if (event is KeyDownEvent) {
-                    ref.read(simInputProvider.notifier).send((
-                      velocityChange: SimInputChange.decrease,
-                    ));
-                  } else if (event is KeyUpEvent) {
-                    ref.read(simInputProvider.notifier).send((
-                      velocityChange: SimInputChange.hold,
-                    ));
-                  }
+                case KeyDownEvent(logicalKey: .keyW || .arrowUp):
+                  ref.read(simInputProvider.notifier).send((
+                    velocityChange: SimInputChange.increase,
+                  ));
+                case KeyUpEvent(logicalKey: .keyW || .arrowUp):
+                  ref.read(simInputProvider.notifier).send((
+                    velocityChange: SimInputChange.hold,
+                  ));
 
-                case LogicalKeyboardKey.keyA || LogicalKeyboardKey.arrowLeft:
-                  if (event is KeyDownEvent) {
-                    ref.read(simInputProvider.notifier).send((
-                      steeringChange: SimInputChange.decrease,
-                    ));
-                  } else if (event is KeyUpEvent) {
-                    ref.read(simInputProvider.notifier).send((
-                      steeringChange: SimInputChange.hold,
-                    ));
-                  }
+                case KeyDownEvent(logicalKey: .keyS || .arrowDown):
+                  ref.read(simInputProvider.notifier).send((
+                    velocityChange: SimInputChange.decrease,
+                  ));
+                case KeyUpEvent(logicalKey: .keyS || .arrowDown):
+                  ref.read(simInputProvider.notifier).send((
+                    velocityChange: SimInputChange.hold,
+                  ));
 
-                case LogicalKeyboardKey.keyD || LogicalKeyboardKey.arrowRight:
-                  if (event is KeyDownEvent) {
-                    ref.read(simInputProvider.notifier).send((
-                      steeringChange: SimInputChange.increase,
-                    ));
-                  } else if (event is KeyUpEvent) {
-                    ref.read(simInputProvider.notifier).send((
-                      steeringChange: SimInputChange.hold,
-                    ));
-                  }
+                case KeyDownEvent(logicalKey: .keyA || .arrowLeft):
+                  ref.read(simInputProvider.notifier).send((
+                    steeringChange: SimInputChange.decrease,
+                  ));
+                case KeyUpEvent(logicalKey: .keyA || .arrowLeft):
+                  ref.read(simInputProvider.notifier).send((
+                    steeringChange: SimInputChange.hold,
+                  ));
+
+                case KeyDownEvent(logicalKey: .keyD || .arrowRight):
+                  ref.read(simInputProvider.notifier).send((
+                    steeringChange: SimInputChange.increase,
+                  ));
+                case KeyUpEvent(logicalKey: .keyD || .arrowRight):
+                  ref.read(simInputProvider.notifier).send((
+                    steeringChange: SimInputChange.hold,
+                  ));
               }
             },
             focusNode: FocusNode(
