@@ -67,24 +67,24 @@ abstract class _$SimulatorUpdateFrequency extends $Notifier<int> {
   }
 }
 
-/// Sends initial parameters to  the sim core.
+/// Sends initial parameters to the sim core.
 
 @ProviderFor(initializeSimCore)
 final initializeSimCoreProvider = InitializeSimCoreProvider._();
 
-/// Sends initial parameters to  the sim core.
+/// Sends initial parameters to the sim core.
 
 final class InitializeSimCoreProvider
-    extends $FunctionalProvider<void, void, void>
-    with $Provider<void> {
-  /// Sends initial parameters to  the sim core.
+    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+    with $FutureModifier<void>, $FutureProvider<void> {
+  /// Sends initial parameters to the sim core.
   InitializeSimCoreProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'initializeSimCoreProvider',
-        isAutoDispose: false,
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -94,24 +94,16 @@ final class InitializeSimCoreProvider
 
   @$internal
   @override
-  $ProviderElement<void> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
 
   @override
-  void create(Ref ref) {
+  FutureOr<void> create(Ref ref) {
     return initializeSimCore(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(void value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<void>(value),
-    );
   }
 }
 
-String _$initializeSimCoreHash() => r'a84ba908eb9e30e7e1c6dd59f769b118fc5cc473';
+String _$initializeSimCoreHash() => r'1766eed606929fc065411d778e167a6c1351ab4a';
 
 /// A provider for handling the common sim core messages for the state of the
 /// simulation.

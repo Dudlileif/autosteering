@@ -127,7 +127,6 @@ Stream<Vehicle> simCoreIsolateStream(Ref ref) async* {
     sendPort.send(null);
     unawaited(simCoreReceiveStream.cancel());
     restartTimer?.cancel();
-    ref.read(_simCoreIsolatePortProvider.notifier).update(null);
     Logger.instance.w('Simulator Core shut down.');
   });
 

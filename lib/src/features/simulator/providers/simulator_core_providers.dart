@@ -53,9 +53,9 @@ class SimulatorUpdateFrequency extends _$SimulatorUpdateFrequency {
   void update(int value) => Future(() => state = value);
 }
 
-/// Sends initial parameters to  the sim core.
-@Riverpod(keepAlive: true)
-void initializeSimCore(Ref ref) {
+/// Sends initial parameters to the sim core.
+@riverpod
+Future<void> initializeSimCore(Ref ref) async {
   Logger.instance.i('Sending initial data to Simulator Core...');
   ref.read(simInputProvider.notifier)
     ..send(ref.read(mainVehicleProvider))
@@ -72,7 +72,7 @@ void initializeSimCore(Ref ref) {
   if (Device.isNative) {
     // Delay sending of network info to make sure startup is not too fast in
     // profile and release mode.
-    Future.delayed(const Duration(milliseconds: 500), () {
+    await Future.delayed(const Duration(milliseconds: 500), () {
       ref.read(simInputProvider.notifier)
         ..send(ref.read(hardwareCommunicationConfigProvider))
         ..send((networkAvailable: ref.read(networkAvailableProvider)))

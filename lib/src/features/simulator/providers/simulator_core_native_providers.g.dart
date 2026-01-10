@@ -177,7 +177,7 @@ final class SimCoreIsolateStreamProvider
 }
 
 String _$simCoreIsolateStreamHash() =>
-    r'e5ff57808f4281c2560bc376c7ce142143874f2f';
+    r'5c27c66fca1bf1b085dbcae25f3e7861d2fc2441';
 
 /// A provider that watches the simulated vehicle and updates the map
 /// position when necessary.
