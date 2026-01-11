@@ -16,5 +16,6 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 export 'sim_core_menu.dart';
+export 'sim_keyboard_listener.dart';
 export 'vehicle_sim_menu.dart';
 export 'vehicle_sim_screen_controls.dart';

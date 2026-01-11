@@ -42,7 +42,7 @@ class BasicVehicleGauges extends StatelessWidget {
               color: Colors.white,
               shadows: [Shadow(offset: Offset(2, 2))],
             ),
-            onTap: () => ref
+            onLongPress: () => ref
               ..invalidate(gaugeTravelledDistanceProvider)
               ..invalidate(debugVehicleTravelledPathListProvider),
             title: TextWithStroke(
@@ -54,7 +54,7 @@ class BasicVehicleGauges extends StatelessWidget {
               strokeWidth: 3.5,
             ),
             subtitle: TextWithStroke(
-              'Tap to reset',
+              'Hold to reset',
               style: theme.textTheme.titleSmall?.copyWith(
                 color: Colors.white,
               ),
@@ -70,7 +70,7 @@ class BasicVehicleGauges extends StatelessWidget {
           ),
           title: Consumer(
             builder: (context, ref, child) => TextWithStroke(
-              '''${(ref.watch(gaugeVelocityProvider) * 3.6).toStringAsFixed(1).padLeft(4)} km/h''',
+              '''${(ref.watch(gaugeVelocityProvider) * 3.6).toStringAsFixed(1).padLeft(5)} km/h''',
               style: GoogleFonts.robotoMono(
                 color: Colors.white,
                 textStyle: theme.textTheme.titleMedium,

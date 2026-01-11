@@ -24,12 +24,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// A virtuial LED bar for showing the user how far off track they are.
+/// A virtual LED bar for showing the user how far off track they are.
 ///
 /// If the shown number has a `.` in it, it means the distance is in meters,
 /// otherwise it is in centimeters.
 class VirtualLedBar extends ConsumerStatefulWidget {
-  /// A virtuial LED bar for showing the user how far off track they are.
+  /// A virtual LED bar for showing the user how far off track they are.
   ///
   /// [showEvenIfNoTrackingAvailable] can be used to always show the
   /// virtual led bar, typically used to test the bar.

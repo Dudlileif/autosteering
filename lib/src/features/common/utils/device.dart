@@ -35,5 +35,4 @@ class Device {
 
   /// Whether the device supports serial communication.
   static bool get supportsSerial => isDesktop || Platform.isAndroid;
-  // TODO(dudlileif): update Android implementation to usb_serial package
 }

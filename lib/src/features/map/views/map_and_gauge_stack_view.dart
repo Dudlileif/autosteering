@@ -25,9 +25,7 @@ import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:window_manager/window_manager.dart';
 
 /// The main map widget with overlayed widgets (buttons, gauges).
 class MapAndGaugeStackView extends ConsumerWidget {
@@ -36,9 +34,6 @@ class MapAndGaugeStackView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var shiftModifier = false;
-    var altModifier = false;
-
     const map = MainMap();
 
     final stack = LayoutBuilder(
@@ -79,38 +74,43 @@ class MapAndGaugeStackView extends ConsumerWidget {
                           ),
                         ),
               ),
-              child: SizedBox(
-                width: ref.watch(miniMapSizeProvider),
-                child: ColoredBox(
-                  color: Colors.black12,
-                  child: SingleChildScrollView(
-                    child: AnimatedSize(
-                      duration: Durations.extralong1,
-                      curve: Easing.standardDecelerate,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const EquipmentWorkedAreaGauge(),
-                          const BasicVehicleGauges(),
-                          const Divider(),
-                          if (ref.watch(
-                            displayABTrackingProvider.select(
-                              (value) => value != null,
-                            ),
-                          )) ...[
-                            const ABTrackingControls(),
-                            const Divider(),
-                          ],
-                          if (ref.watch(simCoreAllowManualInputProvider) ||
-                              ref.watch(showOverrideSteeringProvider)) ...[
-                            const SimVehicleSteeringSlider(),
-                            const Divider(),
-                          ],
-                          if (ref.watch(showMiniMapProvider)) const MiniMap(),
-                        ],
+              child: AnimatedSize(
+                duration: Durations.extralong1,
+                curve: Easing.standardDecelerate,
+                alignment: Alignment.topLeft,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        width: 220,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const EquipmentWorkedAreaGauge(),
+                              const BasicVehicleGauges(),
+                              const SizedBox(height: 8),
+                              if (ref.watch(
+                                displayABTrackingProvider.select(
+                                  (value) => value != null,
+                                ),
+                              ))
+                                const ABTrackingControls(),
+                              if (ref.watch(simCoreAllowManualInputProvider) ||
+                                  ref.watch(showOverrideSteeringProvider))
+                                const SimVehicleSteeringSlider(),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    if (ref.watch(showMiniMapProvider))
+                      const Align(
+                        alignment: Alignment.bottomLeft,
+                        child: MiniMap(),
+                      ),
+                  ],
                 ),
               ),
             ),
@@ -176,117 +176,7 @@ class MapAndGaugeStackView extends ConsumerWidget {
     );
 
     return Device.isDesktop || Device.isWeb
-        ? KeyboardListener(
-            autofocus: true,
-            onKeyEvent: (event) async {
-              switch (event) {
-                case KeyDownEvent(logicalKey: .shiftLeft):
-                  shiftModifier = true;
-                case KeyUpEvent(logicalKey: .shiftLeft):
-                  shiftModifier = false;
-
-                case KeyDownEvent(logicalKey: .altLeft):
-                  altModifier = true;
-                case KeyUpEvent(logicalKey: .altLeft):
-                  altModifier = false;
-
-                case KeyDownEvent(logicalKey: .minus):
-                  ref.read(zoomTimerControllerProvider.notifier).zoomOut();
-                case KeyUpEvent(logicalKey: .minus):
-                  ref.read(zoomTimerControllerProvider.notifier).cancel();
-
-                case KeyDownEvent(logicalKey: .add || .equal):
-                  ref.read(zoomTimerControllerProvider.notifier).zoomIn();
-                case KeyUpEvent(logicalKey: .add || .equal):
-                  ref.read(zoomTimerControllerProvider.notifier).cancel();
-
-                case KeyDownEvent(logicalKey: .enter)
-                    when altModifier && Device.isDesktop:
-                  await windowManager.setFullScreen(
-                    !await windowManager.isFullScreen(),
-                  );
-
-                case KeyDownEvent(logicalKey: .f11) when Device.isDesktop:
-                  await windowManager.setFullScreen(
-                    !await windowManager.isFullScreen(),
-                  );
-
-                case KeyDownEvent(logicalKey: .space) when shiftModifier:
-                  ref.read(simInputProvider.notifier).send(
-                    const (steeringChange: SimInputChange.reset),
-                  );
-                case KeyDownEvent(logicalKey: .space) when !shiftModifier:
-                  ref.read(simInputProvider.notifier).send(
-                    const (velocityChange: SimInputChange.reset),
-                  );
-
-                case KeyDownEvent(logicalKey: .keyV):
-                  final equipments = ref.read(
-                    allEquipmentsProvider.select(
-                      (value) => value.values.where(
-                        (element) => element.sections.isNotEmpty,
-                      ),
-                    ),
-                  );
-                  for (final equipment in equipments) {
-                    ref.read(simInputProvider.notifier).send((
-                      uuid: equipment.uuid,
-                      activeSections:
-                          (equipment..toggleAll(deactivateAllIfAnyActive: true))
-                              .sectionActivationStatus,
-                    ));
-                  }
-
-                case KeyDownEvent(logicalKey: .keyB):
-                  ref.read(simInputProvider.notifier).send((
-                    enableAutoSteer:
-                        ref.read(activeAutosteeringStateProvider) ==
-                        AutosteeringState.disabled,
-                  ));
-
-                case KeyDownEvent(logicalKey: .keyW || .arrowUp):
-                  ref.read(simInputProvider.notifier).send((
-                    velocityChange: SimInputChange.increase,
-                  ));
-                case KeyUpEvent(logicalKey: .keyW || .arrowUp):
-                  ref.read(simInputProvider.notifier).send((
-                    velocityChange: SimInputChange.hold,
-                  ));
-
-                case KeyDownEvent(logicalKey: .keyS || .arrowDown):
-                  ref.read(simInputProvider.notifier).send((
-                    velocityChange: SimInputChange.decrease,
-                  ));
-                case KeyUpEvent(logicalKey: .keyS || .arrowDown):
-                  ref.read(simInputProvider.notifier).send((
-                    velocityChange: SimInputChange.hold,
-                  ));
-
-                case KeyDownEvent(logicalKey: .keyA || .arrowLeft):
-                  ref.read(simInputProvider.notifier).send((
-                    steeringChange: SimInputChange.decrease,
-                  ));
-                case KeyUpEvent(logicalKey: .keyA || .arrowLeft):
-                  ref.read(simInputProvider.notifier).send((
-                    steeringChange: SimInputChange.hold,
-                  ));
-
-                case KeyDownEvent(logicalKey: .keyD || .arrowRight):
-                  ref.read(simInputProvider.notifier).send((
-                    steeringChange: SimInputChange.increase,
-                  ));
-                case KeyUpEvent(logicalKey: .keyD || .arrowRight):
-                  ref.read(simInputProvider.notifier).send((
-                    steeringChange: SimInputChange.hold,
-                  ));
-              }
-            },
-            focusNode: FocusNode(
-              descendantsAreFocusable: false,
-              descendantsAreTraversable: false,
-            ),
-            child: stack,
-          )
+        ? SimKeyboardListener(child: stack)
         : stack;
   }
 }
