@@ -32,6 +32,15 @@ import 'package:window_manager/window_manager.dart';
 // TODO(dudlileif): Come up with better app name
 
 Future<void> main() async {
+  if (!kDebugMode) {
+    PlatformDispatcher.instance.onError = (error, stackTrace) {
+      Logger.instance.e('Platform Error', error: error, stackTrace: stackTrace);
+      return true;
+    };
+    FlutterError.onError = (error) {
+      Logger.instance.e('Flutter Error', error: error, stackTrace: error.stack);
+    };
+  }
   Logger.instance.i('Application startup initiated...');
   WidgetsFlutterBinding.ensureInitialized();
   if (Device.isNative) {
@@ -56,9 +65,7 @@ Future<void> main() async {
         });
       }
     });
-  }
-
-  if (Device.isDesktop) {
+  } else if (Device.isDesktop) {
     await windowManager.ensureInitialized();
     Logger.instance.i(
       'Desktop window manager initalized, waiting until ready to show window.',
@@ -69,9 +76,7 @@ Future<void> main() async {
       await windowManager.focus();
     });
     Logger.instance.i('Desktop window showing and in focus.');
-  }
-
-  if (Device.isWeb) {
+  } else if (Device.isWeb) {
     await FastCachedImageConfig.init(subDir: 'autosteering/image_cache/');
     Logger.instance.i('Configured CachedImage directory');
   }
