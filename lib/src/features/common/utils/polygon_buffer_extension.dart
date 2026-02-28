@@ -186,12 +186,13 @@ extension PolygonBufferExtension on Polygon {
       final tanLat = tan((pi / 2 - point.lat.toRadians()) / 2);
       final lng = point.lon.toRadians();
 
-      value += _polarTriangleArea(tanLat, lng, prevTanLat, prevLng);
+      final newValue =
+          value + _polarTriangleArea(tanLat, lng, prevTanLat, prevLng);
 
       prevTanLat = tanLat;
       prevLng = lng;
 
-      return value;
+      return newValue;
     });
 
     return total * (radius * radius);

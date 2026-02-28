@@ -15,6 +15,5 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-export 'manufacturer_theme_selector.dart';
 export 'theme_menu.dart';
 export 'theme_mode_button.dart';

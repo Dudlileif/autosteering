@@ -175,9 +175,6 @@ class SteeringHardwareConfigKeysContainer {
           const SetEquality<String>().equals(keys, other.keys));
 }
 
-// Issue with freezed and JsonKey annotation
-// ignore_for_file: invalid_annotation_target
-
 /// A configuration for a steering wheel motor of a vehicle.
 @Freezed(fromJson: true, toJson: true)
 sealed class SteeringHardwareConfig with _$SteeringHardwareConfig {

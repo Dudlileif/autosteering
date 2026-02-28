@@ -81,8 +81,8 @@ Future<void> main() async {
     Logger.instance.i('Configured CachedImage directory');
   }
 
-  Logger.instance.i('Precaching shader: assets/shaders/glow.frag');
-  await ShaderBuilder.precacheShader('assets/shaders/glow.frag');
+  Logger.instance.i('Precaching shader: shaders/glow.frag');
+  await ShaderBuilder.precacheShader('shaders/glow.frag');
 
   Logger.instance.i('Starting main application...');
 

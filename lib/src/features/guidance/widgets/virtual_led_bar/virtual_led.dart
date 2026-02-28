@@ -64,7 +64,7 @@ class VirtualLed extends StatelessWidget {
         ),
       ),
     ),
-    assetKey: 'assets/shaders/glow.frag',
+    assetKey: 'shaders/glow.frag',
   );
 }
 
