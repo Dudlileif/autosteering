@@ -62,7 +62,6 @@ class AppTheme {
     colors: useDynamicColors || useManufacturerColors ? lightColors : null,
     blendLevel: 10,
     appBarOpacity: 0.90,
-    tabBarStyle: FlexTabBarStyle.forBackground,
     tooltipsMatchBackground: true,
     lightIsWhite: lightIsWhite,
     visualDensity: FlexColorScheme.comfortablePlatformDensity,
@@ -73,8 +72,10 @@ class AppTheme {
       unselectedToggleIsColored: true,
       sliderYear2023: false,
       progressIndicatorYear2023: false,
+      inputDecoratorBorderType: FlexInputBorderType.outline,
+      inputDecoratorIsFilled: true,
+      useInputDecoratorThemeInDialogs: true,
     ),
-    swapLegacyOnMaterial3: true,
   );
 
   /// The dark theme from this configuration.
@@ -83,7 +84,6 @@ class AppTheme {
     colors: useDynamicColors || useManufacturerColors ? darkColors : null,
     blendLevel: 15,
     appBarOpacity: 0.90,
-    tabBarStyle: FlexTabBarStyle.forBackground,
     tooltipsMatchBackground: true,
     darkIsTrueBlack: darkIsTrueBlack,
     visualDensity: FlexColorScheme.comfortablePlatformDensity,
@@ -94,7 +94,9 @@ class AppTheme {
       unselectedToggleIsColored: true,
       sliderYear2023: false,
       progressIndicatorYear2023: false,
+      inputDecoratorBorderType: FlexInputBorderType.outline,
+      inputDecoratorIsFilled: true,
+      useInputDecoratorThemeInDialogs: true,
     ),
-    swapLegacyOnMaterial3: true,
   );
 }
