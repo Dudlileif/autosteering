@@ -18,8 +18,6 @@
 // Some colors are not overidden at the moment.
 // ignore_for_file: unused_element_parameter
 
-import 'dart:async';
-
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
@@ -102,9 +100,11 @@ class EquipmentSectionButtons extends ConsumerWidget {
                                       children: [
                                         const Padding(
                                           padding: EdgeInsets.only(left: 4),
-                                          child: CustomPaint(
-                                            painter: _CrossPainter(),
-                                            size: Size.square(10),
+                                          child: RepaintBoundary(
+                                            child: CustomPaint(
+                                              painter: _CrossPainter(),
+                                              size: Size.square(10),
+                                            ),
                                           ),
                                         ),
                                         Padding(
@@ -147,9 +147,11 @@ class EquipmentSectionButtons extends ConsumerWidget {
                                       children: [
                                         const Padding(
                                           padding: EdgeInsets.only(left: 4),
-                                          child: CustomPaint(
-                                            painter: _CheckmarkPainter(),
-                                            size: Size.square(12),
+                                          child: RepaintBoundary(
+                                            child: CustomPaint(
+                                              painter: _CheckmarkPainter(),
+                                              size: Size.square(12),
+                                            ),
                                           ),
                                         ),
                                         Padding(
@@ -225,101 +227,36 @@ class _SectionButton extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => __SectionButtonState();
 }
 
-class __SectionButtonState extends ConsumerState<_SectionButton>
-    with SingleTickerProviderStateMixin {
-  late bool prevActive = widget.section.active;
-  late final controller = AnimationController(
-    vsync: this,
-    duration: Durations.short4,
-  );
-
-  late TweenSequence<Color?> colorAnimation = TweenSequence([
-    TweenSequenceItem(
-      tween: ColorTween(
-        begin: Colors.grey,
-        end: widget.section.color ?? Colors.green,
-      ),
-      weight: 1,
-    ),
-  ]);
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
+class __SectionButtonState extends ConsumerState<_SectionButton> {
+  bool prevActive = false;
+  DateTime switchTime = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    if (prevActive != widget.section.active) {
-      if (widget.section.active) {
-        final highlightColor = (widget.section.color ?? Colors.green)
-            .getShadeColor(
-              lighten: switch (theme.brightness) {
-                Brightness.light => true,
-                Brightness.dark => false,
-              },
-            );
-        colorAnimation = TweenSequence<Color?>([
-          TweenSequenceItem(
-            tween: ColorTween(begin: Colors.grey, end: highlightColor),
-            weight: 0.2,
-          ),
-          TweenSequenceItem(
-            tween: ColorTween(begin: highlightColor, end: highlightColor),
-            weight: 0.5,
-          ),
-          TweenSequenceItem(
-            tween: ColorTween(
-              begin: highlightColor,
-              end: widget.section.color ?? Colors.green,
-            ),
-            weight: 0.3,
-          ),
-        ]);
-      } else {
-        colorAnimation = TweenSequence<Color?>([
-          TweenSequenceItem(
-            tween: ColorTween(
-              begin: widget.section.color ?? Colors.green,
-              end: Colors.red,
-            ),
-            weight: 0.2,
-          ),
-          TweenSequenceItem(
-            tween: ColorTween(begin: Colors.red, end: Colors.red),
-            weight: 0.5,
-          ),
-          TweenSequenceItem(
-            tween: ColorTween(begin: Colors.red, end: Colors.grey),
-            weight: 0.3,
-          ),
-        ]);
-      }
-      controller.reset();
-      unawaited(controller.forward());
+
+    if (widget.section.active != prevActive) {
+      switchTime = DateTime.now();
     }
     prevActive = widget.section.active;
-    return AnimatedBuilder(
-      animation: controller,
-      builder: (context, child) {
-        return Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: colorAnimation.evaluate(
-              CurvedAnimation(
-                parent: controller,
-                curve: Easing.standardAccelerate,
-              ),
-            ),
-          ),
-          width: 80,
-          height: 40,
-          clipBehavior: Clip.antiAlias,
-          child: child,
-        );
-      },
+
+    return AnimatedContainer(
+      duration: Durations.short4,
+      width: 80,
+      height: 40,
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: switch ((
+          widget.section.active,
+          DateTime.now().difference(switchTime),
+        )) {
+          (true, > Durations.short4) => Colors.green,
+          (true, _) => Colors.green.darken(),
+          (false, > Durations.short4) => Colors.grey,
+          (false, _) => Colors.red,
+        },
+      ),
       child: Material(
         type: MaterialType.transparency,
         child: InkWell(
