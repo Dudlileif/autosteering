@@ -16,10 +16,12 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:latlong2/latlong.dart';
 
 /// A combination layer for the vehicle debugging features.
 class VehicleDebugLayer extends ConsumerWidget {
@@ -37,7 +39,15 @@ class VehicleDebugLayer extends ConsumerWidget {
 
     final vehicle = ref.watch(mainVehicleProvider);
     final travelledPath = ref.watch(debugVehicleTravelledPathListProvider);
-
+    final secondaryAntennaPosition = ref.watch(
+      gnssSecondaryCurrentSentenceProvider.select(
+        (value) => switch (value) {
+          GnssPositionCommonSentence(:final latitude?, :final longitude?) =>
+            LatLng(latitude, longitude),
+          _ => null,
+        },
+      ),
+    );
     return Stack(
       children: [
         if (debugTravelledPath || debugTrajectory || debugSteering)
@@ -121,6 +131,12 @@ class VehicleDebugLayer extends ConsumerWidget {
                 radius: 10,
                 color: Colors.purple,
               ),
+              if (secondaryAntennaPosition != null)
+                CircleMarker(
+                  point: secondaryAntennaPosition,
+                  radius: 10,
+                  color: Colors.orange,
+                ),
             ],
           ],
         ),
@@ -136,6 +152,16 @@ class VehicleDebugLayer extends ConsumerWidget {
                   color: Colors.white,
                 ),
               ),
+              if (secondaryAntennaPosition != null)
+                Marker(
+                  point: secondaryAntennaPosition,
+                  rotate: true,
+                  child: const Icon(
+                    Icons.settings_input_antenna,
+                    size: 16,
+                    color: Colors.white,
+                  ),
+                ),
             ],
           ),
       ],

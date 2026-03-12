@@ -23,11 +23,15 @@ class ConfirmationDialog extends StatelessWidget {
   const ConfirmationDialog({
     required this.title,
     required this.onConfirmation,
+    this.content,
     super.key,
   });
 
   /// The title at the top of the dialog.
   final String title;
+
+  /// The inner content of the dialog.
+  final Widget? content;
 
   /// The function to run when confirmation is received.
   final Future<void> Function() onConfirmation;
@@ -36,6 +40,7 @@ class ConfirmationDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(title),
+      content: content,
       actions: [
         ElevatedButton.icon(
           onPressed: () => Navigator.of(context).pop(false),

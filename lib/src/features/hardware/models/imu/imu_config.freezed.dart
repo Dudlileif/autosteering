@@ -17,7 +17,9 @@ mixin _$ImuConfig {
 
 /// Whether the vehicle should take into account pitch and roll when
 /// representing its position.
- bool get usePitchAndRoll;/// Whether the pich and roll axes should be swapped.
+ bool get usePitch;/// Whether the vehicle should take into account roll when representing its
+/// position.
+ bool get useRoll;/// Whether the pich and roll axes should be swapped.
  bool get swapPitchAndRoll;/// The zero values for the different axes of the IMU.
  ImuZeroValues get zeroValues;/// Whether the vehicle's bearing should be the one from the IMU.
  bool get useYaw;/// Whether the bearing axis should be inverted.
@@ -46,16 +48,16 @@ $ImuConfigCopyWith<ImuConfig> get copyWith => _$ImuConfigCopyWithImpl<ImuConfig>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ImuConfig&&(identical(other.usePitchAndRoll, usePitchAndRoll) || other.usePitchAndRoll == usePitchAndRoll)&&(identical(other.swapPitchAndRoll, swapPitchAndRoll) || other.swapPitchAndRoll == swapPitchAndRoll)&&(identical(other.zeroValues, zeroValues) || other.zeroValues == zeroValues)&&(identical(other.useYaw, useYaw) || other.useYaw == useYaw)&&(identical(other.invertYaw, invertYaw) || other.invertYaw == invertYaw)&&(identical(other.invertPitch, invertPitch) || other.invertPitch == invertPitch)&&(identical(other.invertRoll, invertRoll) || other.invertRoll == invertRoll)&&(identical(other.pitchGain, pitchGain) || other.pitchGain == pitchGain)&&(identical(other.rollGain, rollGain) || other.rollGain == rollGain)&&(identical(other.asymmetricRollGainLeft, asymmetricRollGainLeft) || other.asymmetricRollGainLeft == asymmetricRollGainLeft)&&(identical(other.delayReadings, delayReadings) || other.delayReadings == delayReadings)&&(identical(other.useOnlyGnssSyncedReadings, useOnlyGnssSyncedReadings) || other.useOnlyGnssSyncedReadings == useOnlyGnssSyncedReadings));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ImuConfig&&(identical(other.usePitch, usePitch) || other.usePitch == usePitch)&&(identical(other.useRoll, useRoll) || other.useRoll == useRoll)&&(identical(other.swapPitchAndRoll, swapPitchAndRoll) || other.swapPitchAndRoll == swapPitchAndRoll)&&(identical(other.zeroValues, zeroValues) || other.zeroValues == zeroValues)&&(identical(other.useYaw, useYaw) || other.useYaw == useYaw)&&(identical(other.invertYaw, invertYaw) || other.invertYaw == invertYaw)&&(identical(other.invertPitch, invertPitch) || other.invertPitch == invertPitch)&&(identical(other.invertRoll, invertRoll) || other.invertRoll == invertRoll)&&(identical(other.pitchGain, pitchGain) || other.pitchGain == pitchGain)&&(identical(other.rollGain, rollGain) || other.rollGain == rollGain)&&(identical(other.asymmetricRollGainLeft, asymmetricRollGainLeft) || other.asymmetricRollGainLeft == asymmetricRollGainLeft)&&(identical(other.delayReadings, delayReadings) || other.delayReadings == delayReadings)&&(identical(other.useOnlyGnssSyncedReadings, useOnlyGnssSyncedReadings) || other.useOnlyGnssSyncedReadings == useOnlyGnssSyncedReadings));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,usePitchAndRoll,swapPitchAndRoll,zeroValues,useYaw,invertYaw,invertPitch,invertRoll,pitchGain,rollGain,asymmetricRollGainLeft,delayReadings,useOnlyGnssSyncedReadings);
+int get hashCode => Object.hash(runtimeType,usePitch,useRoll,swapPitchAndRoll,zeroValues,useYaw,invertYaw,invertPitch,invertRoll,pitchGain,rollGain,asymmetricRollGainLeft,delayReadings,useOnlyGnssSyncedReadings);
 
 @override
 String toString() {
-  return 'ImuConfig(usePitchAndRoll: $usePitchAndRoll, swapPitchAndRoll: $swapPitchAndRoll, zeroValues: $zeroValues, useYaw: $useYaw, invertYaw: $invertYaw, invertPitch: $invertPitch, invertRoll: $invertRoll, pitchGain: $pitchGain, rollGain: $rollGain, asymmetricRollGainLeft: $asymmetricRollGainLeft, delayReadings: $delayReadings, useOnlyGnssSyncedReadings: $useOnlyGnssSyncedReadings)';
+  return 'ImuConfig(usePitch: $usePitch, useRoll: $useRoll, swapPitchAndRoll: $swapPitchAndRoll, zeroValues: $zeroValues, useYaw: $useYaw, invertYaw: $invertYaw, invertPitch: $invertPitch, invertRoll: $invertRoll, pitchGain: $pitchGain, rollGain: $rollGain, asymmetricRollGainLeft: $asymmetricRollGainLeft, delayReadings: $delayReadings, useOnlyGnssSyncedReadings: $useOnlyGnssSyncedReadings)';
 }
 
 
@@ -66,7 +68,7 @@ abstract mixin class $ImuConfigCopyWith<$Res>  {
   factory $ImuConfigCopyWith(ImuConfig value, $Res Function(ImuConfig) _then) = _$ImuConfigCopyWithImpl;
 @useResult
 $Res call({
- bool usePitchAndRoll, bool swapPitchAndRoll, ImuZeroValues zeroValues, bool useYaw, bool invertYaw, bool invertPitch, bool invertRoll, double pitchGain, double rollGain, double? asymmetricRollGainLeft, int delayReadings, bool useOnlyGnssSyncedReadings
+ bool usePitch, bool useRoll, bool swapPitchAndRoll, ImuZeroValues zeroValues, bool useYaw, bool invertYaw, bool invertPitch, bool invertRoll, double pitchGain, double rollGain, double? asymmetricRollGainLeft, int delayReadings, bool useOnlyGnssSyncedReadings
 });
 
 
@@ -83,9 +85,10 @@ class _$ImuConfigCopyWithImpl<$Res>
 
 /// Create a copy of ImuConfig
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? usePitchAndRoll = null,Object? swapPitchAndRoll = null,Object? zeroValues = null,Object? useYaw = null,Object? invertYaw = null,Object? invertPitch = null,Object? invertRoll = null,Object? pitchGain = null,Object? rollGain = null,Object? asymmetricRollGainLeft = freezed,Object? delayReadings = null,Object? useOnlyGnssSyncedReadings = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? usePitch = null,Object? useRoll = null,Object? swapPitchAndRoll = null,Object? zeroValues = null,Object? useYaw = null,Object? invertYaw = null,Object? invertPitch = null,Object? invertRoll = null,Object? pitchGain = null,Object? rollGain = null,Object? asymmetricRollGainLeft = freezed,Object? delayReadings = null,Object? useOnlyGnssSyncedReadings = null,}) {
   return _then(_self.copyWith(
-usePitchAndRoll: null == usePitchAndRoll ? _self.usePitchAndRoll : usePitchAndRoll // ignore: cast_nullable_to_non_nullable
+usePitch: null == usePitch ? _self.usePitch : usePitch // ignore: cast_nullable_to_non_nullable
+as bool,useRoll: null == useRoll ? _self.useRoll : useRoll // ignore: cast_nullable_to_non_nullable
 as bool,swapPitchAndRoll: null == swapPitchAndRoll ? _self.swapPitchAndRoll : swapPitchAndRoll // ignore: cast_nullable_to_non_nullable
 as bool,zeroValues: null == zeroValues ? _self.zeroValues : zeroValues // ignore: cast_nullable_to_non_nullable
 as ImuZeroValues,useYaw: null == useYaw ? _self.useYaw : useYaw // ignore: cast_nullable_to_non_nullable
@@ -188,10 +191,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool usePitchAndRoll,  bool swapPitchAndRoll,  ImuZeroValues zeroValues,  bool useYaw,  bool invertYaw,  bool invertPitch,  bool invertRoll,  double pitchGain,  double rollGain,  double? asymmetricRollGainLeft,  int delayReadings,  bool useOnlyGnssSyncedReadings)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool usePitch,  bool useRoll,  bool swapPitchAndRoll,  ImuZeroValues zeroValues,  bool useYaw,  bool invertYaw,  bool invertPitch,  bool invertRoll,  double pitchGain,  double rollGain,  double? asymmetricRollGainLeft,  int delayReadings,  bool useOnlyGnssSyncedReadings)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ImuConfig() when $default != null:
-return $default(_that.usePitchAndRoll,_that.swapPitchAndRoll,_that.zeroValues,_that.useYaw,_that.invertYaw,_that.invertPitch,_that.invertRoll,_that.pitchGain,_that.rollGain,_that.asymmetricRollGainLeft,_that.delayReadings,_that.useOnlyGnssSyncedReadings);case _:
+return $default(_that.usePitch,_that.useRoll,_that.swapPitchAndRoll,_that.zeroValues,_that.useYaw,_that.invertYaw,_that.invertPitch,_that.invertRoll,_that.pitchGain,_that.rollGain,_that.asymmetricRollGainLeft,_that.delayReadings,_that.useOnlyGnssSyncedReadings);case _:
   return orElse();
 
 }
@@ -209,10 +212,10 @@ return $default(_that.usePitchAndRoll,_that.swapPitchAndRoll,_that.zeroValues,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool usePitchAndRoll,  bool swapPitchAndRoll,  ImuZeroValues zeroValues,  bool useYaw,  bool invertYaw,  bool invertPitch,  bool invertRoll,  double pitchGain,  double rollGain,  double? asymmetricRollGainLeft,  int delayReadings,  bool useOnlyGnssSyncedReadings)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool usePitch,  bool useRoll,  bool swapPitchAndRoll,  ImuZeroValues zeroValues,  bool useYaw,  bool invertYaw,  bool invertPitch,  bool invertRoll,  double pitchGain,  double rollGain,  double? asymmetricRollGainLeft,  int delayReadings,  bool useOnlyGnssSyncedReadings)  $default,) {final _that = this;
 switch (_that) {
 case _ImuConfig():
-return $default(_that.usePitchAndRoll,_that.swapPitchAndRoll,_that.zeroValues,_that.useYaw,_that.invertYaw,_that.invertPitch,_that.invertRoll,_that.pitchGain,_that.rollGain,_that.asymmetricRollGainLeft,_that.delayReadings,_that.useOnlyGnssSyncedReadings);}
+return $default(_that.usePitch,_that.useRoll,_that.swapPitchAndRoll,_that.zeroValues,_that.useYaw,_that.invertYaw,_that.invertPitch,_that.invertRoll,_that.pitchGain,_that.rollGain,_that.asymmetricRollGainLeft,_that.delayReadings,_that.useOnlyGnssSyncedReadings);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -226,10 +229,10 @@ return $default(_that.usePitchAndRoll,_that.swapPitchAndRoll,_that.zeroValues,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool usePitchAndRoll,  bool swapPitchAndRoll,  ImuZeroValues zeroValues,  bool useYaw,  bool invertYaw,  bool invertPitch,  bool invertRoll,  double pitchGain,  double rollGain,  double? asymmetricRollGainLeft,  int delayReadings,  bool useOnlyGnssSyncedReadings)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool usePitch,  bool useRoll,  bool swapPitchAndRoll,  ImuZeroValues zeroValues,  bool useYaw,  bool invertYaw,  bool invertPitch,  bool invertRoll,  double pitchGain,  double rollGain,  double? asymmetricRollGainLeft,  int delayReadings,  bool useOnlyGnssSyncedReadings)?  $default,) {final _that = this;
 switch (_that) {
 case _ImuConfig() when $default != null:
-return $default(_that.usePitchAndRoll,_that.swapPitchAndRoll,_that.zeroValues,_that.useYaw,_that.invertYaw,_that.invertPitch,_that.invertRoll,_that.pitchGain,_that.rollGain,_that.asymmetricRollGainLeft,_that.delayReadings,_that.useOnlyGnssSyncedReadings);case _:
+return $default(_that.usePitch,_that.useRoll,_that.swapPitchAndRoll,_that.zeroValues,_that.useYaw,_that.invertYaw,_that.invertPitch,_that.invertRoll,_that.pitchGain,_that.rollGain,_that.asymmetricRollGainLeft,_that.delayReadings,_that.useOnlyGnssSyncedReadings);case _:
   return null;
 
 }
@@ -241,12 +244,15 @@ return $default(_that.usePitchAndRoll,_that.swapPitchAndRoll,_that.zeroValues,_t
 @JsonSerializable()
 
 class _ImuConfig implements ImuConfig {
-  const _ImuConfig({this.usePitchAndRoll = true, this.swapPitchAndRoll = false, this.zeroValues = const ImuZeroValues(), this.useYaw = false, this.invertYaw = false, this.invertPitch = false, this.invertRoll = false, this.pitchGain = 1, this.rollGain = 1, this.asymmetricRollGainLeft = null, this.delayReadings = 30, this.useOnlyGnssSyncedReadings = true});
+  const _ImuConfig({this.usePitch = true, this.useRoll = true, this.swapPitchAndRoll = false, this.zeroValues = const ImuZeroValues(), this.useYaw = false, this.invertYaw = false, this.invertPitch = false, this.invertRoll = false, this.pitchGain = 1, this.rollGain = 1, this.asymmetricRollGainLeft = null, this.delayReadings = 30, this.useOnlyGnssSyncedReadings = true});
   factory _ImuConfig.fromJson(Map<String, dynamic> json) => _$ImuConfigFromJson(json);
 
 /// Whether the vehicle should take into account pitch and roll when
 /// representing its position.
-@override@JsonKey() final  bool usePitchAndRoll;
+@override@JsonKey() final  bool usePitch;
+/// Whether the vehicle should take into account roll when representing its
+/// position.
+@override@JsonKey() final  bool useRoll;
 /// Whether the pich and roll axes should be swapped.
 @override@JsonKey() final  bool swapPitchAndRoll;
 /// The zero values for the different axes of the IMU.
@@ -288,16 +294,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ImuConfig&&(identical(other.usePitchAndRoll, usePitchAndRoll) || other.usePitchAndRoll == usePitchAndRoll)&&(identical(other.swapPitchAndRoll, swapPitchAndRoll) || other.swapPitchAndRoll == swapPitchAndRoll)&&(identical(other.zeroValues, zeroValues) || other.zeroValues == zeroValues)&&(identical(other.useYaw, useYaw) || other.useYaw == useYaw)&&(identical(other.invertYaw, invertYaw) || other.invertYaw == invertYaw)&&(identical(other.invertPitch, invertPitch) || other.invertPitch == invertPitch)&&(identical(other.invertRoll, invertRoll) || other.invertRoll == invertRoll)&&(identical(other.pitchGain, pitchGain) || other.pitchGain == pitchGain)&&(identical(other.rollGain, rollGain) || other.rollGain == rollGain)&&(identical(other.asymmetricRollGainLeft, asymmetricRollGainLeft) || other.asymmetricRollGainLeft == asymmetricRollGainLeft)&&(identical(other.delayReadings, delayReadings) || other.delayReadings == delayReadings)&&(identical(other.useOnlyGnssSyncedReadings, useOnlyGnssSyncedReadings) || other.useOnlyGnssSyncedReadings == useOnlyGnssSyncedReadings));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ImuConfig&&(identical(other.usePitch, usePitch) || other.usePitch == usePitch)&&(identical(other.useRoll, useRoll) || other.useRoll == useRoll)&&(identical(other.swapPitchAndRoll, swapPitchAndRoll) || other.swapPitchAndRoll == swapPitchAndRoll)&&(identical(other.zeroValues, zeroValues) || other.zeroValues == zeroValues)&&(identical(other.useYaw, useYaw) || other.useYaw == useYaw)&&(identical(other.invertYaw, invertYaw) || other.invertYaw == invertYaw)&&(identical(other.invertPitch, invertPitch) || other.invertPitch == invertPitch)&&(identical(other.invertRoll, invertRoll) || other.invertRoll == invertRoll)&&(identical(other.pitchGain, pitchGain) || other.pitchGain == pitchGain)&&(identical(other.rollGain, rollGain) || other.rollGain == rollGain)&&(identical(other.asymmetricRollGainLeft, asymmetricRollGainLeft) || other.asymmetricRollGainLeft == asymmetricRollGainLeft)&&(identical(other.delayReadings, delayReadings) || other.delayReadings == delayReadings)&&(identical(other.useOnlyGnssSyncedReadings, useOnlyGnssSyncedReadings) || other.useOnlyGnssSyncedReadings == useOnlyGnssSyncedReadings));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,usePitchAndRoll,swapPitchAndRoll,zeroValues,useYaw,invertYaw,invertPitch,invertRoll,pitchGain,rollGain,asymmetricRollGainLeft,delayReadings,useOnlyGnssSyncedReadings);
+int get hashCode => Object.hash(runtimeType,usePitch,useRoll,swapPitchAndRoll,zeroValues,useYaw,invertYaw,invertPitch,invertRoll,pitchGain,rollGain,asymmetricRollGainLeft,delayReadings,useOnlyGnssSyncedReadings);
 
 @override
 String toString() {
-  return 'ImuConfig(usePitchAndRoll: $usePitchAndRoll, swapPitchAndRoll: $swapPitchAndRoll, zeroValues: $zeroValues, useYaw: $useYaw, invertYaw: $invertYaw, invertPitch: $invertPitch, invertRoll: $invertRoll, pitchGain: $pitchGain, rollGain: $rollGain, asymmetricRollGainLeft: $asymmetricRollGainLeft, delayReadings: $delayReadings, useOnlyGnssSyncedReadings: $useOnlyGnssSyncedReadings)';
+  return 'ImuConfig(usePitch: $usePitch, useRoll: $useRoll, swapPitchAndRoll: $swapPitchAndRoll, zeroValues: $zeroValues, useYaw: $useYaw, invertYaw: $invertYaw, invertPitch: $invertPitch, invertRoll: $invertRoll, pitchGain: $pitchGain, rollGain: $rollGain, asymmetricRollGainLeft: $asymmetricRollGainLeft, delayReadings: $delayReadings, useOnlyGnssSyncedReadings: $useOnlyGnssSyncedReadings)';
 }
 
 
@@ -308,7 +314,7 @@ abstract mixin class _$ImuConfigCopyWith<$Res> implements $ImuConfigCopyWith<$Re
   factory _$ImuConfigCopyWith(_ImuConfig value, $Res Function(_ImuConfig) _then) = __$ImuConfigCopyWithImpl;
 @override @useResult
 $Res call({
- bool usePitchAndRoll, bool swapPitchAndRoll, ImuZeroValues zeroValues, bool useYaw, bool invertYaw, bool invertPitch, bool invertRoll, double pitchGain, double rollGain, double? asymmetricRollGainLeft, int delayReadings, bool useOnlyGnssSyncedReadings
+ bool usePitch, bool useRoll, bool swapPitchAndRoll, ImuZeroValues zeroValues, bool useYaw, bool invertYaw, bool invertPitch, bool invertRoll, double pitchGain, double rollGain, double? asymmetricRollGainLeft, int delayReadings, bool useOnlyGnssSyncedReadings
 });
 
 
@@ -325,9 +331,10 @@ class __$ImuConfigCopyWithImpl<$Res>
 
 /// Create a copy of ImuConfig
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? usePitchAndRoll = null,Object? swapPitchAndRoll = null,Object? zeroValues = null,Object? useYaw = null,Object? invertYaw = null,Object? invertPitch = null,Object? invertRoll = null,Object? pitchGain = null,Object? rollGain = null,Object? asymmetricRollGainLeft = freezed,Object? delayReadings = null,Object? useOnlyGnssSyncedReadings = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? usePitch = null,Object? useRoll = null,Object? swapPitchAndRoll = null,Object? zeroValues = null,Object? useYaw = null,Object? invertYaw = null,Object? invertPitch = null,Object? invertRoll = null,Object? pitchGain = null,Object? rollGain = null,Object? asymmetricRollGainLeft = freezed,Object? delayReadings = null,Object? useOnlyGnssSyncedReadings = null,}) {
   return _then(_ImuConfig(
-usePitchAndRoll: null == usePitchAndRoll ? _self.usePitchAndRoll : usePitchAndRoll // ignore: cast_nullable_to_non_nullable
+usePitch: null == usePitch ? _self.usePitch : usePitch // ignore: cast_nullable_to_non_nullable
+as bool,useRoll: null == useRoll ? _self.useRoll : useRoll // ignore: cast_nullable_to_non_nullable
 as bool,swapPitchAndRoll: null == swapPitchAndRoll ? _self.swapPitchAndRoll : swapPitchAndRoll // ignore: cast_nullable_to_non_nullable
 as bool,zeroValues: null == zeroValues ? _self.zeroValues : zeroValues // ignore: cast_nullable_to_non_nullable
 as ImuZeroValues,useYaw: null == useYaw ? _self.useYaw : useYaw // ignore: cast_nullable_to_non_nullable

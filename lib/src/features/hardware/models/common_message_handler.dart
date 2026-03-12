@@ -54,7 +54,9 @@ class CommonMessageHandler {
   /// Returns true if the [message] has been handled, false otherwise to allow
   /// further handling of the message.
   bool handleSteeringHardwareMessage(dynamic message) {
-    if (message is GnssPositionCommonSentence) {
+    if (message case GnssPositionCommonSentence(
+      :final mnemonic,
+    ) when mnemonic != 'GGAH') {
       _ref.read(gnssCurrentSentenceProvider.notifier).update(message);
       _ref
           .read(steeringHardwareNetworkAliveProvider.notifier)
@@ -88,9 +90,9 @@ class CommonMessageHandler {
         _ref.read(gnssPrecisionErrorProvider.notifier).update(message);
       }
     } else if (message is ({ImuReading? imuLatestRaw})) {
-      if (_ref.exists(imuCurrentReadingProvider)) {
+      if (_ref.exists(currentAttitudeReadingProvider)) {
         _ref
-            .read(imuCurrentReadingProvider.notifier)
+            .read(currentAttitudeReadingProvider.notifier)
             .update(message.imuLatestRaw);
       }
       if (message.imuLatestRaw != null) {
@@ -202,6 +204,8 @@ class CommonMessageHandler {
             .read(steeringMotorStepsPerWasIncrementCenterToMaxProvider.notifier)
             .update(message.stepsPerWasIncrementCenterToMax);
       }
+    } else if (message case GGAHSentence()) {
+      _ref.read(gnssSecondaryCurrentSentenceProvider.notifier).update(message);
     } else if (message is LogEvent) {
       Logger.instance.log(
         message.level,

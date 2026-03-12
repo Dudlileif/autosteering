@@ -22,7 +22,6 @@ import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
 
 export 'imu_config.dart';
-export 'imu_reading.dart';
 export 'imu_zero_values.dart';
 
 /// An object representing an IMU (Intertial measurement unit) in a vehicle.
@@ -89,12 +88,12 @@ class Imu {
   double get pitch =>
       switch (config.swapPitchAndRoll) {
         false => clampDouble(
-          (reading.pitch - config.zeroValues.pitchZero).toDouble(),
+          reading.pitch - config.zeroValues.pitchZero,
           -85,
           85,
         ),
         true => clampDouble(
-          (reading.roll - config.zeroValues.rollZero).toDouble(),
+          reading.roll - config.zeroValues.rollZero,
           -85,
           85,
         ),
@@ -109,12 +108,12 @@ class Imu {
   double get roll =>
       switch (config.swapPitchAndRoll) {
         false => clampDouble(
-          (reading.roll - config.zeroValues.rollZero).toDouble(),
+          reading.roll - config.zeroValues.rollZero,
           -85,
           85,
         ),
         true => clampDouble(
-          (reading.pitch - config.zeroValues.pitchZero).toDouble(),
+          reading.pitch - config.zeroValues.pitchZero,
           -85,
           85,
         ),

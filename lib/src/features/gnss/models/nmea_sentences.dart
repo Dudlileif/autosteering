@@ -114,6 +114,9 @@ mixin GnssPositionCommonSentence on NmeaSentence {
   /// objects.
   ///
 
+  /// The identifier of this sentence type.
+  String get mnemonic;
+
   /// The time this message was received by this device.
   late final DateTime deviceReceiveTime;
 
@@ -313,6 +316,9 @@ class GGASentence extends TalkerSentence with GnssPositionCommonSentence {
   }
 
   @override
+  final String mnemonic = 'GGA';
+
+  @override
   int? get quality => _intFromField(6);
 
   @override
@@ -354,6 +360,9 @@ class GNSSentence extends TalkerSentence with GnssPositionCommonSentence {
   GNSSentence({required super.raw}) {
     super.deviceReceiveTime = DateTime.now();
   }
+
+  @override
+  final String mnemonic = 'GNS';
 
   @override
   String? get posMode => fields.elementAtOrNull(6);
@@ -530,6 +539,9 @@ class PANDASentence extends TalkerSentence with GnssPositionCommonSentence {
   }
 
   @override
+  final String mnemonic = 'PANDA';
+
+  @override
   int? get quality => _intFromField(6);
 
   @override
@@ -565,6 +577,9 @@ class PUBXSentence extends ProprietarySentence
   PUBXSentence({required super.raw, super.manufacturer = 'UBX'}) {
     deviceReceiveTime = DateTime.now();
   }
+
+  @override
+  final String mnemonic = 'UBX';
 
   @override
   String get rawWithoutFixtures => _rawWithoutFixtures ??= raw
@@ -627,4 +642,90 @@ class PUBXSentence extends ProprietarySentence
 
   @override
   double? get altitudeMSL => null;
+}
+
+/// A Unicore NMEA sentence for vehicle attitude.
+class HPRSentence extends TalkerSentence {
+  /// A Unicore NMEA sentence for vehicle attitude.
+  ///
+  /// [raw] is the raw string of the sentence.
+  HPRSentence({
+    required super.raw,
+  }) : deviceReceiveTime = DateTime.now();
+
+  /// The time this message was received by this device.
+  late final DateTime deviceReceiveTime;
+
+  /// Gets the int value at fields[field], if there is one.
+  int? _intFromField(int field) =>
+      fields.length > field ? int.tryParse(fields[field]) : null;
+
+  /// Gets the double value at fields[field], if there is one.
+  double? _doubleFromField(int field) =>
+      fields.length > field ? double.tryParse(fields[field]) : null;
+
+  /// Gets the GNSS receiver time of the message at fields[field] if
+  /// there is one.
+  DateTime? _utcFromField(int field) {
+    if (fields.length > field) {
+      final string = fields[field];
+      return _utcFromNmeaField(string);
+    }
+
+    return null;
+  }
+
+  /// The creation time of the message.
+  DateTime? get utc => _utcFromField(1);
+
+  /// The heading of the vehicle.
+  double? get heading => _doubleFromField(2);
+
+  /// The pitch of the vehicle.
+  double? get pitch => _doubleFromField(3);
+
+  /// The roll of the vehicle.
+  double? get roll => _doubleFromField(4);
+
+  /// Fix quality identifier of the position(s) used to calculate the attitude.
+  int? get quality => _intFromField(5);
+
+  /// The number of satellites used to calculate the position.
+  int? get numSatellites => _intFromField(6);
+
+  /// The time in seconds since the last differential update.
+  double? get ageOfDifferentialData => _doubleFromField(7);
+
+  /// Fix quality of the position(s) used to calculate the attitude.
+  GnssFixQuality? get fixQuality => GnssFixQuality.values.firstWhereOrNull(
+    (element) => element.nmeaGGAQuality == quality,
+  );
+}
+
+/// A [GGASentence] for the secondary antenna in a Unicore dual antenna
+/// receiver.
+class GGAHSentence extends TalkerSentence with GnssPositionCommonSentence {
+  /// A [GGASentence] for the secondary antenna in a Unicore dual antenna
+  /// receiver.
+  GGAHSentence({required super.raw}) {
+    super.deviceReceiveTime = DateTime.now();
+  }
+
+  @override
+  final String mnemonic = 'GGAH';
+
+  @override
+  int? get quality => _intFromField(6);
+
+  @override
+  double? get geoidSeparation => _doubleFromField(11);
+
+  /// The time in seconds since the last differential update.
+  @override
+  double? get ageOfDifferentialData => _doubleFromField(13);
+
+  @override
+  GnssFixQuality? get fixQuality => GnssFixQuality.values.firstWhereOrNull(
+    (element) => element.nmeaGGAQuality == quality,
+  );
 }

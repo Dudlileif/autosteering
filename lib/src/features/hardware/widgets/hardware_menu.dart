@@ -24,6 +24,7 @@ import 'package:autosteering/src/features/hardware/widgets/hardware_serial_menu.
     if (dart.library.js_interop) 'hardware_serial_menu_web.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -70,6 +71,21 @@ class HardwareMenu extends ConsumerWidget {
               builder: (context) => const RemoteControlConfigurator(),
             ),
             child: Text('Remote control', style: textStyle),
+          ),
+        if (Device.isNative)
+          Consumer(
+            builder: (context, ref, child) => MenuItemButton(
+              closeOnActivate: false,
+              leadingIcon: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Icon(Icons.upload),
+              ),
+              child: Text('Send GNSS config', style: textStyle),
+              onPressed: () => showDialog<void>(
+                context: context,
+                builder: (context) => const _GnssConfigDialog(),
+              ),
+            ),
           ),
         if (Device.isNative && !dadMode)
           MenuItemButton(
@@ -123,6 +139,46 @@ class HardwareMenu extends ConsumerWidget {
             },
           ),
       ],
+    );
+  }
+}
+
+class _GnssConfigDialog extends ConsumerStatefulWidget {
+  const _GnssConfigDialog();
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      __GnssConfigDialogState();
+}
+
+class __GnssConfigDialogState extends ConsumerState<_GnssConfigDialog> {
+  late final controller = TextEditingController(
+    text: ref.read(
+      mainVehicleProvider.select(
+        (vehicle) =>
+            vehicle.gnssAntennaConfig.receiverConfigs?.join(
+              '\n',
+            ) ??
+            '',
+      ),
+    ),
+  );
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ConfirmationDialog(
+      title: 'Send GNSS config?',
+      content: SingleChildScrollView(
+        child: TextField(minLines: 5, maxLines: 20, controller: controller),
+      ),
+      onConfirmation: () async =>
+          ref.read(sendGnssReceiverConfigProvider(controller.text)),
     );
   }
 }

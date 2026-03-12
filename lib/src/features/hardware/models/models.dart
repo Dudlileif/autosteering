@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+export 'attitude/attitude_reading.dart';
 export 'common_message_handler.dart';
 export 'imu/imu.dart';
 export 'message_decoder.dart';

@@ -8,14 +8,14 @@ version: 0.2.0+1
 
 environment:
     sdk: ">=3.11.0 <4.0.0"
-    flutter: 3.41.2
+    flutter: 3.41.3
 
 dependencies:
     archive: ^4.0.9
     async: ^2.13.0
-    audioplayers: ^6.5.1
+    audioplayers: ^6.6.0
     collection: ^1.19.1
-    dio: ^5.9.1
+    dio: ^5.9.2
     equatable: ^2.0.8
     fast_cached_network_image: ^1.3.3+5
     file_picker: ^10.3.10
@@ -27,7 +27,7 @@ dependencies:
     flutter_map: ^8.2.2
     flutter_riverpod: ^3.2.1
     flutter_shaders: ^0.1.3
-    flutter_svg: ^2.2.3
+    flutter_svg: ^2.2.4
     freezed_annotation: ^3.1.0
     # gamepads: ^0.1.9
     geobase: ^1.5.0

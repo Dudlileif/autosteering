@@ -8,16 +8,16 @@ part of 'gnss_data_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// A provider for the quality of last GNSS position update.
+/// A provider for the last GNSS position NMEA sentence.
 
 @ProviderFor(GnssCurrentSentence)
 final gnssCurrentSentenceProvider = GnssCurrentSentenceProvider._();
 
-/// A provider for the quality of last GNSS position update.
+/// A provider for the last GNSS position NMEA sentence.
 final class GnssCurrentSentenceProvider
     extends
         $NotifierProvider<GnssCurrentSentence, GnssPositionCommonSentence?> {
-  /// A provider for the quality of last GNSS position update.
+  /// A provider for the last GNSS position NMEA sentence.
   GnssCurrentSentenceProvider._()
     : super(
         from: null,
@@ -48,7 +48,7 @@ final class GnssCurrentSentenceProvider
 String _$gnssCurrentSentenceHash() =>
     r'546d03ba5dc9fed55018508605ac36cfbbf0d28d';
 
-/// A provider for the quality of last GNSS position update.
+/// A provider for the last GNSS position NMEA sentence.
 
 abstract class _$GnssCurrentSentence
     extends $Notifier<GnssPositionCommonSentence?> {
@@ -323,4 +323,162 @@ abstract class _$GnssPrecisionError
             >;
     element.handleCreate(ref, build);
   }
+}
+
+/// A provider for the last secondary GNSS position NMEA.
+
+@ProviderFor(GnssSecondaryCurrentSentence)
+final gnssSecondaryCurrentSentenceProvider =
+    GnssSecondaryCurrentSentenceProvider._();
+
+/// A provider for the last secondary GNSS position NMEA.
+final class GnssSecondaryCurrentSentenceProvider
+    extends
+        $NotifierProvider<
+          GnssSecondaryCurrentSentence,
+          GnssPositionCommonSentence?
+        > {
+  /// A provider for the last secondary GNSS position NMEA.
+  GnssSecondaryCurrentSentenceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'gnssSecondaryCurrentSentenceProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$gnssSecondaryCurrentSentenceHash();
+
+  @$internal
+  @override
+  GnssSecondaryCurrentSentence create() => GnssSecondaryCurrentSentence();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GnssPositionCommonSentence? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GnssPositionCommonSentence?>(value),
+    );
+  }
+}
+
+String _$gnssSecondaryCurrentSentenceHash() =>
+    r'2bb4160c49b8648ce8b20596bbb027f543341e25';
+
+/// A provider for the last secondary GNSS position NMEA.
+
+abstract class _$GnssSecondaryCurrentSentence
+    extends $Notifier<GnssPositionCommonSentence?> {
+  GnssPositionCommonSentence? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref =
+        this.ref
+            as $Ref<GnssPositionCommonSentence?, GnssPositionCommonSentence?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                GnssPositionCommonSentence?,
+                GnssPositionCommonSentence?
+              >,
+              GnssPositionCommonSentence?,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// A provider for sending the vehicle GNSS config to the hardware.
+
+@ProviderFor(sendGnssReceiverConfig)
+final sendGnssReceiverConfigProvider = SendGnssReceiverConfigFamily._();
+
+/// A provider for sending the vehicle GNSS config to the hardware.
+
+final class SendGnssReceiverConfigProvider
+    extends $FunctionalProvider<void, void, void>
+    with $Provider<void> {
+  /// A provider for sending the vehicle GNSS config to the hardware.
+  SendGnssReceiverConfigProvider._({
+    required SendGnssReceiverConfigFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'sendGnssReceiverConfigProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$sendGnssReceiverConfigHash();
+
+  @override
+  String toString() {
+    return r'sendGnssReceiverConfigProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $ProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  void create(Ref ref) {
+    final argument = this.argument as String;
+    return sendGnssReceiverConfig(ref, argument);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(void value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<void>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SendGnssReceiverConfigProvider &&
+        other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$sendGnssReceiverConfigHash() =>
+    r'1b94bad866034d8efe4d2192a26aadb8763d71c1';
+
+/// A provider for sending the vehicle GNSS config to the hardware.
+
+final class SendGnssReceiverConfigFamily extends $Family
+    with $FunctionalFamilyOverride<void, String> {
+  SendGnssReceiverConfigFamily._()
+    : super(
+        retry: null,
+        name: r'sendGnssReceiverConfigProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// A provider for sending the vehicle GNSS config to the hardware.
+
+  SendGnssReceiverConfigProvider call(String config) =>
+      SendGnssReceiverConfigProvider._(argument: config, from: this);
+
+  @override
+  String toString() => r'sendGnssReceiverConfigProvider';
 }

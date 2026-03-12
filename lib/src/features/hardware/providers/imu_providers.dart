@@ -52,11 +52,11 @@ class ImuCurrentFrequency extends _$ImuCurrentFrequency {
 
 /// A provider for the current raw [ImuReading] from the hardware.
 @riverpod
-class ImuCurrentReading extends _$ImuCurrentReading {
+class CurrentAttitudeReading extends _$CurrentAttitudeReading {
   Timer? _resetTimer;
 
   @override
-  ImuReading? build() {
+  AttitudeReading? build() {
     ref.onDispose(() {
       _resetTimer?.cancel();
     });
@@ -72,7 +72,7 @@ class ImuCurrentReading extends _$ImuCurrentReading {
   }
 
   /// Updates [state] to [value].
-  void update(ImuReading? value) => Future(() => state = value);
+  void update(AttitudeReading? value) => Future(() => state = value);
 }
 
 /// Whether to show the IMU configurator.

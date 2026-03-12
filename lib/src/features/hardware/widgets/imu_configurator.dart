@@ -97,13 +97,13 @@ class ImuConfigurator extends StatelessWidget {
               ),
               Consumer(
                 child: Text(
-                  'Use IMU pitch and roll',
+                  'Use IMU pitch',
                   style: theme.textTheme.bodyLarge,
                 ),
                 builder: (context, ref, child) => CheckboxListTile(
                   value: ref.watch(
                     mainVehicleProvider.select(
-                      (vehicle) => vehicle.imu.config.usePitchAndRoll,
+                      (vehicle) => vehicle.imu.config.usePitch,
                     ),
                   ),
                   onChanged: (value) {
@@ -117,7 +117,7 @@ class ImuConfigurator extends StatelessWidget {
                                     (value) => value.imu.config,
                                   ),
                                 )
-                                .copyWith(usePitchAndRoll: value),
+                                .copyWith(usePitch: value),
                           );
                       // Wait a short while before saving the hopefully
                       // updated vehicle.
@@ -125,7 +125,46 @@ class ImuConfigurator extends StatelessWidget {
                         final vehicle = ref.watch(mainVehicleProvider);
                         ref.read(saveVehicleProvider(vehicle));
                         Logger.instance.i(
-                          '''Updated vehicle IMU use pitch and roll: ${!value} -> ${vehicle.imu.config.usePitchAndRoll}''',
+                          '''Updated vehicle IMU use pitch: ${!value} -> ${vehicle.imu.config.usePitch}''',
+                        );
+                      });
+                    }
+                  },
+                  secondary: child,
+                ),
+              ),
+
+              Consumer(
+                child: Text(
+                  'Use IMU roll',
+                  style: theme.textTheme.bodyLarge,
+                ),
+                builder: (context, ref, child) => CheckboxListTile(
+                  value: ref.watch(
+                    mainVehicleProvider.select(
+                      (vehicle) => vehicle.imu.config.useRoll,
+                    ),
+                  ),
+                  onChanged: (value) {
+                    if (value != null) {
+                      ref
+                          .read(simInputProvider.notifier)
+                          .send(
+                            ref
+                                .read(
+                                  mainVehicleProvider.select(
+                                    (value) => value.imu.config,
+                                  ),
+                                )
+                                .copyWith(useRoll: value),
+                          );
+                      // Wait a short while before saving the hopefully
+                      // updated vehicle.
+                      Timer(const Duration(milliseconds: 100), () {
+                        final vehicle = ref.watch(mainVehicleProvider);
+                        ref.read(saveVehicleProvider(vehicle));
+                        Logger.instance.i(
+                          '''Updated vehicle IMU use roll: ${!value} -> ${vehicle.imu.config.useRoll}''',
                         );
                       });
                     }
@@ -477,16 +516,18 @@ class ImuConfigurator extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 child: Consumer(
                   builder: (context, ref, child) {
-                    final imuReading = ref.watch(imuCurrentReadingProvider);
+                    final attitudeReading = ref.watch(
+                      currentAttitudeReadingProvider,
+                    );
 
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Raw IMU readings',
-                          style: theme.textTheme.bodyLarge,
-                        ),
-                        if (imuReading != null) ...[
+                    return switch (attitudeReading) {
+                      final ImuReading imuReading => Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Raw IMU readings',
+                            style: theme.textTheme.bodyLarge,
+                          ),
                           Text(
                             '''Yaw from startup: ${imuReading.yaw.toStringAsFixed(1)}º''',
                           ),
@@ -514,10 +555,10 @@ class ImuConfigurator extends StatelessWidget {
                               );
                             },
                           ),
-                        ] else
-                          const Text('Not receiving IMU readings'),
-                      ],
-                    );
+                        ],
+                      ),
+                      _ => const Text('Not receiving IMU readings'),
+                    };
                   },
                 ),
               ),

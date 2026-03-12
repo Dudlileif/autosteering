@@ -19,11 +19,13 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:flutter_libserialport/flutter_libserialport.dart';
 import 'package:geobase/geobase.dart';
+import 'package:path/path.dart' as path;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'hardware_serial_providers.g.dart';
@@ -119,7 +121,21 @@ Stream<String?> hardwareSerialStream(Ref ref) {
 
   final commonMessageHandler = CommonMessageHandler(ref);
 
-  final decoder = MessageDecoder();
+  final decoder =
+      MessageDecoder(
+        logDirectoryPath: Device.isNative
+            ? path.join(
+                ref.watch(fileDirectoryProvider).requireValue.path,
+                'logs',
+                'hardware',
+              )
+            : null,
+      )..enableLogging(
+        combined: ref.watch(hardwareLogCombinedProvider),
+        gnss: ref.watch(hardwareLogGnssProvider),
+        imu: ref.watch(hardwareLogImuProvider),
+        was: ref.watch(hardwareLogWasProvider),
+      );
 
   if (serial != null) {
     timer = Timer.periodic(const Duration(milliseconds: 10), (timer) async {
@@ -129,10 +145,15 @@ Stream<String?> hardwareSerialStream(Ref ref) {
 
         final bytes = serial.read(bytesSize);
         final messages = decoder.decode(bytes);
-
         for (final message in messages) {
-          if (message is ImuReading ||
-              message is ({Geographic gnssPosition, DateTime time}) ||
+          if (message is AttitudeReading ||
+              message
+                  is ({
+                    Geographic gnssPosition,
+                    DateTime gnssTime,
+                    DateTime receiveTime,
+                    GnssFixQuality quality,
+                  }) ||
               message is WasReading) {
             ref.read(simInputProvider.notifier).send(message);
           } else if (commonMessageHandler.attemptToHandleMessage(message)) {

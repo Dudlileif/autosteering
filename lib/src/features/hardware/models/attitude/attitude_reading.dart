@@ -1,4 +1,4 @@
-// Copyright (C) 2024 Gaute Hagen
+// Copyright (C) 2026 Gaute Hagen
 //
 // This file is part of Autosteering.
 //
@@ -18,37 +18,51 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'imu_reading.freezed.dart';
-part 'imu_reading.g.dart';
+part 'attitude_reading.freezed.dart';
+part 'attitude_reading.g.dart';
 
-/// A class for storing IMU input values.
+/// A class for storing attitude reading values.
 @freezed
-sealed class ImuReading with _$ImuReading {
-  /// A class for storing IMU input values.
-  const factory ImuReading({
+sealed class AttitudeReading with _$AttitudeReading {
+  /// A class for storing attitude reading values.
+  const factory AttitudeReading.gnss({
+    /// The time of the reading being received.
+    @DateTimeSerializer() required DateTime receiveTime,
+
+    /// The yaw/heading value.
+    @Default(null) double? yaw,
+
+    /// The pitch value.
+    @Default(null) double? pitch,
+
+    /// The roll value
+    @Default(null) double? roll,
+  }) = GnssAttitudeReading;
+
+  const factory AttitudeReading.imu({
     /// The time of the reading being received.
     @DateTimeSerializer() required DateTime receiveTime,
 
     /// The IMU input yaw/bearing from startup.
-    @Default(0) num yaw,
+    @Default(0) double yaw,
 
     /// The IMU input pitch.
-    @Default(0) num pitch,
+    @Default(0) double pitch,
 
     /// The IMU input roll.
-    @Default(0) num roll,
+    @Default(0) double roll,
 
     /// The IMU input acceleration in the X-axis (lateral).
-    @Default(0) num accelerationX,
+    @Default(0) double accelerationX,
 
     /// The IMU input acceleration in the Y-axis (longitudinal).
-    @Default(0) num accelerationY,
+    @Default(0) double accelerationY,
 
     /// The IMU input acceleration in the Z-axis (vertical).
-    @Default(0) num accelerationZ,
-  }) = _ImuReading;
+    @Default(0) double accelerationZ,
+  }) = ImuReading;
 
-  /// Creates an [ImuReading] object from the [json] map.
-  factory ImuReading.fromJson(Map<String, Object?> json) =>
-      _$ImuReadingFromJson(json);
+  /// Creates an [AttitudeReading] object from the [json] map.
+  factory AttitudeReading.fromJson(Map<String, Object?> json) =>
+      _$AttitudeReadingFromJson(json);
 }

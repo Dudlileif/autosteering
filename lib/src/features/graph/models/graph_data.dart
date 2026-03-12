@@ -20,6 +20,12 @@ enum GraphParameter {
   /// Perpendicular distance to guidance line.
   perpendicularDistance('Perpendicular distance'),
 
+  /// Bearing from the dual antenna receiver.
+  dualBearing('Dual Antenna Bearing'),
+
+  /// Roll from the dual antenna receiver.
+  dualRoll('Dual Antenna Roll'),
+
   /// Bearing from the IMU.
   imuBearing('IMU Bearing'),
 

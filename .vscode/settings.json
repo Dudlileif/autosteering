@@ -72,7 +72,15 @@
   "explorer.fileNesting.expand": false,
   "conventionalCommits.scopes": [
     "Dad mode",
-    "Remote control"
+    "Remote control",
+    "Hardware"
   ],
-  "dart.flutterSdkPath": ".fvm/versions/3.41.2"
+  "dart.flutterSdkPath": ".fvm/versions/3.41.3",
+  "editor.formatOnSave": true,
+  "[dart]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit",
+    }
+  }
 }
