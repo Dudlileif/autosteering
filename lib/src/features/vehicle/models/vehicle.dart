@@ -387,12 +387,15 @@ sealed class Vehicle extends Hitchable {
   void setPositionSim(Geographic value) {
     antennaPosition = value.rhumb
         .destinationPoint(
-          distance: -antennaRollLateralOffset,
+          distance:
+              -(antennaRollLateralOffset + gnssAntennaConfig.lateralOffset),
           bearing: bearing - 90,
         )
         .rhumb
         .destinationPoint(
-          distance: -antennaPitchLongitudinalOffset,
+          distance:
+              -(antennaPitchLongitudinalOffset +
+                  gnssAntennaConfig.longitudinalOffset),
           bearing: bearing,
         );
   }
