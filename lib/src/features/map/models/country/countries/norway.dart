@@ -26,10 +26,7 @@ class Norway extends Country {
 
   @override
   List<TileLayerData> get availableLayers => [
-    _norgeIBilder,
     _norgesKart,
-    _norgesGrunnkart,
-    _norgesGrunnkartGraatone,
     _terrainDTM,
     _terrainDTMMulti,
     _terrainDOM,
@@ -39,42 +36,12 @@ class Norway extends Country {
   Widget mapContribution(BuildContext context) =>
       Text('© Kartverket', style: Theme.of(context).textTheme.bodySmall);
 
-  TileLayerData get _norgeIBilder => TileLayerData(
-    name: 'Norge i bilder',
-    folderName: folderName,
-    urlTemplate:
-        'https://opencache{s}.statkart.no/gatekeeper/gk/gk.open_nib_web_mercator_wmts_v2?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=Nibcache_web_mercator_v2&STYLE=default&FORMAT=image/png&tileMatrixSet=default028mm&tileMatrix={z}&tileRow={y}&tileCol={x}',
-    subdomains: ['', '2', '3'],
-    maxNativeZoom: 18,
-  );
-
   TileLayerData get _norgesKart => TileLayerData(
     name: 'Norgeskart',
     folderName: folderName,
     urlTemplate:
-        'https://opencache{s}.statkart.no/gatekeeper/gk/gk.open_wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=norgeskart_bakgrunn&STYLE=default&FORMAT=image/png&tileMatrixSet=EPSG:3857&tileMatrix=EPSG:3857:{z}&tileRow={y}&tileCol={x}',
-    subdomains: ['', '2', '3'],
-    maxNativeZoom: 20,
-    themedTileLayerBuilder: themedTileLayerBuilder,
-  );
-
-  TileLayerData get _norgesGrunnkart => TileLayerData(
-    name: 'Norges grunnkart',
-    folderName: folderName,
-    urlTemplate:
-        'https://opencache{s}.statkart.no/gatekeeper/gk/gk.open_wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=norges_grunnkart&STYLE=default&FORMAT=image/png&tileMatrixSet=EPSG:3857&tileMatrix=EPSG:3857:{z}&tileRow={y}&tileCol={x}',
-    subdomains: ['', '2', '3'],
-    maxNativeZoom: 20,
-    themedTileLayerBuilder: themedTileLayerBuilder,
-  );
-
-  TileLayerData get _norgesGrunnkartGraatone => TileLayerData(
-    name: 'Norges grunnkart gråtone',
-    folderName: folderName,
-    urlTemplate:
-        'https://opencache{s}.statkart.no/gatekeeper/gk/gk.open_wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=norges_grunnkart_graatone&STYLE=default&FORMAT=image/png&tileMatrixSet=EPSG:3857&tileMatrix=EPSG:3857:{z}&tileRow={y}&tileCol={x}',
-    subdomains: ['', '2', '3'],
-    maxNativeZoom: 20,
+        'https://cache.kartverket.no/v1/wmts/1.0.0/topo/default/webmercator/{z}/{y}/{x}.png',
+    maxNativeZoom: 18,
     themedTileLayerBuilder: themedTileLayerBuilder,
   );
 
