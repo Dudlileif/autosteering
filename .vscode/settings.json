@@ -75,12 +75,12 @@
     "Remote control",
     "Hardware"
   ],
-  "dart.flutterSdkPath": ".fvm/versions/3.41.3",
+  "dart.flutterSdkPath": ".fvm/versions/3.41.5",
   "editor.formatOnSave": true,
   "[dart]": {
     "editor.codeActionsOnSave": {
       "source.fixAll": "explicit",
-      "source.organizeImports": "explicit",
+      "source.organizeImports": "explicit"
     }
   }
 }
