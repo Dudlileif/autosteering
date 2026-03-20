@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 export 'degree_converter.dart';
+export 'gnss_antenna_config/gnss_antenna_config.dart';
 export 'gnss_fix_quality.dart';
 export 'nmea_sentences.dart';
 export 'ntrip_client.dart';

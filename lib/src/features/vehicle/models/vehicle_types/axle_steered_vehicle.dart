@@ -27,8 +27,6 @@ sealed class AxleSteeredVehicle extends Vehicle {
   AxleSteeredVehicle({
     required super.type,
     required this.wheelBase,
-    required this.antennaToSolidAxleDistance,
-    required super.antennaHeight,
     required super.minTurningRadius,
     required super.trackWidth,
     required super.steeringAngleMax,
@@ -47,11 +45,11 @@ sealed class AxleSteeredVehicle extends Vehicle {
     super.pathTrackingMode,
     super.imu,
     super.was,
+    super.gnssAntennaConfig,
     super.thresholdVelocities,
     super.steeringHardwareConfig,
     super.purePursuitParameters,
     super.stanleyParameters,
-    super.antennaLateralOffset,
     super.antennaPosition,
     super.velocity,
     super.bearing,
@@ -80,12 +78,10 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// this means the rear axle on front wheel steered vehicles, and
   /// the front axle on rear wheel steered vehicles.
   ///
-  /// The sign of the direction is positive towards the steering axle and
-  /// negative away from it.
-  ///
-  /// Expected positive for front wheel steered and negative for rear wheel
-  /// steered.
-  double antennaToSolidAxleDistance;
+  /// If the value is negative, then the antenna is in front of the solid axle,
+  /// if it is positive, then the axle is in front of the antenna.
+  double get antennaToSolidAxleDistance =>
+      -gnssAntennaConfig.longitudinalOffset;
 
   /// The maximum steering angle of one of the steering wheels.
   double steeringAngleMaxRaw;
@@ -143,8 +139,11 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// Used to draw the vehicle in correct proportions.
   double solidAxleToFrontDistance;
 
-  /// The position of the center of the rear axle.
-  Geographic get solidAxlePosition;
+  /// The position of the center of the solid axle.
+  Geographic get solidAxlePosition => position.rhumb.destinationPoint(
+    distance: antennaToSolidAxleDistance,
+    bearing: bearing,
+  );
 
   /// The position of the center of the front axle.
   Geographic get steeringAxlePosition;
@@ -686,13 +685,10 @@ sealed class AxleSteeredVehicle extends Vehicle {
   @override
   AxleSteeredVehicle copyWith({
     Geographic? antennaPosition,
-    double? antennaHeight,
-    double? antennaLateralOffset,
     double? minTurningRadius,
     double? steeringAngleMax,
     double? trackWidth,
     double? wheelBase,
-    double? antennaToSolidAxleDistance,
     double? ackermannPercentage,
     double? ackermannSteeringRatio,
     double? steeringAxleWheelDiameter,
@@ -706,6 +702,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     double? wheelSpacing,
     Imu? imu,
     Was? was,
+    GnssAntennaConfig? gnssAntennaConfig,
     ThresholdVelocities? thresholdVelocities,
     SteeringHardwareConfig? steeringHardwareConfig,
     PathTrackingMode? pathTrackingMode,
@@ -734,13 +731,6 @@ sealed class AxleSteeredVehicle extends Vehicle {
   @override
   Map<String, dynamic> toJson() {
     final map = super.toJson();
-
-    map['antenna'] = Map<String, dynamic>.from(map['antenna'] as Map)
-      ..update(
-        'solid_axle_distance',
-        (value) => antennaToSolidAxleDistance,
-        ifAbsent: () => antennaToSolidAxleDistance,
-      );
 
     map['dimensions'] = Map<String, dynamic>.from(map['dimensions'] as Map)
       ..addAll({

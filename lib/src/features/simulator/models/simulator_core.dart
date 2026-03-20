@@ -60,7 +60,7 @@ class SimulatorCoreBase {
     if (data != null) {
       final messages = decoder.decode(data);
       for (final message in messages) {
-        if (message is ImuReading ||
+        if (message is AttitudeReading ||
             message
                 is ({
                   Geographic gnssPosition,
@@ -92,7 +92,7 @@ class SimulatorCoreBase {
     StreamController<dynamic> updateMainThreadStream,
   ) {
     for (final message in decoder.parseString(record)) {
-      if (message is ImuReading ||
+      if (message is AttitudeReading ||
           message
               is ({
                 Geographic gnssPosition,

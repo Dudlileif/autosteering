@@ -44,19 +44,41 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
 
   String get message {
     final nmea = ref.watch(gnssCurrentSentenceProvider);
+    final secondaryNmea = ref.watch(gnssSecondaryCurrentSentenceProvider);
     final precisionError = ref.watch(gnssPrecisionErrorProvider);
 
     final textLines = <String>[];
+
+    String quality;
     if (nmea?.posMode != null) {
-      textLines.add(
-        '''${nmea?.fixQuality?.name ?? GnssFixQuality.notAvailable.name} | ${nmea?.posMode}''',
-      );
+      quality =
+          '''${nmea?.fixQuality?.name ?? GnssFixQuality.notAvailable.name} | ${nmea?.posMode}''';
     } else if (nmea?.ubxNavStatus != null) {
-      textLines.add(
-        '''${nmea?.fixQuality?.name ?? GnssFixQuality.notAvailable.name} | ${nmea?.ubxNavStatus}''',
-      );
+      quality =
+          '''${nmea?.fixQuality?.name ?? GnssFixQuality.notAvailable.name} | ${nmea?.ubxNavStatus}''';
     } else {
-      textLines.add(nmea?.fixQuality?.name ?? GnssFixQuality.notAvailable.name);
+      quality = nmea?.fixQuality?.name ?? GnssFixQuality.notAvailable.name;
+    }
+
+    String? secondaryQuality;
+    if (secondaryNmea != null) {
+      if (secondaryNmea.posMode != null) {
+        secondaryQuality =
+            '''${secondaryNmea.fixQuality?.name ?? GnssFixQuality.notAvailable.name} | ${secondaryNmea.posMode}''';
+      } else if (secondaryNmea.ubxNavStatus != null) {
+        secondaryQuality =
+            '''${secondaryNmea.fixQuality?.name ?? GnssFixQuality.notAvailable.name} | ${secondaryNmea.ubxNavStatus}''';
+      } else {
+        secondaryQuality =
+            secondaryNmea.fixQuality?.name ?? GnssFixQuality.notAvailable.name;
+      }
+    }
+
+    switch ((quality, secondaryQuality)) {
+      case (final quality, null):
+        textLines.add(quality);
+      case (final quality, final secondaryQuality?):
+        textLines.add('M: $quality, S: $secondaryQuality');
     }
 
     final latitude = nmea?.latitude;

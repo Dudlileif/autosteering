@@ -259,6 +259,20 @@ class SimulatorCoreState {
     else if (message is ImuReading) {
       vehicle?.imu.addReading(message);
     }
+    // Update the vehicle heading and roll from dual antenna.
+    else if (message case GnssAttitudeReading(
+      :final yaw,
+      :final pitch,
+    )) {
+      if (vehicle != null) {
+        if (yaw != null) {
+          vehicle?.bearing = yaw + vehicle!.gnssAntennaConfig.dualRelativeAngle;
+        }
+        if (pitch != null) {
+          vehicle?.roll = pitch;
+        }
+      }
+    }
     // Update the WAS config of the vehicle.
     else if (message is WasConfig) {
       vehicle?.was.config = message;
@@ -1015,7 +1029,13 @@ class SimulatorCoreState {
       vehicle!.imu.lastGnssTime = gnssUpdate!.receiveTime;
       if (gnssUpdate != null && prevGnssUpdates.lastOrNull != null) {
         // Correct for roll and pitch if IMU bearing is set.
-        if (vehicle!.imu.bearingIsSet && vehicle!.imu.config.usePitchAndRoll) {
+        if (vehicle case Vehicle(
+          gnssAntennaConfig: GnssAntennaConfig(:final useDualRoll),
+          imu: Imu(
+            :final bearingIsSet,
+            config: ImuConfig(:final usePitch, :final useRoll),
+          ),
+        ) when useDualRoll || (bearingIsSet && (usePitch || useRoll))) {
           gnssUpdate = (
             gnssPosition: vehicle!.correctPositionForRollAndPitch(
               gnssUpdate!.gnssPosition,
@@ -1100,7 +1120,12 @@ class SimulatorCoreState {
 
           // Update the already recorded positions to correct for the
           // vehicle pitch and roll.
-          if (vehicle!.imu.config.usePitchAndRoll) {
+          if (vehicle case Vehicle(
+            gnssAntennaConfig: GnssAntennaConfig(:final useDualRoll),
+            imu: Imu(
+              config: ImuConfig(:final usePitch, :final useRoll),
+            ),
+          ) when useDualRoll || usePitch || useRoll) {
             gnssUpdate = (
               gnssPosition: vehicle!.correctPositionForRollAndPitch(
                 gnssUpdate!.gnssPosition,
@@ -1144,7 +1169,14 @@ class SimulatorCoreState {
             velocityAvg = velocities.isNotEmpty ? velocities.average : 0.0;
 
             gaugeVelocity = velocityAvg;
-            gaugeBearing = bearing;
+            gaugeBearing = switch (vehicle) {
+              Vehicle(
+                :final bearing,
+                gnssAntennaConfig: GnssAntennaConfig(useDualHeading: true),
+              ) =>
+                bearing,
+              _ => bearing,
+            };
           }
         } else {
           // Only update bearing if distance to a previous position is larger
@@ -1153,7 +1185,14 @@ class SimulatorCoreState {
             (element) => element > minBearingUpdateDistance,
           );
 
-          double? bearing;
+          var bearing = switch (vehicle) {
+            Vehicle(
+              :final bearing,
+              gnssAntennaConfig: GnssAntennaConfig(useDualHeading: true),
+            ) =>
+              bearing,
+            _ => null,
+          };
           if (prevPositionIndex > -1) {
             bearing = prevGnssUpdatesOfSameQuality
                 .elementAt(prevPositionIndex)
@@ -1202,7 +1241,14 @@ class SimulatorCoreState {
             )
             ..bearingIsSet = true;
 
-          gaugeBearing = directionCorrectedBearing;
+          gaugeBearing = switch (vehicle) {
+            Vehicle(
+              :final bearing,
+              gnssAntennaConfig: GnssAntennaConfig(useDualHeading: true),
+            ) =>
+              bearing,
+            _ => directionCorrectedBearing,
+          };
           gaugeVelocity = drivingDirectionSign * velocityAvg;
         }
 

@@ -69,55 +69,56 @@ abstract class _$ImuCurrentFrequency extends $Notifier<double?> {
 
 /// A provider for the current raw [ImuReading] from the hardware.
 
-@ProviderFor(ImuCurrentReading)
-final imuCurrentReadingProvider = ImuCurrentReadingProvider._();
+@ProviderFor(CurrentAttitudeReading)
+final currentAttitudeReadingProvider = CurrentAttitudeReadingProvider._();
 
 /// A provider for the current raw [ImuReading] from the hardware.
-final class ImuCurrentReadingProvider
-    extends $NotifierProvider<ImuCurrentReading, ImuReading?> {
+final class CurrentAttitudeReadingProvider
+    extends $NotifierProvider<CurrentAttitudeReading, AttitudeReading?> {
   /// A provider for the current raw [ImuReading] from the hardware.
-  ImuCurrentReadingProvider._()
+  CurrentAttitudeReadingProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'imuCurrentReadingProvider',
+        name: r'currentAttitudeReadingProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$imuCurrentReadingHash();
+  String debugGetCreateSourceHash() => _$currentAttitudeReadingHash();
 
   @$internal
   @override
-  ImuCurrentReading create() => ImuCurrentReading();
+  CurrentAttitudeReading create() => CurrentAttitudeReading();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(ImuReading? value) {
+  Override overrideWithValue(AttitudeReading? value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<ImuReading?>(value),
+      providerOverride: $SyncValueProvider<AttitudeReading?>(value),
     );
   }
 }
 
-String _$imuCurrentReadingHash() => r'070a568db893b517e501acd6245fd20555b388fe';
+String _$currentAttitudeReadingHash() =>
+    r'aeb1f521817df3f9e25ebef1324d8c964bbc2d8b';
 
 /// A provider for the current raw [ImuReading] from the hardware.
 
-abstract class _$ImuCurrentReading extends $Notifier<ImuReading?> {
-  ImuReading? build();
+abstract class _$CurrentAttitudeReading extends $Notifier<AttitudeReading?> {
+  AttitudeReading? build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<ImuReading?, ImuReading?>;
+    final ref = this.ref as $Ref<AttitudeReading?, AttitudeReading?>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<ImuReading?, ImuReading?>,
-              ImuReading?,
+              AnyNotifier<AttitudeReading?, AttitudeReading?>,
+              AttitudeReading?,
               Object?,
               Object?
             >;

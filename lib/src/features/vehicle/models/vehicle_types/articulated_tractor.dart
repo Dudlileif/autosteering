@@ -25,10 +25,8 @@ final class ArticulatedTractor extends Vehicle {
   /// An articulated tractor with two bodies with solid axles that are joined
   /// at a pivot point.
   ArticulatedTractor({
-    required this.antennaToPivotDistance,
     required this.pivotToFrontAxle,
     required this.pivotToRearAxle,
-    required super.antennaHeight,
 
     /// The minimum turning radius of the front axle.
     required super.minTurningRadius,
@@ -43,10 +41,10 @@ final class ArticulatedTractor extends Vehicle {
     super.numWheels,
     this.frontAxleToFrontDistance = 1.5,
     this.rearAxleToEndDistance = 1,
-    super.antennaLateralOffset,
     super.pathTrackingMode,
     super.imu,
     super.was,
+    super.gnssAntennaConfig,
     super.thresholdVelocities,
     super.steeringHardwareConfig,
     super.purePursuitParameters = const PurePursuitParameters(
@@ -77,8 +75,6 @@ final class ArticulatedTractor extends Vehicle {
   factory ArticulatedTractor.fromJson(Map<String, dynamic> json) {
     final info = Map<String, dynamic>.from(json['info'] as Map);
 
-    final antenna = Map<String, dynamic>.from(json['antenna'] as Map);
-
     final dimensions = Map<String, dynamic>.from(json['dimensions'] as Map);
 
     final wheels = Map<String, dynamic>.from(dimensions['wheels'] as Map);
@@ -91,9 +87,6 @@ final class ArticulatedTractor extends Vehicle {
       name: info['name'] as String?,
       uuid: info['uuid'] as String?,
       lastUsed: DateTime.tryParse(info['last_used'] as String),
-      antennaHeight: antenna['height'] as double,
-      antennaLateralOffset: antenna['lateral_offset'] as double,
-      antennaToPivotDistance: antenna['pivot_distance'] as double,
       width: dimensions['width'] as double,
       length: dimensions['length'] as double,
       trackWidth: dimensions['track_width'] as double,
@@ -121,7 +114,7 @@ final class ArticulatedTractor extends Vehicle {
 
   /// The distance from the vehicle articulation pivot point to the antenna
   /// [position].
-  double antennaToPivotDistance;
+  double get antennaToPivotDistance => -gnssAntennaConfig.longitudinalOffset;
 
   /// The distance from the vehicle articulation pivot point to the front
   /// axle center position.
@@ -807,6 +800,7 @@ final class ArticulatedTractor extends Vehicle {
     int? numWheels,
     Imu? imu,
     Was? was,
+    GnssAntennaConfig? gnssAntennaConfig,
     ThresholdVelocities? thresholdVelocities,
     SteeringHardwareConfig? steeringHardwareConfig,
     PathTrackingMode? pathTrackingMode,
@@ -832,8 +826,6 @@ final class ArticulatedTractor extends Vehicle {
     bool? manualSimulationMode,
   }) => ArticulatedTractor(
     antennaPosition: antennaPosition ?? this.antennaPosition,
-    antennaHeight: antennaHeight ?? this.antennaHeight,
-    antennaLateralOffset: antennaLateralOffset ?? this.antennaLateralOffset,
     minTurningRadius: minTurningRadius ?? this.minTurningRadius,
     steeringAngleMax: steeringAngleMax ?? this.steeringAngleMax,
     trackWidth: trackWidth ?? this.trackWidth,
@@ -841,8 +833,6 @@ final class ArticulatedTractor extends Vehicle {
     wheelWidth: wheelWidth ?? this.wheelWidth,
     wheelSpacing: wheelSpacing ?? this.wheelSpacing,
     numWheels: numWheels ?? this.numWheels,
-    antennaToPivotDistance:
-        antennaToPivotDistance ?? this.antennaToPivotDistance,
     pivotToFrontAxle: pivotToFrontAxle ?? this.pivotToFrontAxle,
     pivotToRearAxle: pivotToRearAxle ?? this.pivotToRearAxle,
     frontAxleToHitchDistance:
@@ -853,6 +843,7 @@ final class ArticulatedTractor extends Vehicle {
         rearAxleToTowbarDistance ?? this.rearAxleToTowbarDistance,
     imu: imu ?? this.imu,
     was: was ?? this.was,
+    gnssAntennaConfig: gnssAntennaConfig ?? this.gnssAntennaConfig,
     thresholdVelocities: thresholdVelocities ?? this.thresholdVelocities,
     steeringHardwareConfig:
         steeringHardwareConfig ?? this.steeringHardwareConfig,
@@ -881,13 +872,6 @@ final class ArticulatedTractor extends Vehicle {
   @override
   Map<String, dynamic> toJson() {
     final map = super.toJson();
-
-    map['antenna'] = Map<String, dynamic>.from(map['antenna'] as Map)
-      ..update(
-        'pivot_distance',
-        (value) => antennaToPivotDistance,
-        ifAbsent: () => antennaToPivotDistance,
-      );
 
     map['info'] = Map<String, dynamic>.from(map['info'] as Map)
       ..addAll({'vehicle_type': 'Articulated tractor'});

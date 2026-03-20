@@ -21,6 +21,7 @@ import 'dart:ui';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
+import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
@@ -44,12 +45,10 @@ sealed class Vehicle extends Hitchable {
   /// and methods.
   Vehicle({
     required this.type,
-    required this.antennaHeight,
     required this.minTurningRadius,
     required this.steeringAngleMax,
     required this.trackWidth,
     this.manufacturerColors = ManufacturerColors.masseyFerguson,
-    this.antennaLateralOffset = 0,
     this.steeringAngleInput = 0,
     this.length = 4,
     this.width = 2.5,
@@ -66,6 +65,7 @@ sealed class Vehicle extends Hitchable {
     super.uuid,
     Imu? imu,
     Was? was,
+    GnssAntennaConfig? gnssAntennaConfig,
     SteeringHardwareConfig? steeringHardwareConfig,
     PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
@@ -82,6 +82,7 @@ sealed class Vehicle extends Hitchable {
        _pitch = pitch,
        _roll = roll,
        _velocity = velocity,
+       gnssAntennaConfig = gnssAntennaConfig ?? const GnssAntennaConfig(),
        imu = imu ?? Imu(),
        was = was ?? Was(),
        steeringHardwareConfig =
@@ -139,6 +140,12 @@ sealed class Vehicle extends Hitchable {
 
     final steering = Map<String, dynamic>.from(json['steering'] as Map);
 
+    final gnssAntennaConfig = json.containsKey('gnss_antenna_config')
+        ? GnssAntennaConfig.fromJson(
+            Map<String, dynamic>.from(json['gnss_antenna_config'] as Map),
+          )
+        : const GnssAntennaConfig();
+
     final imu = json.containsKey('imu_config')
         ? Imu(
             config: ImuConfig.fromJson(
@@ -191,6 +198,7 @@ sealed class Vehicle extends Hitchable {
     return vehicle.copyWith(
       imu: imu,
       was: was,
+      gnssAntennaConfig: gnssAntennaConfig,
       steeringHardwareConfig: steeringHardwareConfig,
       thresholdVelocities: thresholdVelocities,
       purePursuitParameters: purePursuitParameters,
@@ -205,12 +213,11 @@ sealed class Vehicle extends Hitchable {
   /// The manufacturer color scheme of the vehicle.
   ManufacturerColors manufacturerColors;
 
-  /// The height of the antenna above the ground, in meters.
-  double antennaHeight;
-
-  /// How much the antenna is offset from the center line of the vehicle
-  /// in the forward direction, in meters.
-  double antennaLateralOffset;
+  /// The GNSS antenna config of the vehicle.
+  ///
+  /// This contains values for the relative position of the antenna and if dual
+  /// antennas are in use.
+  GnssAntennaConfig gnssAntennaConfig;
 
   /// The distance between the centers of the wheels on the solid axle.
   double trackWidth;
@@ -304,10 +311,16 @@ sealed class Vehicle extends Hitchable {
   /// [ImuConfig.asymmetricRollGainLeft] if enabled and rolled to the left.
   double get antennaRollLateralOffset =>
       tan(roll.toRadians()) *
-      antennaHeight *
-      switch (roll < 0 && imu.config.asymmetricRollGainLeft != null) {
-        true => imu.config.asymmetricRollGainLeft!,
-        false => imu.config.rollGain,
+      gnssAntennaConfig.height *
+      switch ((
+        gnssAntennaConfig,
+        roll,
+        imu.config.asymmetricRollGainLeft != null,
+      )) {
+        (GnssAntennaConfig(useDualRoll: true, :final dualRollGain), _, _) =>
+          dualRollGain,
+        (_, < 0, true) => imu.config.asymmetricRollGainLeft!,
+        _ => imu.config.rollGain,
       };
 
   /// The longitudinal offset of the the antenna's true ground position to the
@@ -315,7 +328,7 @@ sealed class Vehicle extends Hitchable {
   ///
   /// The result is multiplied by the [ImuConfig.pitchGain].
   double get antennaPitchLongitudinalOffset =>
-      tan(pitch.toRadians()) * antennaHeight * imu.config.pitchGain;
+      tan(pitch.toRadians()) * gnssAntennaConfig.height * imu.config.pitchGain;
 
   /// The corrected position of the antenna after accounting for the [pitch]
   /// and [roll].
@@ -326,7 +339,7 @@ sealed class Vehicle extends Hitchable {
   /// accounting for [pitch] and [roll].
   @override
   Geographic get position => correctedAntennaPosition.rhumb.destinationPoint(
-    distance: antennaLateralOffset,
+    distance: gnssAntennaConfig.lateralOffset,
     bearing: bearing - 90,
   );
 
@@ -334,6 +347,22 @@ sealed class Vehicle extends Hitchable {
   /// derived from it.
   @override
   set position(Geographic value) => antennaPosition = value;
+
+  /// The corrected position of the secondary antenna, if it is in use.
+  Geographic? get secondaryAntennaPosition => switch (gnssAntennaConfig) {
+    GnssAntennaConfig(
+      :final useDualHeading,
+      :final useDualRoll,
+      :final dualBaseline,
+      :final dualRelativeAngle,
+    )
+        when useDualHeading || useDualRoll =>
+      correctedAntennaPosition.rhumb.destinationPoint(
+        distance: dualBaseline,
+        bearing: bearing + dualRelativeAngle,
+      ),
+    _ => null,
+  };
 
   /// Moves the input [position] to a position corrected for [pitch] and [roll]
   /// with [antennaPitchLongitudinalOffset] and [antennaRollLateralOffset].
@@ -358,12 +387,15 @@ sealed class Vehicle extends Hitchable {
   void setPositionSim(Geographic value) {
     antennaPosition = value.rhumb
         .destinationPoint(
-          distance: -antennaRollLateralOffset,
+          distance:
+              -(antennaRollLateralOffset + gnssAntennaConfig.lateralOffset),
           bearing: bearing - 90,
         )
         .rhumb
         .destinationPoint(
-          distance: -antennaPitchLongitudinalOffset,
+          distance:
+              -(antennaPitchLongitudinalOffset +
+                  gnssAntennaConfig.longitudinalOffset),
           bearing: bearing,
         );
   }
@@ -385,7 +417,7 @@ sealed class Vehicle extends Hitchable {
       true => imu.bearing ?? 0,
       false => _bearing,
     },
-  };
+  }.wrap360();
 
   /// The raw outside set bearing of the vehicle, typically from
   /// GNSS point to point bearing.
@@ -397,7 +429,7 @@ sealed class Vehicle extends Hitchable {
 
   /// The pitch of the vehicle as degrees of inclination around the x-axis
   /// (across) the vehicle in the forward direction.
-  double get pitch => switch (imu.config.usePitchAndRoll) {
+  double get pitch => switch (imu.config.usePitch) {
     true => imu.pitch,
     false => _pitch,
   };
@@ -406,10 +438,11 @@ sealed class Vehicle extends Hitchable {
 
   /// The roll of the vehicle as degrees of roll around the y-axis (along) the
   /// vehicle in the forward direction.
-  double get roll => switch (imu.config.usePitchAndRoll) {
-    true => imu.roll,
-    false => _roll,
-  };
+  double get roll =>
+      switch ((gnssAntennaConfig.useDualRoll, imu.config.useRoll)) {
+        (false, true) => imu.roll,
+        _ => _roll,
+      };
 
   set roll(double value) => _roll = value;
 
@@ -726,13 +759,12 @@ sealed class Vehicle extends Hitchable {
   @override
   Vehicle copyWith({
     Geographic? antennaPosition,
-    double? antennaHeight,
-    double? antennaLateralOffset,
     double? minTurningRadius,
     double? steeringAngleMax,
     double? trackWidth,
     int? numWheels,
     double? wheelSpacing,
+    GnssAntennaConfig? gnssAntennaConfig,
     Was? was,
     Imu? imu,
     ThresholdVelocities? thresholdVelocities,
@@ -769,10 +801,8 @@ sealed class Vehicle extends Hitchable {
       'uuid': uuid,
       'last_used': lastUsed.toIso8601String(),
     };
-    map['antenna'] = {
-      'height': antennaHeight,
-      'lateral_offset': antennaLateralOffset,
-    };
+    map['gnss_antenna_config'] = gnssAntennaConfig;
+
     map['dimensions'] = {
       'length': length,
       'width': width,

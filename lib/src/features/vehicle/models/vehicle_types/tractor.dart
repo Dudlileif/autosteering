@@ -22,12 +22,9 @@ final class Tractor extends AxleSteeredVehicle {
   /// A conventional tractor with front wheel steering and a solid rear axle.
   Tractor({
     required super.wheelBase,
-    required super.antennaToSolidAxleDistance,
-    required super.antennaHeight,
     required super.minTurningRadius,
     required super.steeringAngleMax,
     required super.trackWidth,
-    super.antennaLateralOffset,
     super.solidAxleToFrontHitchDistance = 3.5,
     super.solidAxleToRearHitchDistance = 0.9,
     super.solidAxleToRearTowbarDistance = 0.65,
@@ -41,6 +38,7 @@ final class Tractor extends AxleSteeredVehicle {
     super.wheelSpacing,
     super.antennaPosition,
     super.pathTrackingMode,
+    super.gnssAntennaConfig,
     super.imu,
     super.was,
     super.thresholdVelocities,
@@ -70,8 +68,6 @@ final class Tractor extends AxleSteeredVehicle {
   factory Tractor.fromJson(Map<String, dynamic> json) {
     final info = Map<String, dynamic>.from(json['info'] as Map);
 
-    final antenna = Map<String, dynamic>.from(json['antenna'] as Map);
-
     final dimensions = Map<String, dynamic>.from(json['dimensions'] as Map);
 
     final wheels = Map<String, dynamic>.from(dimensions['wheels'] as Map);
@@ -84,14 +80,10 @@ final class Tractor extends AxleSteeredVehicle {
       name: info['name'] as String?,
       uuid: info['uuid'] as String?,
       lastUsed: DateTime.tryParse(info['last_used'] as String),
-      antennaHeight: antenna['height'] as double,
-      antennaLateralOffset: antenna['lateral_offset'] as double,
-      antennaToSolidAxleDistance: antenna['solid_axle_distance'] as double,
       width: dimensions['width'] as double,
       length: dimensions['length'] as double,
       wheelBase: dimensions['wheel_base'] as double,
       trackWidth: dimensions['track_width'] as double,
-
       minTurningRadius: steering['min_turning_radius'] as double,
       steeringAngleMax: steering['steering_angle_max'] as double,
       ackermannSteeringRatio: steering['ackermann_steering_ratio'] as double,
@@ -115,18 +107,11 @@ final class Tractor extends AxleSteeredVehicle {
     );
   }
 
-  /// The position of the center of the rear axle.
-  @override
-  Geographic get solidAxlePosition => position.rhumb.destinationPoint(
-    distance: antennaToSolidAxleDistance,
-    bearing: (bearing - 180).wrap360(),
-  );
-
   /// The position of the center of the front axle.
   @override
   Geographic get steeringAxlePosition => position.rhumb.destinationPoint(
-    distance: wheelBase - antennaToSolidAxleDistance,
-    bearing: bearing.wrap360(),
+    distance: antennaToSolidAxleDistance + wheelBase,
+    bearing: bearing,
   );
 
   /// The position of the Stanley axle in the the vehicle direction. Used when
@@ -139,7 +124,7 @@ final class Tractor extends AxleSteeredVehicle {
       switch (isReversing) {
         true => solidAxlePosition.rhumb.destinationPoint(
           distance: wheelBase,
-          bearing: bearing + 180,
+          bearing: (bearing + 180).wrap360(),
         ),
         false => steeringAxlePosition,
       }.rhumb.destinationPoint(
@@ -180,6 +165,7 @@ final class Tractor extends AxleSteeredVehicle {
     double? wheelSpacing,
     Imu? imu,
     Was? was,
+    GnssAntennaConfig? gnssAntennaConfig,
     ThresholdVelocities? thresholdVelocities,
     SteeringHardwareConfig? steeringHardwareConfig,
     PathTrackingMode? pathTrackingMode,
@@ -206,14 +192,10 @@ final class Tractor extends AxleSteeredVehicle {
     bool? manualSimulationMode,
   }) => Tractor(
     antennaPosition: antennaPosition ?? this.antennaPosition,
-    antennaHeight: antennaHeight ?? this.antennaHeight,
-    antennaLateralOffset: antennaLateralOffset ?? this.antennaLateralOffset,
     minTurningRadius: minTurningRadius ?? this.minTurningRadius,
     steeringAngleMax: steeringAngleMax ?? steeringAngleMaxRaw,
     trackWidth: trackWidth ?? this.trackWidth,
     wheelBase: wheelBase ?? this.wheelBase,
-    antennaToSolidAxleDistance:
-        antennaToSolidAxleDistance ?? this.antennaToSolidAxleDistance,
     solidAxleToFrontHitchDistance:
         solidAxleToFrontHitchDistance ?? this.solidAxleToFrontHitchDistance,
     solidAxleToRearHitchDistance:
@@ -234,6 +216,7 @@ final class Tractor extends AxleSteeredVehicle {
     wheelSpacing: wheelSpacing ?? this.wheelSpacing,
     imu: imu ?? this.imu,
     was: was ?? this.was,
+    gnssAntennaConfig: gnssAntennaConfig ?? this.gnssAntennaConfig,
     thresholdVelocities: thresholdVelocities ?? this.thresholdVelocities,
     steeringHardwareConfig:
         steeringHardwareConfig ?? this.steeringHardwareConfig,

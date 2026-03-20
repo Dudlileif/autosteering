@@ -7,7 +7,8 @@ part of 'imu_config.dart';
 // **************************************************************************
 
 _ImuConfig _$ImuConfigFromJson(Map<String, dynamic> json) => _ImuConfig(
-  usePitchAndRoll: json['usePitchAndRoll'] as bool? ?? true,
+  usePitch: json['usePitch'] as bool? ?? true,
+  useRoll: json['useRoll'] as bool? ?? true,
   swapPitchAndRoll: json['swapPitchAndRoll'] as bool? ?? false,
   zeroValues: json['zeroValues'] == null
       ? const ImuZeroValues()
@@ -26,7 +27,8 @@ _ImuConfig _$ImuConfigFromJson(Map<String, dynamic> json) => _ImuConfig(
 
 Map<String, dynamic> _$ImuConfigToJson(_ImuConfig instance) =>
     <String, dynamic>{
-      'usePitchAndRoll': instance.usePitchAndRoll,
+      'usePitch': instance.usePitch,
+      'useRoll': instance.useRoll,
       'swapPitchAndRoll': instance.swapPitchAndRoll,
       'zeroValues': instance.zeroValues,
       'useYaw': instance.useYaw,

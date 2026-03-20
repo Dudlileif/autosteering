@@ -40,7 +40,7 @@ sealed class ImuZeroValues with _$ImuZeroValues {
     @Default(0) num rollZero,
   }) = _ImuZeroValues;
 
-  /// Creates
+  /// Creates an [ImuZeroValues] object from the [json] map.
   factory ImuZeroValues.fromJson(Map<String, Object?> json) =>
       _$ImuZeroValuesFromJson(json);
 }

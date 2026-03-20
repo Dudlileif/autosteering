@@ -58,6 +58,8 @@ class MessageDecoder {
         ..registerTalkerSentence('GST', (line) => GSTSentence(raw: line))
         ..registerTalkerSentence('VTG', (line) => VTGSentence(raw: line))
         ..registerTalkerSentence('TXT', (line) => TXTSentence(raw: line))
+        ..registerTalkerSentence('HPR', (line) => HPRSentence(raw: line))
+        ..registerTalkerSentence('GGAH', (line) => GGAHSentence(raw: line))
         ..registerProprietarySentence('UBX', (line) => PUBXSentence(raw: line));
 
   /// Start time of the current NMEA_log, if there is one.
@@ -175,7 +177,7 @@ class MessageDecoder {
     return closeReadings.elementAt(indexOfClosest);
   }
 
-  /// Enable or disable_logging of the different hardware messages.
+  /// Enable or disable logging of the different hardware messages.
   void enableLogging({bool? gnss, bool? imu, bool? was, bool? combined}) {
     if (gnss != null) {
       if (!_logGNSS && gnss) {
@@ -397,13 +399,19 @@ class MessageDecoder {
               data['pitch'] is num &&
               data['roll'] is num) {
             final reading = ImuReading(
-              yaw: data['yaw'] as num,
-              pitch: data['pitch'] as num,
-              roll: data['roll'] as num,
-              accelerationX: data['acc_x'] is num ? data['acc_x'] as num : 0,
-              accelerationY: data['acc_y'] is num ? data['acc_y'] as num : 0,
-              accelerationZ: data['acc_z'] is num ? data['acc_z'] as num : 0,
               receiveTime: DateTime.now(),
+              yaw: data['yaw'] as double,
+              pitch: data['pitch'] as double,
+              roll: data['roll'] as double,
+              accelerationX: data['acc_x'] is double
+                  ? data['acc_x'] as double
+                  : 0,
+              accelerationY: data['acc_y'] is double
+                  ? data['acc_y'] as double
+                  : 0,
+              accelerationZ: data['acc_z'] is double
+                  ? data['acc_z'] as double
+                  : 0,
             );
             imuReadings.add(reading);
             while (imuReadings.length > messagesToKeep) {
@@ -534,7 +542,6 @@ class MessageDecoder {
       }
     } else if (str.startsWith(r'$')) {
       final nmea = nmeaDecoder.decode(str);
-
       if (nmea is VTGSentence) {
         vtgSentences.add(nmea);
         while (vtgSentences.length > messagesToKeep) {
@@ -559,7 +566,10 @@ class MessageDecoder {
             'TXT message from GNSS hardware: ${nmea.raw}',
           ),
         );
-      } else if (nmea is GnssPositionCommonSentence && nmea.valid) {
+      } else if (nmea case GnssPositionCommonSentence(
+        valid: true,
+        :final mnemonic,
+      ) when mnemonic != 'GGAH') {
         if (nmea.longitude != null && nmea.latitude != null) {
           messages.add((
             gnssPosition: Geographic(
@@ -607,6 +617,17 @@ class MessageDecoder {
           gnssSentences.removeAt(0);
         }
         messages.add((gnssCurrentFrequency: gnssFrequency));
+      } else if (nmea case HPRSentence(valid: true)) {
+        messages.add(
+          GnssAttitudeReading(
+            receiveTime: nmea.deviceReceiveTime,
+            yaw: nmea.heading,
+            pitch: nmea.pitch,
+            roll: nmea.roll,
+          ),
+        );
+      } else if (nmea case GGAHSentence(valid: true)) {
+        messages.add(nmea);
       } else if (nmea != null) {
         messages.add(
           LogEvent(Level.warning, 'Invalid NMEA message: ${nmea.raw}'),
@@ -641,7 +662,9 @@ class MessageDecoder {
       }
     }
     if (messages.isEmpty) {
-      messages.add(LogEvent(Level.warning, 'Garbled message: $str'));
+      // Disabled garble logging for now as it was printing for messages
+      // that would complete when more data is received.
+      // messages.add(LogEvent(Level.warning, 'Garbled message: $str'));
     }
     if (Device.isNative) {
       if (_logCombined && logDirectoryPath != null) {
@@ -658,7 +681,7 @@ class MessageDecoder {
         }
         file.writeAsStringSync(
           [
-            '${DateTime.now().toIso8601String}: $str',
+            '${DateTime.now().toIso8601String()}: $str',
             Platform.lineTerminator,
           ].join(),
           mode: FileMode.append,
@@ -675,7 +698,6 @@ class MessageDecoder {
 
     try {
       final strings = rawStrings(data);
-
       for (final str in strings.where((element) => element.isNotEmpty)) {
         messages.addAll(parseString(str));
       }

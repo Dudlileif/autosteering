@@ -236,7 +236,7 @@ final class GraphActiveDataProvider
   }
 }
 
-String _$graphActiveDataHash() => r'71410bb4a1062a0af018495a5ee5978e4cd880f8';
+String _$graphActiveDataHash() => r'7a96d9a3466ef3fcceac88089b41609846ea46a1';
 
 /// A provider for the values to show on the graph.
 ///
@@ -289,7 +289,7 @@ final class GraphValuesProvider
   }
 }
 
-String _$graphValuesHash() => r'51660a35a3c9353505c69c31949c6838554d42c2';
+String _$graphValuesHash() => r'37c3c72d10e28e4a14d1c0db684d6e28d6903f9f';
 
 /// A provider for the values to show on the graph.
 ///

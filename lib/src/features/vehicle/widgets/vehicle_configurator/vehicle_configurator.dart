@@ -18,8 +18,8 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
-import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_antenna_page.dart';
 import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_dimensions_page.dart';
+import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_gnss_page.dart';
 import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_hitches_page.dart';
 import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_steering_page.dart';
 import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_type_selector_page.dart';
@@ -55,7 +55,7 @@ class _VehicleConfiguratorState extends ConsumerState<VehicleConfigurator>
   static const pages = <Widget>[
     VehicleTypeSelectorPage(),
     VehicleDimensionsPage(),
-    VehicleAntennaPage(),
+    VehicleGnssPage(),
     VehicleWheelsPage(),
     VehicleSteeringPage(),
     VehicleHitchesPage(),
@@ -125,7 +125,7 @@ class _VehicleConfiguratorState extends ConsumerState<VehicleConfigurator>
                   const Tab(icon: Icon(Icons.expand), text: 'Dimensions'),
                   const Tab(
                     icon: Icon(Icons.settings_input_antenna),
-                    text: 'Antenna',
+                    text: 'GNSS',
                   ),
                   const Tab(icon: Icon(Icons.circle_outlined), text: 'Wheels'),
                   const Tab(icon: Icon(Icons.electric_meter), text: 'Steering'),

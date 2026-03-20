@@ -16,15 +16,17 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:autosteering/src/features/audio/audio.dart';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/gnss/gnss.dart';
+import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'gnss_data_providers.g.dart';
 
-/// A provider for the quality of last GNSS position update.
+/// A provider for the last GNSS position NMEA sentence.
 @riverpod
 class GnssCurrentSentence extends _$GnssCurrentSentence {
   Timer? _resetTimer;
@@ -143,4 +145,52 @@ class GnssPrecisionError extends _$GnssPrecisionError {
     ({double? latitudeError, double? longitudeError, double? altitudeError})?
     value,
   ) => Future(() => state = value);
+}
+
+/// A provider for the last secondary GNSS position NMEA.
+@riverpod
+class GnssSecondaryCurrentSentence extends _$GnssSecondaryCurrentSentence {
+  Timer? _resetTimer;
+
+  @override
+  GnssPositionCommonSentence? build() {
+    ref.onDispose(() {
+      _resetTimer?.cancel();
+    });
+    listenSelf((previous, next) {
+      _resetTimer?.cancel();
+      _resetTimer = Timer(
+        const Duration(milliseconds: 350),
+        ref.invalidateSelf,
+      );
+    });
+    return null;
+  }
+
+  /// Updates [state] to [value].
+  void update(GnssPositionCommonSentence? value) => Future(() => state = value);
+}
+
+/// A provider for sending the vehicle GNSS config to the hardware.
+@riverpod
+void sendGnssReceiverConfig(Ref ref, String config) {
+  final configLines = config.replaceAll('\r', '').split('\n');
+
+  final bytes = Uint8List.fromList([...configLines, ''].join('\r\n').codeUnits);
+  final serial = ref.read(hardwareSerialProvider);
+  if (serial != null) {
+    serial.write(
+      Uint8List.fromList([
+        0xD0,
+        bytes.length >> 8,
+        bytes.length & 0xFF,
+        ...bytes,
+      ]),
+      timeout: 1000,
+    );
+  }
+  final tcp = ref.read(tcpServerProvider);
+  if (tcp.hasValue) {
+    tcp.value!.add([0xD0, bytes.length >> 8, bytes.length & 0xFF, ...bytes]);
+  }
 }

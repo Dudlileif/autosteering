@@ -207,7 +207,7 @@ final class HardwareSerialStreamProvider
 }
 
 String _$hardwareSerialStreamHash() =>
-    r'0107f77cb40b79a8b4103bd1d150b7883dab976d';
+    r'c59a0e00edfa21018ee69ff9ebac626e49806a52';
 
 /// A provider for telling whether the [HardwareSerial] is receiving data.
 ///

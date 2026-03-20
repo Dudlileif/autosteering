@@ -117,6 +117,16 @@ Set<GraphData> graphActiveData(Ref ref) {
   final graphData = parameters
       .map(
         (parameter) => switch (parameter) {
+          GraphParameter.dualBearing => const GraphData(
+            min: 0,
+            max: 360,
+            parameter: GraphParameter.dualBearing,
+          ),
+          GraphParameter.dualRoll => const GraphData(
+            min: 0,
+            max: 360,
+            parameter: GraphParameter.dualRoll,
+          ),
           GraphParameter.imuBearing => const GraphData(
             min: 0,
             max: 360,
@@ -209,6 +219,12 @@ class GraphValues extends _$GraphValues {
         }
 
         final raw = switch (parameter.parameter) {
+          GraphParameter.dualBearing => ref.read(
+            mainVehicleProvider.select((value) => value.bearing),
+          ),
+          GraphParameter.dualRoll => ref.read(
+            mainVehicleProvider.select((value) => value.roll),
+          ),
           GraphParameter.imuBearing => ref.read(
             mainVehicleProvider.select((value) => value.imu.bearing),
           ),

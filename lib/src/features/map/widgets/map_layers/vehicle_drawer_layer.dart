@@ -240,6 +240,15 @@ class VehicleDrawerLayer extends ConsumerWidget {
               borderStrokeWidth: 0.03,
               borderColor: Colors.black,
             ),
+            if (vehicle.secondaryAntennaPosition case Geographic(:final latLng))
+              CircleMarker(
+                point: latLng,
+                radius: 0.1,
+                useRadiusInMeter: true,
+                color: Colors.white,
+                borderStrokeWidth: 0.03,
+                borderColor: Colors.black,
+              ),
           ],
         ),
       ],

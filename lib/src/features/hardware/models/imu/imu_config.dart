@@ -28,8 +28,11 @@ sealed class ImuConfig with _$ImuConfig {
   /// A configuration class fro how the vehicle should use the IMU and
   /// zero values for the axes.
   ///
-  /// [usePitchAndRoll] is whether the vehicle should take into account pitch
-  /// and roll when representing its position.
+  /// [usePitch] is whether the vehicle should take into account pitch when
+  /// representing its position.
+  ///
+  /// [useRoll] is whether the vehicle should take into account roll when
+  /// representing its position.
   ///
   /// [swapPitchAndRoll] is whether the pich and roll axes should be swapped.
   ///
@@ -53,7 +56,11 @@ sealed class ImuConfig with _$ImuConfig {
   const factory ImuConfig({
     /// Whether the vehicle should take into account pitch and roll when
     /// representing its position.
-    @Default(true) bool usePitchAndRoll,
+    @Default(true) bool usePitch,
+
+    /// Whether the vehicle should take into account roll when representing its
+    /// position.
+    @Default(true) bool useRoll,
 
     /// Whether the pich and roll axes should be swapped.
     @Default(false) bool swapPitchAndRoll,
