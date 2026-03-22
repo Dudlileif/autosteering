@@ -36,29 +36,38 @@ class BasicVehicleGauges extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Consumer(
-          builder: (context, ref, child) => ListTile(
-            leading: const Icon(
-              Icons.straighten,
-              color: Colors.white,
-              shadows: [Shadow(offset: Offset(2, 2))],
-            ),
-            onLongPress: () => ref
-              ..invalidate(gaugeTravelledDistanceProvider)
-              ..invalidate(debugVehicleTravelledPathListProvider),
-            title: TextWithStroke(
-              '''${ref.watch(gaugeTravelledDistanceProvider).toStringAsFixed(1).padLeft(5)} m''',
-              style: GoogleFonts.robotoMono(
-                color: Colors.white,
-                textStyle: theme.textTheme.titleMedium,
+          builder: (context, ref, child) => Material(
+            type: .transparency,
+            child: ListTile(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(16),
+                  bottomRight: Radius.circular(16),
+                ),
               ),
-              strokeWidth: 3.5,
-            ),
-            subtitle: TextWithStroke(
-              'Hold to reset',
-              style: theme.textTheme.titleSmall?.copyWith(
+              leading: const Icon(
+                Icons.straighten,
                 color: Colors.white,
+                shadows: [Shadow(offset: Offset(2, 2))],
               ),
-              strokeWidth: 2,
+              onLongPress: () => ref
+                ..invalidate(gaugeTravelledDistanceProvider)
+                ..invalidate(debugVehicleTravelledPathListProvider),
+              title: TextWithStroke(
+                '''${ref.watch(gaugeTravelledDistanceProvider).toStringAsFixed(1).padLeft(5)} m''',
+                style: GoogleFonts.robotoMono(
+                  color: Colors.white,
+                  textStyle: theme.textTheme.titleMedium,
+                ),
+                strokeWidth: 3.5,
+              ),
+              subtitle: TextWithStroke(
+                'Hold to reset',
+                style: theme.textTheme.titleSmall?.copyWith(
+                  color: Colors.white,
+                ),
+                strokeWidth: 2,
+              ),
             ),
           ),
         ),
