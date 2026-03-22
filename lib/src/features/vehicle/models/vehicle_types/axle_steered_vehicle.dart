@@ -364,7 +364,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     // The vehicle center position, which is offset from the solid
     // axle position.
     final vehiclePosition = solidAxlePosition.rhumb.destinationPoint(
-      distance: antennaToSolidAxleDistance,
+      distance: -antennaToSolidAxleDistance,
       bearing: switch (this) {
         Tractor() => projectedBearing,
         Harvester() => projectedBearing + 180,

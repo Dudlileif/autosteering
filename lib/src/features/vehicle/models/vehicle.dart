@@ -393,9 +393,7 @@ sealed class Vehicle extends Hitchable {
         )
         .rhumb
         .destinationPoint(
-          distance:
-              -(antennaPitchLongitudinalOffset +
-                  gnssAntennaConfig.longitudinalOffset),
+          distance: -antennaPitchLongitudinalOffset,
           bearing: bearing,
         );
   }
