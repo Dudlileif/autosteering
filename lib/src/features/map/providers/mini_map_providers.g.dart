@@ -358,3 +358,42 @@ abstract class _$MiniMapSize extends $Notifier<double> {
     element.handleCreate(ref, build);
   }
 }
+
+/// A provider for the distinct zoom events of the [MiniMapController].
+
+@ProviderFor(miniMapZoomEvent)
+final miniMapZoomEventProvider = MiniMapZoomEventProvider._();
+
+/// A provider for the distinct zoom events of the [MiniMapController].
+
+final class MiniMapZoomEventProvider
+    extends
+        $FunctionalProvider<AsyncValue<MapEvent>, MapEvent, Stream<MapEvent>>
+    with $FutureModifier<MapEvent>, $StreamProvider<MapEvent> {
+  /// A provider for the distinct zoom events of the [MiniMapController].
+  MiniMapZoomEventProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'miniMapZoomEventProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$miniMapZoomEventHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<MapEvent> $createElement($ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
+
+  @override
+  Stream<MapEvent> create(Ref ref) {
+    return miniMapZoomEvent(ref);
+  }
+}
+
+String _$miniMapZoomEventHash() => r'713e33bff4ddd815f05fa9536fee3a8565020bff';

@@ -229,3 +229,13 @@ class MiniMapSize extends _$MiniMapSize {
   /// Update the [state] to [value].
   void update(double value) => Future(() => state = value);
 }
+
+/// A provider for the distinct zoom events of the [MiniMapController].
+@riverpod
+Stream<MapEvent> miniMapZoomEvent(Ref ref) => ref.watch(
+  miniMapControllerProvider.select(
+    (selector) => selector.mapEventStream.distinct(
+      (e1, e2) => e1.camera.zoom == e2.camera.zoom,
+    ),
+  ),
+);

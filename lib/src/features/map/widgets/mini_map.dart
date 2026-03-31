@@ -172,7 +172,9 @@ class _MiniMapView extends ConsumerWidget {
         if (ref.watch(showSentinelLayersProvider))
           const Opacity(opacity: 0.65, child: SentinelLayers()),
         const FieldLayer(),
-        const EquipmentWorkedPathsLayer(),
+        const MobileLayerTransformer(
+          child: EquipmentWorkedPathsLayer(forMiniMap: true),
+        ),
         MarkerLayer(
           markers: [
             Marker(

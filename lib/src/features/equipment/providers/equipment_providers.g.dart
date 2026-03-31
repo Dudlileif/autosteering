@@ -373,6 +373,201 @@ abstract class _$EquipmentPaths
   }
 }
 
+/// A provider for the map screen points for the worked paths for the given
+/// equipment [uuid].
+
+@ProviderFor(EquipmentMapPaths)
+final equipmentMapPathsProvider = EquipmentMapPathsFamily._();
+
+/// A provider for the map screen points for the worked paths for the given
+/// equipment [uuid].
+final class EquipmentMapPathsProvider
+    extends
+        $NotifierProvider<
+          EquipmentMapPaths,
+          ({
+            Offset origin,
+            Map<int, SectionEdgePositions?>? prevActivePosition,
+            Map<int, Float32List> sections,
+          })
+        > {
+  /// A provider for the map screen points for the worked paths for the given
+  /// equipment [uuid].
+  EquipmentMapPathsProvider._({
+    required EquipmentMapPathsFamily super.from,
+    required (String, {bool forMiniMap}) super.argument,
+  }) : super(
+         retry: null,
+         name: r'equipmentMapPathsProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$equipmentMapPathsHash();
+
+  @override
+  String toString() {
+    return r'equipmentMapPathsProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  EquipmentMapPaths create() => EquipmentMapPaths();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(
+    ({
+      Offset origin,
+      Map<int, SectionEdgePositions?>? prevActivePosition,
+      Map<int, Float32List> sections,
+    })
+    value,
+  ) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride:
+          $SyncValueProvider<
+            ({
+              Offset origin,
+              Map<int, SectionEdgePositions?>? prevActivePosition,
+              Map<int, Float32List> sections,
+            })
+          >(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is EquipmentMapPathsProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$equipmentMapPathsHash() => r'8d6dd82eb37e04678cb45dd68ef61a6904e7911b';
+
+/// A provider for the map screen points for the worked paths for the given
+/// equipment [uuid].
+
+final class EquipmentMapPathsFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          EquipmentMapPaths,
+          ({
+            Offset origin,
+            Map<int, SectionEdgePositions?>? prevActivePosition,
+            Map<int, Float32List> sections,
+          }),
+          ({
+            Offset origin,
+            Map<int, SectionEdgePositions?>? prevActivePosition,
+            Map<int, Float32List> sections,
+          }),
+          ({
+            Offset origin,
+            Map<int, SectionEdgePositions?>? prevActivePosition,
+            Map<int, Float32List> sections,
+          }),
+          (String, {bool forMiniMap})
+        > {
+  EquipmentMapPathsFamily._()
+    : super(
+        retry: null,
+        name: r'equipmentMapPathsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// A provider for the map screen points for the worked paths for the given
+  /// equipment [uuid].
+
+  EquipmentMapPathsProvider call(String uuid, {bool forMiniMap = false}) =>
+      EquipmentMapPathsProvider._(
+        argument: (uuid, forMiniMap: forMiniMap),
+        from: this,
+      );
+
+  @override
+  String toString() => r'equipmentMapPathsProvider';
+}
+
+/// A provider for the map screen points for the worked paths for the given
+/// equipment [uuid].
+
+abstract class _$EquipmentMapPaths
+    extends
+        $Notifier<
+          ({
+            Offset origin,
+            Map<int, SectionEdgePositions?>? prevActivePosition,
+            Map<int, Float32List> sections,
+          })
+        > {
+  late final _$args = ref.$arg as (String, {bool forMiniMap});
+  String get uuid => _$args.$1;
+  bool get forMiniMap => _$args.forMiniMap;
+
+  ({
+    Offset origin,
+    Map<int, SectionEdgePositions?>? prevActivePosition,
+    Map<int, Float32List> sections,
+  })
+  build(String uuid, {bool forMiniMap = false});
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref =
+        this.ref
+            as $Ref<
+              ({
+                Offset origin,
+                Map<int, SectionEdgePositions?>? prevActivePosition,
+                Map<int, Float32List> sections,
+              }),
+              ({
+                Offset origin,
+                Map<int, SectionEdgePositions?>? prevActivePosition,
+                Map<int, Float32List> sections,
+              })
+            >;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                ({
+                  Offset origin,
+                  Map<int, SectionEdgePositions?>? prevActivePosition,
+                  Map<int, Float32List> sections,
+                }),
+                ({
+                  Offset origin,
+                  Map<int, SectionEdgePositions?>? prevActivePosition,
+                  Map<int, Float32List> sections,
+                })
+              >,
+              ({
+                Offset origin,
+                Map<int, SectionEdgePositions?>? prevActivePosition,
+                Map<int, Float32List> sections,
+              }),
+              Object?,
+              Object?
+            >;
+    element.handleCreate(
+      ref,
+      () => build(_$args.$1, forMiniMap: _$args.forMiniMap),
+    );
+  }
+}
+
 /// A provider for holding [EquipmentLogRecord] for the [Equipment] with the
 /// given UUID.
 

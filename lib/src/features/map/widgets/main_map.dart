@@ -90,7 +90,7 @@ class MainMap extends ConsumerWidget {
         if (ref.watch(showGridLayerProvider)) const GridLayer(),
         if (ref.watch(showFieldLayerProvider)) const FieldLayer(),
         if (ref.watch(showFinishedPathLayerProvider)) const FinishedPathLayer(),
-        const EquipmentWorkedPathsLayer(),
+        const MobileLayerTransformer(child: EquipmentWorkedPathsLayer()),
         if (ref.watch(showVehicleDrawingLayerProvider))
           const VehicleDrawerLayer(),
         if (ref.watch(showEquipmentDrawingLayerProvider))

@@ -31,7 +31,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// A layer for painting the equipment worked paths on the [FlutterMap].
 class EquipmentWorkedPathsLayer extends ConsumerStatefulWidget {
   /// A layer for painting the equipment worked paths on the [FlutterMap].
-  const EquipmentWorkedPathsLayer({super.key});
+  ///
+  /// If [forMiniMap] is true, then the layer will use the map controller
+  /// of the mini map as basis for the zoom and origin.
+  const EquipmentWorkedPathsLayer({this.forMiniMap = false, super.key});
+
+  /// Whether the layer is for the mini map, which has its own map controller.
+  final bool forMiniMap;
 
   @override
   ConsumerState<EquipmentWorkedPathsLayer> createState() =>
@@ -42,6 +48,7 @@ class _EquipmentWorkedPathsLayerState
     extends ConsumerState<EquipmentWorkedPathsLayer> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final camera = MapCamera.of(context);
     final size = Size(camera.size.width, camera.size.height);
 
@@ -56,77 +63,109 @@ class _EquipmentWorkedPathsLayerState
     final children = <Widget>[];
     for (final equipment in equipments) {
       final activationStatus = equipment.sectionActivationStatus;
-      final workedLines = ref.watch(equipmentPathsProvider(equipment.uuid));
-      if (workedLines.isNotEmpty) {
-        final screenPoints = workedLines
-            .mapIndexed(
-              (activationIndex, activation) =>
-                  activation.map<int, Float32List>((section, points) {
-                    if (points != null) {
-                      final offsets = [
-                        for (final offset in points.map((e) {
-                          final offset1 = camera.latLngToScreenOffset(
-                            e.left.latLng,
-                          );
-                          final offset2 = camera.latLngToScreenOffset(
-                            e.right.latLng,
-                          );
-
-                          return [
-                            offset1.dx,
-                            offset1.dy,
-                            offset2.dx,
-                            offset2.dy,
-                          ];
-                        }))
-                          ...offset,
-                      ];
-
-                      if (activationIndex == workedLines.length - 1 &&
-                          activationStatus[section]!) {
-                        final points = equipment.sectionEdgePositions(
-                          section,
-                          fraction: recordFraction,
-                        );
-                        final offset1 = camera.latLngToScreenOffset(
-                          points!.left.latLng,
-                        );
-                        final offset2 = camera.latLngToScreenOffset(
-                          points.right.latLng,
-                        );
-
-                        offsets.addAll([
-                          offset1.dx,
-                          offset1.dy,
-                          offset2.dx,
-                          offset2.dy,
-                        ]);
-                      }
-                      return MapEntry(section, Float32List.fromList(offsets));
-                    }
-                    return MapEntry(section, Float32List.fromList([]));
-                  })..removeWhere((key, value) => value.isEmpty),
-            )
-            .toList();
-
+      final (:sections, :origin, :prevActivePosition) = ref.watch(
+        equipmentMapPathsProvider(
+          equipment.uuid,
+          forMiniMap: widget.forMiniMap,
+        ),
+      );
+      if (sections.isNotEmpty) {
         children.add(
           CustomPaint(
             painter: _EquipentWorkedPathsPainter(
-              points: screenPoints,
-              color: Theme.of(context).primaryColor,
+              points: sections,
+              color: theme.primaryColor,
               sectionColors: Map<int, Color?>.fromEntries(
                 equipment.sections
                     .where((section) => section.workingWidth > 0)
                     .map((e) => MapEntry(e.index, e.workedPathColor)),
               ),
+              offset: camera.pixelOrigin - origin,
             ),
             size: size,
             isComplex: true,
           ),
         );
+        final activeSections = Map<int, Float32List>.fromEntries(
+          sections.keys
+              .map((section) {
+                if (activationStatus[section]! &&
+                    prevActivePosition?[section] != null) {
+                  final sectionEdges = equipment.sectionEdgePositions(
+                    section,
+                    fraction: recordFraction,
+                  );
+                  final offsetLeft =
+                      camera.crs.latLngToOffset(
+                        sectionEdges!.left.latLng,
+                        camera.zoom,
+                      ) -
+                      origin;
+
+                  final offsetRight =
+                      camera.crs.latLngToOffset(
+                        sectionEdges.right.latLng,
+                        camera.zoom,
+                      ) -
+                      origin;
+
+                  final prevOffsetLeft =
+                      camera.crs.latLngToOffset(
+                        prevActivePosition![section]!.left.latLng,
+                        camera.zoom,
+                      ) -
+                      origin;
+
+                  final prevOffsetRight =
+                      camera.crs.latLngToOffset(
+                        prevActivePosition[section]!.right.latLng,
+                        camera.zoom,
+                      ) -
+                      origin;
+
+                  return MapEntry(
+                    section,
+                    Float32List.fromList([
+                      offsetRight.dx,
+                      offsetRight.dy,
+                      prevOffsetRight.dx,
+                      prevOffsetRight.dy,
+                      prevOffsetLeft.dx,
+                      prevOffsetLeft.dy,
+                      prevOffsetLeft.dx,
+                      prevOffsetLeft.dy,
+                      offsetLeft.dx,
+                      offsetLeft.dy,
+                      offsetRight.dx,
+                      offsetRight.dy,
+                    ]),
+                  );
+                }
+                return MapEntry(section, Float32List(0));
+              })
+              .where((entry) => entry.value.isNotEmpty),
+        );
+
+        if (activeSections.isNotEmpty) {
+          children.add(
+            CustomPaint(
+              painter: _EquipentWorkedPathsPainter(
+                points: activeSections,
+                color: theme.primaryColor,
+                sectionColors: Map<int, Color?>.fromEntries(
+                  equipment.sections
+                      .where((section) => section.workingWidth > 0)
+                      .map((e) => MapEntry(e.index, e.workedPathColor)),
+                ),
+                offset: camera.pixelOrigin - origin,
+              ),
+              size: size,
+              isComplex: true,
+            ),
+          );
+        }
       }
     }
-
     if (children.isEmpty) {
       return const SizedBox.shrink();
     } else if (children.length == 1) {
@@ -145,6 +184,8 @@ class _EquipentWorkedPathsPainter extends CustomPainter {
   /// [Vertices.raw] mode of [Canvas.drawVertices], so all points should be
   /// converted to x,y values and concatenated in the float list.
   ///
+  /// [offset] is the offset for moving the canvas to the camera position.
+  ///
   /// [color] is the color to draw the paths with.
   /// The individual section colors can be overidden with [sectionColors].
   ///
@@ -156,6 +197,7 @@ class _EquipentWorkedPathsPainter extends CustomPainter {
   /// section. If the value is null, the default [color] is applied.
   _EquipentWorkedPathsPainter({
     required this.points,
+    required this.offset,
     this.color = Colors.green,
     this.opacity = 0.4,
     this.sectionColors,
@@ -165,7 +207,7 @@ class _EquipentWorkedPathsPainter extends CustomPainter {
   /// The use of [Float32List] is to use the most performant [Vertices.raw]
   /// mode of [Canvas.drawVertices], so all points should be converted to x,y
   /// values and concatenated in the float list.
-  final List<Map<int, Float32List>> points;
+  final Map<int, Float32List> points;
 
   /// The color to draw the paths with.
   /// The individual section colors can be overidden with [sectionColors].
@@ -179,35 +221,42 @@ class _EquipentWorkedPathsPainter extends CustomPainter {
   /// value is null, the default [color] is applied.
   Map<int, Color?>? sectionColors;
 
+  /// The offset for moving the canvas to the camera position.
+  final Offset offset;
+
   @override
   void paint(Canvas canvas, Size size) {
-    for (final activation in points) {
-      activation.forEach((sectionIndex, section) {
-        final paintColor = sectionColors?[sectionIndex] ?? color;
+    canvas.translate(-offset.dx, -offset.dy);
 
-        // We can only draw 2^16 = 65536 vertices per call of drawVertices due
-        // to Vertices.raw.indices being an Uint16List.
-        // Since section is a concatenation of x,y coordinates, 2*65536
-        // corresponds to the length for 65536 vertices.
-        if (section.length > 2 * 65536) {
-          final slices = section.slices(2 * 65536).map(Float32List.fromList);
+    points.forEach((sectionIndex, section) {
+      final paintColor = sectionColors?[sectionIndex] ?? color;
+      // if (sectionIndex == 0) {
+      //   print(section.length);
+      // }
+      // We can only draw 2^16 = 65536 vertices per call of drawVertices due
+      // to Vertices.raw.indices being an Uint16List.
+      // Since section is a concatenation of x,y coordinates, 2*65536
+      // corresponds to the length for 65536 vertices.
+      // Every triangle then consists of six x,y pairs, so we slice where the
+      // last full triangle ends. (2*65536)~/6 = 131070
+      if (section.length > 131070) {
+        final slices = section.slices(131070).map(Float32List.fromList);
 
-          for (final element in slices) {
-            canvas.drawVertices(
-              Vertices.raw(VertexMode.triangleStrip, element),
-              BlendMode.src,
-              Paint()..color = paintColor.withValues(alpha: opacity),
-            );
-          }
-        } else {
+        for (final element in slices) {
           canvas.drawVertices(
-            Vertices.raw(VertexMode.triangleStrip, section),
+            Vertices.raw(VertexMode.triangles, element),
             BlendMode.src,
             Paint()..color = paintColor.withValues(alpha: opacity),
           );
         }
-      });
-    }
+      } else {
+        canvas.drawVertices(
+          Vertices.raw(VertexMode.triangles, section),
+          BlendMode.src,
+          Paint()..color = paintColor.withValues(alpha: opacity),
+        );
+      }
+    });
   }
 
   @override

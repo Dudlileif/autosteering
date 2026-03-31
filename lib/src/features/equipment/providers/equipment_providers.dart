@@ -17,15 +17,18 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
+import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geobase/geobase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:universal_io/io.dart';
@@ -471,6 +474,129 @@ class EquipmentPaths extends _$EquipmentPaths {
     List<Map<int, List<SectionEdgePositions>?>> previous,
     List<Map<int, List<SectionEdgePositions>?>> next,
   ) => true;
+}
+
+// TODO(dudlileif): Test updating manually when the equipmentPathsProvider
+// updates, this could yield even better performance instead of listening
+// and recalculating all the paths when they change.
+
+/// A provider for the map screen points for the worked paths for the given
+/// equipment [uuid].
+@riverpod
+class EquipmentMapPaths extends _$EquipmentMapPaths {
+  late Offset _origin;
+
+  @override
+  ({
+    Map<int, Float32List> sections,
+    Offset origin,
+    Map<int, SectionEdgePositions?>? prevActivePosition,
+  })
+  build(String uuid, {bool forMiniMap = false}) {
+    // Force rebuild when zoom level changes.
+    ref.listen(
+      switch (forMiniMap) {
+        false => mainMapZoomEventProvider,
+        true => miniMapZoomEventProvider,
+      },
+      (_, event) => ref.invalidateSelf(),
+    );
+    final workedLines = ref.watch(equipmentPathsProvider(uuid));
+    final camera = ref.watch(switch (forMiniMap) {
+      false => mainMapControllerProvider.select((selector) => selector.camera),
+      true => miniMapControllerProvider.select((selector) => selector.camera),
+    });
+    _origin = camera.pixelOrigin;
+
+    final sections = <int, List<double>>{};
+
+    for (final activation in workedLines) {
+      activation.forEach((
+        section,
+        points,
+      ) {
+        if (points != null) {
+          points.forEachIndexed((index, currentPos) {
+            if (index == 0) {
+              return;
+            }
+            final offsetLeft =
+                camera.crs.latLngToOffset(
+                  currentPos.left.latLng,
+                  camera.zoom,
+                ) -
+                _origin;
+
+            final offsetRight =
+                camera.crs.latLngToOffset(
+                  currentPos.right.latLng,
+                  camera.zoom,
+                ) -
+                _origin;
+
+            final length = sections[section]?.length ?? 0;
+
+            final prevOffsetLeft = switch (index) {
+              1 =>
+                camera.crs.latLngToOffset(
+                      points[0].left.latLng,
+                      camera.zoom,
+                    ) -
+                    _origin,
+              _ => Offset(
+                sections[section]![length - 4],
+                sections[section]![length - 3],
+              ),
+            };
+
+            final prevOffsetRight = switch (index) {
+              1 =>
+                camera.crs.latLngToOffset(
+                      points[0].right.latLng,
+                      camera.zoom,
+                    ) -
+                    _origin,
+              _ => Offset(
+                sections[section]![length - 2],
+                sections[section]![length - 1],
+              ),
+            };
+
+            final offsets = [
+              offsetRight.dx,
+              offsetRight.dy,
+              prevOffsetRight.dx,
+              prevOffsetRight.dy,
+              prevOffsetLeft.dx,
+              prevOffsetLeft.dy,
+              prevOffsetLeft.dx,
+              prevOffsetLeft.dy,
+              offsetLeft.dx,
+              offsetLeft.dy,
+              offsetRight.dx,
+              offsetRight.dy,
+            ];
+
+            sections.update(
+              section,
+              (current) => current..addAll(offsets),
+              ifAbsent: () => offsets,
+            );
+          });
+        }
+      });
+    }
+
+    return (
+      sections: sections.map(
+        (section, points) => MapEntry(section, Float32List.fromList(points)),
+      ),
+      origin: _origin,
+      prevActivePosition: workedLines.lastOrNull?.map(
+        (section, positions) => MapEntry(section, positions?.last),
+      ),
+    );
+  }
 }
 
 /// A provider for holding [EquipmentLogRecord] for the [Equipment] with the

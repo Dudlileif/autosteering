@@ -1080,3 +1080,42 @@ abstract class _$ShowGridSizeIndicator extends $Notifier<bool> {
     element.handleCreate(ref, build);
   }
 }
+
+/// A provider for the distinct zoom events of the [MainMapController].
+
+@ProviderFor(mainMapZoomEvent)
+final mainMapZoomEventProvider = MainMapZoomEventProvider._();
+
+/// A provider for the distinct zoom events of the [MainMapController].
+
+final class MainMapZoomEventProvider
+    extends
+        $FunctionalProvider<AsyncValue<MapEvent>, MapEvent, Stream<MapEvent>>
+    with $FutureModifier<MapEvent>, $StreamProvider<MapEvent> {
+  /// A provider for the distinct zoom events of the [MainMapController].
+  MainMapZoomEventProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'mainMapZoomEventProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$mainMapZoomEventHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<MapEvent> $createElement($ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
+
+  @override
+  Stream<MapEvent> create(Ref ref) {
+    return mainMapZoomEvent(ref);
+  }
+}
+
+String _$mainMapZoomEventHash() => r'256f05b6cdc0e52aa390da910adb2a99ebba6c26';

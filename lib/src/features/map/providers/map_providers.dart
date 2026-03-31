@@ -529,3 +529,13 @@ class ShowGridSizeIndicator extends _$ShowGridSizeIndicator {
   /// Update the [state] to [value].
   void update({required bool value}) => Future(() => state = value);
 }
+
+/// A provider for the distinct zoom events of the [MainMapController].
+@riverpod
+Stream<MapEvent> mainMapZoomEvent(Ref ref) => ref.watch(
+  mainMapControllerProvider.select(
+    (selector) => selector.mapEventStream.distinct(
+      (e1, e2) => e1.camera.zoom == e2.camera.zoom,
+    ),
+  ),
+);
