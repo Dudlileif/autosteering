@@ -59,6 +59,20 @@ class _SimCoreIsolatePort extends _$SimCoreIsolatePort {
       Logger.instance.i('Simulator Core sendport set to: $next');
       if (next != null) {
         ref.read(initializeSimCoreProvider);
+
+        // Delay sending of network info to make sure startup is not too fast in
+        // profile and release mode.
+        Timer(const Duration(milliseconds: 500), () {
+          ref.read(simInputProvider.notifier)
+            ..send(ref.read(hardwareCommunicationConfigProvider))
+            ..send((networkAvailable: ref.read(networkAvailableProvider)))
+            ..send((
+              logGNSS: ref.read(hardwareLogGnssProvider),
+              logIMU: ref.read(hardwareLogImuProvider),
+              logWAS: ref.read(hardwareLogWasProvider),
+              logCombined: ref.read(hardwareLogCombinedProvider),
+            ));
+        });
       }
     });
     return null;

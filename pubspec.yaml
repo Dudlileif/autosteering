@@ -38,7 +38,7 @@ dependencies:
     json_annotation: ^4.11.0
     latlong2: ^0.9.1
     logger: ^2.7.0
-    material_symbols_icons: ^4.2928.0
+    material_symbols_icons: ^4.2928.1
     nmea: ^3.3.3
     package_info_plus: ^9.0.1
     path: ^1.9.1

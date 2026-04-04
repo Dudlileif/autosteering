@@ -451,7 +451,7 @@ final class EquipmentMapPathsProvider
   }
 }
 
-String _$equipmentMapPathsHash() => r'8d6dd82eb37e04678cb45dd68ef61a6904e7911b';
+String _$equipmentMapPathsHash() => r'21427b8e289ab8ec9cb47cbccd82c4c863dbad24';
 
 /// A provider for the map screen points for the worked paths for the given
 /// equipment [uuid].

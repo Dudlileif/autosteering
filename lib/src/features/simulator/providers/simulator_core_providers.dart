@@ -19,7 +19,6 @@ import 'dart:async';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
-import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/providers/simulator_core_native_providers.dart'
     if (dart.library.js_interop) 'simulator_core_web_providers.dart';
@@ -69,21 +68,6 @@ Future<void> initializeSimCore(Ref ref) async {
     ..send(ref.read(activeABConfigProvider))
     ..send((pathTracking: ref.read(displayPathTrackingProvider)))
     ..send((abTracking: ref.read(displayABTrackingProvider)));
-  if (Device.isNative) {
-    // Delay sending of network info to make sure startup is not too fast in
-    // profile and release mode.
-    await Future.delayed(const Duration(milliseconds: 500), () {
-      ref.read(simInputProvider.notifier)
-        ..send(ref.read(hardwareCommunicationConfigProvider))
-        ..send((networkAvailable: ref.read(networkAvailableProvider)))
-        ..send((
-          logGNSS: ref.read(hardwareLogGnssProvider),
-          logIMU: ref.read(hardwareLogImuProvider),
-          logWAS: ref.read(hardwareLogWasProvider),
-          logCombined: ref.read(hardwareLogCombinedProvider),
-        ));
-    });
-  }
 }
 
 /// A provider for handling the common sim core messages for the state of the
