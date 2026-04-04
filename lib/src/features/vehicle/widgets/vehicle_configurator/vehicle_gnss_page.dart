@@ -275,6 +275,7 @@ class VehicleGnssPage extends ConsumerWidget {
                             ),
                             keyboardType: const TextInputType.numberWithOptions(
                               decimal: true,
+                              signed: true,
                             ),
                             initialValue: ref.read(
                               configuredVehicleProvider.select(

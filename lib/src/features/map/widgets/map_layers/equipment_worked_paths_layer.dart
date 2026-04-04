@@ -230,9 +230,7 @@ class _EquipentWorkedPathsPainter extends CustomPainter {
 
     points.forEach((sectionIndex, section) {
       final paintColor = sectionColors?[sectionIndex] ?? color;
-      // if (sectionIndex == 0) {
-      //   print(section.length);
-      // }
+
       // We can only draw 2^16 = 65536 vertices per call of drawVertices due
       // to Vertices.raw.indices being an Uint16List.
       // Since section is a concatenation of x,y coordinates, 2*65536

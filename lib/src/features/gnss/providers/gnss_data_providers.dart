@@ -168,7 +168,11 @@ class GnssSecondaryCurrentSentence extends _$GnssSecondaryCurrentSentence {
   }
 
   /// Updates [state] to [value].
-  void update(GnssPositionCommonSentence? value) => Future(() => state = value);
+  void update(GnssPositionCommonSentence? value) {
+    if (ref.mounted) {
+      state = value;
+    }
+  }
 }
 
 /// A provider for sending the vehicle GNSS config to the hardware.
