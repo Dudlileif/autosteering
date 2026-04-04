@@ -152,6 +152,9 @@ class SteeringHardwareConfigKey {
 
   /// Key for [SteeringHardwareConfig.asymmetricVelocity].
   static const asymmetricVelocity = 'asymmetric_velocity';
+
+  /// Key for [SteeringHardwareConfig.sensorPeriodUs].
+  static const sensorPeriodUs = 'sensor_period_us';
 }
 
 /// An immutable container for handling multiple [SteeringHardwareConfigKey]s
@@ -263,6 +266,10 @@ sealed class SteeringHardwareConfig with _$SteeringHardwareConfig {
   @Assert(
     'wasMax>=0 && wasMax>wasCenter',
     'wasMax should be positive and larger than wasCenter.',
+  )
+  @Assert(
+    'sensorPeriodUs>0',
+    'sensorPeriodUs should be greater than 0 for the hardware to respond.',
   )
   const factory SteeringHardwareConfig({
     /// Whether the motor rotation direction should be reversed.
@@ -464,6 +471,12 @@ sealed class SteeringHardwareConfig with _$SteeringHardwareConfig {
     @JsonKey(name: SteeringHardwareConfigKey.asymmetricVelocity)
     @Default(false)
     bool asymmetricVelocity,
+
+    /// Period in microseconds between sensor readings.
+    /// Defaults to 50000, which corresponds to 20 Hz.
+    @JsonKey(name: SteeringHardwareConfigKey.sensorPeriodUs)
+    @Default(50000)
+    int sensorPeriodUs,
   }) = _SteeringHardwareConfig;
 
   /// Private constructor to allow use of methods with freezed models.

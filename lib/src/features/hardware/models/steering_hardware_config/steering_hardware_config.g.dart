@@ -56,6 +56,7 @@ _SteeringHardwareConfig _$SteeringHardwareConfigFromJson(
   wasCenter: (json['was_center'] as num?)?.toInt() ?? 2000,
   wasMax: (json['was_max'] as num?)?.toInt() ?? 3750,
   asymmetricVelocity: json['asymmetric_velocity'] as bool? ?? false,
+  sensorPeriodUs: (json['sensor_period_us'] as num?)?.toInt() ?? 50000,
 );
 
 Map<String, dynamic> _$SteeringHardwareConfigToJson(
@@ -103,6 +104,7 @@ Map<String, dynamic> _$SteeringHardwareConfigToJson(
   'was_center': instance.wasCenter,
   'was_max': instance.wasMax,
   'asymmetric_velocity': instance.asymmetricVelocity,
+  'sensor_period_us': instance.sensorPeriodUs,
 };
 
 const _$MotorHoldingModeEnumMap = {
