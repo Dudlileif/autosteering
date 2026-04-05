@@ -304,7 +304,31 @@ class VehicleGnssPage extends ConsumerWidget {
                               }
                             },
                           ),
-                          if (vehicle.gnssAntennaConfig.useDualRoll)
+                          if (vehicle.gnssAntennaConfig.useDualRoll) ...[
+                            CheckboxListTile(
+                              value: vehicle.gnssAntennaConfig.invertDualRoll,
+                              title: const Text('Invert roll'),
+                              secondary: const Icon(
+                                Symbols.compare_arrows_rounded,
+                              ),
+                              onChanged: (value) {
+                                if (value != null) {
+                                  ref
+                                      .read(
+                                        configuredVehicleProvider.notifier,
+                                      )
+                                      .update(
+                                        vehicle.copyWith(
+                                          gnssAntennaConfig: vehicle
+                                              .gnssAntennaConfig
+                                              .copyWith(
+                                                invertDualRoll: value,
+                                              ),
+                                        ),
+                                      );
+                                }
+                              },
+                            ),
                             Builder(
                               builder: (context) {
                                 var gain =
@@ -370,6 +394,7 @@ class VehicleGnssPage extends ConsumerWidget {
                                 );
                               },
                             ),
+                          ],
                         ],
                       )
                     : const SizedBox(

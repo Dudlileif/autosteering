@@ -111,7 +111,7 @@ final class RemoteControlHardwareNetworkAliveProvider
 }
 
 String _$remoteControlHardwareNetworkAliveHash() =>
-    r'3f8ca1b3130dc0bf228534ef09d8255335c1ecc8';
+    r'4cf8e9dc200a7247d0be54e399b35fdac3394ad0';
 
 /// A provider for whether there is a connection with the remote control
 /// hardware.
@@ -409,7 +409,7 @@ final class SteeringHardwareAddressProvider
 }
 
 String _$steeringHardwareAddressHash() =>
-    r'4deae9c27798375b988669897cd5573dd9664f79';
+    r'd3b4b8b1f9fa9ebec3440e8b47a3673673cadfee';
 
 /// A provider for the IP adress of the steering hardware we want to communicate
 /// with.
@@ -473,7 +473,7 @@ final class RemoteControlHardwareAddressProvider
 }
 
 String _$remoteControlHardwareAddressHash() =>
-    r'359a0f8633779f4e06498a2f5cd731eeed4179ae';
+    r'b6ae8ae858b9e08689b4ed86189ec9185fcd9404';
 
 /// A provider for the IP adress of the remote control hardware we want to
 /// communicate with.

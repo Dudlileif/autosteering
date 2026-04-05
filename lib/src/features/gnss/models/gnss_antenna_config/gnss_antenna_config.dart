@@ -66,6 +66,9 @@ sealed class GnssAntennaConfig with _$GnssAntennaConfig {
     /// The gain to apply when using the dual antennas for roll.
     @Default(1) double dualRollGain,
 
+    /// Whether the dual roll value should be inverted.
+    @Default(false) bool invertDualRoll,
+
     /// Configuration strings for configuring the GNSS receiver on startup.
     @Default(null) List<String>? receiverConfigs,
   }) = _GnssAntennaConfig;

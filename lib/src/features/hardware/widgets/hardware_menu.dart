@@ -72,7 +72,7 @@ class HardwareMenu extends ConsumerWidget {
             ),
             child: Text('Remote control', style: textStyle),
           ),
-        if (Device.isNative)
+        if (Device.isNative && !dadMode)
           Consumer(
             builder: (context, ref, child) => MenuItemButton(
               closeOnActivate: false,

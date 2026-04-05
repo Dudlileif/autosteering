@@ -16,6 +16,7 @@ _GnssAntennaConfig _$GnssAntennaConfigFromJson(Map<String, dynamic> json) =>
       dualBaseline: (json['dualBaseline'] as num?)?.toDouble() ?? 1,
       dualRelativeAngle: (json['dualRelativeAngle'] as num?)?.toDouble() ?? 90,
       dualRollGain: (json['dualRollGain'] as num?)?.toDouble() ?? 1,
+      invertDualRoll: json['invertDualRoll'] as bool? ?? false,
       receiverConfigs:
           (json['receiverConfigs'] as List<dynamic>?)
               ?.map((e) => e as String)
@@ -33,5 +34,6 @@ Map<String, dynamic> _$GnssAntennaConfigToJson(_GnssAntennaConfig instance) =>
       'dualBaseline': instance.dualBaseline,
       'dualRelativeAngle': instance.dualRelativeAngle,
       'dualRollGain': instance.dualRollGain,
+      'invertDualRoll': instance.invertDualRoll,
       'receiverConfigs': instance.receiverConfigs,
     };

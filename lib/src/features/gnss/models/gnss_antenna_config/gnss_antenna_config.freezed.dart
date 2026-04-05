@@ -33,7 +33,8 @@ mixin _$GnssAntennaConfig {
 /// side of the vehicle and the secondary antenna on the right side of the
 /// vehicle.
  double get dualRelativeAngle;/// The gain to apply when using the dual antennas for roll.
- double get dualRollGain;/// Configuration strings for configuring the GNSS receiver on startup.
+ double get dualRollGain;/// Whether the dual roll value should be inverted.
+ bool get invertDualRoll;/// Configuration strings for configuring the GNSS receiver on startup.
  List<String>? get receiverConfigs;
 /// Create a copy of GnssAntennaConfig
 /// with the given fields replaced by the non-null parameter values.
@@ -47,16 +48,16 @@ $GnssAntennaConfigCopyWith<GnssAntennaConfig> get copyWith => _$GnssAntennaConfi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GnssAntennaConfig&&(identical(other.longitudinalOffset, longitudinalOffset) || other.longitudinalOffset == longitudinalOffset)&&(identical(other.lateralOffset, lateralOffset) || other.lateralOffset == lateralOffset)&&(identical(other.height, height) || other.height == height)&&(identical(other.useDualHeading, useDualHeading) || other.useDualHeading == useDualHeading)&&(identical(other.useDualRoll, useDualRoll) || other.useDualRoll == useDualRoll)&&(identical(other.dualBaseline, dualBaseline) || other.dualBaseline == dualBaseline)&&(identical(other.dualRelativeAngle, dualRelativeAngle) || other.dualRelativeAngle == dualRelativeAngle)&&(identical(other.dualRollGain, dualRollGain) || other.dualRollGain == dualRollGain)&&const DeepCollectionEquality().equals(other.receiverConfigs, receiverConfigs));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GnssAntennaConfig&&(identical(other.longitudinalOffset, longitudinalOffset) || other.longitudinalOffset == longitudinalOffset)&&(identical(other.lateralOffset, lateralOffset) || other.lateralOffset == lateralOffset)&&(identical(other.height, height) || other.height == height)&&(identical(other.useDualHeading, useDualHeading) || other.useDualHeading == useDualHeading)&&(identical(other.useDualRoll, useDualRoll) || other.useDualRoll == useDualRoll)&&(identical(other.dualBaseline, dualBaseline) || other.dualBaseline == dualBaseline)&&(identical(other.dualRelativeAngle, dualRelativeAngle) || other.dualRelativeAngle == dualRelativeAngle)&&(identical(other.dualRollGain, dualRollGain) || other.dualRollGain == dualRollGain)&&(identical(other.invertDualRoll, invertDualRoll) || other.invertDualRoll == invertDualRoll)&&const DeepCollectionEquality().equals(other.receiverConfigs, receiverConfigs));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,longitudinalOffset,lateralOffset,height,useDualHeading,useDualRoll,dualBaseline,dualRelativeAngle,dualRollGain,const DeepCollectionEquality().hash(receiverConfigs));
+int get hashCode => Object.hash(runtimeType,longitudinalOffset,lateralOffset,height,useDualHeading,useDualRoll,dualBaseline,dualRelativeAngle,dualRollGain,invertDualRoll,const DeepCollectionEquality().hash(receiverConfigs));
 
 @override
 String toString() {
-  return 'GnssAntennaConfig(longitudinalOffset: $longitudinalOffset, lateralOffset: $lateralOffset, height: $height, useDualHeading: $useDualHeading, useDualRoll: $useDualRoll, dualBaseline: $dualBaseline, dualRelativeAngle: $dualRelativeAngle, dualRollGain: $dualRollGain, receiverConfigs: $receiverConfigs)';
+  return 'GnssAntennaConfig(longitudinalOffset: $longitudinalOffset, lateralOffset: $lateralOffset, height: $height, useDualHeading: $useDualHeading, useDualRoll: $useDualRoll, dualBaseline: $dualBaseline, dualRelativeAngle: $dualRelativeAngle, dualRollGain: $dualRollGain, invertDualRoll: $invertDualRoll, receiverConfigs: $receiverConfigs)';
 }
 
 
@@ -67,7 +68,7 @@ abstract mixin class $GnssAntennaConfigCopyWith<$Res>  {
   factory $GnssAntennaConfigCopyWith(GnssAntennaConfig value, $Res Function(GnssAntennaConfig) _then) = _$GnssAntennaConfigCopyWithImpl;
 @useResult
 $Res call({
- double longitudinalOffset, double lateralOffset, double height, bool useDualHeading, bool useDualRoll, double dualBaseline, double dualRelativeAngle, double dualRollGain, List<String>? receiverConfigs
+ double longitudinalOffset, double lateralOffset, double height, bool useDualHeading, bool useDualRoll, double dualBaseline, double dualRelativeAngle, double dualRollGain, bool invertDualRoll, List<String>? receiverConfigs
 });
 
 
@@ -84,7 +85,7 @@ class _$GnssAntennaConfigCopyWithImpl<$Res>
 
 /// Create a copy of GnssAntennaConfig
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? longitudinalOffset = null,Object? lateralOffset = null,Object? height = null,Object? useDualHeading = null,Object? useDualRoll = null,Object? dualBaseline = null,Object? dualRelativeAngle = null,Object? dualRollGain = null,Object? receiverConfigs = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? longitudinalOffset = null,Object? lateralOffset = null,Object? height = null,Object? useDualHeading = null,Object? useDualRoll = null,Object? dualBaseline = null,Object? dualRelativeAngle = null,Object? dualRollGain = null,Object? invertDualRoll = null,Object? receiverConfigs = freezed,}) {
   return _then(_self.copyWith(
 longitudinalOffset: null == longitudinalOffset ? _self.longitudinalOffset : longitudinalOffset // ignore: cast_nullable_to_non_nullable
 as double,lateralOffset: null == lateralOffset ? _self.lateralOffset : lateralOffset // ignore: cast_nullable_to_non_nullable
@@ -94,7 +95,8 @@ as bool,useDualRoll: null == useDualRoll ? _self.useDualRoll : useDualRoll // ig
 as bool,dualBaseline: null == dualBaseline ? _self.dualBaseline : dualBaseline // ignore: cast_nullable_to_non_nullable
 as double,dualRelativeAngle: null == dualRelativeAngle ? _self.dualRelativeAngle : dualRelativeAngle // ignore: cast_nullable_to_non_nullable
 as double,dualRollGain: null == dualRollGain ? _self.dualRollGain : dualRollGain // ignore: cast_nullable_to_non_nullable
-as double,receiverConfigs: freezed == receiverConfigs ? _self.receiverConfigs : receiverConfigs // ignore: cast_nullable_to_non_nullable
+as double,invertDualRoll: null == invertDualRoll ? _self.invertDualRoll : invertDualRoll // ignore: cast_nullable_to_non_nullable
+as bool,receiverConfigs: freezed == receiverConfigs ? _self.receiverConfigs : receiverConfigs // ignore: cast_nullable_to_non_nullable
 as List<String>?,
   ));
 }
@@ -177,10 +179,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double longitudinalOffset,  double lateralOffset,  double height,  bool useDualHeading,  bool useDualRoll,  double dualBaseline,  double dualRelativeAngle,  double dualRollGain,  List<String>? receiverConfigs)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double longitudinalOffset,  double lateralOffset,  double height,  bool useDualHeading,  bool useDualRoll,  double dualBaseline,  double dualRelativeAngle,  double dualRollGain,  bool invertDualRoll,  List<String>? receiverConfigs)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GnssAntennaConfig() when $default != null:
-return $default(_that.longitudinalOffset,_that.lateralOffset,_that.height,_that.useDualHeading,_that.useDualRoll,_that.dualBaseline,_that.dualRelativeAngle,_that.dualRollGain,_that.receiverConfigs);case _:
+return $default(_that.longitudinalOffset,_that.lateralOffset,_that.height,_that.useDualHeading,_that.useDualRoll,_that.dualBaseline,_that.dualRelativeAngle,_that.dualRollGain,_that.invertDualRoll,_that.receiverConfigs);case _:
   return orElse();
 
 }
@@ -198,10 +200,10 @@ return $default(_that.longitudinalOffset,_that.lateralOffset,_that.height,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double longitudinalOffset,  double lateralOffset,  double height,  bool useDualHeading,  bool useDualRoll,  double dualBaseline,  double dualRelativeAngle,  double dualRollGain,  List<String>? receiverConfigs)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double longitudinalOffset,  double lateralOffset,  double height,  bool useDualHeading,  bool useDualRoll,  double dualBaseline,  double dualRelativeAngle,  double dualRollGain,  bool invertDualRoll,  List<String>? receiverConfigs)  $default,) {final _that = this;
 switch (_that) {
 case _GnssAntennaConfig():
-return $default(_that.longitudinalOffset,_that.lateralOffset,_that.height,_that.useDualHeading,_that.useDualRoll,_that.dualBaseline,_that.dualRelativeAngle,_that.dualRollGain,_that.receiverConfigs);}
+return $default(_that.longitudinalOffset,_that.lateralOffset,_that.height,_that.useDualHeading,_that.useDualRoll,_that.dualBaseline,_that.dualRelativeAngle,_that.dualRollGain,_that.invertDualRoll,_that.receiverConfigs);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -215,10 +217,10 @@ return $default(_that.longitudinalOffset,_that.lateralOffset,_that.height,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double longitudinalOffset,  double lateralOffset,  double height,  bool useDualHeading,  bool useDualRoll,  double dualBaseline,  double dualRelativeAngle,  double dualRollGain,  List<String>? receiverConfigs)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double longitudinalOffset,  double lateralOffset,  double height,  bool useDualHeading,  bool useDualRoll,  double dualBaseline,  double dualRelativeAngle,  double dualRollGain,  bool invertDualRoll,  List<String>? receiverConfigs)?  $default,) {final _that = this;
 switch (_that) {
 case _GnssAntennaConfig() when $default != null:
-return $default(_that.longitudinalOffset,_that.lateralOffset,_that.height,_that.useDualHeading,_that.useDualRoll,_that.dualBaseline,_that.dualRelativeAngle,_that.dualRollGain,_that.receiverConfigs);case _:
+return $default(_that.longitudinalOffset,_that.lateralOffset,_that.height,_that.useDualHeading,_that.useDualRoll,_that.dualBaseline,_that.dualRelativeAngle,_that.dualRollGain,_that.invertDualRoll,_that.receiverConfigs);case _:
   return null;
 
 }
@@ -230,7 +232,7 @@ return $default(_that.longitudinalOffset,_that.lateralOffset,_that.height,_that.
 @JsonSerializable()
 
 class _GnssAntennaConfig implements GnssAntennaConfig {
-  const _GnssAntennaConfig({this.longitudinalOffset = 0, this.lateralOffset = 0, this.height = 2.8, this.useDualHeading = false, this.useDualRoll = false, this.dualBaseline = 1, this.dualRelativeAngle = 90, this.dualRollGain = 1, final  List<String>? receiverConfigs = null}): _receiverConfigs = receiverConfigs;
+  const _GnssAntennaConfig({this.longitudinalOffset = 0, this.lateralOffset = 0, this.height = 2.8, this.useDualHeading = false, this.useDualRoll = false, this.dualBaseline = 1, this.dualRelativeAngle = 90, this.dualRollGain = 1, this.invertDualRoll = false, final  List<String>? receiverConfigs = null}): _receiverConfigs = receiverConfigs;
   factory _GnssAntennaConfig.fromJson(Map<String, dynamic> json) => _$GnssAntennaConfigFromJson(json);
 
 /// Longitudinal offset in meters from the main node of the vehicle,
@@ -259,6 +261,8 @@ class _GnssAntennaConfig implements GnssAntennaConfig {
 @override@JsonKey() final  double dualRelativeAngle;
 /// The gain to apply when using the dual antennas for roll.
 @override@JsonKey() final  double dualRollGain;
+/// Whether the dual roll value should be inverted.
+@override@JsonKey() final  bool invertDualRoll;
 /// Configuration strings for configuring the GNSS receiver on startup.
  final  List<String>? _receiverConfigs;
 /// Configuration strings for configuring the GNSS receiver on startup.
@@ -284,16 +288,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GnssAntennaConfig&&(identical(other.longitudinalOffset, longitudinalOffset) || other.longitudinalOffset == longitudinalOffset)&&(identical(other.lateralOffset, lateralOffset) || other.lateralOffset == lateralOffset)&&(identical(other.height, height) || other.height == height)&&(identical(other.useDualHeading, useDualHeading) || other.useDualHeading == useDualHeading)&&(identical(other.useDualRoll, useDualRoll) || other.useDualRoll == useDualRoll)&&(identical(other.dualBaseline, dualBaseline) || other.dualBaseline == dualBaseline)&&(identical(other.dualRelativeAngle, dualRelativeAngle) || other.dualRelativeAngle == dualRelativeAngle)&&(identical(other.dualRollGain, dualRollGain) || other.dualRollGain == dualRollGain)&&const DeepCollectionEquality().equals(other._receiverConfigs, _receiverConfigs));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GnssAntennaConfig&&(identical(other.longitudinalOffset, longitudinalOffset) || other.longitudinalOffset == longitudinalOffset)&&(identical(other.lateralOffset, lateralOffset) || other.lateralOffset == lateralOffset)&&(identical(other.height, height) || other.height == height)&&(identical(other.useDualHeading, useDualHeading) || other.useDualHeading == useDualHeading)&&(identical(other.useDualRoll, useDualRoll) || other.useDualRoll == useDualRoll)&&(identical(other.dualBaseline, dualBaseline) || other.dualBaseline == dualBaseline)&&(identical(other.dualRelativeAngle, dualRelativeAngle) || other.dualRelativeAngle == dualRelativeAngle)&&(identical(other.dualRollGain, dualRollGain) || other.dualRollGain == dualRollGain)&&(identical(other.invertDualRoll, invertDualRoll) || other.invertDualRoll == invertDualRoll)&&const DeepCollectionEquality().equals(other._receiverConfigs, _receiverConfigs));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,longitudinalOffset,lateralOffset,height,useDualHeading,useDualRoll,dualBaseline,dualRelativeAngle,dualRollGain,const DeepCollectionEquality().hash(_receiverConfigs));
+int get hashCode => Object.hash(runtimeType,longitudinalOffset,lateralOffset,height,useDualHeading,useDualRoll,dualBaseline,dualRelativeAngle,dualRollGain,invertDualRoll,const DeepCollectionEquality().hash(_receiverConfigs));
 
 @override
 String toString() {
-  return 'GnssAntennaConfig(longitudinalOffset: $longitudinalOffset, lateralOffset: $lateralOffset, height: $height, useDualHeading: $useDualHeading, useDualRoll: $useDualRoll, dualBaseline: $dualBaseline, dualRelativeAngle: $dualRelativeAngle, dualRollGain: $dualRollGain, receiverConfigs: $receiverConfigs)';
+  return 'GnssAntennaConfig(longitudinalOffset: $longitudinalOffset, lateralOffset: $lateralOffset, height: $height, useDualHeading: $useDualHeading, useDualRoll: $useDualRoll, dualBaseline: $dualBaseline, dualRelativeAngle: $dualRelativeAngle, dualRollGain: $dualRollGain, invertDualRoll: $invertDualRoll, receiverConfigs: $receiverConfigs)';
 }
 
 
@@ -304,7 +308,7 @@ abstract mixin class _$GnssAntennaConfigCopyWith<$Res> implements $GnssAntennaCo
   factory _$GnssAntennaConfigCopyWith(_GnssAntennaConfig value, $Res Function(_GnssAntennaConfig) _then) = __$GnssAntennaConfigCopyWithImpl;
 @override @useResult
 $Res call({
- double longitudinalOffset, double lateralOffset, double height, bool useDualHeading, bool useDualRoll, double dualBaseline, double dualRelativeAngle, double dualRollGain, List<String>? receiverConfigs
+ double longitudinalOffset, double lateralOffset, double height, bool useDualHeading, bool useDualRoll, double dualBaseline, double dualRelativeAngle, double dualRollGain, bool invertDualRoll, List<String>? receiverConfigs
 });
 
 
@@ -321,7 +325,7 @@ class __$GnssAntennaConfigCopyWithImpl<$Res>
 
 /// Create a copy of GnssAntennaConfig
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? longitudinalOffset = null,Object? lateralOffset = null,Object? height = null,Object? useDualHeading = null,Object? useDualRoll = null,Object? dualBaseline = null,Object? dualRelativeAngle = null,Object? dualRollGain = null,Object? receiverConfigs = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? longitudinalOffset = null,Object? lateralOffset = null,Object? height = null,Object? useDualHeading = null,Object? useDualRoll = null,Object? dualBaseline = null,Object? dualRelativeAngle = null,Object? dualRollGain = null,Object? invertDualRoll = null,Object? receiverConfigs = freezed,}) {
   return _then(_GnssAntennaConfig(
 longitudinalOffset: null == longitudinalOffset ? _self.longitudinalOffset : longitudinalOffset // ignore: cast_nullable_to_non_nullable
 as double,lateralOffset: null == lateralOffset ? _self.lateralOffset : lateralOffset // ignore: cast_nullable_to_non_nullable
@@ -331,7 +335,8 @@ as bool,useDualRoll: null == useDualRoll ? _self.useDualRoll : useDualRoll // ig
 as bool,dualBaseline: null == dualBaseline ? _self.dualBaseline : dualBaseline // ignore: cast_nullable_to_non_nullable
 as double,dualRelativeAngle: null == dualRelativeAngle ? _self.dualRelativeAngle : dualRelativeAngle // ignore: cast_nullable_to_non_nullable
 as double,dualRollGain: null == dualRollGain ? _self.dualRollGain : dualRollGain // ignore: cast_nullable_to_non_nullable
-as double,receiverConfigs: freezed == receiverConfigs ? _self._receiverConfigs : receiverConfigs // ignore: cast_nullable_to_non_nullable
+as double,invertDualRoll: null == invertDualRoll ? _self.invertDualRoll : invertDualRoll // ignore: cast_nullable_to_non_nullable
+as bool,receiverConfigs: freezed == receiverConfigs ? _self._receiverConfigs : receiverConfigs // ignore: cast_nullable_to_non_nullable
 as List<String>?,
   ));
 }

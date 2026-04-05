@@ -269,7 +269,10 @@ class SimulatorCoreState {
           vehicle?.bearing = yaw + vehicle!.gnssAntennaConfig.dualRelativeAngle;
         }
         if (pitch != null) {
-          vehicle?.roll = pitch;
+          vehicle?.roll = switch (vehicle!.gnssAntennaConfig.invertDualRoll) {
+            false => pitch,
+            true => -pitch,
+          };
         }
       }
     }
