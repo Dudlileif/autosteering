@@ -21,6 +21,8 @@ import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_symbols_icons/symbols.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// A menu for changing network settings to connect to the hardware.
 class HardwareNetworkDialog extends ConsumerWidget {
@@ -100,53 +102,11 @@ ${ref.watch(deviceIPAddressEthernetProvider)}''', style: textStyle),
               final controller = TextEditingController(
                 text: ref.watch(steeringHardwareAddressProvider),
               );
-              return TextFormField(
+              return TextField(
+                controller: controller,
+                readOnly: true,
                 decoration: InputDecoration(
                   labelText: 'Steering Hardware Address',
-                  counter: SizedBox(
-                    height: 18,
-                    child: Column(
-                      children: [
-                        ListenableBuilder(
-                          listenable: controller,
-                          builder: (context, child) => Consumer(
-                            builder: (context, ref, child) => ref
-                                .watch(
-                                  validInternetAddressProvider(
-                                    controller.text,
-                                  ),
-                                )
-                                .when(
-                                  data: (data) => switch (data) {
-                                    true => Text(
-                                      'Valid IP found',
-                                      style: theme.textTheme.bodySmall
-                                          ?.copyWith(
-                                            color: Colors.green.shade600,
-                                          ),
-                                    ),
-                                    _ => Text(
-                                      'No valid IP found',
-                                      style: theme.textTheme.bodySmall
-                                          ?.copyWith(
-                                            color: theme.colorScheme.error,
-                                          ),
-                                    ),
-                                  },
-                                  error: (error, stackTrace) => Text(
-                                    'No valid IP found',
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      color: theme.colorScheme.error,
-                                    ),
-                                  ),
-                                  loading: LinearProgressIndicator.new,
-                                ),
-                          ),
-                        ),
-                        const Expanded(child: SizedBox.shrink()),
-                      ],
-                    ),
-                  ),
                   icon: Column(
                     children: [
                       Consumer(
@@ -164,11 +124,31 @@ ${ref.watch(deviceIPAddressEthernetProvider)}''', style: textStyle),
                       const Icon(Icons.router),
                     ],
                   ),
+                  suffixIcon: switch (controller.text) {
+                    String(isNotEmpty: true) => Row(
+                      mainAxisSize: .min,
+                      children: [
+                        IconButton(
+                          onPressed: () => Clipboard.setData(
+                            ClipboardData(text: controller.text),
+                          ),
+                          icon: const Icon(Symbols.copy_all_rounded),
+                        ),
+                        IconButton(
+                          onPressed: () async {
+                            final uri = Uri(
+                              scheme: 'http',
+                              host: controller.text,
+                            );
+                            await launchUrl(uri, mode: .inAppBrowserView);
+                          },
+                          icon: const Icon(Symbols.globe_rounded),
+                        ),
+                      ],
+                    ),
+                    _ => null,
+                  },
                 ),
-                controller: controller,
-                onFieldSubmitted: ref
-                    .read(steeringHardwareAddressProvider.notifier)
-                    .update,
               );
             },
           ),
@@ -180,53 +160,11 @@ ${ref.watch(deviceIPAddressEthernetProvider)}''', style: textStyle),
               final controller = TextEditingController(
                 text: ref.watch(remoteControlHardwareAddressProvider),
               );
-              return TextFormField(
+              return TextField(
+                controller: controller,
+                readOnly: true,
                 decoration: InputDecoration(
                   labelText: 'Remote Control Hardware Address',
-                  counter: SizedBox(
-                    height: 18,
-                    child: Column(
-                      children: [
-                        ListenableBuilder(
-                          listenable: controller,
-                          builder: (context, child) => Consumer(
-                            builder: (context, ref, child) => ref
-                                .watch(
-                                  validInternetAddressProvider(
-                                    controller.text,
-                                  ),
-                                )
-                                .when(
-                                  data: (data) => switch (data) {
-                                    true => Text(
-                                      'Valid IP found',
-                                      style: theme.textTheme.bodySmall
-                                          ?.copyWith(
-                                            color: Colors.green.shade600,
-                                          ),
-                                    ),
-                                    _ => Text(
-                                      'No valid IP found',
-                                      style: theme.textTheme.bodySmall
-                                          ?.copyWith(
-                                            color: theme.colorScheme.error,
-                                          ),
-                                    ),
-                                  },
-                                  error: (error, stackTrace) => Text(
-                                    'No valid IP found',
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      color: theme.colorScheme.error,
-                                    ),
-                                  ),
-                                  loading: LinearProgressIndicator.new,
-                                ),
-                          ),
-                        ),
-                        const Expanded(child: SizedBox.shrink()),
-                      ],
-                    ),
-                  ),
                   icon: Column(
                     children: [
                       Consumer(
@@ -246,11 +184,32 @@ ${ref.watch(deviceIPAddressEthernetProvider)}''', style: textStyle),
                       const Icon(Icons.settings_remote),
                     ],
                   ),
+                  suffixIcon: switch (controller.text) {
+                    String(isNotEmpty: true) => Row(
+                      mainAxisSize: .min,
+                      children: [
+                        IconButton(
+                          onPressed: () => Clipboard.setData(
+                            ClipboardData(text: controller.text),
+                          ),
+                          icon: const Icon(Symbols.copy_all_rounded),
+                        ),
+                        IconButton(
+                          onPressed: () async {
+                            final uri = Uri(
+                              scheme: 'http',
+                              host: controller.text,
+                            );
+                            await launchUrl(uri, mode: .inAppBrowserView);
+                          },
+                          icon: const Icon(Symbols.globe_rounded),
+                        ),
+                      ],
+                    ),
+
+                    _ => null,
+                  },
                 ),
-                controller: controller,
-                onFieldSubmitted: ref
-                    .read(remoteControlHardwareAddressProvider.notifier)
-                    .update,
               );
             },
           ),

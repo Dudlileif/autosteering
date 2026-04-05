@@ -168,16 +168,10 @@ Stream<Vehicle> simCoreIsolateStream(Ref ref) async* {
       ref
           .read(steeringHardwareAddressProvider.notifier)
           .update(message.steeringHardwareAddress.address);
-      Logger.instance.i(
-        'Steering hardware detected at: ${message.steeringHardwareAddress}',
-      );
     } else if (message is ({InternetAddress remoteControlHardwareAddress})) {
       ref
           .read(remoteControlHardwareAddressProvider.notifier)
           .update(message.remoteControlHardwareAddress.address);
-      Logger.instance.i(
-        '''Remote control hardware detected at: ${message.remoteControlHardwareAddress}''',
-      );
     } else if (message is ({bool remoteControlHeartbeat})) {
       ref
           .read(remoteControlHardwareNetworkAliveProvider.notifier)

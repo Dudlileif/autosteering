@@ -286,7 +286,7 @@ final class NtripAliveProvider extends $NotifierProvider<NtripAlive, bool> {
   }
 }
 
-String _$ntripAliveHash() => r'b9e6ac1073b9f2d29c8bc014e5b038f092bc9d7e';
+String _$ntripAliveHash() => r'd36a87c43c9d5472c0f4416974c447e6e25c173a';
 
 /// A provider for telling whether the [NtripClient] is receiving data.
 ///

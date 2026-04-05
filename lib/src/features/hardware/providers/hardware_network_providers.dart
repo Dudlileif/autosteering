@@ -65,7 +65,7 @@ class RemoteControlHardwareNetworkAlive
     });
     listenSelf((previous, next) {
       _resetTimer?.cancel();
-      _resetTimer = Timer(const Duration(seconds: 2), ref.invalidateSelf);
+      _resetTimer = Timer(const Duration(seconds: 3), ref.invalidateSelf);
     });
 
     return false;
@@ -117,8 +117,8 @@ class DeviceIPAddressWlan extends _$DeviceIPAddressWlan {
               .contains(RegExp(r'wlp\d{1,}s\d{1,}')),
         )
         ?.addresses
-        .first
-        .address;
+        .map((a) => a.address)
+        .join('\n');
   }
 }
 
@@ -145,8 +145,8 @@ class DeviceIPAddressAP extends _$DeviceIPAddressAP {
               element.name.toLowerCase().contains('swlan'),
         )
         ?.addresses
-        .first
-        .address;
+        .map((a) => a.address)
+        .join('\n');
   }
 }
 
@@ -170,8 +170,8 @@ class DeviceIPAddressEthernet extends _$DeviceIPAddressEthernet {
           (element) => element.name.toLowerCase().startsWith('e'),
         )
         ?.addresses
-        .first
-        .address;
+        .map((a) => a.address)
+        .join('\n');
   }
 }
 
@@ -180,24 +180,17 @@ class DeviceIPAddressEthernet extends _$DeviceIPAddressEthernet {
 @Riverpod(keepAlive: true)
 class SteeringHardwareAddress extends _$SteeringHardwareAddress {
   @override
-  String build() {
-    ref.watch(reloadAllSettingsProvider);
+  String? build() {
     listenSelf((previous, next) {
-      if (previous != null) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.hardwareAdress, next);
+      if (next != previous && next != null) {
+        Logger.instance.i('Steering hardware detected at: $next');
       }
     });
-
-    return ref
-            .read(settingsProvider.notifier)
-            .getString(SettingsKey.hardwareAdress) ??
-        'autosteering.local';
+    return null;
   }
 
   /// Update the [state] to [value] if it's a valid IP adress.
-  void update(String value) => Future(() {
+  void update(String? value) => Future(() {
     state = value;
   });
 }
@@ -207,24 +200,18 @@ class SteeringHardwareAddress extends _$SteeringHardwareAddress {
 @Riverpod(keepAlive: true)
 class RemoteControlHardwareAddress extends _$RemoteControlHardwareAddress {
   @override
-  String build() {
-    ref.watch(reloadAllSettingsProvider);
+  @override
+  String? build() {
     listenSelf((previous, next) {
-      if (previous != null) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.remoteControlAddress, next);
+      if (next != previous && next != null) {
+        Logger.instance.i('Remote control hardware detected at: $next');
       }
     });
-
-    return ref
-            .read(settingsProvider.notifier)
-            .getString(SettingsKey.remoteControlAddress) ??
-        'autosteering-remote-control.local';
+    return null;
   }
 
   /// Update the [state] to [value] if it's a valid IP adress.
-  void update(String value) => Future(() {
+  void update(String? value) => Future(() {
     state = value;
   });
 }
@@ -304,17 +291,11 @@ class HardwareUDPSendPort extends _$HardwareUDPSendPort {
 /// The updated state is automatically sent to the
 @Riverpod(keepAlive: true)
 ({
-  String steeringHardwareAddress,
-  String remoteControlHardwareAddress,
   int hardwareUDPReceivePort,
   int hardwareUDPSendPort,
 })
 hardwareCommunicationConfig(Ref ref) {
   final config = (
-    steeringHardwareAddress: ref.watch(steeringHardwareAddressProvider),
-    remoteControlHardwareAddress: ref.watch(
-      remoteControlHardwareAddressProvider,
-    ),
     hardwareUDPReceivePort: ref.watch(hardwareUDPReceivePortProvider),
     hardwareUDPSendPort: ref.watch(hardwareUDPSendPortProvider),
   );

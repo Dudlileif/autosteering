@@ -230,7 +230,7 @@ final class DeviceIPAddressWlanProvider
 }
 
 String _$deviceIPAddressWlanHash() =>
-    r'ce074c458ebbd164aa678c97b8c31ffb02106929';
+    r'df930b8e98301fa76fde6372ed0404c509b65555';
 
 /// A provider for the wireless IP address of the device.
 
@@ -288,7 +288,7 @@ final class DeviceIPAddressAPProvider
   }
 }
 
-String _$deviceIPAddressAPHash() => r'ce7a951ff9cdaa646e1f210b77b3ac2eef853f2c';
+String _$deviceIPAddressAPHash() => r'77b8951576f747b63edeb0099cc165820b346800';
 
 /// A provider for the access point host IP address of the device.
 
@@ -347,7 +347,7 @@ final class DeviceIPAddressEthernetProvider
 }
 
 String _$deviceIPAddressEthernetHash() =>
-    r'ce57e6b22c403d2f60015e7396b2409d9e5570ee';
+    r'045b02f9231ac91730d4731af24a221b853559b9';
 
 /// A provider for the ethernet IP address of the device.
 
@@ -378,7 +378,7 @@ final steeringHardwareAddressProvider = SteeringHardwareAddressProvider._();
 /// A provider for the IP adress of the steering hardware we want to communicate
 /// with.
 final class SteeringHardwareAddressProvider
-    extends $NotifierProvider<SteeringHardwareAddress, String> {
+    extends $NotifierProvider<SteeringHardwareAddress, String?> {
   /// A provider for the IP adress of the steering hardware we want to communicate
   /// with.
   SteeringHardwareAddressProvider._()
@@ -400,31 +400,31 @@ final class SteeringHardwareAddressProvider
   SteeringHardwareAddress create() => SteeringHardwareAddress();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(String value) {
+  Override overrideWithValue(String? value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<String>(value),
+      providerOverride: $SyncValueProvider<String?>(value),
     );
   }
 }
 
 String _$steeringHardwareAddressHash() =>
-    r'3cb2a5f5c518f59c85623b9cc2213e2bdf494396';
+    r'4deae9c27798375b988669897cd5573dd9664f79';
 
 /// A provider for the IP adress of the steering hardware we want to communicate
 /// with.
 
-abstract class _$SteeringHardwareAddress extends $Notifier<String> {
-  String build();
+abstract class _$SteeringHardwareAddress extends $Notifier<String?> {
+  String? build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<String, String>;
+    final ref = this.ref as $Ref<String?, String?>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<String, String>,
-              String,
+              AnyNotifier<String?, String?>,
+              String?,
               Object?,
               Object?
             >;
@@ -442,7 +442,7 @@ final remoteControlHardwareAddressProvider =
 /// A provider for the IP adress of the remote control hardware we want to
 /// communicate with.
 final class RemoteControlHardwareAddressProvider
-    extends $NotifierProvider<RemoteControlHardwareAddress, String> {
+    extends $NotifierProvider<RemoteControlHardwareAddress, String?> {
   /// A provider for the IP adress of the remote control hardware we want to
   /// communicate with.
   RemoteControlHardwareAddressProvider._()
@@ -464,31 +464,31 @@ final class RemoteControlHardwareAddressProvider
   RemoteControlHardwareAddress create() => RemoteControlHardwareAddress();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(String value) {
+  Override overrideWithValue(String? value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<String>(value),
+      providerOverride: $SyncValueProvider<String?>(value),
     );
   }
 }
 
 String _$remoteControlHardwareAddressHash() =>
-    r'2c9ca0304c21a280e27dc076ad6eb73e20649aca';
+    r'359a0f8633779f4e06498a2f5cd731eeed4179ae';
 
 /// A provider for the IP adress of the remote control hardware we want to
 /// communicate with.
 
-abstract class _$RemoteControlHardwareAddress extends $Notifier<String> {
-  String build();
+abstract class _$RemoteControlHardwareAddress extends $Notifier<String?> {
+  String? build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<String, String>;
+    final ref = this.ref as $Ref<String?, String?>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<String, String>,
-              String,
+              AnyNotifier<String?, String?>,
+              String?,
               Object?,
               Object?
             >;
@@ -635,34 +635,11 @@ final hardwareCommunicationConfigProvider =
 final class HardwareCommunicationConfigProvider
     extends
         $FunctionalProvider<
-          ({
-            int hardwareUDPReceivePort,
-            int hardwareUDPSendPort,
-            String remoteControlHardwareAddress,
-            String steeringHardwareAddress,
-          }),
-          ({
-            int hardwareUDPReceivePort,
-            int hardwareUDPSendPort,
-            String remoteControlHardwareAddress,
-            String steeringHardwareAddress,
-          }),
-          ({
-            int hardwareUDPReceivePort,
-            int hardwareUDPSendPort,
-            String remoteControlHardwareAddress,
-            String steeringHardwareAddress,
-          })
+          ({int hardwareUDPReceivePort, int hardwareUDPSendPort}),
+          ({int hardwareUDPReceivePort, int hardwareUDPSendPort}),
+          ({int hardwareUDPReceivePort, int hardwareUDPSendPort})
         >
-    with
-        $Provider<
-          ({
-            int hardwareUDPReceivePort,
-            int hardwareUDPSendPort,
-            String remoteControlHardwareAddress,
-            String steeringHardwareAddress,
-          })
-        > {
+    with $Provider<({int hardwareUDPReceivePort, int hardwareUDPSendPort})> {
   /// A provider for the combined state of the [SteeringHardwareAddress],
   /// [HardwareUDPReceivePort] and [HardwareUDPSendPort].
   ///
@@ -683,54 +660,30 @@ final class HardwareCommunicationConfigProvider
 
   @$internal
   @override
-  $ProviderElement<
-    ({
-      int hardwareUDPReceivePort,
-      int hardwareUDPSendPort,
-      String remoteControlHardwareAddress,
-      String steeringHardwareAddress,
-    })
-  >
+  $ProviderElement<({int hardwareUDPReceivePort, int hardwareUDPSendPort})>
   $createElement($ProviderPointer pointer) => $ProviderElement(pointer);
 
   @override
-  ({
-    int hardwareUDPReceivePort,
-    int hardwareUDPSendPort,
-    String remoteControlHardwareAddress,
-    String steeringHardwareAddress,
-  })
-  create(Ref ref) {
+  ({int hardwareUDPReceivePort, int hardwareUDPSendPort}) create(Ref ref) {
     return hardwareCommunicationConfig(ref);
   }
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(
-    ({
-      int hardwareUDPReceivePort,
-      int hardwareUDPSendPort,
-      String remoteControlHardwareAddress,
-      String steeringHardwareAddress,
-    })
-    value,
+    ({int hardwareUDPReceivePort, int hardwareUDPSendPort}) value,
   ) {
     return $ProviderOverride(
       origin: this,
       providerOverride:
           $SyncValueProvider<
-            ({
-              int hardwareUDPReceivePort,
-              int hardwareUDPSendPort,
-              String remoteControlHardwareAddress,
-              String steeringHardwareAddress,
-            })
+            ({int hardwareUDPReceivePort, int hardwareUDPSendPort})
           >(value),
     );
   }
 }
 
 String _$hardwareCommunicationConfigHash() =>
-    r'2b6f034132f0d933e3fc4f5bc0b2a14d33d3e689';
+    r'c91fb09a96532f99b670eaf5d07563503d25f5db';
 
 /// A provider for a TCP server for sending/receiving data via TCP.
 

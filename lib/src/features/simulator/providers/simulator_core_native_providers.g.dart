@@ -105,7 +105,7 @@ final class _SimCoreIsolatePortProvider
 }
 
 String _$_simCoreIsolatePortHash() =>
-    r'64cdd106492ca58082261994da9711b1a9459816';
+    r'b6be1600be89e864fec6a4dd14b09f95f9144126';
 
 /// A provider for keeping the isolate [SendPort] when working on a
 /// native platform. Vehicle inputs gets directed here from [SimInput].

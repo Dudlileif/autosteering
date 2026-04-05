@@ -367,7 +367,7 @@ final class GnssSecondaryCurrentSentenceProvider
 }
 
 String _$gnssSecondaryCurrentSentenceHash() =>
-    r'2bb4160c49b8648ce8b20596bbb027f543341e25';
+    r'4abd15c0b6cf1130b518640958409cde543ee3a8';
 
 /// A provider for the last secondary GNSS position NMEA.
 
