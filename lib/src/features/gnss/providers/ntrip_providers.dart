@@ -173,14 +173,15 @@ class NtripAlive extends _$NtripAlive {
   bool build() {
     ref.onDispose(() {
       _resetTimer?.cancel();
-      ref.invalidate(ntripClientProvider);
     });
     listenSelf((previous, next) {
       if (next) {
         _resetTimer?.cancel();
         _resetTimer = Timer(const Duration(seconds: 5), () {
           Logger.instance.i('NTRIP client disconnected, timed out.');
-          ref.invalidateSelf();
+          ref
+            ..invalidate(ntripClientProvider)
+            ..invalidateSelf();
         });
       }
     });

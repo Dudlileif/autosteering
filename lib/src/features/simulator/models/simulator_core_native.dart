@@ -26,6 +26,7 @@ import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/simulator/models/simulator_core_state.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_multicast_lock/flutter_multicast_lock.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:udp/udp.dart';
@@ -107,16 +108,16 @@ class SimulatorCore {
     var networkAvailable = false;
     var udpReceivePort = 3333;
     var udpSendPort = 6666;
-
-    var steeringHardwareAddress = 'autosteering.local';
-    var remoteControlHardwareAddress = 'autosteering-remote-control.local';
+    final receiveMulticastAddress = InternetAddress('239.0.0.10');
+    final steeringHardwareMulticastAddress = InternetAddress('239.0.0.20');
+    final remoteControlMulticastAddress = InternetAddress('239.0.0.30');
 
     Endpoint? steeringHardwareEndPoint;
     Endpoint? remoteControlEndPoint;
     Endpoint? receiveEndPoint;
     Endpoint? sendEndPoint;
     UDP? receiveUdp;
-    UDP? sendUdp;
+    RawDatagramSocket? sendSocket;
 
     final steeringHardwareUdpSendStream = StreamController<Uint8List>();
     final remoteControlHardwareUdpSendStream = StreamController<Uint8List>();
@@ -126,9 +127,13 @@ class SimulatorCore {
       ..remoteControlSendStream = remoteControlHardwareUdpSendStream;
 
     steeringHardwareUdpSendStream.stream.listen((event) async {
-      if (sendUdp != null && steeringHardwareEndPoint != null) {
+      if (sendSocket != null && steeringHardwareEndPoint != null) {
         try {
-          await sendUdp!.send(event, steeringHardwareEndPoint!);
+          sendSocket!.send(
+            event,
+            steeringHardwareEndPoint!.address!,
+            steeringHardwareEndPoint!.port!.value,
+          );
         } on Exception catch (error, stackTrace) {
           updateMainThreadStream.add(
             LogEvent(
@@ -142,9 +147,13 @@ class SimulatorCore {
       }
     });
     remoteControlHardwareUdpSendStream.stream.listen((event) async {
-      if (sendUdp != null && remoteControlEndPoint != null) {
+      if (sendSocket != null && remoteControlEndPoint != null) {
         try {
-          await sendUdp!.send(event, remoteControlEndPoint!);
+          sendSocket!.send(
+            event,
+            remoteControlEndPoint!.address!,
+            remoteControlEndPoint!.port!.value,
+          );
         } on Exception catch (error, stackTrace) {
           updateMainThreadStream.add(
             LogEvent(
@@ -178,42 +187,64 @@ class SimulatorCore {
 
       if (datagram?.data != null) {
         final string = String.fromCharCodes(datagram!.data);
-        if (string.startsWith('Steering hardware') &&
-            datagram.address != steeringHardwareEndPoint?.address) {
+        if (string.startsWith('Steering hardware')) {
           updateMainThreadStream.add((
             steeringHardwareAddress: datagram.address,
           ));
         } else if (string.startsWith('Remote control')) {
-          if (datagram.address != remoteControlEndPoint?.address) {
-            updateMainThreadStream.add((
+          updateMainThreadStream
+            ..add((
               remoteControlHardwareAddress: datagram.address,
-            ));
-          }
-          updateMainThreadStream.add((remoteControlHeartbeat: true));
+            ))
+            ..add((remoteControlHeartbeat: true));
         }
       }
     }
 
     Future<void> setupSendUdp() async {
-      sendEndPoint = Endpoint.any();
-      sendUdp?.close();
+      sendEndPoint = Endpoint.unicast(
+        steeringHardwareMulticastAddress,
+        port: Port(udpSendPort),
+      );
+      sendSocket?.close();
 
       updateMainThreadStream.add(
         LogEvent(Level.info, 'Closed current UDP send instance and sockets.'),
       );
       if (sendEndPoint != null) {
-        sendUdp = await UDP.bind(sendEndPoint!);
+        sendSocket = await RawDatagramSocket.bind(
+          steeringHardwareMulticastAddress,
+          udpSendPort,
+        );
+        final interfaces = await NetworkInterface.list();
+        final interface = interfaces.firstWhere(
+          (i) =>
+              i.name.toLowerCase().contains('ap') ||
+              i.name.toLowerCase().contains('wlan2') ||
+              i.name.toLowerCase().contains('swlan'),
+          orElse: () => interfaces.first,
+        );
+        sendSocket?.joinMulticast(steeringHardwareMulticastAddress, interface);
+        sendSocket?.joinMulticast(remoteControlMulticastAddress, interface);
+
+        sendSocket?.setMulticastInterface(interface);
       }
       updateMainThreadStream.add(
         LogEvent(
           Level.info,
-          '''Set up local UDP send endpoint on IP: ${sendUdp?.local.address}, port: ${sendUdp?.local.port?.value}''',
+          '''Set up local UDP send endpoint on IP: ${sendSocket?.address}, port: ${sendSocket?.port}''',
         ),
       );
     }
 
     Future<void> setupReceiveUdp(int receivePort) async {
-      receiveEndPoint = Endpoint.any(port: Port(receivePort));
+      if (!await FlutterMulticastLock().isMulticastLockHeld()) {
+        await FlutterMulticastLock().acquireMulticastLock();
+      }
+      receiveEndPoint = Endpoint.unicast(
+        receiveMulticastAddress,
+        port: Port(receivePort),
+      );
       receiveUdp?.close();
 
       updateMainThreadStream.add(
@@ -224,6 +255,16 @@ class SimulatorCore {
       );
       if (receiveEndPoint != null) {
         receiveUdp = await UDP.bind(receiveEndPoint!);
+
+        final interfaces = await NetworkInterface.list();
+        final interface = interfaces.firstWhere(
+          (i) =>
+              i.name.toLowerCase().contains('ap') ||
+              i.name.toLowerCase().contains('wlan2') ||
+              i.name.toLowerCase().contains('swlan'),
+          orElse: () => interfaces.first,
+        );
+        receiveUdp?.socket?.joinMulticast(receiveMulticastAddress, interface);
       }
       updateMainThreadStream.add(
         LogEvent(
@@ -240,41 +281,37 @@ class SimulatorCore {
 
     Future<void> setupSteeringSendUdp() async {
       try {
-        final steeringHardwareIp = (await InternetAddress.lookup(
-          steeringHardwareAddress,
-        )).firstOrNull;
-        if (steeringHardwareIp != null) {
-          udpHeartbeatTimer.cancel();
+        udpHeartbeatTimer.cancel();
 
-          steeringHardwareEndPoint = Endpoint.unicast(
-            steeringHardwareIp,
-            port: Port(udpSendPort),
-          );
-          updateMainThreadStream
-            ..add(
-              LogEvent(
-                Level.info,
-                '''Closed current steering hardware UDP send instance and sockets.''',
-              ),
-            )
-            ..add(
-              LogEvent(
-                Level.info,
-                '''Steering hardware UDP endpoint IP: ${steeringHardwareEndPoint?.address}, port: ${steeringHardwareEndPoint?.port?.value}''',
-              ),
-            );
+        steeringHardwareEndPoint = Endpoint.multicast(
+          steeringHardwareMulticastAddress,
+          port: Port(udpSendPort),
+        );
 
-          steeringHardwareUdpSendStream.add(
-            Uint8List.fromList(utf8.encode('Simulator started')),
+        updateMainThreadStream
+          ..add(
+            LogEvent(
+              Level.info,
+              '''Closed current steering hardware UDP send instance and sockets.''',
+            ),
+          )
+          ..add(
+            LogEvent(
+              Level.info,
+              '''Steering hardware UDP endpoint IP: ${steeringHardwareEndPoint?.address}, port: ${steeringHardwareEndPoint?.port?.value}''',
+            ),
           );
 
-          udpHeartbeatTimer = Timer.periodic(const Duration(seconds: 1), (
-            timer,
-          ) {
-            steeringHardwareUdpSendStream.add(heartbeatUDPMessage);
-            remoteControlHardwareUdpSendStream.add(heartbeatUDPMessage);
-          });
-        }
+        steeringHardwareUdpSendStream.add(
+          Uint8List.fromList(utf8.encode('Simulator started')),
+        );
+
+        udpHeartbeatTimer = Timer.periodic(const Duration(seconds: 1), (
+          timer,
+        ) {
+          steeringHardwareUdpSendStream.add(heartbeatUDPMessage);
+          remoteControlHardwareUdpSendStream.add(heartbeatUDPMessage);
+        });
       } on Exception catch (_) {
         // Continue, as the error is the same as previously.
         steeringAddressLookupRetryTimer?.cancel();
@@ -289,41 +326,36 @@ class SimulatorCore {
 
     Future<void> setupRemoteControlSendUdp() async {
       try {
-        final remoteControlIp = (await InternetAddress.lookup(
-          remoteControlHardwareAddress,
-        )).firstOrNull;
-        if (remoteControlIp != null) {
-          udpHeartbeatTimer.cancel();
+        udpHeartbeatTimer.cancel();
 
-          remoteControlEndPoint = Endpoint.unicast(
-            remoteControlIp,
-            port: Port(udpSendPort),
-          );
-          updateMainThreadStream
-            ..add(
-              LogEvent(
-                Level.info,
-                '''Closed current remote control hardware UDP send instance and sockets.''',
-              ),
-            )
-            ..add(
-              LogEvent(
-                Level.info,
-                '''Remote control hardware UDP endpoint IP: ${remoteControlEndPoint?.address}, port: ${remoteControlEndPoint?.port?.value}''',
-              ),
-            );
-
-          remoteControlHardwareUdpSendStream.add(
-            Uint8List.fromList(utf8.encode('Simulator started')),
+        remoteControlEndPoint = Endpoint.multicast(
+          remoteControlMulticastAddress,
+          port: Port(udpSendPort),
+        );
+        updateMainThreadStream
+          ..add(
+            LogEvent(
+              Level.info,
+              '''Closed current remote control hardware UDP send instance and sockets.''',
+            ),
+          )
+          ..add(
+            LogEvent(
+              Level.info,
+              '''Remote control hardware UDP endpoint IP: ${remoteControlEndPoint?.address}, port: ${remoteControlEndPoint?.port?.value}''',
+            ),
           );
 
-          udpHeartbeatTimer = Timer.periodic(const Duration(seconds: 1), (
-            timer,
-          ) {
-            steeringHardwareUdpSendStream.add(heartbeatUDPMessage);
-            remoteControlHardwareUdpSendStream.add(heartbeatUDPMessage);
-          });
-        }
+        remoteControlHardwareUdpSendStream.add(
+          Uint8List.fromList(utf8.encode('Simulator started')),
+        );
+
+        udpHeartbeatTimer = Timer.periodic(const Duration(seconds: 1), (
+          timer,
+        ) {
+          steeringHardwareUdpSendStream.add(heartbeatUDPMessage);
+          remoteControlHardwareUdpSendStream.add(heartbeatUDPMessage);
+        });
       } on Exception catch (_) {
         // Continue, as the error is the same as previously.
         remoteControlAddressLookupRetryTimer?.cancel();
@@ -366,6 +398,9 @@ class SimulatorCore {
             'hardware',
           );
           messageDecoder = MessageDecoder(logDirectoryPath: logDirectoryPath);
+
+          await setupReceiveUdp(udpReceivePort);
+          await setupSendUdp();
         }
         // Close and remote UDP instances if no network is available, stops
         // isolate from crashing
@@ -375,9 +410,9 @@ class SimulatorCore {
             await setupSendUdp();
             await setupReceiveUdp(udpReceivePort);
           } else {
-            sendUdp?.close();
+            sendSocket?.close();
             receiveUdp?.close();
-            if (sendUdp != null || receiveUdp != null) {
+            if (sendSocket != null || receiveUdp != null) {
               updateMainThreadStream.add(
                 LogEvent(
                   Level.info,
@@ -386,21 +421,17 @@ class SimulatorCore {
               );
             }
             receiveUdp = null;
-            sendUdp = null;
+            sendSocket = null;
           }
         }
         // Update the udp ip adress for the hardware.
         else if (message
             is ({
-              String steeringHardwareAddress,
-              String remoteControlHardwareAddress,
               int hardwareUDPReceivePort,
               int hardwareUDPSendPort,
             })) {
           udpReceivePort = message.hardwareUDPReceivePort;
           udpSendPort = message.hardwareUDPSendPort;
-          steeringHardwareAddress = message.steeringHardwareAddress;
-          remoteControlHardwareAddress = message.remoteControlHardwareAddress;
           udpHeartbeatTimer.cancel();
           steeringAddressLookupRetryTimer?.cancel();
           remoteControlAddressLookupRetryTimer?.cancel();
@@ -536,7 +567,8 @@ class SimulatorCore {
       }
     }
     receiveUdp?.close();
-    sendUdp?.close();
+    sendSocket?.close();
+    await FlutterMulticastLock().releaseMulticastLock();
 
     updateMainThreadStream.add(
       LogEvent(Level.info, 'Simulator Core isolate exited.'),
