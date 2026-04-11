@@ -98,6 +98,7 @@ Stream<Vehicle> simCoreIsolateStream(Ref ref) async* {
     SimulatorCore.isolateWorker,
     receivePort.sendPort,
     debugName: 'Simulator Core',
+    errorsAreFatal: false,
   );
   isolate.addErrorListener(receivePort.sendPort);
 

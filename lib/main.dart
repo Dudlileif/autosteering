@@ -38,7 +38,11 @@ Future<void> main() async {
       return true;
     };
     FlutterError.onError = (error) {
-      Logger.instance.e('Flutter Error', error: error, stackTrace: error.stack);
+      Logger.instance.e(
+        'Flutter Error',
+        error: error.exceptionAsString(),
+        stackTrace: error.stack,
+      );
     };
   }
   Logger.instance.i('Application startup initiated...');
