@@ -359,7 +359,7 @@ sealed class Vehicle extends Hitchable {
         when useDualHeading || useDualRoll =>
       correctedAntennaPosition.rhumb.destinationPoint(
         distance: dualBaseline,
-        bearing: bearing - dualRelativeAngle,
+        bearing: bearing + dualRelativeAngle,
       ),
     _ => null,
   };

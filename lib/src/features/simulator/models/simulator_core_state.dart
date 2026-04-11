@@ -266,7 +266,7 @@ class SimulatorCoreState {
     )) {
       if (vehicle != null) {
         if (yaw != null) {
-          vehicle?.bearing = yaw + vehicle!.gnssAntennaConfig.dualRelativeAngle;
+          vehicle?.bearing = yaw - vehicle!.gnssAntennaConfig.dualRelativeAngle;
         }
         if (pitch != null) {
           vehicle?.roll = switch (vehicle!.gnssAntennaConfig.invertDualRoll) {
@@ -1211,7 +1211,10 @@ class SimulatorCoreState {
             break CheckIfUpdateIsUsable;
           }
 
-          final bearingReference = vehicle!.imu.bearing ?? vehicle!.bearingRaw;
+          final bearingReference = switch (vehicle!.gnssAntennaConfig) {
+            GnssAntennaConfig(useDualHeading: true) => vehicle!.bearingRaw,
+            _ => vehicle!.imu.bearing ?? vehicle!.bearingRaw,
+          };
 
           drivingDirectionSign =
               switch (bearingDifference(bearing, bearingReference) > 90) {
