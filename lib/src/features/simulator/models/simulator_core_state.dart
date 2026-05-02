@@ -541,7 +541,7 @@ class SimulatorCoreState {
         abTracking?.setCurrentOffsetToClosest(vehicle!);
       }
     }
-    // Update if the AB-tracking to the new config
+    // Update the AB-tracking with the new config
     else if (message is ABConfig) {
       abConfig = message;
       abTracking?.applyConfig(message);
@@ -785,8 +785,10 @@ class SimulatorCoreState {
   /// Checks and updates the [abTracking] and [pathTracking].
   void checkGuidance() {
     if (vehicle != null) {
-      abTracking?.checkAutoOffsetSnap(vehicle!);
-      if (autosteeringState == AutosteeringState.disabled &&
+      if (autosteeringState case .disabled) {
+        abTracking?.checkAutoOffsetSnap(vehicle!);
+      }
+      if (autosteeringState == .disabled &&
           allowManualTrackingUpdates &&
           vehicle!.velocity.abs() > 0) {
         if (abTracking != null) {
