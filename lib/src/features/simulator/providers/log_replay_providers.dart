@@ -94,7 +94,7 @@ FutureOr<LogReplay?> loadLogReplayFromFile(Ref ref, String path) async {
 FutureOr<LogReplay?> importLogReplay(Ref ref) async {
   ref.keepAlive();
   Timer(const Duration(seconds: 5), ref.invalidateSelf);
-  final pickedFiles = await FilePicker.platform.pickFiles(
+  final pickedFiles = await FilePicker.pickFiles(
     allowedExtensions: ['log'],
     type: FileType.custom,
     dialogTitle: 'Choose log replay file',

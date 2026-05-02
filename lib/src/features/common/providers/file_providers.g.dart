@@ -455,7 +455,7 @@ final class ExportJsonToFileDirectoryProvider
 }
 
 String _$exportJsonToFileDirectoryHash() =>
-    r'd2aea414c93d370bc7b411d3e7f998a7980aec2c';
+    r'd31580af9bb0bd319ab5fd6047bfaa784005e6e4';
 
 /// A provider for saving [object] to [fileName].json to a file in the [folder]
 /// in the file drectory.
@@ -988,7 +988,7 @@ final class ExportWholeFileDirectoryProvider
 }
 
 String _$exportWholeFileDirectoryHash() =>
-    r'1b86bbaf94c73b217fcfecf7a46422cab2c63faf';
+    r'3f87076cb2d86a827c7ea565a4926d69d26ff8c3';
 
 /// A provider for the progress of the currently ongoing export, if there is
 /// one.
@@ -1106,7 +1106,7 @@ final class ExportAllProvider
   }
 }
 
-String _$exportAllHash() => r'b00616867ee9da4ffd3c441c4ec89a18d1b3f521';
+String _$exportAllHash() => r'8126e3133d99086283d7c55104b81a72355486ff';
 
 /// A provider for exporting all files in a [directory].
 
@@ -1236,4 +1236,4 @@ final class ImportWholeFileDirectoryProvider
 }
 
 String _$importWholeFileDirectoryHash() =>
-    r'b68561946747a14bcaaae483264838a3865b70dd';
+    r'c0b65b409be2eb3a647a7d3878d4ef2ba0fb90e3';

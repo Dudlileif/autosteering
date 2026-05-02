@@ -61,6 +61,8 @@ enum SettingsKey {
   ntripEnabled('ntrip.enabled'),
   ntripActiveProfile('ntrip.active_profile'),
   ntripProfiles('ntrip.profiles'),
+  ntripSendOverUDP('ntrip.send_over_udp'),
+  ntripSendOverTCP('ntrip.send_over_tcp'),
   pathRecordingSettings('path_recording_settings'),
   remoteControlAddress('remote_control.address'),
   remoteControlButtonActions('remote_control.button_actions'),

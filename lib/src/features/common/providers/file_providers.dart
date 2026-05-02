@@ -195,7 +195,7 @@ FutureOr<void> exportJsonToFileDirectory(
     }
   } else {
     try {
-      final exportFolder = await FilePicker.platform.getDirectoryPath(
+      final exportFolder = await FilePicker.getDirectoryPath(
         dialogTitle: 'Select export folder',
       );
       if (exportFolder != null) {
@@ -464,7 +464,7 @@ FutureOr<void> exportWholeFileDirectory(Ref ref) async {
   ref.keepAlive();
   try {
     if (Device.isNative) {
-      final exportFolder = await FilePicker.platform.getDirectoryPath(
+      final exportFolder = await FilePicker.getDirectoryPath(
         dialogTitle: 'Select export folder',
       );
       if (exportFolder != null) {
@@ -540,7 +540,7 @@ FutureOr<void> exportAll(
   ref.keepAlive();
   try {
     if (Device.isNative) {
-      final exportFolder = await FilePicker.platform.getDirectoryPath(
+      final exportFolder = await FilePicker.getDirectoryPath(
         dialogTitle: 'Select export folder',
       );
       if (exportFolder != null) {
@@ -636,7 +636,7 @@ FutureOr<void> importWholeFileDirectory(Ref ref) async {
   ref.keepAlive();
   try {
     if (Device.isNative) {
-      final importFile = await FilePicker.platform.pickFiles(
+      final importFile = await FilePicker.pickFiles(
         dialogTitle: 'Select ZIP file to import',
         type: FileType.custom,
         allowedExtensions: ['zip'],

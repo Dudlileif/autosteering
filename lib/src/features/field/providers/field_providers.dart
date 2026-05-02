@@ -440,7 +440,7 @@ FutureOr<Field?> loadFieldFromFile(Ref ref, String path) async {
 FutureOr<Field?> importField(Ref ref) async {
   ref.keepAlive();
   Timer(const Duration(seconds: 5), ref.invalidateSelf);
-  final pickedFiles = await FilePicker.platform.pickFiles(
+  final pickedFiles = await FilePicker.pickFiles(
     allowedExtensions: ['json'],
     type: FileType.custom,
     dialogTitle: 'Choose field file',

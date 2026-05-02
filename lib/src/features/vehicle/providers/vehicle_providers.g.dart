@@ -789,7 +789,7 @@ final class ImportVehicleProvider
   }
 }
 
-String _$importVehicleHash() => r'9424f72c9aa7ec7efc5cbf08fb8a67e3e9e31858';
+String _$importVehicleHash() => r'f6d4702b0e38ba1fd6e9a490aa2cad82bd8747cf';
 
 /// A provider for whether widgets for overriding the steering should be shown.
 

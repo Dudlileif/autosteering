@@ -1178,7 +1178,7 @@ final class ImportEquipmentProvider
   }
 }
 
-String _$importEquipmentHash() => r'23788a72e175496df6e300087a244ad146ac2e28';
+String _$importEquipmentHash() => r'9d49214ca322b82d12ad1be86665f039220e9674';
 
 /// A provider for exporting all equipment files.
 

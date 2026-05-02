@@ -449,7 +449,7 @@ FutureOr<ABTracking?> importABTracking(Ref ref) async {
   ref.keepAlive();
   Timer(const Duration(seconds: 5), ref.invalidateSelf);
 
-  final pickedFiles = await FilePicker.platform.pickFiles(
+  final pickedFiles = await FilePicker.pickFiles(
     allowedExtensions: ['json'],
     type: FileType.custom,
     dialogTitle: 'Choose AB tracking file',

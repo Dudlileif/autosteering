@@ -435,7 +435,7 @@ final class ImportSettingsProvider
   }
 }
 
-String _$importSettingsHash() => r'915992cf797b53b2cbe104e37e9c16f4b51ef9d2';
+String _$importSettingsHash() => r'837414fcb6326138ece43f9b62aa4a1127a91854';
 
 /// A provider for rebuilding all providers that reads [Settings] during the
 /// build method.

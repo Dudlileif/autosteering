@@ -400,17 +400,17 @@ class MessageDecoder {
               data['roll'] is num) {
             final reading = ImuReading(
               receiveTime: DateTime.now(),
-              yaw: data['yaw'] as double,
-              pitch: data['pitch'] as double,
-              roll: data['roll'] as double,
-              accelerationX: data['acc_x'] is double
-                  ? data['acc_x'] as double
+              yaw: (data['yaw'] as num).toDouble(),
+              pitch: (data['pitch'] as num).toDouble(),
+              roll: (data['roll'] as num).toDouble(),
+              accelerationX: data['acc_x'] is num
+                  ? (data['acc_x'] as num).toDouble()
                   : 0,
-              accelerationY: data['acc_y'] is double
-                  ? data['acc_y'] as double
+              accelerationY: data['acc_y'] is num
+                  ? (data['acc_y'] as num).toDouble()
                   : 0,
-              accelerationZ: data['acc_z'] is double
-                  ? data['acc_z'] as double
+              accelerationZ: data['acc_z'] is num
+                  ? (data['acc_z'] as num).toDouble()
                   : 0,
             );
             imuReadings.add(reading);

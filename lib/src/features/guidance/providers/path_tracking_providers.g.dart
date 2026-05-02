@@ -1001,7 +1001,7 @@ final class ImportPathTrackingProvider
 }
 
 String _$importPathTrackingHash() =>
-    r'268e63b8faf3fc76f311a1ab96dfaa6b4391d2b9';
+    r'0232d12f7d56e617da15344ff5a5e84d886ea4bd';
 
 /// A provider for exporting all guidance files.
 

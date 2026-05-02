@@ -707,7 +707,7 @@ final class ImportWorkSessionProvider
   }
 }
 
-String _$importWorkSessionHash() => r'e5dbb7652642dd8cbcb98e6a03dae4bf1eefcee5';
+String _$importWorkSessionHash() => r'd46058572a84791ab88316eb086f344892e0e666';
 
 /// A provider for exporting all work session files.
 
