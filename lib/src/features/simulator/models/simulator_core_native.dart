@@ -221,7 +221,9 @@ class SimulatorCore {
           (i) =>
               i.name.toLowerCase().contains('ap') ||
               i.name.toLowerCase().contains('wlan2') ||
-              i.name.toLowerCase().contains('swlan'),
+              i.name.toLowerCase().contains('swlan') ||
+              i.name.toLowerCase().contains('eth') ||
+              i.name.toLowerCase().contains('enp'),
           orElse: () => interfaces.first,
         );
         sendSocket?.joinMulticast(steeringHardwareMulticastAddress, interface);
@@ -261,7 +263,9 @@ class SimulatorCore {
           (i) =>
               i.name.toLowerCase().contains('ap') ||
               i.name.toLowerCase().contains('wlan2') ||
-              i.name.toLowerCase().contains('swlan'),
+              i.name.toLowerCase().contains('swlan') ||
+              i.name.toLowerCase().contains('eth') ||
+              i.name.toLowerCase().contains('enp'),
           orElse: () => interfaces.first,
         );
         receiveUdp?.socket?.joinMulticast(receiveMulticastAddress, interface);
