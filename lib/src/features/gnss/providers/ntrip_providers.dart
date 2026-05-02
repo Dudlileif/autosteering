@@ -24,6 +24,7 @@ import 'package:autosteering/src/features/gnss/models/ntrip_profile.dart';
 import 'package:autosteering/src/features/gnss/providers/gnss_data_providers.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
+import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -284,7 +285,12 @@ class NtripClient extends _$NtripClient {
                   ref.read(hardwareSerialProvider.notifier).write(event),
                 );
               } else {
-                ref.read(tcpServerProvider.notifier).send(event);
+                if (ref.read(sendNtripOverUDPProvider)) {
+                  ref.read(simInputProvider.notifier).send((rtcm: event));
+                }
+                if (ref.read(sendNtripOverTCPProvider)) {
+                  ref.read(tcpServerProvider.notifier).send(event);
+                }
               }
               final dataString = String.fromCharCodes(event);
 
@@ -501,4 +507,59 @@ class NtripDataUsageByMonth extends _$NtripDataUsageByMonth {
     final equal = const DeepCollectionEquality().equals(previous, next);
     return !equal;
   }
+}
+
+/// A provider for whether NTRIP data should be sent to the sim core and then
+/// over UDP to the hardware.
+@Riverpod(keepAlive: true)
+class SendNtripOverUDP extends _$SendNtripOverUDP {
+  @override
+  bool build() {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (next != previous) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.ntripSendOverUDP, next, force: true);
+      }
+    });
+
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.ntripSendOverUDP) ??
+        false;
+  }
+
+  /// Updates [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Inverts the [state].
+  void toggle() => Future(() => state = !state);
+}
+
+/// A provider for whether NTRIP data should be sent over TCP to the hardware.
+@Riverpod(keepAlive: true)
+class SendNtripOverTCP extends _$SendNtripOverTCP {
+  @override
+  bool build() {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (next != previous) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.ntripSendOverTCP, next, force: true);
+      }
+    });
+
+    return ref
+            .read(settingsProvider.notifier)
+            .getBool(SettingsKey.ntripSendOverTCP) ??
+        true;
+  }
+
+  /// Updates [state] to [value].
+  void update({required bool value}) => Future(() => state = value);
+
+  /// Inverts the [state].
+  void toggle() => Future(() => state = !state);
 }

@@ -192,6 +192,30 @@ class NtripMenu extends ConsumerWidget {
               );
             },
           ),
+        if (!dadMode)
+          Consumer(
+            builder: (context, ref, child) => CheckboxListTile(
+              value: ref.watch(sendNtripOverUDPProvider),
+              onChanged: (value) => value != null
+                  ? ref
+                        .read(sendNtripOverUDPProvider.notifier)
+                        .update(value: value)
+                  : null,
+              secondary: Text('Send over UDP', style: textStyle),
+            ),
+          ),
+        if (!dadMode)
+          Consumer(
+            builder: (context, ref, child) => CheckboxListTile(
+              value: ref.watch(sendNtripOverTCPProvider),
+              onChanged: (value) => value != null
+                  ? ref
+                        .read(sendNtripOverTCPProvider.notifier)
+                        .update(value: value)
+                  : null,
+              secondary: Text('Send over TCP', style: textStyle),
+            ),
+          ),
       ],
     );
   }

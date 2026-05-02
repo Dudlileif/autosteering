@@ -538,6 +538,8 @@ class SimulatorCore {
               }).codeUnits,
             ),
           );
+        } else if (message case (:final Uint8List rtcm)) {
+          steeringHardwareUdpSendStream.add(rtcm);
         }
         // Shut down the isolate.
         else if (message == null) {

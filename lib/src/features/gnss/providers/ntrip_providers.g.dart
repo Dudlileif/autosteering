@@ -348,7 +348,7 @@ final class NtripClientProvider
   NtripClient create() => NtripClient();
 }
 
-String _$ntripClientHash() => r'7c3ae992cbb1b8fd70973ac7ce23e1b24dd48196';
+String _$ntripClientHash() => r'ff8a2806a76f33e13d96ce7e0a4e7f571c66b2b3';
 
 /// A provider for creating and listening to an [NtripClient].
 ///
@@ -653,6 +653,126 @@ abstract class _$NtripDataUsageByMonth extends $Notifier<Map<String, int>> {
             as $ClassProviderElement<
               AnyNotifier<Map<String, int>, Map<String, int>>,
               Map<String, int>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// A provider for whether NTRIP data should be sent to the sim core and then
+/// over UDP to the hardware.
+
+@ProviderFor(SendNtripOverUDP)
+final sendNtripOverUDPProvider = SendNtripOverUDPProvider._();
+
+/// A provider for whether NTRIP data should be sent to the sim core and then
+/// over UDP to the hardware.
+final class SendNtripOverUDPProvider
+    extends $NotifierProvider<SendNtripOverUDP, bool> {
+  /// A provider for whether NTRIP data should be sent to the sim core and then
+  /// over UDP to the hardware.
+  SendNtripOverUDPProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'sendNtripOverUDPProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$sendNtripOverUDPHash();
+
+  @$internal
+  @override
+  SendNtripOverUDP create() => SendNtripOverUDP();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$sendNtripOverUDPHash() => r'7e6b0506c606a91fc79425dea7c299a572172049';
+
+/// A provider for whether NTRIP data should be sent to the sim core and then
+/// over UDP to the hardware.
+
+abstract class _$SendNtripOverUDP extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// A provider for whether NTRIP data should be sent over TCP to the hardware.
+
+@ProviderFor(SendNtripOverTCP)
+final sendNtripOverTCPProvider = SendNtripOverTCPProvider._();
+
+/// A provider for whether NTRIP data should be sent over TCP to the hardware.
+final class SendNtripOverTCPProvider
+    extends $NotifierProvider<SendNtripOverTCP, bool> {
+  /// A provider for whether NTRIP data should be sent over TCP to the hardware.
+  SendNtripOverTCPProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'sendNtripOverTCPProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$sendNtripOverTCPHash();
+
+  @$internal
+  @override
+  SendNtripOverTCP create() => SendNtripOverTCP();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$sendNtripOverTCPHash() => r'6a1397a0ed2bc7afeab431a1a519ea0a8f5c3d32';
+
+/// A provider for whether NTRIP data should be sent over TCP to the hardware.
+
+abstract class _$SendNtripOverTCP extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
               Object?,
               Object?
             >;
