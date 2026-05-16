@@ -1452,7 +1452,7 @@ class _PidPage extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'P: ${p.toStringAsFixed(1)}',
+                  'P: ${p.round()}',
                   style: theme.textTheme.bodyLarge,
                 ),
                 Text('Current error', style: theme.textTheme.bodySmall),
@@ -1503,14 +1503,14 @@ class _PidPage extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'I: ${i.toStringAsFixed(3)}',
+                  'I: ${i.round()}',
                   style: theme.textTheme.bodyLarge,
                 ),
                 Text('Error over time', style: theme.textTheme.bodySmall),
                 Slider(
                   value: i,
-                  max: 2,
-                  divisions: 200,
+                  max: 50,
+                  divisions: 50,
                   onChanged: (value) {
                     ref
                         .read(simInputProvider.notifier)
@@ -1554,14 +1554,14 @@ class _PidPage extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'D: ${d.toStringAsFixed(3)}',
+                  'D: ${d.round()}',
                   style: theme.textTheme.bodyLarge,
                 ),
                 Text('Error rate of change', style: theme.textTheme.bodySmall),
                 Slider(
                   value: d,
-                  max: 2,
-                  divisions: 100,
+                  max: 50,
+                  divisions: 50,
                   onChanged: (value) {
                     ref
                         .read(simInputProvider.notifier)
