@@ -334,27 +334,31 @@ FutureOr<void> updateSteeringHardwareConfig(
         mainVehicleProvider.select((value) => value.steeringHardwareConfig),
       );
       final url =
-          '''http://${ref.watch(steeringHardwareAddressProvider)}/update_motor_config?${steeringHardwareConfig.httpHeader(keyContainer.keys)}''';
-      Logger.instance.i('Updating motor config with: $url');
+          '''http://${ref.watch(steeringHardwareAddressProvider)}/update_motor_config''';
+      Logger.instance.i('Updating hardware config at: $url');
 
-      final response = await Dio(
-        BaseOptions(
-          connectTimeout: const Duration(seconds: 5),
-          receiveTimeout: const Duration(seconds: 5),
-        ),
-      ).get<String>(url);
+      final response =
+          await Dio(
+            BaseOptions(
+              connectTimeout: const Duration(seconds: 5),
+              receiveTimeout: const Duration(seconds: 5),
+            ),
+          ).patch<String>(
+            url,
+            data: steeringHardwareConfig.toJsonWithKeys(keyContainer.keys),
+          );
       if (response.statusCode == 200) {
         Logger.instance.i(
-          '''Successfully updated motor config on hardware for parameters: ${keyContainer.keys}.''',
+          '''Successfully updated hardware config on hardware for parameters: ${keyContainer.keys}.''',
         );
       } else {
         Logger.instance.e(
-          'Failed to update motor config on hardware: $response',
+          'Failed to update hardware config on hardware: $response',
         );
       }
     } on Exception catch (error, stackTrace) {
       Logger.instance.e(
-        'Failed to update motor config on hardware.',
+        'Failed to update hardware config on hardware.',
         error: error,
         stackTrace: stackTrace,
       );
@@ -374,23 +378,26 @@ FutureOr<void> sendSteeringHardwareConfig(Ref ref) async {
       mainVehicleProvider.select((value) => value.steeringHardwareConfig),
     );
 
-    final response =
-        await Dio(
-          BaseOptions(
-            connectTimeout: const Duration(seconds: 5),
-            receiveTimeout: const Duration(seconds: 5),
-          ),
-        ).get<String>(
-          '''http://${ref.watch(steeringHardwareAddressProvider)}/update_motor_config?${steeringHardwareConfig.httpHeader}''',
-        );
+    final url =
+        '''http://${ref.watch(steeringHardwareAddressProvider)}/update_motor_config''';
+    Logger.instance.i('Sending hardware config to: $url');
+
+    final response = await Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 5),
+        receiveTimeout: const Duration(seconds: 5),
+      ),
+    ).patch<String>(url, data: steeringHardwareConfig.toJson());
     if (response.statusCode == 200) {
-      Logger.instance.i('Successfully sent motor config to hardware.');
+      Logger.instance.i('Successfully sent hardware config to hardware.');
     } else {
-      Logger.instance.e('Failed to send motor config to hardware: $response');
+      Logger.instance.e(
+        'Failed to send hardware config to hardware: $response',
+      );
     }
   } on Exception catch (error, stackTrace) {
     Logger.instance.e(
-      'Failed to send motor config to hardware.',
+      'Failed to send hardware config to hardware.',
       error: error,
       stackTrace: stackTrace,
     );

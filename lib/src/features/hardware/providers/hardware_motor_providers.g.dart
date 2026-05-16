@@ -727,7 +727,7 @@ final class UpdateSteeringHardwareConfigProvider
 }
 
 String _$updateSteeringHardwareConfigHash() =>
-    r'6397d7a756a81a2081aaa49abe875b9637b6c1ed';
+    r'6327d1d2fc5c13ae79fe899e5786fabd27939539';
 
 /// A provider for updating the motor configuration on the hardware with the
 /// parameters corresponding to [keyContainer].
@@ -799,7 +799,7 @@ final class SendSteeringHardwareConfigProvider
 }
 
 String _$sendSteeringHardwareConfigHash() =>
-    r'5d4163f872056a0781518790e027656e9abb22e8';
+    r'62d96745b25217a351728df2cc8ebb21af34af23';
 
 /// A provider for the UI [Offset] for the steering hardware configurator.
 

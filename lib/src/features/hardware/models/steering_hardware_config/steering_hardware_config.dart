@@ -498,28 +498,8 @@ sealed class SteeringHardwareConfig with _$SteeringHardwareConfig {
 
   /// An HTTP header with the parameters corresponding to [keys] for sending a
   /// request to update the motor config on the hardware.
-  String httpHeader(Set<String> keys) {
-    final json = toJson()..removeWhere((key, value) => !keys.contains(key));
-    return json.entries
-        .map((entry) {
-          if (entry.value is bool) {
-            return '${entry.key}=${(entry.value as bool) ? 1 : 0}';
-          }
-          return '${entry.key}=${entry.value}';
-        })
-        .join('&');
-  }
-
-  /// An HTTP header with all parameters for sending a request to update the
-  /// motor config on the hardware.
-  String get httpHeaderFull => toJson().entries
-      .map((entry) {
-        if (entry.value is bool) {
-          return '${entry.key}=${(entry.value as bool) ? 1 : 0}';
-        }
-        return '${entry.key}=${entry.value}';
-      })
-      .join('&');
+  Map<String, dynamic> toJsonWithKeys(Set<String> keys) =>
+      toJson()..removeWhere((key, value) => !keys.contains(key));
 }
 
 /// An enumerator for the choices of motor holdig mode (freewheel).
