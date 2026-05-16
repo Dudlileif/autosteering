@@ -18,6 +18,7 @@
 import 'dart:ui';
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
@@ -82,6 +83,7 @@ class SimVehicleVelocityControls extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               child: Consumer(
                 builder: (context, ref, child) {
+                  final unit = ref.watch(uiUnitVelocityProvider);
                   final velocity = ref.watch(
                     mainVehicleProvider.select((vehicle) => vehicle.velocity),
                   );
@@ -101,7 +103,7 @@ class SimVehicleVelocityControls extends StatelessWidget {
                         ),
                       ),
                       TextWithStroke(
-                        '${velocity.toStringAsFixed(1).padLeft(5)} m/s',
+                        '''${unit.fromUnit(velocity).toStringAsFixed(1).padLeft(5)} ${unit.symbol}''',
                         style: GoogleFonts.robotoMono(
                           color: Colors.white,
                           textStyle: theme.textTheme.titleMedium,

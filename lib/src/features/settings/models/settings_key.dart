@@ -83,6 +83,9 @@ enum SettingsKey {
   uiSteeringHardwareConfiguratorOffset(
     'ui.steering_hardware_configurator_offset',
   ),
+  uiUnitArea('ui.unit.area'),
+  uiUnitDistance('ui.unit.distance'),
+  uiUnitVelocity('ui.unit.velocity'),
   virtualLedBarConfig('virtual_led_bar.config'),
   virtualLedBarEnabled('virtual_led_bar.enabled')
   ;

@@ -367,49 +367,53 @@ class _LoadFieldMenu extends ConsumerWidget {
 
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
+    final unit = ref.watch(uiUnitAreaProvider);
+
     return MenuButtonWithChildren(
       text: 'Load',
       icon: Icons.history,
-      menuChildren: fields
-          .map(
-            (field) => ConstrainedBox(
-              constraints: const BoxConstraints(minWidth: 200),
-              child: ListTile(
-                onTap: () {
-                  field.lastUsed = DateTime.now();
+      menuChildren: fields.map(
+        (field) {
+          final area = unit.fromUnit(field.areaWithoutHoles);
 
-                  ref.read(activeFieldProvider.notifier).update(field);
+          return ConstrainedBox(
+            constraints: const BoxConstraints(minWidth: 200),
+            child: ListTile(
+              onTap: () {
+                field.lastUsed = DateTime.now();
 
-                  ref.read(saveFieldProvider(field));
-                },
-                trailing: Device.isNative
-                    ? IconButton(
-                        onPressed: () async {
-                          await showDialog<bool>(
-                            context: context,
-                            builder: (context) => Consumer(
-                              builder: (context, ref, child) => DeleteDialog(
-                                name: field.name,
-                                onDelete: () async => await ref.watch(
-                                  deleteFieldProvider(
-                                    field,
-                                  ).future,
-                                ),
+                ref.read(activeFieldProvider.notifier).update(field);
+
+                ref.read(saveFieldProvider(field));
+              },
+              trailing: Device.isNative
+                  ? IconButton(
+                      onPressed: () async {
+                        await showDialog<bool>(
+                          context: context,
+                          builder: (context) => Consumer(
+                            builder: (context, ref, child) => DeleteDialog(
+                              name: field.name,
+                              onDelete: () async => await ref.watch(
+                                deleteFieldProvider(
+                                  field,
+                                ).future,
                               ),
                             ),
-                          );
-                        },
-                        icon: const Icon(Icons.delete),
-                      )
-                    : null,
-                title: Text(field.name, style: textStyle),
-                subtitle: Text(
-                  '''${(field.areaWithoutHoles / 1e4).toStringAsFixed(2)} ha''',
-                ),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.delete),
+                    )
+                  : null,
+              title: Text(field.name, style: textStyle),
+              subtitle: Text(
+                '''${area.toStringAsFixed(2)} ${unit.symbol}''',
               ),
             ),
-          )
-          .toList(),
+          );
+        },
+      ).toList(),
     );
   }
 }

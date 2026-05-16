@@ -299,3 +299,78 @@ FutureOr<Map<String, dynamic>?> importSettings(Ref ref) async {
 /// build method.
 @Riverpod(keepAlive: true)
 String reloadAllSettings(Ref ref) => const Uuid().v4();
+
+/// A provider for which area unit the UI should show.
+@Riverpod(keepAlive: true)
+class UiUnitArea extends _$UiUnitArea {
+  @override
+  UnitArea build() {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (next != previous) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.uiUnitArea, next.symbol);
+      }
+    });
+
+    final value = ref
+        .read(settingsProvider.notifier)
+        .getString(SettingsKey.uiUnitArea);
+
+    return UnitArea.fromSymbol(value);
+  }
+
+  /// Update the [state] to [value].
+  void update(UnitArea value) => Future(() => state = value);
+}
+
+/// A provider for which distance unit the UI should show.
+@Riverpod(keepAlive: true)
+class UiUnitDistance extends _$UiUnitDistance {
+  @override
+  UnitDistance build() {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (next != previous) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.uiUnitDistance, next.symbol);
+      }
+    });
+
+    final value = ref
+        .read(settingsProvider.notifier)
+        .getString(SettingsKey.uiUnitDistance);
+
+    return UnitDistance.fromSymbol(value);
+  }
+
+  /// Update the [state] to [value].
+  void update(UnitDistance value) => Future(() => state = value);
+}
+
+/// A provider for which velocity unit the UI should show.
+@Riverpod(keepAlive: true)
+class UiUnitVelocity extends _$UiUnitVelocity {
+  @override
+  UnitVelocity build() {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (next != previous) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.uiUnitVelocity, next.symbol);
+      }
+    });
+
+    final value = ref
+        .read(settingsProvider.notifier)
+        .getString(SettingsKey.uiUnitVelocity);
+
+    return UnitVelocity.fromSymbol(value);
+  }
+
+  /// Update the [state] to [value].
+  void update(UnitVelocity value) => Future(() => state = value);
+}

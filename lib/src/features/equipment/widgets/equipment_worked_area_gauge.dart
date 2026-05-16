@@ -20,6 +20,7 @@ import 'dart:ui';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -43,6 +44,8 @@ class EquipmentWorkedAreaGauge extends ConsumerWidget {
       ),
     );
     if (area != null || fieldArea != null) {
+      final unit = ref.watch(uiUnitAreaProvider);
+
       return ListTile(
         leading: const Icon(
           Icons.square_foot,
@@ -50,12 +53,16 @@ class EquipmentWorkedAreaGauge extends ConsumerWidget {
           shadows: [Shadow(offset: Offset(2, 2))],
         ),
         title: TextWithStroke(
-          switch (fieldArea != null) {
-            true =>
-              '''
-${area != null ? (area / 1e4).toStringAsFixed(2) : '-'} / ${(fieldArea! / 1e4).toStringAsFixed(2)} ha
-${area != null ? '${clampDouble(100 * area / fieldArea, 0, 100).toStringAsFixed(1)}%' : ''}''',
-            false => '${(area! / 1e4).toStringAsFixed(2)} ha',
+          switch ((area, fieldArea)) {
+            (final area?, final fieldArea?) => [
+              '${unit.fromUnit(area).toStringAsFixed(2)} / ${unit.fromUnit(fieldArea).toStringAsFixed(2)} ${unit.symbol}',
+              '''${clampDouble(100 * area / fieldArea, 0, 100).toStringAsFixed(1)}%''',
+            ].join('\n'),
+            (final area?, _) =>
+              '${unit.fromUnit(area).toStringAsFixed(2)} ${unit.symbol}',
+            (_, final fieldArea?) =>
+              '- / ${unit.fromUnit(fieldArea).toStringAsFixed(2)} ${unit.symbol}',
+            _ => '',
           },
           style: GoogleFonts.robotoMono(
             color: Colors.white,

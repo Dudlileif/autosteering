@@ -22,6 +22,7 @@ import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -41,6 +42,7 @@ class SettingsMenu extends ConsumerWidget {
       menuChildren: [
         const MapMenu(),
         const SimCoreMenu(),
+        const _UnitMenu(),
         const ThemeMenu(),
         const AudioVolumeMenu(),
         const _ImportExportMenu(),
@@ -318,4 +320,93 @@ class _GraphButton extends ConsumerWidget {
     ),
     false => const SizedBox.shrink(),
   };
+}
+
+class _UnitMenu extends ConsumerWidget {
+  const _UnitMenu();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return MenuButtonWithChildren(
+      text: 'Units',
+      icon: Icons.speed,
+      menuChildren: [
+        Consumer(
+          builder: (context, ref, child) {
+            final selectedUnit = ref.watch(uiUnitAreaProvider);
+            return MenuButtonWithChildren(
+              text: 'Area',
+              icon: Icons.square_foot,
+              menuChildren: UnitArea.values
+                  .map(
+                    (unit) => Consumer(
+                      builder: (context, ref, child) => ListTile(
+                        title: Text(unit.name.capitalize),
+                        leading: Text(unit.symbol),
+                        subtitle: Text(
+                          '${unit.inSquareMeters.toStringAsFixed(1)} m²',
+                        ),
+                        onTap: () =>
+                            ref.read(uiUnitAreaProvider.notifier).update(unit),
+                        selected: selectedUnit == unit,
+                      ),
+                    ),
+                  )
+                  .toList(),
+            );
+          },
+        ),
+        Consumer(
+          builder: (context, ref, child) {
+            final selectedUnit = ref.watch(uiUnitDistanceProvider);
+            return MenuButtonWithChildren(
+              text: 'Distance',
+              icon: Icons.straighten,
+              menuChildren: UnitDistance.values
+                  .map(
+                    (unit) => Consumer(
+                      builder: (context, ref, child) => ListTile(
+                        title: Text(unit.name.capitalize),
+                        leading: Text(unit.symbol),
+                        subtitle: Text('${unit.inMeters} m'),
+                        onTap: () => ref
+                            .read(uiUnitDistanceProvider.notifier)
+                            .update(unit),
+                        selected: selectedUnit == unit,
+                      ),
+                    ),
+                  )
+                  .toList(),
+            );
+          },
+        ),
+        Consumer(
+          builder: (context, ref, child) {
+            final selectedUnit = ref.watch(uiUnitVelocityProvider);
+            return MenuButtonWithChildren(
+              text: 'Velocity',
+              icon: Icons.speed,
+              menuChildren: UnitVelocity.values
+                  .map(
+                    (unit) => Consumer(
+                      builder: (context, ref, child) => ListTile(
+                        title: Text(unit.name.capitalize),
+                        leading: Text(unit.symbol),
+                        subtitle: Text(
+                          '${unit.inMetersPerSecond.toStringAsFixed(3)} m/s',
+                        ),
+                        onTap: () => ref
+                            .read(uiUnitVelocityProvider.notifier)
+                            .update(unit),
+                        selected: selectedUnit == unit,
+                      ),
+                    ),
+                  )
+                  .toList(),
+            );
+          },
+        ),
+      ],
+    );
+  }
 }

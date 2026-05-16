@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -36,40 +37,46 @@ class BasicVehicleGauges extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Consumer(
-          builder: (context, ref, child) => Material(
-            type: .transparency,
-            child: ListTile(
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(16),
-                  bottomRight: Radius.circular(16),
+          builder: (context, ref, child) {
+            final unit = ref.watch(uiUnitDistanceProvider);
+            final distance = unit.fromUnit(
+              ref.watch(gaugeTravelledDistanceProvider),
+            );
+            return Material(
+              type: .transparency,
+              child: ListTile(
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(16),
+                    bottomRight: Radius.circular(16),
+                  ),
                 ),
-              ),
-              leading: const Icon(
-                Icons.straighten,
-                color: Colors.white,
-                shadows: [Shadow(offset: Offset(2, 2))],
-              ),
-              onLongPress: () => ref
-                ..invalidate(gaugeTravelledDistanceProvider)
-                ..invalidate(debugVehicleTravelledPathListProvider),
-              title: TextWithStroke(
-                '''${ref.watch(gaugeTravelledDistanceProvider).toStringAsFixed(1).padLeft(5)} m''',
-                style: GoogleFonts.robotoMono(
+                leading: const Icon(
+                  Icons.straighten,
                   color: Colors.white,
-                  textStyle: theme.textTheme.titleMedium,
+                  shadows: [Shadow(offset: Offset(2, 2))],
                 ),
-                strokeWidth: 3.5,
-              ),
-              subtitle: TextWithStroke(
-                'Hold to reset',
-                style: theme.textTheme.titleSmall?.copyWith(
-                  color: Colors.white,
+                onLongPress: () => ref
+                  ..invalidate(gaugeTravelledDistanceProvider)
+                  ..invalidate(debugVehicleTravelledPathListProvider),
+                title: TextWithStroke(
+                  '''${distance.toStringAsFixed(1).padLeft(5)} ${unit.symbol}''',
+                  style: GoogleFonts.robotoMono(
+                    color: Colors.white,
+                    textStyle: theme.textTheme.titleMedium,
+                  ),
+                  strokeWidth: 3.5,
                 ),
-                strokeWidth: 2,
+                subtitle: TextWithStroke(
+                  'Hold to reset',
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    color: Colors.white,
+                  ),
+                  strokeWidth: 2,
+                ),
               ),
-            ),
-          ),
+            );
+          },
         ),
         ListTile(
           leading: const Icon(
@@ -78,14 +85,19 @@ class BasicVehicleGauges extends StatelessWidget {
             shadows: [Shadow(offset: Offset(2, 2))],
           ),
           title: Consumer(
-            builder: (context, ref, child) => TextWithStroke(
-              '''${(ref.watch(gaugeVelocityProvider) * 3.6).toStringAsFixed(1).padLeft(5)} km/h''',
-              style: GoogleFonts.robotoMono(
-                color: Colors.white,
-                textStyle: theme.textTheme.titleMedium,
-              ),
-              strokeWidth: 3.5,
-            ),
+            builder: (context, ref, child) {
+              final unit = ref.watch(uiUnitVelocityProvider);
+              final velocity = unit.fromUnit(ref.watch(gaugeVelocityProvider));
+
+              return TextWithStroke(
+                '''${velocity.toStringAsFixed(1).padLeft(5)} ${unit.symbol}''',
+                style: GoogleFonts.robotoMono(
+                  color: Colors.white,
+                  textStyle: theme.textTheme.titleMedium,
+                ),
+                strokeWidth: 3.5,
+              );
+            },
           ),
         ),
         ListTile(

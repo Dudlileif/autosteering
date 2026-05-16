@@ -30,4 +30,5 @@ export 'position_projection_extensions.dart';
 export 'raw_datagram_socket_extensions.dart';
 export 'ring_buffer.dart';
 export 'sub_directory_finder_extension.dart';
+export 'units/units.dart';
 export 'xml_element_finder.dart';

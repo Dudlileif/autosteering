@@ -485,3 +485,176 @@ final class ReloadAllSettingsProvider
 }
 
 String _$reloadAllSettingsHash() => r'cda9fc34c9c7c0205dce8fe1dd421b55ecabeb0c';
+
+/// A provider for which area unit the UI should show.
+
+@ProviderFor(UiUnitArea)
+final uiUnitAreaProvider = UiUnitAreaProvider._();
+
+/// A provider for which area unit the UI should show.
+final class UiUnitAreaProvider extends $NotifierProvider<UiUnitArea, UnitArea> {
+  /// A provider for which area unit the UI should show.
+  UiUnitAreaProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'uiUnitAreaProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$uiUnitAreaHash();
+
+  @$internal
+  @override
+  UiUnitArea create() => UiUnitArea();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(UnitArea value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<UnitArea>(value),
+    );
+  }
+}
+
+String _$uiUnitAreaHash() => r'ff7e8ff3cb31c582a775882f2ac2819dbded9417';
+
+/// A provider for which area unit the UI should show.
+
+abstract class _$UiUnitArea extends $Notifier<UnitArea> {
+  UnitArea build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<UnitArea, UnitArea>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<UnitArea, UnitArea>,
+              UnitArea,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// A provider for which distance unit the UI should show.
+
+@ProviderFor(UiUnitDistance)
+final uiUnitDistanceProvider = UiUnitDistanceProvider._();
+
+/// A provider for which distance unit the UI should show.
+final class UiUnitDistanceProvider
+    extends $NotifierProvider<UiUnitDistance, UnitDistance> {
+  /// A provider for which distance unit the UI should show.
+  UiUnitDistanceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'uiUnitDistanceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$uiUnitDistanceHash();
+
+  @$internal
+  @override
+  UiUnitDistance create() => UiUnitDistance();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(UnitDistance value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<UnitDistance>(value),
+    );
+  }
+}
+
+String _$uiUnitDistanceHash() => r'65b975e775a5fc7c50818dc1d392fb02c9213d33';
+
+/// A provider for which distance unit the UI should show.
+
+abstract class _$UiUnitDistance extends $Notifier<UnitDistance> {
+  UnitDistance build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<UnitDistance, UnitDistance>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<UnitDistance, UnitDistance>,
+              UnitDistance,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// A provider for which velocity unit the UI should show.
+
+@ProviderFor(UiUnitVelocity)
+final uiUnitVelocityProvider = UiUnitVelocityProvider._();
+
+/// A provider for which velocity unit the UI should show.
+final class UiUnitVelocityProvider
+    extends $NotifierProvider<UiUnitVelocity, UnitVelocity> {
+  /// A provider for which velocity unit the UI should show.
+  UiUnitVelocityProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'uiUnitVelocityProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$uiUnitVelocityHash();
+
+  @$internal
+  @override
+  UiUnitVelocity create() => UiUnitVelocity();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(UnitVelocity value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<UnitVelocity>(value),
+    );
+  }
+}
+
+String _$uiUnitVelocityHash() => r'8c837d38b6c6732a8d6dd46c38c375c7edb3bbea';
+
+/// A provider for which velocity unit the UI should show.
+
+abstract class _$UiUnitVelocity extends $Notifier<UnitVelocity> {
+  UnitVelocity build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<UnitVelocity, UnitVelocity>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<UnitVelocity, UnitVelocity>,
+              UnitVelocity,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
