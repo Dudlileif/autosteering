@@ -59,6 +59,7 @@ Future<void> initializeSimCore(Ref ref) async {
   ref.read(simInputProvider.notifier)
     ..send(ref.read(mainVehicleProvider))
     ..send((simulationTargetHz: ref.read(simulatorUpdateFrequencyProvider)))
+    ..send((gaugesAverageCount: ref.read(gaugesAverageCountProvider)))
     ..send((autoSlowDown: ref.read(simCoreVehicleAutoSlowDownProvider)))
     ..send((
       autoCenterSteering: ref.read(simCoreVehicleAutoCenterSteeringProvider),
@@ -230,4 +231,30 @@ class SimCoreVehicleAutoSlowDown extends _$SimCoreVehicleAutoSlowDown {
 
   /// Invert the current [state].
   void toggle() => Future(() => state != state);
+}
+
+/// A provider for the number of previous positions to use for calculating
+/// the gauge velocity and bearing values.
+@Riverpod(keepAlive: true)
+class GaugesAverageCount extends _$GaugesAverageCount {
+  @override
+  int build() {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      ref.read(simInputProvider.notifier).send((gaugesAverageCount: next));
+      if (previous != null) {
+        ref
+            .read(settingsProvider.notifier)
+            .update(SettingsKey.gaugesAverageCount, next);
+      }
+    });
+
+    return ref
+            .read(settingsProvider.notifier)
+            .getInt(SettingsKey.gaugesAverageCount) ??
+        10;
+  }
+
+  /// Update the [state] to [value].
+  void update(int value) => Future(() => state = value);
 }

@@ -626,69 +626,6 @@ final class LastUsedVehicleProvider
 
 String _$lastUsedVehicleHash() => r'286f2c8f04bb4d0b06c044bd219d21348cd4e3ca';
 
-/// A provider for the number of previous positions to use for calculating
-/// the gauge velocity and bearing values.
-
-@ProviderFor(GaugesAverageCount)
-final gaugesAverageCountProvider = GaugesAverageCountProvider._();
-
-/// A provider for the number of previous positions to use for calculating
-/// the gauge velocity and bearing values.
-final class GaugesAverageCountProvider
-    extends $NotifierProvider<GaugesAverageCount, int> {
-  /// A provider for the number of previous positions to use for calculating
-  /// the gauge velocity and bearing values.
-  GaugesAverageCountProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'gaugesAverageCountProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$gaugesAverageCountHash();
-
-  @$internal
-  @override
-  GaugesAverageCount create() => GaugesAverageCount();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(int value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<int>(value),
-    );
-  }
-}
-
-String _$gaugesAverageCountHash() =>
-    r'e407f07f9f1334a8aa3816877cf3f391c25a7e48';
-
-/// A provider for the number of previous positions to use for calculating
-/// the gauge velocity and bearing values.
-
-abstract class _$GaugesAverageCount extends $Notifier<int> {
-  int build();
-  @$mustCallSuper
-  @override
-  void runBuild() {
-    final ref = this.ref as $Ref<int, int>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<int, int>,
-              int,
-              Object?,
-              Object?
-            >;
-    element.handleCreate(ref, build);
-  }
-}
-
 /// A provider for the target steering angle when using guidance.
 
 @ProviderFor(VehicleSteeringAngleTarget)

@@ -21,7 +21,6 @@ import 'dart:convert';
 import 'package:autosteering/src/features/audio/audio.dart';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/map/map.dart';
-import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:file_picker/file_picker.dart';
@@ -194,31 +193,6 @@ AsyncValue<Vehicle> lastUsedVehicle(Ref ref) =>
 
       return PreconfiguredVehicles.tractor;
     });
-
-/// A provider for the number of previous positions to use for calculating
-/// the gauge velocity and bearing values.
-@Riverpod(keepAlive: true)
-class GaugesAverageCount extends _$GaugesAverageCount {
-  @override
-  int build() {
-    ref.watch(reloadAllSettingsProvider);
-    listenSelf((previous, next) {
-      if (previous != null) {
-        ref
-            .read(settingsProvider.notifier)
-            .update(SettingsKey.gaugesAverageCount, next);
-      }
-    });
-
-    return ref
-            .read(settingsProvider.notifier)
-            .getInt(SettingsKey.gaugesAverageCount) ??
-        10;
-  }
-
-  /// Update the [state] to [value].
-  void update(int value) => Future(() => state = value);
-}
 
 /// A provider for the target steering angle when using guidance.
 @Riverpod(keepAlive: true)

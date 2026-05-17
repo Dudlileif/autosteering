@@ -103,7 +103,7 @@ final class InitializeSimCoreProvider
   }
 }
 
-String _$initializeSimCoreHash() => r'c9d8d9e5da06776956f76909b67bd925482137ed';
+String _$initializeSimCoreHash() => r'f0ba7f1ebd7da3fc86c9d5a977fc14009dbe1cee';
 
 /// A provider for handling the common sim core messages for the state of the
 /// simulation.
@@ -556,6 +556,69 @@ abstract class _$SimCoreVehicleAutoSlowDown extends $Notifier<bool> {
             as $ClassProviderElement<
               AnyNotifier<bool, bool>,
               bool,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// A provider for the number of previous positions to use for calculating
+/// the gauge velocity and bearing values.
+
+@ProviderFor(GaugesAverageCount)
+final gaugesAverageCountProvider = GaugesAverageCountProvider._();
+
+/// A provider for the number of previous positions to use for calculating
+/// the gauge velocity and bearing values.
+final class GaugesAverageCountProvider
+    extends $NotifierProvider<GaugesAverageCount, int> {
+  /// A provider for the number of previous positions to use for calculating
+  /// the gauge velocity and bearing values.
+  GaugesAverageCountProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'gaugesAverageCountProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$gaugesAverageCountHash();
+
+  @$internal
+  @override
+  GaugesAverageCount create() => GaugesAverageCount();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(int value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<int>(value),
+    );
+  }
+}
+
+String _$gaugesAverageCountHash() =>
+    r'b0fb6b23349cbc68704337613e812d2641e4a830';
+
+/// A provider for the number of previous positions to use for calculating
+/// the gauge velocity and bearing values.
+
+abstract class _$GaugesAverageCount extends $Notifier<int> {
+  int build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<int, int>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<int, int>,
+              int,
               Object?,
               Object?
             >;

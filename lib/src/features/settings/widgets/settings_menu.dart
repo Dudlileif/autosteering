@@ -327,6 +327,8 @@ class _UnitMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final dadMode = ref.watch(enableDadModeProvider);
+
     return MenuButtonWithChildren(
       text: 'Units',
       icon: Icons.speed,
@@ -406,6 +408,42 @@ class _UnitMenu extends ConsumerWidget {
             );
           },
         ),
+        if (!dadMode)
+          Consumer(
+            builder: (context, ref, child) {
+              final count = ref.watch(gaugesAverageCountProvider);
+              return ListTile(
+                title: const Text('Gauge average count'),
+                subtitle: Row(
+                  spacing: 8,
+                  mainAxisAlignment: .spaceEvenly,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.remove),
+                      onPressed: switch (count) {
+                        > 5 =>
+                          () => ref
+                              .read(gaugesAverageCountProvider.notifier)
+                              .update(count - 5),
+                        _ => null,
+                      },
+                    ),
+                    Text('$count'),
+                    IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: switch (count) {
+                        < 50 =>
+                          () => ref
+                              .read(gaugesAverageCountProvider.notifier)
+                              .update(count + 5),
+                        _ => null,
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
       ],
     );
   }
