@@ -53,7 +53,9 @@ class SentinelLayerSelector extends ConsumerWidget {
             layer: layer,
           );
         },
-        onReorder: ref.read(availableSentinelLayersProvider.notifier).reorder,
+        onReorderItem: ref
+            .read(availableSentinelLayersProvider.notifier)
+            .reorder,
       );
 
       return MenuButtonWithChildren(

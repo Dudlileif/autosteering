@@ -70,18 +70,14 @@ sealed class Vehicle extends Hitchable {
     PurePursuitParameters? purePursuitParameters,
     StanleyParameters? stanleyParameters,
     super.lastUsed,
-    double bearing = 0,
-    double pitch = 0,
-    double roll = 0,
-    double velocity = 0,
+    this._bearing = 0,
+    this._pitch = 0,
+    this._roll = 0,
+    this._velocity = 0,
     this.nudgeDistance = 0,
     this.manualSimulationMode = false,
   }) : numWheels = numWheels ?? 1,
        wheelSpacing = wheelSpacing ?? 0.05,
-       _bearing = bearing,
-       _pitch = pitch,
-       _roll = roll,
-       _velocity = velocity,
        gnssAntennaConfig = gnssAntennaConfig ?? const GnssAntennaConfig(),
        imu = imu ?? Imu(),
        was = was ?? Was(),
@@ -835,8 +831,7 @@ enum VehicleType {
   articulatedTractor('Articulated tractor'),
 
   /// Harvester or vehicle with rear axle steering.
-  harvester('Harvester')
-  ;
+  harvester('Harvester');
 
   const VehicleType(this.name);
 

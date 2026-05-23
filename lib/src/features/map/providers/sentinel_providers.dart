@@ -98,12 +98,8 @@ class AvailableSentinelLayers extends _$AvailableSentinelLayers {
 
   /// Reorders the item at [oldIndex] to [newIndex].
   void reorder(int oldIndex, int newIndex) => Future(() {
-    var moveTo = newIndex;
-    if (oldIndex < newIndex) {
-      moveTo -= 1;
-    }
     final layer = state.removeAt(oldIndex);
-    state = List<SentinelLayer>.from(state)..insert(moveTo, layer);
+    state = List<SentinelLayer>.from(state)..insert(newIndex, layer);
   });
 
   @override

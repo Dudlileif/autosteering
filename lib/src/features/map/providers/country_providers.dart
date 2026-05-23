@@ -154,12 +154,8 @@ class AvailableCountryLayers extends _$AvailableCountryLayers {
 
   /// Reorder the item at [oldIndex] to [newIndex].
   void reorder(int oldIndex, int newIndex) => Future(() {
-    var moveTo = newIndex;
-    if (oldIndex < newIndex) {
-      moveTo -= 1;
-    }
     final layer = state.removeAt(oldIndex);
-    state = List<TileLayerData>.from(state)..insert(moveTo, layer);
+    state = List<TileLayerData>.from(state)..insert(newIndex, layer);
   });
 
   @override

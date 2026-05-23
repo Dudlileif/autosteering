@@ -58,7 +58,9 @@ class CountryLayerSelector extends ConsumerWidget {
             layer: layer,
           );
         },
-        onReorder: ref.read(availableCountryLayersProvider.notifier).reorder,
+        onReorderItem: ref
+            .read(availableCountryLayersProvider.notifier)
+            .reorder,
       );
 
       return MenuButtonWithChildren(

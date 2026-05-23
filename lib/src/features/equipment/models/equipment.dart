@@ -48,7 +48,7 @@ class Equipment extends Hitchable {
   /// [hitchToChildRearFixedHitchLength], [hitchToChildRearTowbarHitchLength]
   /// depending on which hitch(es) you wan't to add.
   ///
-  /// The [bearing] and [position] parameters generally doesn't need to be
+  /// The [bearing] and [_position] parameters generally doesn't need to be
   /// set, as the equipment usually doesn't spawn/show initially without a
   /// parent to inherit position and bearing from.
   Equipment({
@@ -73,9 +73,8 @@ class Equipment extends Hitchable {
     this.decorationWidth,
     List<Section>? sections,
     double bearing = 0,
-    Geographic position = const Geographic(lat: 0, lon: 0),
+    this._position = const Geographic(lat: 0, lon: 0),
   }) : sections = sections ?? [],
-       _position = position,
        _bearing = hitchParent?.bearing ?? bearing;
 
   /// Creates an [Equipment] from the [json] object.

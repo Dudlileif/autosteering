@@ -74,6 +74,7 @@ class MenuButtonWithChildren extends ConsumerWidget {
     );
 
     return SubmenuButton(
+      animated: true,
       menuChildren: menuChildren,
       child: icon != null || iconOverrideWidget != null
           ? Row(
