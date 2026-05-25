@@ -22,6 +22,7 @@ import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -48,6 +49,7 @@ class SettingsMenu extends ConsumerWidget {
         const _ImportExportMenu(),
         const _DadModeButton(),
         if (!dadMode) ...[const _DebugModeButton(), const _GraphButton()],
+        const _LocaleMenu(),
         const _LicenseButton(),
       ],
     );
@@ -445,6 +447,30 @@ class _UnitMenu extends ConsumerWidget {
             },
           ),
       ],
+    );
+  }
+}
+
+class _LocaleMenu extends ConsumerWidget {
+  const _LocaleMenu();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedLocale = ref.watch(uiLocaleProvider);
+    final strings = AppLocalizations.of(context);
+
+    return MenuButtonWithChildren(
+      text: strings.locale,
+      icon: Icons.language,
+      menuChildren: AppLocalizations.supportedLocales
+          .map(
+            (locale) => ListTile(
+              title: Text(strings.localeOption(locale.languageCode)),
+              selected: locale == selectedLocale,
+              onTap: () => ref.read(uiLocaleProvider.notifier).update(locale),
+            ),
+          )
+          .toList(),
     );
   }
 }

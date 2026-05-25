@@ -17,7 +17,9 @@
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/scaffold/widgets/main_scaffold.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -61,6 +63,7 @@ class _AutosteeringState extends ConsumerState<Autosteering> {
 
     final appTheme = ref.watch(appThemeProvider);
     final themeMode = ref.watch(activeThemeModeProvider);
+    final locale = ref.watch(uiLocaleProvider);
 
     Logger.instance.i('Theme updated.');
 
@@ -73,6 +76,9 @@ class _AutosteeringState extends ConsumerState<Autosteering> {
       darkTheme: appTheme.dark,
       themeMode: themeMode,
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: locale,
       home: const MainScaffold(),
     );
 

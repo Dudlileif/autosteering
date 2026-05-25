@@ -73,7 +73,8 @@
   "conventionalCommits.scopes": [
     "Dad mode",
     "Remote control",
-    "Hardware"
+    "Hardware",
+    "Localization"
   ],
   "dart.flutterSdkPath": ".fvm/versions/3.44.0",
   "editor.formatOnSave": true,

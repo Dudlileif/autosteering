@@ -1,0 +1,17 @@
+{
+    "@@locale": "en",
+    "locale": "Locale",
+    "@locale": {
+        "description": "Name on menu entry for selecting app locale."
+    },
+    "localeOption": "{locale, select, en{English} nb{Norwegian} other{Language}}",
+    "@localeOption": {
+        "description": "Locale name, e.g. English, Norwegian etc.",
+        "placeholders": {
+            "locale": {
+                "type": "String",
+                "example": "en"
+            }
+        }
+    }
+}

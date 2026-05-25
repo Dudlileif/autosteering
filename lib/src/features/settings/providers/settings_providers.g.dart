@@ -658,3 +658,60 @@ abstract class _$UiUnitVelocity extends $Notifier<UnitVelocity> {
     element.handleCreate(ref, build);
   }
 }
+
+/// A provider for which locale to use.
+
+@ProviderFor(UiLocale)
+final uiLocaleProvider = UiLocaleProvider._();
+
+/// A provider for which locale to use.
+final class UiLocaleProvider extends $NotifierProvider<UiLocale, Locale> {
+  /// A provider for which locale to use.
+  UiLocaleProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'uiLocaleProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$uiLocaleHash();
+
+  @$internal
+  @override
+  UiLocale create() => UiLocale();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Locale value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Locale>(value),
+    );
+  }
+}
+
+String _$uiLocaleHash() => r'289b692aee4203fde31d8186eaa4aeba0502a561';
+
+/// A provider for which locale to use.
+
+abstract class _$UiLocale extends $Notifier<Locale> {
+  Locale build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<Locale, Locale>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Locale, Locale>,
+              Locale,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

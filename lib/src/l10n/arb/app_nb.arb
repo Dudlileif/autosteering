@@ -1,0 +1,5 @@
+{
+    "@@locale": "nb",
+    "locale": "Språk",
+    "localeOption": "{locale, select, en{Engelsk} nb{Norsk} other{Språk}}"
+}

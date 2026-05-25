@@ -18,6 +18,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:ui' show Locale;
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
@@ -373,4 +374,41 @@ class UiUnitVelocity extends _$UiUnitVelocity {
 
   /// Update the [state] to [value].
   void update(UnitVelocity value) => Future(() => state = value);
+}
+
+/// A provider for which locale to use.
+@Riverpod(keepAlive: true)
+class UiLocale extends _$UiLocale {
+  @override
+  Locale build() {
+    ref.watch(reloadAllSettingsProvider);
+    listenSelf((previous, next) {
+      if (next != previous) {
+        ref.read(settingsProvider.notifier).update(
+          SettingsKey.uiLocale,
+          switch (next) {
+            Locale(:final languageCode, :final countryCode?) =>
+              '$languageCode-$countryCode',
+            Locale(:final languageCode) => languageCode,
+          },
+        );
+      }
+    });
+
+    final value = ref
+        .read(settingsProvider.notifier)
+        .getString(SettingsKey.uiLocale);
+
+    return switch (value?.split('-')) {
+      [final languageCode, final countryCode] => Locale(
+        languageCode,
+        countryCode,
+      ),
+      [final languageCode] => Locale(languageCode),
+      _ => const Locale('en'),
+    };
+  }
+
+  /// Update the [state] to [value].
+  void update(Locale value) => Future(() => state = value);
 }
