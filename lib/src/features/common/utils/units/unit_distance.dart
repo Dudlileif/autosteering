@@ -15,9 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-/// An enumerator for which unit we want to use when displaying distance in the
+/// An enumerator for which unit we want to use when displaying lengths in the
 /// app.
-enum UnitDistance {
+enum UnitLength {
   /// The SI base unit for distance.
   meter(1, 'm'),
 
@@ -25,13 +25,12 @@ enum UnitDistance {
   foot(0.3048, 'ft'),
 
   /// 1 yard is equal to 0.9144 meters.
-  yard(0.9144, 'yd')
-  ;
+  yard(0.9144, 'yd');
 
-  const UnitDistance(this.inMeters, this.symbol);
+  const UnitLength(this.inMeters, this.symbol);
 
   /// Find enum value by [symbol], defaults to [meter] if no match is found.
-  static UnitDistance fromSymbol(String? symbol) => values.firstWhere(
+  static UnitLength fromSymbol(String? symbol) => values.firstWhere(
     (unit) => unit.symbol == symbol,
     orElse: () => .meter,
   );
@@ -44,6 +43,6 @@ enum UnitDistance {
 
   /// Convert [value] to this unit from [sourceUnit], defaults to
   /// [meter].
-  double fromUnit(double value, {UnitDistance sourceUnit = .meter}) =>
+  double fromUnit(double value, {UnitLength sourceUnit = .meter}) =>
       value * sourceUnit.inMeters / inMeters;
 }

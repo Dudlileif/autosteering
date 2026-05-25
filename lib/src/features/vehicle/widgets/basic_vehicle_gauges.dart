@@ -18,6 +18,7 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -32,13 +33,15 @@ class BasicVehicleGauges extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final strings = AppLocalizations.of(context);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Consumer(
           builder: (context, ref, child) {
-            final unit = ref.watch(uiUnitDistanceProvider);
+            final unit = ref.watch(uiUnitLengthProvider);
             final distance = unit.fromUnit(
               ref.watch(gaugeTravelledDistanceProvider),
             );
@@ -60,7 +63,7 @@ class BasicVehicleGauges extends StatelessWidget {
                   ..invalidate(gaugeTravelledDistanceProvider)
                   ..invalidate(debugVehicleTravelledPathListProvider),
                 title: TextWithStroke(
-                  '''${distance.toStringAsFixed(1).padLeft(5)} ${unit.symbol}''',
+                  '''${distance.toStringAsFixed(1).padLeft(5)} ${strings.unitLengthDisplay(unit.symbol)}''',
                   style: GoogleFonts.robotoMono(
                     color: Colors.white,
                     textStyle: theme.textTheme.titleMedium,
@@ -90,7 +93,7 @@ class BasicVehicleGauges extends StatelessWidget {
               final velocity = unit.fromUnit(ref.watch(gaugeVelocityProvider));
 
               return TextWithStroke(
-                '''${velocity.toStringAsFixed(1).padLeft(5)} ${unit.symbol}''',
+                '''${velocity.toStringAsFixed(1).padLeft(5)} ${strings.unitVelocityDisplay(unit.symbol)}''',
                 style: GoogleFonts.robotoMono(
                   color: Colors.white,
                   textStyle: theme.textTheme.titleMedium,

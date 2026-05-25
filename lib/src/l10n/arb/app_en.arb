@@ -1,5 +1,9 @@
 {
     "@@locale": "en",
+    "area": "Area",
+    "@area": {},
+    "length": "Length",
+    "@length": {},
     "locale": "Locale",
     "@locale": {
         "description": "Name on menu entry for selecting app locale."
@@ -13,5 +17,75 @@
                 "example": "en"
             }
         }
-    }
+    },
+    "units": "Units",
+    "@units": {},
+    "unitAreaDisplay": "{arg, select, other{Area unit} m2{m²} ac{ac} ha{haa} daa{daa}}",
+    "@unitAreaDisplay": {
+        "context": "unit.area",
+        "description": "Display (e.g. in gauges) for area unit enum",
+        "placeholders": {
+            "arg": {
+                "type": "String",
+                "example": "m2"
+            }
+        }
+    },
+    "unitAreaName": "{arg, select, other{Area unit} m2{Square meters} ac{Acre} ha{Hectare} daa{Decare}}",
+    "@unitAreaName": {
+        "context": "unit.area",
+        "description": "Name for area unit enum.",
+        "placeholders": {
+            "arg": {
+                "type": "String",
+                "example": "m2"
+            }
+        }
+    },
+    "unitLengthDisplay": "{arg, select, other{Length unit} m{m} ft{ft} yd{yd}}",
+    "@unitLengthDisplay": {
+        "context": "unit.length",
+        "description": "Display (e.g. in gauges) for length unit enum",
+        "placeholders": {
+            "arg": {
+                "type": "String",
+                "example": "m"
+            }
+        }
+    },
+    "unitLengthName": "{arg, select, other{Length unit} m{Meters} ft{Feet} yd{Yard}}",
+    "@unitLengthName": {
+        "context": "unit.length",
+        "description": "Name for length unit enum.",
+        "placeholders": {
+            "arg": {
+                "type": "String",
+                "example": "m"
+            }
+        }
+    },
+    "unitVelocityDisplay": "{arg, select, other{Velocity unit} mps{m/s} kph{km/h} mph{mph}}",
+    "@unitVelocityDisplay": {
+        "context": "unit.length",
+        "description": "Display (e.g. in gauges) for velocity unit enum",
+        "placeholders": {
+            "arg": {
+                "type": "String",
+                "example": "kph"
+            }
+        }
+    },
+    "unitVelocityName": "{arg, select, other{Velocity unit} mps{Meters per second} kph{Kilometers per hour} mph{Miles per hour}}",
+    "@unitVelocityName": {
+        "context": "unit.length",
+        "description": "Name for velocity unit enum.",
+        "placeholders": {
+            "arg": {
+                "type": "String",
+                "example": "kph"
+            }
+        }
+    },
+    "velocity": "Velocity",
+    "@velocity": {}
 }

@@ -26,6 +26,7 @@ import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:collection/collection.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
@@ -353,6 +354,7 @@ class _LoadFieldMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final fields = ref
         .watch(savedFieldsProvider)
         .maybeWhen(
@@ -408,7 +410,7 @@ class _LoadFieldMenu extends ConsumerWidget {
                   : null,
               title: Text(field.name, style: textStyle),
               subtitle: Text(
-                '''${area.toStringAsFixed(2)} ${unit.symbol}''',
+                '''${area.toStringAsFixed(2)} ${strings.unitAreaDisplay(unit.symbol)}''',
               ),
             ),
           );

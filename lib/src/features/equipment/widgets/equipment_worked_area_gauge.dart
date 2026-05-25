@@ -21,6 +21,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -34,6 +35,7 @@ class EquipmentWorkedAreaGauge extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final fieldArea = ref.watch(
       activeFieldProvider.select((value) => value?.areaWithoutHoles),
     );
@@ -55,13 +57,13 @@ class EquipmentWorkedAreaGauge extends ConsumerWidget {
         title: TextWithStroke(
           switch ((area, fieldArea)) {
             (final area?, final fieldArea?) => [
-              '${unit.fromUnit(area).toStringAsFixed(2)} / ${unit.fromUnit(fieldArea).toStringAsFixed(2)} ${unit.symbol}',
+              '${unit.fromUnit(area).toStringAsFixed(2)} / ${unit.fromUnit(fieldArea).toStringAsFixed(2)} ${strings.unitAreaDisplay(unit.symbol)}',
               '''${clampDouble(100 * area / fieldArea, 0, 100).toStringAsFixed(1)}%''',
             ].join('\n'),
             (final area?, _) =>
-              '${unit.fromUnit(area).toStringAsFixed(2)} ${unit.symbol}',
+              ''''${unit.fromUnit(area).toStringAsFixed(2)} ${strings.unitAreaDisplay(unit.symbol)}''',
             (_, final fieldArea?) =>
-              '- / ${unit.fromUnit(fieldArea).toStringAsFixed(2)} ${unit.symbol}',
+              ''''- / ${unit.fromUnit(fieldArea).toStringAsFixed(2)} ${strings.unitAreaDisplay(unit.symbol)}''',
             _ => '',
           },
           style: GoogleFonts.robotoMono(

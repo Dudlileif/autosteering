@@ -328,27 +328,27 @@ class UiUnitArea extends _$UiUnitArea {
 
 /// A provider for which distance unit the UI should show.
 @Riverpod(keepAlive: true)
-class UiUnitDistance extends _$UiUnitDistance {
+class UiUnitLength extends _$UiUnitLength {
   @override
-  UnitDistance build() {
+  UnitLength build() {
     ref.watch(reloadAllSettingsProvider);
     listenSelf((previous, next) {
       if (next != previous) {
         ref
             .read(settingsProvider.notifier)
-            .update(SettingsKey.uiUnitDistance, next.symbol);
+            .update(SettingsKey.uiUnitLength, next.symbol);
       }
     });
 
     final value = ref
         .read(settingsProvider.notifier)
-        .getString(SettingsKey.uiUnitDistance);
+        .getString(SettingsKey.uiUnitLength);
 
-    return UnitDistance.fromSymbol(value);
+    return UnitLength.fromSymbol(value);
   }
 
   /// Update the [state] to [value].
-  void update(UnitDistance value) => Future(() => state = value);
+  void update(UnitLength value) => Future(() => state = value);
 }
 
 /// A provider for which velocity unit the UI should show.

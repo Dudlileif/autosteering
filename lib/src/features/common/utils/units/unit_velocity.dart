@@ -19,10 +19,10 @@
 /// app.
 enum UnitVelocity {
   /// 1 meter per second is the base unit for velocity.
-  metersPerSecond(1, 'm/s'),
+  metersPerSecond(1, 'mps'),
 
   /// 1 kilometer per hour is equal to ~ 0.277777777778 meters per second.
-  kilometersPerHour(0.277777777778, 'km/h'),
+  kilometersPerHour(0.277777777778, 'kph'),
 
   /// 1 mile per hour is equal to 0.44704 meters per second.
   milesPerHour(0.44704, 'mph'),

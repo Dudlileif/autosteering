@@ -21,6 +21,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,6 +38,7 @@ class SimVehicleVelocityControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final strings = AppLocalizations.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -103,7 +105,7 @@ class SimVehicleVelocityControls extends StatelessWidget {
                         ),
                       ),
                       TextWithStroke(
-                        '''${unit.fromUnit(velocity).toStringAsFixed(1).padLeft(5)} ${unit.symbol}''',
+                        '''${unit.fromUnit(velocity).toStringAsFixed(1).padLeft(5)} ${strings.unitVelocityDisplay(unit.symbol)}''',
                         style: GoogleFonts.robotoMono(
                           color: Colors.white,
                           textStyle: theme.textTheme.titleMedium,

@@ -23,7 +23,6 @@ import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/l10n/app_localizations.dart';
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -329,26 +328,27 @@ class _UnitMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final dadMode = ref.watch(enableDadModeProvider);
 
     return MenuButtonWithChildren(
-      text: 'Units',
+      text: strings.units,
       icon: Icons.speed,
       menuChildren: [
         Consumer(
           builder: (context, ref, child) {
             final selectedUnit = ref.watch(uiUnitAreaProvider);
             return MenuButtonWithChildren(
-              text: 'Area',
+              text: strings.area,
               icon: Icons.square_foot,
               menuChildren: UnitArea.values
                   .map(
                     (unit) => Consumer(
                       builder: (context, ref, child) => ListTile(
-                        title: Text(unit.name.capitalize),
-                        leading: Text(unit.symbol),
+                        title: Text(strings.unitAreaName(unit.symbol)),
+                        leading: Text(strings.unitAreaDisplay(unit.symbol)),
                         subtitle: Text(
-                          '${unit.inSquareMeters.toStringAsFixed(1)} m²',
+                          '''${unit.inSquareMeters.toStringAsFixed(1)} ${strings.unitAreaDisplay(UnitArea.squareMeter.symbol)}''',
                         ),
                         onTap: () =>
                             ref.read(uiUnitAreaProvider.notifier).update(unit),
@@ -362,19 +362,21 @@ class _UnitMenu extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) {
-            final selectedUnit = ref.watch(uiUnitDistanceProvider);
+            final selectedUnit = ref.watch(uiUnitLengthProvider);
             return MenuButtonWithChildren(
-              text: 'Distance',
+              text: strings.length,
               icon: Icons.straighten,
-              menuChildren: UnitDistance.values
+              menuChildren: UnitLength.values
                   .map(
                     (unit) => Consumer(
                       builder: (context, ref, child) => ListTile(
-                        title: Text(unit.name.capitalize),
-                        leading: Text(unit.symbol),
-                        subtitle: Text('${unit.inMeters} m'),
+                        title: Text(strings.unitLengthName(unit.symbol)),
+                        leading: Text(strings.unitLengthDisplay(unit.symbol)),
+                        subtitle: Text(
+                          '''${unit.inMeters} ${strings.unitLengthDisplay(UnitLength.meter.symbol)}''',
+                        ),
                         onTap: () => ref
-                            .read(uiUnitDistanceProvider.notifier)
+                            .read(uiUnitLengthProvider.notifier)
                             .update(unit),
                         selected: selectedUnit == unit,
                       ),
@@ -388,16 +390,16 @@ class _UnitMenu extends ConsumerWidget {
           builder: (context, ref, child) {
             final selectedUnit = ref.watch(uiUnitVelocityProvider);
             return MenuButtonWithChildren(
-              text: 'Velocity',
+              text: strings.velocity,
               icon: Icons.speed,
               menuChildren: UnitVelocity.values
                   .map(
                     (unit) => Consumer(
                       builder: (context, ref, child) => ListTile(
-                        title: Text(unit.name.capitalize),
-                        leading: Text(unit.symbol),
+                        title: Text(strings.unitVelocityName(unit.symbol)),
+                        leading: Text(strings.unitVelocityDisplay(unit.symbol)),
                         subtitle: Text(
-                          '${unit.inMetersPerSecond.toStringAsFixed(3)} m/s',
+                          '''${unit.inMetersPerSecond.toStringAsFixed(3)} ${strings.unitVelocityDisplay(UnitVelocity.metersPerSecond.symbol)}''',
                         ),
                         onTap: () => ref
                             .read(uiUnitVelocityProvider.notifier)

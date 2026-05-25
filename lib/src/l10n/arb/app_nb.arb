@@ -1,5 +1,15 @@
 {
     "@@locale": "nb",
+    "area": "Areal",
+    "length": "Lengde",
     "locale": "Språk",
-    "localeOption": "{locale, select, en{Engelsk} nb{Norsk} other{Språk}}"
+    "localeOption": "{locale, select, en{Engelsk} nb{Norsk} other{Språk}}",
+    "units": "Enheter",
+    "unitAreaDisplay": "{arg, select, other{Arealenhet} m2{m²} ac{ac} ha{haa} daa{daa}}",
+    "unitAreaName": "{arg, select, other{Arealenhet} m2{Kvadratmeter} ac{Acre} ha{Hektar} daa{Dekar}}",
+    "unitLengthDisplay": "{arg, select, other{Lengdeenhet} m{m} ft{ft} yd{yd}}",
+    "unitLengthName": "{arg, select, other{Lengdeenhet} m{Meter} ft{Fot} yd{Yard}}",
+    "unitVelocityDisplay": "{arg, select, other{Hastighetsenhet} mps{m/s} kph{km/t} mph{mph}}",
+    "unitVelocityName": "{arg, select, other{Hastighetsenhet} mps{Meter per sekund} kph{Kilometer i timen} mph{Miles per hour}}",
+    "velocity": "Hastighet"
 }

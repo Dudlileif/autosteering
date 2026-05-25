@@ -98,6 +98,18 @@ abstract class AppLocalizations {
     Locale('nb'),
   ];
 
+  /// No description provided for @area.
+  ///
+  /// In en, this message translates to:
+  /// **'Area'**
+  String get area;
+
+  /// No description provided for @length.
+  ///
+  /// In en, this message translates to:
+  /// **'Length'**
+  String get length;
+
   /// Name on menu entry for selecting app locale.
   ///
   /// In en, this message translates to:
@@ -109,6 +121,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{locale, select, en{English} nb{Norwegian} other{Language}}'**
   String localeOption(String locale);
+
+  /// No description provided for @units.
+  ///
+  /// In en, this message translates to:
+  /// **'Units'**
+  String get units;
+
+  /// Display (e.g. in gauges) for area unit enum
+  ///
+  /// In en, this message translates to:
+  /// **'{arg, select, other{Area unit} m2{m²} ac{ac} ha{haa} daa{daa}}'**
+  String unitAreaDisplay(String arg);
+
+  /// Name for area unit enum.
+  ///
+  /// In en, this message translates to:
+  /// **'{arg, select, other{Area unit} m2{Square meters} ac{Acre} ha{Hectare} daa{Decare}}'**
+  String unitAreaName(String arg);
+
+  /// Display (e.g. in gauges) for length unit enum
+  ///
+  /// In en, this message translates to:
+  /// **'{arg, select, other{Length unit} m{m} ft{ft} yd{yd}}'**
+  String unitLengthDisplay(String arg);
+
+  /// Name for length unit enum.
+  ///
+  /// In en, this message translates to:
+  /// **'{arg, select, other{Length unit} m{Meters} ft{Feet} yd{Yard}}'**
+  String unitLengthName(String arg);
+
+  /// Display (e.g. in gauges) for velocity unit enum
+  ///
+  /// In en, this message translates to:
+  /// **'{arg, select, other{Velocity unit} mps{m/s} kph{km/h} mph{mph}}'**
+  String unitVelocityDisplay(String arg);
+
+  /// Name for velocity unit enum.
+  ///
+  /// In en, this message translates to:
+  /// **'{arg, select, other{Velocity unit} mps{Meters per second} kph{Kilometers per hour} mph{Miles per hour}}'**
+  String unitVelocityName(String arg);
+
+  /// No description provided for @velocity.
+  ///
+  /// In en, this message translates to:
+  /// **'Velocity'**
+  String get velocity;
 }
 
 class _AppLocalizationsDelegate
