@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 /// A dialog asking for confirmation before running [onConfirmation].
@@ -38,6 +39,7 @@ class ConfirmationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     return AlertDialog(
       title: Text(title),
       content: content,
@@ -45,7 +47,7 @@ class ConfirmationDialog extends StatelessWidget {
         ElevatedButton.icon(
           onPressed: () => Navigator.of(context).pop(false),
           icon: const Icon(Icons.clear),
-          label: const Text('Cancel'),
+          label: Text(strings.cancel),
         ),
         FilledButton.icon(
           onPressed: () async {
@@ -55,7 +57,7 @@ class ConfirmationDialog extends StatelessWidget {
             }
           },
           icon: const Icon(Icons.check),
-          label: const Text('Confirm'),
+          label: Text(strings.confirm),
         ),
       ],
     );
@@ -86,8 +88,9 @@ class DeleteDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     return ConfirmationDialog(
-      title: overrideString ?? 'Delete $name?',
+      title: overrideString ?? '${strings.deleteValue(name)}?',
       onConfirmation: onDelete,
       key: key,
     );

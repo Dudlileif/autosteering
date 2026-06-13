@@ -212,8 +212,8 @@ class SimulatorCoreState {
             message.hitchFrontFixedChild ?? vehicle?.hitchFrontFixedChild,
         hitchRearFixedChild:
             message.hitchRearFixedChild ?? vehicle?.hitchRearFixedChild,
-        hitchRearTowbarChild:
-            message.hitchRearTowbarChild ?? vehicle?.hitchRearTowbarChild,
+        hitchRearDrawbarChild:
+            message.hitchRearDrawbarChild ?? vehicle?.hitchRearDrawbarChild,
         manualSimulationMode: allowManualSimInput,
       );
       pathTrackingMode = message.pathTrackingMode;

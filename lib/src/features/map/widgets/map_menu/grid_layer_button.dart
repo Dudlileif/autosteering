@@ -17,6 +17,7 @@
 
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -27,9 +28,15 @@ class GridLayerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     return Consumer(
-      child: Text('Show grid', softWrap: false, style: textStyle),
+      child: Text(
+        strings.showValue(strings.grid.toLowerCase()),
+        softWrap: false,
+        style: textStyle,
+      ),
       builder: (context, ref, child) {
         final showLayerButton = CheckboxListTile(
           value: ref.watch(showGridLayerProvider),
@@ -51,7 +58,10 @@ class GridLayerButton extends StatelessWidget {
                           .read(showGridSizeIndicatorProvider.notifier)
                           .update(value: value)
                     : null,
-                title: Text('Show size indicator', style: textStyle),
+                title: Text(
+                  strings.showValue(strings.sizeIndicator.toLowerCase()),
+                  style: textStyle,
+                ),
                 secondary: const Icon(Icons.grid_3x3),
               ),
             ],

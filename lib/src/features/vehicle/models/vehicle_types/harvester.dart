@@ -28,7 +28,7 @@ final class Harvester extends AxleSteeredVehicle {
     super.antennaPosition,
     super.solidAxleToFrontHitchDistance = 2,
     super.solidAxleToRearHitchDistance,
-    super.solidAxleToRearTowbarDistance = 6,
+    super.solidAxleToRearDrawbarDistance = 6,
     super.ackermannSteeringRatio,
     super.ackermannPercentage,
     super.steeringAxleWheelDiameter,
@@ -56,7 +56,7 @@ final class Harvester extends AxleSteeredVehicle {
     super.wheelsRolledDistance,
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
-    super.hitchRearTowbarChild,
+    super.hitchRearDrawbarChild,
     super.name,
     super.uuid,
     super.lastUsed,
@@ -102,8 +102,8 @@ final class Harvester extends AxleSteeredVehicle {
           hitches['solid_axle_to_front_hitch_distance'] as double?,
       solidAxleToRearHitchDistance:
           hitches['solid_axle_to_rear_hitch_distance'] as double?,
-      solidAxleToRearTowbarDistance:
-          hitches['solid_axle_to_rear_towbar_distance'] as double?,
+      solidAxleToRearDrawbarDistance:
+          hitches['solid_axle_to_rear_drawbar_distance'] as double?,
     );
   }
 
@@ -152,7 +152,7 @@ final class Harvester extends AxleSteeredVehicle {
     double? trackWidth,
     double? wheelBase,
     double? solidAxleToFrontHitchDistance,
-    double? solidAxleToRearTowbarDistance,
+    double? solidAxleToRearDrawbarDistance,
     double? solidAxleToRearHitchDistance,
     double? ackermannSteeringRatio,
     double? ackermannPercentage,
@@ -182,7 +182,7 @@ final class Harvester extends AxleSteeredVehicle {
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,
     Hitchable? hitchRearFixedChild,
-    Hitchable? hitchRearTowbarChild,
+    Hitchable? hitchRearDrawbarChild,
     String? name,
     String? uuid,
     DateTime? lastUsed,
@@ -198,8 +198,8 @@ final class Harvester extends AxleSteeredVehicle {
         solidAxleToFrontHitchDistance ?? this.solidAxleToFrontHitchDistance,
     solidAxleToRearHitchDistance:
         solidAxleToRearHitchDistance ?? this.solidAxleToRearHitchDistance,
-    solidAxleToRearTowbarDistance:
-        solidAxleToRearTowbarDistance ?? this.solidAxleToRearTowbarDistance,
+    solidAxleToRearDrawbarDistance:
+        solidAxleToRearDrawbarDistance ?? this.solidAxleToRearDrawbarDistance,
     ackermannSteeringRatio:
         ackermannSteeringRatio ?? this.ackermannSteeringRatio,
     ackermannPercentage: ackermannPercentage ?? this.ackermannPercentage,
@@ -233,7 +233,7 @@ final class Harvester extends AxleSteeredVehicle {
     wheelsRolledDistance: wheelsRolledDistance ?? this.wheelsRolledDistance,
     hitchFrontFixedChild: hitchFrontFixedChild ?? this.hitchFrontFixedChild,
     hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
-    hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
+    hitchRearDrawbarChild: hitchRearDrawbarChild ?? this.hitchRearDrawbarChild,
     name: name ?? this.name,
     uuid: uuid ?? this.uuid,
     lastUsed: lastUsed ?? this.lastUsed,

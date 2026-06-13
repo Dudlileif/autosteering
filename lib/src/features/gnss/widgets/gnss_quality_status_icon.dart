@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/gnss/gnss.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -43,6 +44,8 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
   final OverlayPortalController portalController = OverlayPortalController();
 
   String get message {
+    final strings = AppLocalizations.of(context);
+
     final nmea = ref.watch(gnssCurrentSentenceProvider);
     final secondaryNmea = ref.watch(gnssSecondaryCurrentSentenceProvider);
     final precisionError = ref.watch(gnssPrecisionErrorProvider);
@@ -140,9 +143,9 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
       final sinceLast = DateTime.now().difference(update.device).inMilliseconds;
 
       final delay = update.delay?.inMilliseconds;
-      textLines.add('Last: $sinceLast ms');
+      textLines.add(strings.sinceLastValueMs(sinceLast));
       if (delay != null) {
-        textLines.add('Delay: $delay ms');
+        textLines.add(strings.delayValueMs(delay));
       }
     }
     return textLines.join('\n');

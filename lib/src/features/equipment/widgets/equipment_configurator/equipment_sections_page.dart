@@ -20,6 +20,7 @@ import 'dart:async';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/theme/utils/utils.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,6 +32,7 @@ class EquipmentSectionsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
     return SingleChildScrollView(
@@ -41,7 +43,10 @@ class EquipmentSectionsPage extends ConsumerWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8),
-                child: Text('Sections', style: theme.textTheme.titleLarge),
+                child: Text(
+                  strings.sections(0),
+                  style: theme.textTheme.titleLarge,
+                ),
               ),
               Center(
                 child: ConstrainedBox(
@@ -54,9 +59,9 @@ class EquipmentSectionsPage extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.numbers),
-                      labelText: 'Number of sections',
+                    decoration: InputDecoration(
+                      icon: const Icon(Icons.numbers),
+                      labelText: strings.numberOfSections,
                     ),
                     keyboardType: TextInputType.number,
                     onFieldSubmitted: (value) {
@@ -81,7 +86,13 @@ class EquipmentSectionsPage extends ConsumerWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(8),
                   child: Text(
-                    '''Total width: ${ref.watch(configuredEquipmentProvider.select((value) => value.width))} m''',
+                    strings.totalWidth(
+                      ref.watch(
+                        configuredEquipmentProvider.select(
+                          (value) => value.width,
+                        ),
+                      ),
+                    ),
                     style: theme.textTheme.bodyLarge,
                   ),
                 ),
@@ -135,14 +146,16 @@ class _SectionWidthExpansionTileState
     padding: const EdgeInsets.only(top: 8),
     child: Consumer(
       builder: (context, ref, child) {
+        final strings = AppLocalizations.of(context);
         final equipment = ref.watch(configuredEquipmentProvider);
+
         return TextFormField(
           enabled: ref.watch(configuredEquipmentEqualWidthsProvider),
           controller: TextEditingController(
             text: '${equipment.sections.first.width}',
           ),
-          decoration: const InputDecoration(
-            labelText: 'Section width',
+          decoration: InputDecoration(
+            labelText: strings.sectionWidth,
             suffixText: 'm',
           ),
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -168,20 +181,24 @@ class _SectionWidthExpansionTileState
 
   late final widgets = <Widget>[
     Consumer(
-      builder: (context, ref, child) => CheckboxListTile(
-        enabled: ref.watch(
-          configuredEquipmentProvider.select(
-            (value) => value.sections.length >= 2,
+      builder: (context, ref, child) {
+        final strings = AppLocalizations.of(context);
+
+        return CheckboxListTile(
+          enabled: ref.watch(
+            configuredEquipmentProvider.select(
+              (value) => value.sections.length >= 2,
+            ),
           ),
-        ),
-        title: const Text('Equal widths'),
-        value: ref.watch(configuredEquipmentEqualWidthsProvider),
-        onChanged: (value) => value != null
-            ? ref
-                  .read(configuredEquipmentEqualWidthsProvider.notifier)
-                  .update(value: value)
-            : null,
-      ),
+          title: Text(strings.equalWidths),
+          value: ref.watch(configuredEquipmentEqualWidthsProvider),
+          onChanged: (value) => value != null
+              ? ref
+                    .read(configuredEquipmentEqualWidthsProvider.notifier)
+                    .update(value: value)
+              : null,
+        );
+      },
     ),
     if (ref.read(configuredEquipmentEqualWidthsProvider)) textField,
   ];
@@ -239,14 +256,16 @@ class _SectionWorkingWidthExpansionTileState
     padding: const EdgeInsets.only(top: 8),
     child: Consumer(
       builder: (context, ref, child) {
+        final strings = AppLocalizations.of(context);
         final equipment = ref.watch(configuredEquipmentProvider);
+
         return TextFormField(
           enabled: ref.watch(configuredEquipmentEqualWorkingWidthsProvider),
           controller: TextEditingController(
             text: '${equipment.sections.first.workingWidth}',
           ),
-          decoration: const InputDecoration(
-            labelText: 'Section working width',
+          decoration: InputDecoration(
+            labelText: strings.sectionWorkingWidth,
             suffixText: 'm',
           ),
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -272,20 +291,26 @@ class _SectionWorkingWidthExpansionTileState
 
   late final widgets = <Widget>[
     Consumer(
-      builder: (context, ref, child) => CheckboxListTile(
-        enabled: ref.watch(
-          configuredEquipmentProvider.select(
-            (value) => value.sections.length >= 2,
+      builder: (context, ref, child) {
+        final strings = AppLocalizations.of(context);
+
+        return CheckboxListTile(
+          enabled: ref.watch(
+            configuredEquipmentProvider.select(
+              (value) => value.sections.length >= 2,
+            ),
           ),
-        ),
-        title: const Text('Equal working widths'),
-        value: ref.watch(configuredEquipmentEqualWorkingWidthsProvider),
-        onChanged: (value) => value != null
-            ? ref
-                  .read(configuredEquipmentEqualWorkingWidthsProvider.notifier)
-                  .update(value: value)
-            : null,
-      ),
+          title: Text(strings.equalWorkingWidths),
+          value: ref.watch(configuredEquipmentEqualWorkingWidthsProvider),
+          onChanged: (value) => value != null
+              ? ref
+                    .read(
+                      configuredEquipmentEqualWorkingWidthsProvider.notifier,
+                    )
+                    .update(value: value)
+              : null,
+        );
+      },
     ),
     if (ref.read(configuredEquipmentEqualWorkingWidthsProvider)) textField,
   ];
@@ -450,10 +475,16 @@ class _SectionWidth extends ConsumerWidget {
     if (section == null) {
       return const SizedBox.shrink();
     }
+    final strings = AppLocalizations.of(context);
+
     return TextFormField(
       controller: TextEditingController(text: '${section.width}'),
       decoration: InputDecoration(
-        labelText: 'Section ${section.index + 1} width',
+        labelText: [
+          strings.sections(1),
+          section.index + 1,
+          strings.width.toLowerCase(),
+        ].join(' '),
         suffixText: 'm',
       ),
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -483,11 +514,16 @@ class _SectionWorkingWidth extends ConsumerWidget {
     if (section == null) {
       return const SizedBox.shrink();
     }
+    final strings = AppLocalizations.of(context);
 
     return TextFormField(
       controller: TextEditingController(text: '${section.workingWidth}'),
       decoration: InputDecoration(
-        labelText: 'Section ${section.index + 1} working width',
+        labelText: [
+          strings.sections(1),
+          section.index + 1,
+          strings.workingWidth.toLowerCase(),
+        ].join(' '),
         suffixText: 'm',
       ),
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -517,8 +553,16 @@ class _SectionButtonColorSelector extends ConsumerWidget {
     if (section == null) {
       return const SizedBox.shrink();
     }
+    final strings = AppLocalizations.of(context);
+
     return DropdownMenu(
-      label: Text('Section ${section.index + 1} button color'),
+      label: Text(
+        [
+          strings.sections(1),
+          section.index + 1,
+          strings.buttonColor.toLowerCase(),
+        ].join(' '),
+      ),
       leadingIcon: Icon(Icons.color_lens, color: section.color ?? Colors.green),
       initialSelection: section.color,
       onSelected: (color) {
@@ -529,7 +573,7 @@ class _SectionButtonColorSelector extends ConsumerWidget {
       dropdownMenuEntries: [
         DropdownMenuEntry(
           value: null,
-          label: 'Default',
+          label: strings.defaultOption,
           leadingIcon: const Icon(Icons.color_lens, color: Colors.green),
           trailingIcon: section.color == null ? const Icon(Icons.check) : null,
         ),
@@ -563,8 +607,16 @@ class _SectionWorkedPathColorSelector extends ConsumerWidget {
     if (section == null) {
       return const SizedBox.shrink();
     }
+    final strings = AppLocalizations.of(context);
+
     return DropdownMenu(
-      label: Text('Section ${section.index + 1} path color'),
+      label: Text(
+        [
+          strings.sections(1),
+          section.index + 1,
+          strings.pathColor.toLowerCase(),
+        ].join(' '),
+      ),
       leadingIcon: Icon(
         Icons.color_lens,
         color: section.workedPathColor ?? theme.primaryColor,
@@ -577,7 +629,7 @@ class _SectionWorkedPathColorSelector extends ConsumerWidget {
       dropdownMenuEntries: [
         DropdownMenuEntry(
           value: null,
-          label: 'Default',
+          label: strings.defaultOption,
           leadingIcon: Icon(Icons.color_lens, color: theme.primaryColor),
           trailingIcon: section.workedPathColor == null
               ? const Icon(Icons.check)

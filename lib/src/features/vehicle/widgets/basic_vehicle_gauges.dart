@@ -18,9 +18,11 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 /// Basic vehicle gauges to show the travelled distance (clearable), velocity
 /// and bearing.
@@ -32,13 +34,19 @@ class BasicVehicleGauges extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final strings = AppLocalizations.of(context);
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 1,
+    );
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Consumer(
           builder: (context, ref, child) {
-            final unit = ref.watch(uiUnitDistanceProvider);
+            final unit = ref.watch(uiUnitLengthProvider);
             final distance = unit.fromUnit(
               ref.watch(gaugeTravelledDistanceProvider),
             );
@@ -60,7 +68,7 @@ class BasicVehicleGauges extends StatelessWidget {
                   ..invalidate(gaugeTravelledDistanceProvider)
                   ..invalidate(debugVehicleTravelledPathListProvider),
                 title: TextWithStroke(
-                  '''${distance.toStringAsFixed(1).padLeft(5)} ${unit.symbol}''',
+                  '''${numberFormatter.format(distance).padLeft(5)} ${strings.unitLengthDisplay(unit.symbol)}''',
                   style: GoogleFonts.robotoMono(
                     color: Colors.white,
                     textStyle: theme.textTheme.titleMedium,
@@ -68,7 +76,7 @@ class BasicVehicleGauges extends StatelessWidget {
                   strokeWidth: 3.5,
                 ),
                 subtitle: TextWithStroke(
-                  'Hold to reset',
+                  strings.holdToReset,
                   style: theme.textTheme.titleSmall?.copyWith(
                     color: Colors.white,
                   ),
@@ -90,7 +98,7 @@ class BasicVehicleGauges extends StatelessWidget {
               final velocity = unit.fromUnit(ref.watch(gaugeVelocityProvider));
 
               return TextWithStroke(
-                '''${velocity.toStringAsFixed(1).padLeft(5)} ${unit.symbol}''',
+                '''${numberFormatter.format(velocity).padLeft(5)} ${strings.unitVelocityDisplay(unit.symbol)}''',
                 style: GoogleFonts.robotoMono(
                   color: Colors.white,
                   textStyle: theme.textTheme.titleMedium,
@@ -108,7 +116,7 @@ class BasicVehicleGauges extends StatelessWidget {
           ),
           title: Consumer(
             builder: (context, ref, child) => TextWithStroke(
-              '''${ref.watch(gaugeBearingProvider).toStringAsFixed(1).padLeft(5)}º''',
+              '''${numberFormatter.format(ref.watch(gaugeBearingProvider)).padLeft(5)}º''',
               style: GoogleFonts.robotoMono(
                 color: Colors.white,
                 textStyle: theme.textTheme.titleMedium,

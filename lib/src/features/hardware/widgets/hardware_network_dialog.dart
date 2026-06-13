@@ -18,6 +18,7 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,12 +32,14 @@ class HardwareNetworkDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final textStyle = theme.menuButtonWithChildrenText;
+
     return SimpleDialog(
-      title: const Row(
+      title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [Text('Network'), CloseButton()],
+        children: [Text(strings.network), const CloseButton()],
       ),
       contentPadding: const EdgeInsets.only(
         left: 24,
@@ -56,7 +59,7 @@ class HardwareNetworkDialog extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.only(left: 28),
                     child: SelectableText('''
-This device WLAN:
+${strings.thisDeviceValue(strings.wifi)}:
 ${ref.watch(deviceIPAddressWlanProvider)}''', style: textStyle),
                   ),
                 ],
@@ -71,8 +74,8 @@ ${ref.watch(deviceIPAddressWlanProvider)}''', style: textStyle),
                   const Icon(Icons.router),
                   Padding(
                     padding: const EdgeInsets.only(left: 28),
-                    child: Text('''
-This device AP host:
+                    child: SelectableText('''
+${strings.thisDeviceValue(strings.apHost)}:
 ${ref.watch(deviceIPAddressAPProvider)}''', style: textStyle),
                   ),
                 ],
@@ -87,8 +90,8 @@ ${ref.watch(deviceIPAddressAPProvider)}''', style: textStyle),
                   const Icon(Icons.cable),
                   Padding(
                     padding: const EdgeInsets.only(left: 28),
-                    child: Text('''
-This device Ethernet:
+                    child: SelectableText('''
+${strings.thisDeviceValue(strings.ethernet)}:
 ${ref.watch(deviceIPAddressEthernetProvider)}''', style: textStyle),
                   ),
                 ],
@@ -106,7 +109,7 @@ ${ref.watch(deviceIPAddressEthernetProvider)}''', style: textStyle),
                 controller: controller,
                 readOnly: true,
                 decoration: InputDecoration(
-                  labelText: 'Steering Hardware Address',
+                  labelText: strings.steeringHardwareAddress,
                   icon: Column(
                     children: [
                       Consumer(
@@ -164,7 +167,7 @@ ${ref.watch(deviceIPAddressEthernetProvider)}''', style: textStyle),
                 controller: controller,
                 readOnly: true,
                 decoration: InputDecoration(
-                  labelText: 'Remote Control Hardware Address',
+                  labelText: strings.remoteControlHardwareAddress,
                   icon: Column(
                     children: [
                       Consumer(
@@ -220,7 +223,7 @@ ${ref.watch(deviceIPAddressEthernetProvider)}''', style: textStyle),
             child: Consumer(
               builder: (context, ref, child) => TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'Receive port',
+                  labelText: strings.receivePort,
                   labelStyle: textStyle,
                   floatingLabelStyle: textStyle,
                   icon: const Icon(Icons.call_received),
@@ -233,8 +236,8 @@ ${ref.watch(deviceIPAddressEthernetProvider)}''', style: textStyle),
                   final port = value != null ? int.tryParse(value) : null;
 
                   return port != null && port >= 1000 && port <= 65535
-                      ? 'Valid Port'
-                      : 'Invalid Port';
+                      ? strings.validValue(strings.portNetwork.toLowerCase())
+                      : strings.invalidValue(strings.portNetwork.toLowerCase());
                 },
                 controller: TextEditingController(
                   text: ref.read(hardwareUDPReceivePortProvider).toString(),
@@ -249,9 +252,9 @@ ${ref.watch(deviceIPAddressEthernetProvider)}''', style: textStyle),
             padding: const EdgeInsets.only(top: 16),
             child: Consumer(
               builder: (context, ref, child) => TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Send port',
-                  icon: Icon(Icons.send),
+                decoration: InputDecoration(
+                  labelText: strings.sendPort,
+                  icon: const Icon(Icons.send),
                 ),
                 keyboardType: TextInputType.number,
                 maxLength: 5,
@@ -261,8 +264,8 @@ ${ref.watch(deviceIPAddressEthernetProvider)}''', style: textStyle),
                   final port = value != null ? int.tryParse(value) : null;
 
                   return port != null && port >= 1000 && port <= 65535
-                      ? 'Valid Port'
-                      : 'Invalid Port';
+                      ? strings.validValue(strings.portNetwork.toLowerCase())
+                      : strings.invalidValue(strings.portNetwork.toLowerCase());
                 },
                 controller: TextEditingController(
                   text: ref.read(hardwareUDPSendPortProvider).toString(),

@@ -18,6 +18,7 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,14 +31,15 @@ class VehicleSimMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
       icon: Icons.agriculture,
-      text: 'Vehicle',
+      text: strings.vehicle,
       menuChildren: [
         Consumer(
-          child: Text('Auto center steering', style: textStyle),
+          child: Text(strings.autoCenterSteering, style: textStyle),
           builder: (context, ref, child) => CheckboxListTile(
             title: child,
             value: ref.watch(simCoreVehicleAutoCenterSteeringProvider),
@@ -51,7 +53,7 @@ class VehicleSimMenu extends StatelessWidget {
           ),
         ),
         Consumer(
-          child: Text('Auto slow down', style: textStyle),
+          child: Text(strings.autoSlowDown, style: textStyle),
           builder: (context, ref, child) => CheckboxListTile(
             title: child,
             value: ref.watch(simCoreVehicleAutoSlowDownProvider),

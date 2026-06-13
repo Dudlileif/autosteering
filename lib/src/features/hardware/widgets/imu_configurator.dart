@@ -22,6 +22,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -32,6 +33,7 @@ class ImuConfigurator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
     return Card(
@@ -44,7 +46,7 @@ class ImuConfigurator extends StatelessWidget {
           appBar: AppBar(
             primary: false,
             scrolledUnderElevation: 0,
-            title: const Text('IMU Configurator'),
+            title: Text(strings.imuConfigurator),
             actions: [
               Padding(
                 padding: const EdgeInsets.all(8),
@@ -61,7 +63,10 @@ class ImuConfigurator extends StatelessWidget {
           body: ListView(
             children: [
               Consumer(
-                child: Text('Use IMU yaw', style: theme.textTheme.bodyLarge),
+                child: Text(
+                  strings.useImuValue(strings.yaw),
+                  style: theme.textTheme.bodyLarge,
+                ),
                 builder: (context, ref, child) => CheckboxListTile(
                   value: ref.watch(
                     mainVehicleProvider.select(
@@ -97,7 +102,7 @@ class ImuConfigurator extends StatelessWidget {
               ),
               Consumer(
                 child: Text(
-                  'Use IMU pitch',
+                  strings.useImuValue(strings.pitch),
                   style: theme.textTheme.bodyLarge,
                 ),
                 builder: (context, ref, child) => CheckboxListTile(
@@ -136,7 +141,7 @@ class ImuConfigurator extends StatelessWidget {
 
               Consumer(
                 child: Text(
-                  'Use IMU roll',
+                  strings.useImuValue(strings.roll),
                   style: theme.textTheme.bodyLarge,
                 ),
                 builder: (context, ref, child) => CheckboxListTile(
@@ -174,7 +179,7 @@ class ImuConfigurator extends StatelessWidget {
               ),
               Consumer(
                 child: Text(
-                  'Swap pitch and roll axes',
+                  strings.swapPitchAndRollAxes,
                   style: theme.textTheme.bodyLarge,
                 ),
                 builder: (context, ref, child) => CheckboxListTile(
@@ -211,7 +216,10 @@ class ImuConfigurator extends StatelessWidget {
                 ),
               ),
               Consumer(
-                child: Text('Invert pitch', style: theme.textTheme.bodyLarge),
+                child: Text(
+                  strings.invertPitch,
+                  style: theme.textTheme.bodyLarge,
+                ),
                 builder: (context, ref, child) => CheckboxListTile(
                   value: ref.watch(
                     mainVehicleProvider.select(
@@ -246,7 +254,10 @@ class ImuConfigurator extends StatelessWidget {
                 ),
               ),
               Consumer(
-                child: Text('Invert roll', style: theme.textTheme.bodyLarge),
+                child: Text(
+                  strings.invertRoll,
+                  style: theme.textTheme.bodyLarge,
+                ),
                 builder: (context, ref, child) => CheckboxListTile(
                   value: ref.watch(
                     mainVehicleProvider.select(
@@ -283,7 +294,13 @@ class ImuConfigurator extends StatelessWidget {
               Consumer(
                 builder: (context, ref, child) => ListTile(
                   title: Text(
-                    '''Delay readings: ${ref.watch(mainVehicleProvider.select((value) => value.imu.config.delayReadings))} ms''',
+                    strings.delayReadings(
+                      ref.watch(
+                        mainVehicleProvider.select(
+                          (value) => value.imu.config.delayReadings,
+                        ),
+                      ),
+                    ),
                   ),
                   onTap: () => showDialog<void>(
                     context: context,
@@ -293,7 +310,7 @@ class ImuConfigurator extends StatelessWidget {
               ),
               Consumer(
                 child: Text(
-                  'Only use GNSS synced readings',
+                  strings.onlyUseGnssSyncedReadings,
                   style: theme.textTheme.bodyLarge,
                 ),
                 builder: (context, ref, child) => CheckboxListTile(
@@ -302,7 +319,7 @@ class ImuConfigurator extends StatelessWidget {
                       (value) => value.imu.config.useOnlyGnssSyncedReadings,
                     ),
                   ),
-                  subtitle: const Text('DO NOT DISABLE'),
+                  subtitle: Text(strings.doNotDisable.toUpperCase()),
                   onChanged: (value) {
                     if (value != null) {
                       ref
@@ -344,7 +361,7 @@ class ImuConfigurator extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'Pitch: ${pitch.toStringAsFixed(1)}º',
+                              '${strings.pitch}: ${pitch.toStringAsFixed(1)}º',
                               style: theme.textTheme.bodyLarge,
                             ),
                             IconButton(
@@ -381,7 +398,7 @@ class ImuConfigurator extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'Roll: ${roll.toStringAsFixed(1)}º',
+                              '${strings.roll}: ${roll.toStringAsFixed(1)}º',
                               style: theme.textTheme.bodyLarge,
                             ),
                             IconButton(
@@ -408,7 +425,7 @@ class ImuConfigurator extends StatelessWidget {
               Consumer(
                 builder: (context, ref, child) => ListTile(
                   title: Text(
-                    '''Pitch gain: ${ref.watch(mainVehicleProvider.select((value) => value.imu.config.pitchGain)).toStringAsFixed(2)}''',
+                    '''${strings.pitchGain}: ${ref.watch(mainVehicleProvider.select((value) => value.imu.config.pitchGain)).toStringAsFixed(2)}''',
                   ),
                   onTap: () => showDialog<void>(
                     context: context,
@@ -431,9 +448,9 @@ class ImuConfigurator extends StatelessWidget {
                   return ListTile(
                     title: Text(
                       [
-                        '''${asymmetricRollGainLeft != null ? 'Right roll' : 'Roll'} gain: ${gain.toStringAsFixed(2)}''',
+                        '''${asymmetricRollGainLeft != null ? '${strings.right} ${strings.rollGain.toLowerCase()}' : strings.rollGain}: ${gain.toStringAsFixed(2)}''',
                         if (asymmetricRollGainLeft != null)
-                          '''Left roll gain: ${asymmetricRollGainLeft.toStringAsFixed(2)}''',
+                          '''${strings.left} ${strings.rollGain.toLowerCase()}: ${asymmetricRollGainLeft.toStringAsFixed(2)}''',
                       ].join('\n'),
                     ),
                     onTap: () => showDialog<void>(
@@ -445,7 +462,7 @@ class ImuConfigurator extends StatelessWidget {
               ),
               Consumer(
                 child: Text(
-                  'Zero Pitch and Roll',
+                  strings.zeroImuPitchAndRoll,
                   style: theme.textTheme.bodyLarge,
                 ),
                 builder: (context, ref, child) => ListTile(
@@ -458,7 +475,7 @@ class ImuConfigurator extends StatelessWidget {
               ),
               Consumer(
                 child: Text(
-                  'Zero Bearing to GNSS bearing',
+                  strings.zeroBearingToGnssBearing,
                   style: theme.textTheme.bodyLarge,
                 ),
                 builder: (context, ref, child) => ListTile(
@@ -486,7 +503,7 @@ class ImuConfigurator extends StatelessWidget {
               ),
               Consumer(
                 child: Text(
-                  'Zero Bearing to North',
+                  strings.zeroBearingToNorth,
                   style: theme.textTheme.bodyLarge,
                 ),
                 builder: (context, ref, child) => ListTile(
@@ -525,24 +542,26 @@ class ImuConfigurator extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            'Raw IMU readings',
+                            strings.rawSensorReading(strings.imu),
                             style: theme.textTheme.bodyLarge,
                           ),
                           Text(
-                            '''Yaw from startup: ${imuReading.yaw.toStringAsFixed(1)}º''',
+                            '''${strings.yawFromStartup}: ${imuReading.yaw.toStringAsFixed(1)}º''',
                           ),
                           Text(
-                            'Pitch: ${imuReading.pitch.toStringAsFixed(1)}º',
-                          ),
-                          Text('Roll: ${imuReading.roll.toStringAsFixed(1)}º'),
-                          Text(
-                            '''Acceleration X: ${imuReading.accelerationX.toStringAsFixed(3)}''',
+                            '''${strings.pitch}: ${imuReading.pitch.toStringAsFixed(1)}º''',
                           ),
                           Text(
-                            '''Acceleration Y: ${imuReading.accelerationY.toStringAsFixed(3)}''',
+                            '''${strings.roll}: ${imuReading.roll.toStringAsFixed(1)}º''',
                           ),
                           Text(
-                            '''Acceleration Z: ${imuReading.accelerationZ.toStringAsFixed(3)}''',
+                            '''${strings.acceleration} X: ${imuReading.accelerationX.toStringAsFixed(3)}''',
+                          ),
+                          Text(
+                            '''${strings.acceleration} Y: ${imuReading.accelerationY.toStringAsFixed(3)}''',
+                          ),
+                          Text(
+                            '''${strings.acceleration} Z: ${imuReading.accelerationZ.toStringAsFixed(3)}''',
                           ),
                           Consumer(
                             builder: (context, ref, child) {
@@ -550,14 +569,19 @@ class ImuConfigurator extends StatelessWidget {
                                 imuCurrentFrequencyProvider,
                               );
 
-                              return Text(
-                                '''Update frequency: ${freq?.toStringAsFixed(1)} Hz''',
-                              );
+                              return switch (freq) {
+                                final double freq => Text(
+                                  strings.updateFrequency(freq),
+                                ),
+                                _ => const SizedBox.shrink(),
+                              };
                             },
                           ),
                         ],
                       ),
-                      _ => const Text('Not receiving IMU readings'),
+                      _ => Text(
+                        strings.notReceivingSensorReadings(strings.imu),
+                      ),
                     };
                   },
                 ),
@@ -585,6 +609,7 @@ class __DelayReadingsDialogState extends ConsumerState<_DelayReadingsDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
     return SimpleDialog(
       contentPadding: const EdgeInsets.only(
@@ -597,7 +622,7 @@ class __DelayReadingsDialogState extends ConsumerState<_DelayReadingsDialog> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Delay readings: $delayReadings ms',
+            strings.delayReadings(delayReadings),
             style: theme.textTheme.bodyLarge,
           ),
           IconButton(
@@ -624,11 +649,11 @@ class __DelayReadingsDialogState extends ConsumerState<_DelayReadingsDialog> {
               ElevatedButton.icon(
                 onPressed: Navigator.of(context).pop,
                 icon: const Icon(Icons.clear),
-                label: const Text('Cancel'),
+                label: Text(strings.cancel),
               ),
               FilledButton.icon(
                 icon: const Icon(Icons.check),
-                label: const Text('Apply'),
+                label: Text(strings.apply),
                 onPressed: () {
                   final oldValue = ref.read(
                     mainVehicleProvider.select(
@@ -680,7 +705,9 @@ class __PitchGainDialogState extends ConsumerState<_PitchGainDialog> {
   );
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
+
     return SimpleDialog(
       contentPadding: const EdgeInsets.only(
         left: 24,
@@ -692,7 +719,7 @@ class __PitchGainDialogState extends ConsumerState<_PitchGainDialog> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Pitch gain: ${pitchGain.toStringAsFixed(2)}',
+            '${strings.pitchGain}: ${pitchGain.toStringAsFixed(2)}',
             style: theme.textTheme.bodyLarge,
           ),
           IconButton(
@@ -717,7 +744,7 @@ class __PitchGainDialogState extends ConsumerState<_PitchGainDialog> {
               ElevatedButton.icon(
                 onPressed: Navigator.of(context).pop,
                 icon: const Icon(Icons.clear),
-                label: const Text('Cancel'),
+                label: Text(strings.cancel),
               ),
               FilledButton.icon(
                 onPressed: () {
@@ -749,7 +776,7 @@ class __PitchGainDialogState extends ConsumerState<_PitchGainDialog> {
                   Navigator.of(context).pop();
                 },
                 icon: const Icon(Icons.check),
-                label: const Text('Apply'),
+                label: Text(strings.apply),
               ),
             ],
           ),
@@ -779,6 +806,7 @@ class __RollGainDialogState extends ConsumerState<_RollGainDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
     return SimpleDialog(
@@ -792,7 +820,7 @@ class __RollGainDialogState extends ConsumerState<_RollGainDialog> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            '''Roll gain ${asymmetricRollGainLeft != null ? '' : ' ${rollGain.toStringAsFixed(2)}'}''',
+            '''${strings.rollGain} ${asymmetricRollGainLeft != null ? '' : ' ${rollGain.toStringAsFixed(2)}'}''',
             style: theme.textTheme.bodyLarge,
           ),
           IconButton(
@@ -814,7 +842,7 @@ class __RollGainDialogState extends ConsumerState<_RollGainDialog> {
             },
           ),
           secondary: Text(
-            'Asymmetric roll gain',
+            strings.asymmetricRollGain,
             style: theme.textTheme.bodyLarge,
           ),
         ),
@@ -822,7 +850,7 @@ class __RollGainDialogState extends ConsumerState<_RollGainDialog> {
           Padding(
             padding: const EdgeInsets.only(left: 16),
             child: Text(
-              'Right gain: ${rollGain.toStringAsFixed(2)}',
+              '''${strings.right} ${strings.gain.toLowerCase()}: ${rollGain.toStringAsFixed(2)}''',
               style: theme.textTheme.bodyLarge,
             ),
           ),
@@ -836,7 +864,7 @@ class __RollGainDialogState extends ConsumerState<_RollGainDialog> {
           Padding(
             padding: const EdgeInsets.only(left: 16),
             child: Text(
-              'Left gain: ${asymmetricRollGainLeft?.toStringAsFixed(2)}',
+              '''${strings.left} ${strings.gain.toLowerCase()}: ${asymmetricRollGainLeft?.toStringAsFixed(2)}''',
               style: theme.textTheme.bodyLarge,
             ),
           ),
@@ -857,7 +885,7 @@ class __RollGainDialogState extends ConsumerState<_RollGainDialog> {
               ElevatedButton.icon(
                 onPressed: Navigator.of(context).pop,
                 icon: const Icon(Icons.clear),
-                label: const Text('Cancel'),
+                label: Text(strings.cancel),
               ),
               FilledButton.icon(
                 onPressed: () {
@@ -901,7 +929,7 @@ class __RollGainDialogState extends ConsumerState<_RollGainDialog> {
                   Navigator.of(context).pop();
                 },
                 icon: const Icon(Icons.check),
-                label: const Text('Apply'),
+                label: Text(strings.apply),
               ),
             ],
           ),
@@ -916,8 +944,10 @@ class _ZeroPitchAndRollDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
+
     return SimpleDialog(
-      title: const Text('Zero Pitch and Roll?'),
+      title: Text('${strings.zeroImuPitchAndRoll}?'),
       children: [
         Center(
           child: ConstrainedBox(
@@ -926,9 +956,7 @@ class _ZeroPitchAndRollDialog extends ConsumerWidget {
               spacing: 8,
               runSpacing: 8,
               children: [
-                const Text(
-                  '''Ensure that you are on a flat and horizontal surface, preferably concrete or asphalt.''',
-                ),
+                Text(strings.zeroImuDescription),
                 Align(
                   alignment: Alignment.bottomRight,
                   child: Wrap(
@@ -936,12 +964,12 @@ class _ZeroPitchAndRollDialog extends ConsumerWidget {
                     runSpacing: 8,
                     children: [
                       ElevatedButton.icon(
-                        label: const Text('Cancel'),
+                        label: Text(strings.cancel),
                         icon: const Icon(Icons.clear),
                         onPressed: () => Navigator.of(context).pop(),
                       ),
                       FilledButton.icon(
-                        label: const Text('Confirm'),
+                        label: Text(strings.confirm),
                         icon: const Icon(Icons.check),
                         onPressed: () {
                           final oldValues = ref.read(

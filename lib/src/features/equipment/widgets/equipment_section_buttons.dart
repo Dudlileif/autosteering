@@ -21,6 +21,7 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,6 +34,7 @@ class EquipmentSectionButtons extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final equipments = ref.watch(
       allEquipmentsProvider.select(
         (entry) => entry.values.where(
@@ -64,8 +66,8 @@ class EquipmentSectionButtons extends ConsumerWidget {
                           activeSections: (equipment..toggleSection(0))
                               .sectionActivationStatus,
                         )),
-                        overrideOnText: 'ON',
-                        overrideOffText: 'OFF',
+                        overrideOnText: strings.on.toUpperCase(),
+                        overrideOffText: strings.off.toUpperCase(),
                       ),
                       false => Column(
                         mainAxisSize: MainAxisSize.min,
@@ -112,7 +114,7 @@ class EquipmentSectionButtons extends ConsumerWidget {
                                             left: 12,
                                           ),
                                           child: TextWithStroke(
-                                            'Deactivate all',
+                                            strings.deactivateAll,
                                             style: textStyle,
                                             strokeWidth: 3.5,
                                           ),
@@ -159,7 +161,7 @@ class EquipmentSectionButtons extends ConsumerWidget {
                                             left: 8,
                                           ),
                                           child: TextWithStroke(
-                                            'Activate all',
+                                            strings.activateAll,
                                             style: textStyle,
                                             strokeWidth: 3.5,
                                           ),

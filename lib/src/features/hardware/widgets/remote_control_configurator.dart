@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/hardware/hardware.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,6 +29,8 @@ class RemoteControlConfigurator extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
+
     final actions = ref.watch(remoteControlButtonActionsProvider);
     return SimpleDialog(
       contentPadding: const EdgeInsets.only(
@@ -36,11 +39,13 @@ class RemoteControlConfigurator extends ConsumerWidget {
         right: 24,
         bottom: 16,
       ),
-      title: const Row(
+      title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(child: Text('Remote control configurator', softWrap: true)),
-          CloseButton(),
+          Expanded(
+            child: Text(strings.remoteControlConfigurator, softWrap: true),
+          ),
+          const CloseButton(),
         ],
       ),
       children: [
@@ -55,7 +60,9 @@ class RemoteControlConfigurator extends ConsumerWidget {
                       Expanded(
                         child: DropdownMenu<RemoteControlButtonAction?>(
                           expandedInsets: const EdgeInsets.all(8),
-                          label: Text('Button ${button + 1}'.padRight(9)),
+                          label: Text(
+                            '${strings.button} ${button + 1}'.padRight(9),
+                          ),
                           initialSelection: actions[button],
                           leadingIcon: Icon(
                             actions[button]?.icon ?? Icons.clear,
@@ -67,7 +74,9 @@ class RemoteControlConfigurator extends ConsumerWidget {
                                   .map(
                                     (action) => DropdownMenuEntry(
                                       value: action,
-                                      label: action?.description ?? 'No action',
+                                      label: strings.remoteControlAction(
+                                        action?.name ?? strings.noAction,
+                                      ),
                                       leadingIcon: Icon(
                                         action?.icon ?? Icons.clear,
                                         fill: 1,
@@ -115,7 +124,7 @@ class RemoteControlConfigurator extends ConsumerWidget {
                   ),
                 ),
             icon: const Icon(Icons.add),
-            label: const Text('Add button'),
+            label: Text(strings.addButton),
           ),
         ),
       ],

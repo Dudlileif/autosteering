@@ -83,12 +83,12 @@ enum SettingsKey {
   uiSteeringHardwareConfiguratorOffset(
     'ui.steering_hardware_configurator_offset',
   ),
+  uiLocale('ui.locale'),
   uiUnitArea('ui.unit.area'),
-  uiUnitDistance('ui.unit.distance'),
+  uiUnitLength('ui.unit.length'),
   uiUnitVelocity('ui.unit.velocity'),
   virtualLedBarConfig('virtual_led_bar.config'),
-  virtualLedBarEnabled('virtual_led_bar.enabled')
-  ;
+  virtualLedBarEnabled('virtual_led_bar.enabled');
 
   const SettingsKey(this.name);
 

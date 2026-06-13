@@ -18,6 +18,7 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -87,6 +88,7 @@ class _CountryLayerMenuItemButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
     return Row(
@@ -126,7 +128,8 @@ class _CountryLayerMenuItemButton extends StatelessWidget {
 
                         return Slider(
                           value: opacity,
-                          label: 'Opacity: ${opacity.toStringAsFixed(2)}',
+                          label:
+                              '''${strings.opacity}: ${opacity.toStringAsFixed(2)}''',
                           onChanged: enabled
                               ? (value) => ref
                                     .read(

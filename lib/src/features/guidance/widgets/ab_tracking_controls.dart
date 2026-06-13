@@ -18,6 +18,7 @@
 import 'package:autosteering/src/features/common/widgets/text_with_stroke.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -33,13 +34,14 @@ class ABTrackingControls extends ConsumerWidget {
 
     final abTracking = ref.watch(displayABTrackingProvider);
     if (abTracking != null) {
+      final strings = AppLocalizations.of(context);
       final theme = Theme.of(context);
 
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           TextWithStroke(
-            'Line: ${abTracking.currentOffset ?? '-'}',
+            '${strings.line}: ${abTracking.currentOffset ?? '-'}',
             style: theme.textTheme.titleLarge?.copyWith(color: Colors.white),
             strokeWidth: 3.5,
           ),
@@ -48,7 +50,7 @@ class ABTrackingControls extends ConsumerWidget {
             child: Consumer(
               builder: (context, ref, child) => FilterChip(
                 label: TextWithStroke(
-                  'SNAP',
+                  strings.snap.toUpperCase(),
                   style: theme.textTheme.titleMedium?.copyWith(
                     color: Colors.white,
                   ),

@@ -23,6 +23,7 @@ import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geobase/geobase.dart';
@@ -54,6 +55,8 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
   @override
   Widget build(BuildContext context) {
     ref.watch(automaticPathRecordingProvider);
+
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     final settings = ref.watch(activePathRecordingSettingsProvider);
@@ -75,11 +78,11 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
               spacing: 4,
               children: [
                 Text(switch (target) {
-                  PathRecordingTarget.abCurve => 'AB Curve',
-                  PathRecordingTarget.field => 'Field',
-                  PathRecordingTarget.pathTracking => 'Tracking',
+                  PathRecordingTarget.abCurve => strings.abCurve,
+                  PathRecordingTarget.field => strings.field,
+                  PathRecordingTarget.pathTracking => strings.tracking,
                 }),
-                const Text('Recording'),
+                Text(strings.recording),
               ],
             ),
             actions: [
@@ -114,14 +117,14 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                           .update(value: false);
                     }),
                     selected: {_recordingMode},
-                    segments: const [
+                    segments: [
                       ButtonSegment(
                         value: _RecordingMode.automatic,
-                        label: Text('Automatic'),
+                        label: Text(strings.automatic),
                       ),
                       ButtonSegment(
                         value: _RecordingMode.manual,
-                        label: Text('Manual'),
+                        label: Text(strings.manual),
                       ),
                     ],
                   ),
@@ -158,7 +161,9 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                           }
                         },
                         child: Text(
-                          enabled ? 'Recording, tap to pause' : 'Record',
+                          enabled
+                              ? strings.recordingTapToPause
+                              : strings.record,
                           style: textStyle,
                         ),
                       );
@@ -190,7 +195,7 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                                 .update(value: true);
                           }
                         : null,
-                    child: Text('Finish recording', style: textStyle),
+                    child: Text(strings.finishRecording, style: textStyle),
                   ),
                 ],
                 _RecordingMode.manual => [
@@ -212,7 +217,7 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                               ),
                               applySettings: true,
                             ),
-                        child: Text('Add point', style: textStyle),
+                        child: Text(strings.addPoint, style: textStyle),
                       );
                     },
                   ),
@@ -239,7 +244,7 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                                     .update(value: true);
                               }
                             : null,
-                        child: Text('Finish recording', style: textStyle),
+                        child: Text(strings.finishRecording, style: textStyle),
                       );
                     },
                   ),
@@ -305,9 +310,15 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                     }
                   },
                   child: Text(switch (target) {
-                    PathRecordingTarget.abCurve => 'Create AB curve',
-                    PathRecordingTarget.field => 'Use as exterior boundary',
-                    PathRecordingTarget.pathTracking => 'Create path tracking',
+                    PathRecordingTarget.abCurve => strings.createValue(
+                      strings.abCurve,
+                    ),
+                    PathRecordingTarget.field => strings.useAsValue(
+                      strings.exteriorBoundary.toLowerCase(),
+                    ),
+                    PathRecordingTarget.pathTracking => strings.createValue(
+                      strings.pathTracking.toLowerCase(),
+                    ),
                   }, style: textStyle),
                 ),
                 if (target == PathRecordingTarget.field) ...[
@@ -325,7 +336,7 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                             .toList(),
                       )
                       ..invalidate(finishedPathRecordingListProvider),
-                    child: Text('Add interior boundary', style: textStyle),
+                    child: Text(strings.addInteriorBoundary, style: textStyle),
                   ),
                 ],
               ],
@@ -343,7 +354,7 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Lateral offset: ${distance.toStringAsFixed(1)} m',
+                        '''${strings.lateralOffset}: ${distance.toStringAsFixed(1)} m''',
                         style: textStyle,
                       ),
                       Slider.adaptive(
@@ -366,7 +377,7 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Longitudinal offset: ${distance.toStringAsFixed(1)} m',
+                        '''${strings.longitudinalOffset}: ${distance.toStringAsFixed(1)} m''',
                         style: textStyle,
                       ),
                       Slider.adaptive(
@@ -392,7 +403,7 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          '''Max distance: ${distance.toStringAsFixed(1)} m''',
+                          '''${strings.maxDistance}: ${distance.toStringAsFixed(1)} m''',
                           style: textStyle,
                         ),
                         Slider.adaptive(
@@ -417,7 +428,7 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          'Min distance: ${distance.toStringAsFixed(1)} m',
+                          '''${strings.minDistance}: ${distance.toStringAsFixed(1)} m''',
                           style: textStyle,
                         ),
                         Slider.adaptive(
@@ -442,7 +453,7 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          '''Turn trigger angle: ${angle.toStringAsFixed(1)}°''',
+                          '''${strings.turnTriggerAngle}: ${angle.toStringAsFixed(1)}°''',
                           style: textStyle,
                         ),
                         Slider.adaptive(
@@ -469,7 +480,7 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                 ),
               )) ...[
                 Consumer(
-                  child: Text('Show last recorded path', style: textStyle),
+                  child: Text(strings.showLastRecordedPath, style: textStyle),
                   builder: (context, ref, child) => CheckboxListTile(
                     title: child,
                     secondary: const Icon(Icons.route),
@@ -482,7 +493,7 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                   ),
                 ),
                 Consumer(
-                  child: Text('Edit recorded path', style: textStyle),
+                  child: Text(strings.editRecordedPath, style: textStyle),
                   builder: (context, ref, child) => CheckboxListTile(
                     title: child,
                     secondary: const Icon(Icons.edit),
@@ -517,7 +528,7 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                           ..invalidate(editFinishedPathProvider);
                       }
                     },
-                    child: Text('Clear recorded path', style: textStyle),
+                    child: Text(strings.clearRecordedPath, style: textStyle),
                   ),
                 ),
               ],
@@ -534,6 +545,8 @@ class _CreateFieldButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
+
     return MenuItemButton(
       closeOnActivate: false,
       leadingIcon: const Padding(
@@ -550,7 +563,9 @@ class _CreateFieldButton extends ConsumerWidget {
               var name = '';
               return StatefulBuilder(
                 builder: (context, setState) => SimpleDialog(
-                  title: const Text('Name the field'),
+                  title: Text(
+                    strings.nameTheValue(strings.field.toLowerCase()),
+                  ),
                   contentPadding: const EdgeInsets.only(
                     left: 24,
                     top: 12,
@@ -559,9 +574,9 @@ class _CreateFieldButton extends ConsumerWidget {
                   ),
                   children: [
                     TextFormField(
-                      decoration: const InputDecoration(
-                        icon: Icon(Icons.label_outline),
-                        labelText: 'Name',
+                      decoration: InputDecoration(
+                        icon: const Icon(Icons.label_outline),
+                        labelText: strings.name,
                       ),
                       initialValue: name,
                       onChanged: (value) => setState(() => name = value),
@@ -569,7 +584,9 @@ class _CreateFieldButton extends ConsumerWidget {
                       keyboardType: TextInputType.text,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       validator: (value) => isBlank(value)
-                          ? '''No name entered! Please enter a name so that the field can be saved!'''
+                          ? strings.noNameEnteredValue(
+                              strings.field.toLowerCase(),
+                            )
                           : null,
                     ),
                     Padding(
@@ -615,7 +632,9 @@ class _CreateFieldButton extends ConsumerWidget {
                             });
                             Navigator.of(context).pop();
                           },
-                          child: const Text('Save field'),
+                          child: Text(
+                            strings.saveValue(strings.field.toLowerCase()),
+                          ),
                         ),
                       ),
                     ),
@@ -627,7 +646,7 @@ class _CreateFieldButton extends ConsumerWidget {
         );
       },
       child: Text(
-        'Create field',
+        strings.createValue(strings.field.toLowerCase()),
         style: Theme.of(context).menuButtonWithChildrenText,
       ),
     );

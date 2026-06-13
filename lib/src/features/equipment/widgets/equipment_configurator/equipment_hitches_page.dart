@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/equipment/equipment.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,14 +27,15 @@ class EquipmentHitchesPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final equipment = ref.watch(configuredEquipmentProvider);
 
     final children = [
-      Text('Child hitches', style: Theme.of(context).textTheme.titleLarge),
+      Text(strings.childHitches, style: Theme.of(context).textTheme.titleLarge),
       TextFormField(
-        decoration: const InputDecoration(
-          icon: Icon(Icons.expand),
-          labelText: 'Hitch to front fixed hitch distance',
+        decoration: InputDecoration(
+          icon: const Icon(Icons.expand),
+          labelText: strings.hitchToFrontFixedHitchDistance,
           suffixText: 'm',
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -53,9 +55,9 @@ class EquipmentHitchesPage extends ConsumerWidget {
         },
       ),
       TextFormField(
-        decoration: const InputDecoration(
-          icon: Icon(Icons.expand),
-          labelText: 'Hitch to rear fixed hitch distance',
+        decoration: InputDecoration(
+          icon: const Icon(Icons.expand),
+          labelText: strings.hitchToRearFixedHitchDistance,
           suffixText: 'm',
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -75,15 +77,15 @@ class EquipmentHitchesPage extends ConsumerWidget {
         },
       ),
       TextFormField(
-        decoration: const InputDecoration(
-          icon: Icon(Icons.expand),
-          labelText: 'Hitch to rear towbar distance',
+        decoration: InputDecoration(
+          icon: const Icon(Icons.expand),
+          labelText: strings.hitchToRearDrawbarDistance,
           suffixText: 'm',
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
           configuredEquipmentProvider.select(
-            (value) => value.hitchToChildRearTowbarHitchLength?.toString(),
+            (value) => value.hitchToChildRearDrawbarHitchLength?.toString(),
           ),
         ),
         onFieldSubmitted: (value) {
@@ -92,7 +94,7 @@ class EquipmentHitchesPage extends ConsumerWidget {
           ref
               .read(configuredEquipmentProvider.notifier)
               .update(
-                equipment..hitchToChildRearTowbarHitchLength = distance?.abs(),
+                equipment..hitchToChildRearDrawbarHitchLength = distance?.abs(),
               );
         },
       ),

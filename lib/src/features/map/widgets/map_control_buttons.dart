@@ -19,6 +19,7 @@ import 'dart:math';
 
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,6 +31,7 @@ class MapControlButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
     // Defer the first frame so that map and vehcile position are initialized.
@@ -42,7 +44,7 @@ class MapControlButtons extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           child: Consumer(
             builder: (context, ref, child) => FloatingActionButton(
-              tooltip: 'Lock map on vehicle',
+              tooltip: strings.lockMapToVehicle,
               backgroundColor: theme.colorScheme.primaryContainer.withValues(
                 alpha: 0.6,
               ),
@@ -58,7 +60,7 @@ class MapControlButtons extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           child: Consumer(
             builder: (context, ref, child) => FloatingActionButton(
-              tooltip: 'Always point map north',
+              tooltip: strings.alwaysPointMapNorth,
               backgroundColor: theme.colorScheme.primaryContainer.withValues(
                 alpha: 0.6,
               ),
@@ -163,7 +165,7 @@ class MapControlButtons extends StatelessWidget {
           child: Consumer(
             builder: (context, ref, child) {
               return FloatingActionButton(
-                tooltip: 'Zoom in',
+                tooltip: strings.zoomIn,
                 backgroundColor: theme.colorScheme.primaryContainer.withValues(
                   alpha: 0.6,
                 ),
@@ -180,7 +182,7 @@ class MapControlButtons extends StatelessWidget {
           child: Consumer(
             builder: (context, ref, child) {
               return FloatingActionButton(
-                tooltip: 'Zoom out',
+                tooltip: strings.zoomOut,
                 backgroundColor: theme.colorScheme.primaryContainer.withValues(
                   alpha: 0.6,
                 ),

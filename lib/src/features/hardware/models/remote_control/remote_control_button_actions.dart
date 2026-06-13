@@ -21,26 +21,21 @@ import 'package:material_symbols_icons/symbols.dart';
 /// An enumerator for remote control button actions.
 enum RemoteControlButtonAction {
   /// Toggle the equipment sections.
-  toggleEquipmentSections('Toggle equipment sections', Symbols.handyman),
+  toggleEquipmentSections(Symbols.handyman),
 
   /// Toggle autosteering.
-  toggleAutosteering('Toggle autosteering', Symbols.search_hands_free),
+  toggleAutosteering(Symbols.search_hands_free),
 
   /// Toggle AB tracking snap to closest line.
   toggleABSnap(
-    'Toggle AB-line snap to closest line',
     Symbols.format_letter_spacing,
   ),
 
   /// Reset nudge distance to 0.
-  resetNudgeDistance('Reset nudge distance to 0', Symbols.exposure_zero)
-  ;
+  resetNudgeDistance(Symbols.exposure_zero);
 
-  const RemoteControlButtonAction(this.description, [this.icon]);
-
-  /// A short description of this.
-  final String description;
+  const RemoteControlButtonAction(this.icon);
 
   /// An icon that represents this.
-  final IconData? icon;
+  final IconData icon;
 }

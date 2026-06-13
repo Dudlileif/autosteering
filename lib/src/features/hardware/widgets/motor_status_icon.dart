@@ -19,6 +19,7 @@ import 'dart:math';
 
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
@@ -48,44 +49,41 @@ class _MotorStatusIconState extends ConsumerState<MotorStatusIcon>
   final portalController = OverlayPortalController();
 
   String get message {
+    final strings = AppLocalizations.of(context);
     final textLines = <String>[];
     final motorStatus = ref.watch(steeringMotorStatusProvider);
     if (motorStatus != null) {
-      textLines.add(motorStatus.text);
+      textLines.add(strings.motorStatusOption(motorStatus.name));
     }
 
     final targetSteeringAngle = ref.watch(vehicleSteeringAngleTargetProvider);
     if (targetSteeringAngle != null) {
-      textLines.add(
-        'Steering target: ${targetSteeringAngle.toStringAsFixed(1)}°',
-      );
+      textLines.add(strings.steeringTarget(targetSteeringAngle));
     }
 
     final actualSteeringAngle = ref.watch(
       mainVehicleProvider.select((value) => value.steeringAngle),
     );
-    textLines.add(
-      'Steering actual: ${actualSteeringAngle.toStringAsFixed(1)}°',
-    );
+    textLines.add(strings.steeringActual(actualSteeringAngle));
 
     if (targetSteeringAngle != null) {
       textLines.add(
-        '''Steering Δ: ${(targetSteeringAngle - actualSteeringAngle).toStringAsFixed(1)}°''',
+        strings.steeringDelta(targetSteeringAngle - actualSteeringAngle),
       );
     }
 
     final wasReading = ref.watch(
       mainVehicleProvider.select((value) => value.was.reading.value),
     );
-    textLines.add('WAS reading: $wasReading');
+    textLines.add(strings.wasReading(wasReading));
     final wasTarget = ref.watch(steeringMotorWasTargetProvider);
     if (wasTarget != null) {
-      textLines.add('WAS target: $wasTarget');
+      textLines.add(strings.wasTarget(wasTarget));
     }
 
     final actualRPM = ref.watch(steeringMotorActualRPMProvider);
     if (actualRPM != null) {
-      textLines.add('Actual RPM: ${actualRPM.toStringAsFixed(1)}');
+      textLines.add(strings.actualRpm(actualRPM));
     }
 
     final currentScaleValue = ref.watch(steeringMotorCurrentScaleProvider);
@@ -100,12 +98,12 @@ class _MotorStatusIconState extends ConsumerState<MotorStatusIcon>
 
     final calibrationTarget = ref.watch(steeringMotorTargetRotationProvider);
     if (calibrationTarget != null) {
-      textLines.add('Target: $calibrationTarget');
+      textLines.add('${strings.target}: $calibrationTarget');
     }
 
     final rotation = ref.watch(steeringMotorRotationProvider);
     if (rotation != null) {
-      textLines.add('Rotation: $rotation');
+      textLines.add('${strings.rotation}: $rotation');
     }
 
     final stepsMinCenter = ref.watch(
@@ -117,13 +115,13 @@ class _MotorStatusIconState extends ConsumerState<MotorStatusIcon>
     );
 
     if (stepsMinCenter != null || stepsCenterMax != null) {
-      textLines.add('Steps / increment');
+      textLines.add(strings.stepsIncrement);
     }
     if (stepsMinCenter != null) {
-      textLines.add('Min-Center: $stepsMinCenter');
+      textLines.add(strings.stepsMinCenter(stepsMinCenter));
     }
     if (stepsCenterMax != null) {
-      textLines.add('Center-Max: $stepsCenterMax');
+      textLines.add(strings.stepsCenterMax(stepsCenterMax));
     }
 
     return textLines.join('\n');
@@ -190,8 +188,12 @@ class _MotorStatusIconState extends ConsumerState<MotorStatusIcon>
                         null => Colors.grey,
                       },
                       shadows: [
-                        Shadow(offset: Offset(sin(motorRotationAngle), 0)),
-                        Shadow(offset: Offset(0, cos(motorRotationAngle))),
+                        Shadow(
+                          offset: Offset(
+                            sin(motorRotationAngle),
+                            cos(motorRotationAngle),
+                          ),
+                        ),
                       ],
                     ),
                   ),

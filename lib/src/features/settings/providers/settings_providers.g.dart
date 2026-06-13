@@ -545,55 +545,55 @@ abstract class _$UiUnitArea extends $Notifier<UnitArea> {
 
 /// A provider for which distance unit the UI should show.
 
-@ProviderFor(UiUnitDistance)
-final uiUnitDistanceProvider = UiUnitDistanceProvider._();
+@ProviderFor(UiUnitLength)
+final uiUnitLengthProvider = UiUnitLengthProvider._();
 
 /// A provider for which distance unit the UI should show.
-final class UiUnitDistanceProvider
-    extends $NotifierProvider<UiUnitDistance, UnitDistance> {
+final class UiUnitLengthProvider
+    extends $NotifierProvider<UiUnitLength, UnitLength> {
   /// A provider for which distance unit the UI should show.
-  UiUnitDistanceProvider._()
+  UiUnitLengthProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'uiUnitDistanceProvider',
+        name: r'uiUnitLengthProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$uiUnitDistanceHash();
+  String debugGetCreateSourceHash() => _$uiUnitLengthHash();
 
   @$internal
   @override
-  UiUnitDistance create() => UiUnitDistance();
+  UiUnitLength create() => UiUnitLength();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(UnitDistance value) {
+  Override overrideWithValue(UnitLength value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<UnitDistance>(value),
+      providerOverride: $SyncValueProvider<UnitLength>(value),
     );
   }
 }
 
-String _$uiUnitDistanceHash() => r'65b975e775a5fc7c50818dc1d392fb02c9213d33';
+String _$uiUnitLengthHash() => r'65b975e775a5fc7c50818dc1d392fb02c9213d33';
 
 /// A provider for which distance unit the UI should show.
 
-abstract class _$UiUnitDistance extends $Notifier<UnitDistance> {
-  UnitDistance build();
+abstract class _$UiUnitLength extends $Notifier<UnitLength> {
+  UnitLength build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<UnitDistance, UnitDistance>;
+    final ref = this.ref as $Ref<UnitLength, UnitLength>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<UnitDistance, UnitDistance>,
-              UnitDistance,
+              AnyNotifier<UnitLength, UnitLength>,
+              UnitLength,
               Object?,
               Object?
             >;
@@ -652,6 +652,63 @@ abstract class _$UiUnitVelocity extends $Notifier<UnitVelocity> {
             as $ClassProviderElement<
               AnyNotifier<UnitVelocity, UnitVelocity>,
               UnitVelocity,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// A provider for which locale to use.
+
+@ProviderFor(UiLocale)
+final uiLocaleProvider = UiLocaleProvider._();
+
+/// A provider for which locale to use.
+final class UiLocaleProvider extends $NotifierProvider<UiLocale, Locale> {
+  /// A provider for which locale to use.
+  UiLocaleProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'uiLocaleProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$uiLocaleHash();
+
+  @$internal
+  @override
+  UiLocale create() => UiLocale();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Locale value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Locale>(value),
+    );
+  }
+}
+
+String _$uiLocaleHash() => r'289b692aee4203fde31d8186eaa4aeba0502a561';
+
+/// A provider for which locale to use.
+
+abstract class _$UiLocale extends $Notifier<Locale> {
+  Locale build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<Locale, Locale>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Locale, Locale>,
+              Locale,
               Object?,
               Object?
             >;

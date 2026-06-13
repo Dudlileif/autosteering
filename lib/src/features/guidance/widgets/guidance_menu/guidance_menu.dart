@@ -27,6 +27,7 @@ import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiver/strings.dart';
@@ -40,15 +41,17 @@ class GuidanceMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final dadMode = ref.watch(enableDadModeProvider);
 
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final textStyle = theme.menuButtonWithChildrenText;
+
     return MenuButtonWithChildren(
-      text: 'Guidance',
+      text: strings.guidance,
       icon: Icons.navigation_outlined,
       menuChildren: [
         if (!dadMode)
           ListTile(
-            title: Text('Tracking mode', style: textStyle),
+            title: Text(strings.trackingMode, style: textStyle),
             trailing: Consumer(
               builder: (context, ref, child) {
                 final trackingMode = ref.watch(
@@ -81,14 +84,14 @@ class GuidanceMenu extends ConsumerWidget {
                     });
                   },
                   selected: {trackingMode},
-                  segments: const [
+                  segments: [
                     ButtonSegment(
                       value: PathTrackingMode.purePursuit,
-                      label: Text('Pure pursuit'),
+                      label: Text(strings.trackingModePurePursuit),
                     ),
                     ButtonSegment(
                       value: PathTrackingMode.stanley,
-                      label: Text('Stanley'),
+                      label: Text(strings.trackingModeStanley),
                     ),
                   ],
                 );
@@ -126,7 +129,7 @@ class GuidanceMenu extends ConsumerWidget {
               }
             },
             closeOnActivate: false,
-            child: Text('Close active', style: textStyle),
+            child: Text(strings.closeActive, style: textStyle),
           ),
         if (ref.watch(
               displayABTrackingProvider.select((value) => value == null),
@@ -195,11 +198,13 @@ class _LoadPathTrackingMenu extends ConsumerWidget {
     if (pathTrackings.isEmpty) {
       return const SizedBox.shrink();
     }
-
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
-      text: 'Load path tracking',
+      text: strings.loadValue(
+        strings.pathTracking.toLowerCase(),
+      ),
       icon: Icons.history,
       menuChildren: pathTrackings
           .map(
@@ -250,7 +255,7 @@ class _LoadPathTrackingMenu extends ConsumerWidget {
                       )
                     : null,
                 title: Text(
-                  pathTracking.name ?? 'No name',
+                  pathTracking.name ?? strings.noName,
                   style: textStyle,
                 ),
                 subtitle: Builder(
@@ -287,11 +292,11 @@ class _LoadABTrackingMenu extends ConsumerWidget {
     if (abTrackings.isEmpty) {
       return const SizedBox.shrink();
     }
-
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
-      text: 'Load AB tracking',
+      text: strings.loadValue(strings.abTracking),
       icon: Icons.history,
       menuChildren: abTrackings
           .map(
@@ -370,7 +375,10 @@ class _LoadABTrackingMenu extends ConsumerWidget {
                         icon: const Icon(Icons.delete),
                       )
                     : null,
-                title: Text(abTracking.name ?? 'No name', style: textStyle),
+                title: Text(
+                  abTracking.name ?? strings.noName,
+                  style: textStyle,
+                ),
                 subtitle: Text(abTracking.type.name),
               ),
             ),
@@ -385,21 +393,22 @@ class _ImportMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
       icon: Icons.file_open,
-      text: 'Import',
+      text: strings.importAction,
       menuChildren: [
         MenuItemButton(
           onPressed: () async => await ref.watch(importABTrackingProvider),
           closeOnActivate: false,
-          child: Text('AB-tracking', style: textStyle),
+          child: Text(strings.abTracking, style: textStyle),
         ),
         MenuItemButton(
           onPressed: () async => await ref.watch(importPathTrackingProvider),
           closeOnActivate: false,
-          child: Text('Path tracking', style: textStyle),
+          child: Text(strings.pathTracking, style: textStyle),
         ),
       ],
     );
@@ -411,6 +420,7 @@ class _ExportButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     final abTracking = ref.watch(displayABTrackingProvider);
@@ -430,7 +440,7 @@ class _ExportButton extends ConsumerWidget {
               exportPathTrackingProvider(pathTracking).future,
             )
           : null,
-      child: Text('Export', style: textStyle),
+      child: Text(strings.exportAction, style: textStyle),
     );
   }
 }
@@ -444,7 +454,9 @@ class _RenameABTrackingButton extends ConsumerWidget {
     if (abTracking == null) {
       return const SizedBox.shrink();
     }
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     return MenuItemButton(
       closeOnActivate: false,
       leadingIcon: const Padding(
@@ -457,7 +469,7 @@ class _RenameABTrackingButton extends ConsumerWidget {
           var name = abTracking.name ?? '';
           return StatefulBuilder(
             builder: (context, setState) => SimpleDialog(
-              title: const Text('Name the AB tracking'),
+              title: Text(strings.nameTheValue(strings.abTracking)),
               contentPadding: const EdgeInsets.only(
                 left: 24,
                 top: 12,
@@ -468,9 +480,9 @@ class _RenameABTrackingButton extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: TextFormField(
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.label_outline),
-                      labelText: 'Name',
+                    decoration: InputDecoration(
+                      icon: const Icon(Icons.label_outline),
+                      labelText: strings.name,
                     ),
                     initialValue: name,
                     onChanged: (value) => setState(() => name = value),
@@ -478,7 +490,9 @@ class _RenameABTrackingButton extends ConsumerWidget {
                     keyboardType: TextInputType.text,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value) => isBlank(value)
-                        ? '''No name entered! Please enter a name so that the tracking can be saved!'''
+                        ? strings.noNameEnteredValue(
+                            strings.tracking.toLowerCase(),
+                          )
                         : null,
                   ),
                 ),
@@ -508,7 +522,9 @@ class _RenameABTrackingButton extends ConsumerWidget {
                         }
                         Navigator.of(context).pop();
                       },
-                      child: const Text('Save tracking'),
+                      child: Text(
+                        strings.saveValue(strings.tracking.toLowerCase()),
+                      ),
                     ),
                   ),
                 ),
@@ -517,7 +533,7 @@ class _RenameABTrackingButton extends ConsumerWidget {
           );
         },
       ),
-      child: Text('Rename AB tracking', style: textStyle),
+      child: Text(strings.renameValue(strings.abTracking), style: textStyle),
     );
   }
 }
@@ -531,7 +547,9 @@ class _RenamePathTrackingButton extends ConsumerWidget {
     if (pathTracking == null) {
       return const SizedBox.shrink();
     }
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     return MenuItemButton(
       closeOnActivate: false,
       leadingIcon: const Padding(
@@ -544,7 +562,7 @@ class _RenamePathTrackingButton extends ConsumerWidget {
           var name = pathTracking.name ?? '';
           return StatefulBuilder(
             builder: (context, setState) => SimpleDialog(
-              title: const Text('Name the AB tracking'),
+              title: Text(strings.nameTheValue(strings.abTracking)),
               contentPadding: const EdgeInsets.only(
                 left: 24,
                 top: 12,
@@ -555,9 +573,9 @@ class _RenamePathTrackingButton extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: TextFormField(
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.label_outline),
-                      labelText: 'Name',
+                    decoration: InputDecoration(
+                      icon: const Icon(Icons.label_outline),
+                      labelText: strings.name,
                     ),
                     initialValue: name,
                     onChanged: (value) => setState(() => name = value),
@@ -565,7 +583,9 @@ class _RenamePathTrackingButton extends ConsumerWidget {
                     keyboardType: TextInputType.text,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value) => isBlank(value)
-                        ? '''No name entered! Please enter a name so that the tracking can be saved!'''
+                        ? strings.noNameEnteredValue(
+                            strings.tracking.toLowerCase(),
+                          )
                         : null,
                   ),
                 ),
@@ -595,7 +615,9 @@ class _RenamePathTrackingButton extends ConsumerWidget {
                         }
                         Navigator.of(context).pop();
                       },
-                      child: const Text('Save tracking'),
+                      child: Text(
+                        strings.saveValue(strings.pathTracking.toLowerCase()),
+                      ),
                     ),
                   ),
                 ),
@@ -604,7 +626,10 @@ class _RenamePathTrackingButton extends ConsumerWidget {
           );
         },
       ),
-      child: Text('Rename path tracking', style: textStyle),
+      child: Text(
+        strings.renameValue(strings.pathTracking.toLowerCase()),
+        style: textStyle,
+      ),
     );
   }
 }
@@ -618,7 +643,9 @@ class _SaveABTrackingButton extends ConsumerWidget {
     if (abTracking == null) {
       return const SizedBox.shrink();
     }
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     return MenuItemButton(
       closeOnActivate: false,
       leadingIcon: const Padding(
@@ -636,7 +663,7 @@ class _SaveABTrackingButton extends ConsumerWidget {
                 var name = '';
                 return StatefulBuilder(
                   builder: (context, setState) => SimpleDialog(
-                    title: const Text('Name the AB tracking'),
+                    title: Text(strings.nameTheValue(strings.abTracking)),
                     contentPadding: const EdgeInsets.only(
                       left: 24,
                       top: 12,
@@ -647,9 +674,9 @@ class _SaveABTrackingButton extends ConsumerWidget {
                       Padding(
                         padding: const EdgeInsets.all(8),
                         child: TextFormField(
-                          decoration: const InputDecoration(
-                            icon: Icon(Icons.label_outline),
-                            labelText: 'Name',
+                          decoration: InputDecoration(
+                            icon: const Icon(Icons.label_outline),
+                            labelText: strings.name,
                           ),
                           initialValue: name,
                           onChanged: (value) => setState(() => name = value),
@@ -658,7 +685,9 @@ class _SaveABTrackingButton extends ConsumerWidget {
                           keyboardType: TextInputType.text,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) => isBlank(value)
-                              ? '''No name entered! Please enter a name so that the tracking can be saved!'''
+                              ? strings.noNameEnteredValue(
+                                  strings.tracking.toLowerCase(),
+                                )
                               : null,
                         ),
                       ),
@@ -680,7 +709,9 @@ class _SaveABTrackingButton extends ConsumerWidget {
                               );
                               Navigator.of(context).pop();
                             },
-                            child: const Text('Save tracking'),
+                            child: Text(
+                              strings.saveValue(strings.tracking.toLowerCase()),
+                            ),
                           ),
                         ),
                       ),
@@ -692,7 +723,7 @@ class _SaveABTrackingButton extends ConsumerWidget {
           );
         }
       },
-      child: Text('Save AB tracking', style: textStyle),
+      child: Text(strings.saveValue(strings.abTracking), style: textStyle),
     );
   }
 }
@@ -706,6 +737,7 @@ class _SavePathTrackingButton extends ConsumerWidget {
     if (pathTracking == null) {
       return const SizedBox.shrink();
     }
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuItemButton(
@@ -727,7 +759,9 @@ class _SavePathTrackingButton extends ConsumerWidget {
                 var name = '';
                 return StatefulBuilder(
                   builder: (context, setState) => SimpleDialog(
-                    title: const Text('Name the path tracking'),
+                    title: Text(
+                      strings.nameTheValue(strings.pathTracking.toLowerCase()),
+                    ),
                     contentPadding: const EdgeInsets.only(
                       left: 24,
                       top: 12,
@@ -736,9 +770,9 @@ class _SavePathTrackingButton extends ConsumerWidget {
                     ),
                     children: [
                       TextFormField(
-                        decoration: const InputDecoration(
-                          icon: Icon(Icons.label_outline),
-                          labelText: 'Name',
+                        decoration: InputDecoration(
+                          icon: const Icon(Icons.label_outline),
+                          labelText: strings.name,
                         ),
                         initialValue: name,
                         onChanged: (value) => setState(() => name = value),
@@ -747,7 +781,9 @@ class _SavePathTrackingButton extends ConsumerWidget {
                         keyboardType: TextInputType.text,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (value) => isBlank(value)
-                            ? '''No name entered! Please enter a name so that the tracking can be saved!'''
+                            ? strings.noNameEnteredValue(
+                                strings.tracking.toLowerCase(),
+                              )
                             : null,
                       ),
                       Padding(
@@ -768,7 +804,9 @@ class _SavePathTrackingButton extends ConsumerWidget {
                               );
                               Navigator.of(context).pop();
                             },
-                            child: const Text('Save tracking'),
+                            child: Text(
+                              strings.saveValue(strings.tracking.toLowerCase()),
+                            ),
                           ),
                         ),
                       ),
@@ -780,7 +818,10 @@ class _SavePathTrackingButton extends ConsumerWidget {
           );
         }
       },
-      child: Text('Save path tracking', style: textStyle),
+      child: Text(
+        strings.saveValue(strings.pathTracking.toLowerCase()),
+        style: textStyle,
+      ),
     );
   }
 }

@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,16 +27,20 @@ class VehicleSteeringPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final vehicle = ref.watch(configuredVehicleProvider);
 
     final children = [
       Center(
-        child: Text('Steering', style: Theme.of(context).textTheme.titleLarge),
+        child: Text(
+          strings.steering,
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
       ),
       TextFormField(
         decoration: InputDecoration(
           icon: const Icon(Icons.looks),
-          labelText: 'Minimum turning radius',
+          labelText: strings.minimumTurningRadius,
           suffixText: 'm',
           counter: vehicle is AxleSteeredVehicle
               ? Consumer(
@@ -47,7 +52,7 @@ class VehicleSteeringPage extends ConsumerWidget {
                             .toStringAsFixed(2),
                       ),
                     );
-                    return Text('''Theoretical: $value m''');
+                    return Text('''${strings.theoretical}: $value m''');
                   },
                 )
               : null,
@@ -67,9 +72,9 @@ class VehicleSteeringPage extends ConsumerWidget {
         },
       ),
       TextFormField(
-        decoration: const InputDecoration(
-          icon: Icon(Icons.signal_cellular_0_bar),
-          labelText: 'Max steering angle (inner wheel)',
+        decoration: InputDecoration(
+          icon: const Icon(Icons.signal_cellular_0_bar),
+          labelText: strings.maxSteeringAngle,
           suffixText: '°',
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -95,7 +100,7 @@ class VehicleSteeringPage extends ConsumerWidget {
         TextFormField(
           decoration: InputDecoration(
             icon: const Icon(Icons.tune),
-            labelText: 'Ackermann percentage ',
+            labelText: strings.ackermannPercentage,
             counter: Consumer(
               builder: (context, ref, child) {
                 final vehicle =
@@ -112,10 +117,10 @@ class VehicleSteeringPage extends ConsumerWidget {
                   runSpacing: 8,
                   children: [
                     Text(
-                      '''Inner: ${vehicle.steeringAngleMaxRaw.toStringAsFixed(1)}°''',
+                      '''${strings.inner}: ${vehicle.steeringAngleMaxRaw.toStringAsFixed(1)}°''',
                     ),
                     Text(
-                      'Outer: ${ackermann.oppositeAngle.toStringAsFixed(1)}°',
+                      '''${strings.outer}: ${ackermann.oppositeAngle.toStringAsFixed(1)}°''',
                     ),
                   ],
                 );

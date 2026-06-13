@@ -17,17 +17,17 @@
 
 /// An enumerator for which unit we want to use when displaying area in the app.
 enum UnitArea {
-  /// The SI base unit for area.
-  squareMeter(1, 'm²'),
-
-  /// 1 acre is equal to 4046.8564224 square meters.
-  acre(4046.8564224, 'ac'),
-
   /// 1 hectare is equal to 10000 square meters.
   hectare(10000, 'ha'),
 
   /// 1 decare is equal to 1000 square meters.
-  decare(1000, 'daa')
+  decare(1000, 'daa'),
+
+  /// The SI base unit for area.
+  squareMeter(1, 'm2'),
+
+  /// 1 acre is equal to 4046.8564224 square meters.
+  acre(4046.8564224, 'ac'),
   ;
 
   const UnitArea(this.inSquareMeters, this.symbol);

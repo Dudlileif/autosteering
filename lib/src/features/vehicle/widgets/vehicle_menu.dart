@@ -22,6 +22,7 @@ import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,12 +34,13 @@ class VehicleMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final dadMode = ref.watch(enableDadModeProvider);
-
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
+    final dadMode = ref.watch(enableDadModeProvider);
+
     return MenuButtonWithChildren(
-      text: 'Vehicle',
+      text: strings.vehicle,
       icon: Icons.agriculture,
       menuChildren: [
         const _LoadVehicleMenu(),
@@ -50,7 +52,10 @@ class VehicleMenu extends ConsumerWidget {
               padding: EdgeInsets.only(left: 8),
               child: Icon(Icons.navigation),
             ),
-            child: Text('Reset bearing', style: textStyle),
+            child: Text(
+              strings.resetValue(strings.bearing.toLowerCase()),
+              style: textStyle,
+            ),
             onPressed: () => ref.read(simInputProvider.notifier).send((
               setZeroIMUBearingToNextGNSSBearing: true,
             )),
@@ -62,7 +67,7 @@ class VehicleMenu extends ConsumerWidget {
               padding: EdgeInsets.only(left: 8),
               child: Icon(Icons.settings),
             ),
-            child: Text('Configure', style: textStyle),
+            child: Text(strings.configure, style: textStyle),
             onPressed: () => showDialog<void>(
               context: context,
               builder: (context) => const VehicleConfigurator(),
@@ -78,7 +83,7 @@ class VehicleMenu extends ConsumerWidget {
                   const Icon(Icons.memory),
                   Padding(
                     padding: const EdgeInsets.only(left: 8),
-                    child: Text('IMU Configurator', style: textStyle),
+                    child: Text(strings.imuConfigurator, style: textStyle),
                   ),
                 ],
               ),
@@ -103,7 +108,7 @@ class VehicleMenu extends ConsumerWidget {
                   const Icon(Icons.electric_meter),
                   Padding(
                     padding: const EdgeInsets.only(left: 8),
-                    child: Text('WAS & Motor Configurator', style: textStyle),
+                    child: Text(strings.wasMotorConfigurator, style: textStyle),
                   ),
                 ],
               ),
@@ -130,7 +135,10 @@ class VehicleMenu extends ConsumerWidget {
                   const Icon(Icons.abc),
                   Padding(
                     padding: const EdgeInsets.only(left: 8),
-                    child: Text('Autosteering Parameters', style: textStyle),
+                    child: Text(
+                      strings.autosteeringParameters,
+                      style: textStyle,
+                    ),
                   ),
                 ],
               ),
@@ -149,13 +157,13 @@ class VehicleMenu extends ConsumerWidget {
           ),
         Consumer(
           builder: (context, ref, child) => CheckboxListTile(
-            title: Text('Show nudging controls', style: textStyle),
-            secondary: const Padding(
-              padding: EdgeInsets.only(left: 4),
-              child: RotatedBox(
-                quarterTurns: 1,
-                child: Icon(Icons.vertical_align_center),
-              ),
+            title: Text(
+              strings.showValue(strings.nudgeControls.toLowerCase()),
+              style: textStyle,
+            ),
+            secondary: const RotatedBox(
+              quarterTurns: 1,
+              child: Icon(Icons.vertical_align_center),
             ),
             value: ref.watch(showNudgingControlsProvider),
             onChanged: (value) => value != null
@@ -172,11 +180,8 @@ class VehicleMenu extends ConsumerWidget {
         if (!dadMode)
           Consumer(
             builder: (context, ref, child) => CheckboxListTile(
-              title: Text('Show motor target override', style: textStyle),
-              secondary: const Padding(
-                padding: EdgeInsets.only(left: 4),
-                child: Icon(Icons.warning_rounded),
-              ),
+              title: Text(strings.showMotorTargetOverride, style: textStyle),
+              secondary: const Icon(Icons.warning_rounded),
               value: ref.watch(showOverrideSteeringProvider),
               onChanged: (value) => value != null
                   ? ref
@@ -207,11 +212,11 @@ class _LoadVehicleMenu extends ConsumerWidget {
     if (vehicles.isEmpty) {
       return const SizedBox.shrink();
     }
-
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
-      text: 'Load',
+      text: strings.load,
       icon: Icons.history,
       menuChildren: vehicles
           .map(
@@ -219,7 +224,9 @@ class _LoadVehicleMenu extends ConsumerWidget {
               constraints: const BoxConstraints(minWidth: 200),
               child: ListTile(
                 title: Text(vehicle.name ?? vehicle.uuid, style: textStyle),
-                subtitle: Text(vehicle.runtimeType.toString()),
+                subtitle: Text(
+                  strings.vehicleType(vehicle.runtimeType.toString()),
+                ),
                 onTap: () {
                   final position = ref.watch(
                     mainVehicleProvider.select((value) => value.position),
@@ -281,11 +288,12 @@ class _ImportExportMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
       icon: Icons.import_export,
-      text: 'Import/Export',
+      text: strings.importExport,
       menuChildren: [
         Consumer(
           builder: (context, ref, child) {
@@ -296,7 +304,7 @@ class _ImportExportMenu extends StatelessWidget {
                 padding: EdgeInsets.only(left: 8),
                 child: Icon(Icons.file_open),
               ),
-              child: Text('Import', style: textStyle),
+              child: Text(strings.importAction, style: textStyle),
             );
           },
         ),
@@ -321,7 +329,7 @@ class _ImportExportMenu extends StatelessWidget {
                 padding: EdgeInsets.only(left: 8),
                 child: Icon(Icons.save_alt),
               ),
-              child: Text('Export', style: textStyle),
+              child: Text(strings.exportAction, style: textStyle),
             );
           },
         ),

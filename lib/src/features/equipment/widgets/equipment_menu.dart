@@ -23,8 +23,8 @@ import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:collection/collection.dart';
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiver/strings.dart';
@@ -36,12 +36,13 @@ class EquipmentMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final textStyle = theme.menuButtonWithChildrenText;
     final dadMode = ref.watch(enableDadModeProvider);
 
     return MenuButtonWithChildren(
-      text: 'Equipment',
+      text: strings.equipment,
       icon: Icons.handyman,
       menuChildren: [
         const _LoadEquipmentSetupMenu(),
@@ -53,7 +54,7 @@ class EquipmentMenu extends ConsumerWidget {
             padding: EdgeInsets.only(left: 8),
             child: Icon(Icons.settings),
           ),
-          child: Text('Configure', style: textStyle),
+          child: Text(strings.configure, style: textStyle),
           onPressed: () => showDialog<void>(
             context: context,
             builder: (context) => const EquipmentConfigurator(),
@@ -68,7 +69,7 @@ class EquipmentMenu extends ConsumerWidget {
         else if (!dadMode)
           const _EquipmentTrajectoryButton(),
         Consumer(
-          child: Text('Clear unused', style: textStyle),
+          child: Text(strings.clearUnused, style: textStyle),
           builder: (context, ref, child) => MenuItemButton(
             closeOnActivate: false,
             leadingIcon: const Padding(
@@ -80,7 +81,7 @@ class EquipmentMenu extends ConsumerWidget {
           ),
         ),
         Consumer(
-          child: Text('Clear worked area', style: textStyle),
+          child: Text(strings.clearWorkedArea, style: textStyle),
           builder: (context, ref, child) => MenuItemButton(
             closeOnActivate: false,
             leadingIcon: const Padding(
@@ -102,18 +103,21 @@ class EquipmentMenu extends ConsumerWidget {
                 title: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('Recording position', style: textStyle),
+                    Text(strings.recordingPosition, style: textStyle),
                     SegmentedButton<double?>(
                       style: theme.segmentedButtonTheme.style?.copyWith(
                         visualDensity: VisualDensity.compact,
                       ),
                       showSelectedIcon: false,
                       selected: {fraction},
-                      segments: const [
-                        ButtonSegment(value: null, label: Text('Default')),
-                        ButtonSegment(value: 1, label: Text('Front')),
-                        ButtonSegment(value: 0.5, label: Text('Center')),
-                        ButtonSegment(value: 0, label: Text('Rear')),
+                      segments: [
+                        ButtonSegment(
+                          value: null,
+                          label: Text(strings.defaultOption),
+                        ),
+                        ButtonSegment(value: 1, label: Text(strings.front)),
+                        ButtonSegment(value: 0.5, label: Text(strings.center)),
+                        ButtonSegment(value: 0, label: Text(strings.rear)),
                       ],
                       onSelectionChanged: (values) => ref
                           .read(
@@ -136,10 +140,11 @@ class _SaveEquipmentSetup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return Consumer(
-      child: Text('Save setup', style: textStyle),
+      child: Text(strings.saveSetup, style: textStyle),
       builder: (context, ref, child) {
         if (ref.watch(
           mainVehicleProvider.select((value) => value.numAttachedChildren > 0),
@@ -157,7 +162,7 @@ class _SaveEquipmentSetup extends StatelessWidget {
                 var name = '';
                 return StatefulBuilder(
                   builder: (context, setState) => SimpleDialog(
-                    title: const Text('Save equipment setup'),
+                    title: Text(strings.saveEquipmentSetup),
                     contentPadding: const EdgeInsets.only(
                       left: 24,
                       top: 12,
@@ -166,9 +171,9 @@ class _SaveEquipmentSetup extends StatelessWidget {
                     ),
                     children: [
                       TextFormField(
-                        decoration: const InputDecoration(
-                          icon: Icon(Icons.label_outline),
-                          labelText: 'Name',
+                        decoration: InputDecoration(
+                          icon: const Icon(Icons.label_outline),
+                          labelText: strings.name,
                         ),
                         initialValue: name,
                         onChanged: (value) => setState(() => name = value),
@@ -177,7 +182,9 @@ class _SaveEquipmentSetup extends StatelessWidget {
                         keyboardType: TextInputType.text,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (value) => isBlank(value)
-                            ? '''No name entered! Please enter a name so that the setup can be saved!'''
+                            ? strings.noNameEnteredValue(
+                                strings.setup.toLowerCase(),
+                              )
                             : null,
                       ),
                       Padding(
@@ -191,7 +198,7 @@ class _SaveEquipmentSetup extends StatelessWidget {
                               ElevatedButton.icon(
                                 onPressed: Navigator.of(context).pop,
                                 icon: const Icon(Icons.clear),
-                                label: const Text('Cancel'),
+                                label: Text(strings.cancel),
                               ),
                               Consumer(
                                 builder: (context, ref, child) {
@@ -215,7 +222,7 @@ class _SaveEquipmentSetup extends StatelessWidget {
                                       _ => null,
                                     },
                                     icon: const Icon(Icons.check),
-                                    label: const Text('Save'),
+                                    label: Text(strings.save),
                                   );
                                 },
                               ),
@@ -255,11 +262,11 @@ class _LoadEquipmentMenu extends ConsumerWidget {
     if (equipments.isEmpty) {
       return const SizedBox.shrink();
     }
-
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
-      text: 'Load',
+      text: strings.load,
       icon: Icons.history,
       menuChildren: equipments
           .map(
@@ -280,7 +287,7 @@ class _LoadEquipmentMenu extends ConsumerWidget {
                   style: textStyle,
                 ),
                 subtitle: Text(
-                  '''${equipment.hitchType.name.capitalize} | ${equipment.width} m${equipment.sections.length > 1 ? ' | ${equipment.sections.length} sections' : ''}''',
+                  '''${strings.hitchType(equipment.hitchType.name)} | ${equipment.width} m${equipment.sections.length > 1 ? ' | ${equipment.sections.length} ${strings.sections(equipment.sections.length)}' : ''}''',
                 ),
                 trailing: Device.isNative
                     ? IconButton(
@@ -320,11 +327,12 @@ class _ImportExportMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
       icon: Icons.import_export,
-      text: 'Import/Export',
+      text: strings.importExport,
       menuChildren: [
         Consumer(
           builder: (context, ref, child) {
@@ -335,7 +343,7 @@ class _ImportExportMenu extends ConsumerWidget {
                 padding: EdgeInsets.only(left: 8),
                 child: Icon(Icons.file_open),
               ),
-              child: Text('Import', style: textStyle),
+              child: Text(strings.importAction, style: textStyle),
             );
           },
         ),
@@ -360,7 +368,7 @@ class _ImportExportMenu extends ConsumerWidget {
                 padding: EdgeInsets.only(left: 8),
                 child: Icon(Icons.save_alt),
               ),
-              child: Text('Export', style: textStyle),
+              child: Text(strings.exportAction, style: textStyle),
             );
           },
         ),
@@ -373,7 +381,10 @@ class _ImportExportMenu extends ConsumerWidget {
                 padding: EdgeInsets.only(left: 8),
                 child: Icon(Icons.file_open),
               ),
-              child: Text('Import setup', style: textStyle),
+              child: Text(
+                strings.importValue(strings.setup.toLowerCase()),
+                style: textStyle,
+              ),
             );
           },
         ),
@@ -400,7 +411,10 @@ class _ImportExportMenu extends ConsumerWidget {
                   padding: EdgeInsets.only(left: 8),
                   child: Icon(Icons.save_alt),
                 ),
-                child: Text('Export setup', style: textStyle),
+                child: Text(
+                  strings.exportValue(strings.setup),
+                  style: textStyle,
+                ),
               );
             },
           ),
@@ -435,11 +449,11 @@ class _LoadEquipmentSetupMenu extends ConsumerWidget {
     if (setups.isEmpty) {
       return const SizedBox.shrink();
     }
-
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
-      text: 'Load setup',
+      text: strings.loadValue(strings.setup.toLowerCase()),
       icon: Icons.history,
       menuChildren: setups
           .map(
@@ -503,14 +517,14 @@ class _AttachEquipmentMenu extends ConsumerWidget {
     if (!hasHitches) {
       return const SizedBox.shrink();
     }
-
+    final strings = AppLocalizations.of(context);
     final equipmentName = ref.watch(
       loadedEquipmentProvider.select((value) => value?.name),
     );
 
     return equipmentName?.isNotEmpty ?? false
         ? MenuButtonWithChildren(
-            text: 'Attach\n$equipmentName',
+            text: '${strings.attach}\n$equipmentName',
             icon: Icons.commit,
             menuChildren: [
               _RecursiveAttachEquipmentMenu(
@@ -540,11 +554,12 @@ class _RecursiveAttachEquipmentMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final text = [
-      if (parent.parentHitch != null) parent.parentHitch!.name,
+      if (parent.parentHitch != null)
+        strings.hitchOption(parent.parentHitch!.name),
       (parent.name ?? parent.uuid),
     ].join('\n');
-
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     if (parent.hitchPoints.isEmpty) {
@@ -570,7 +585,10 @@ class _RecursiveAttachEquipmentMenu extends ConsumerWidget {
                   ))
                 : null,
             closeOnActivate: false,
-            child: Text('Front fixed', style: textStyle),
+            child: Text(
+              strings.hitchOption(Hitch.frontFixed.name),
+              style: textStyle,
+            ),
           ),
         if (parent.hitchRearFixedChild != null)
           _RecursiveAttachEquipmentMenu(
@@ -588,25 +606,31 @@ class _RecursiveAttachEquipmentMenu extends ConsumerWidget {
                   ))
                 : null,
             closeOnActivate: false,
-            child: Text('Rear fixed', style: textStyle),
+            child: Text(
+              strings.hitchOption(Hitch.rearFixed.name),
+              style: textStyle,
+            ),
           ),
-        if (parent.hitchRearTowbarChild != null)
+        if (parent.hitchRearDrawbarChild != null)
           _RecursiveAttachEquipmentMenu(
-            parent: parent.hitchRearTowbarChild!,
+            parent: parent.hitchRearDrawbarChild!,
             child: child,
           )
-        else if (parent.hitchRearTowbarPoint != null &&
-            child.hitchType == HitchType.towbar)
+        else if (parent.hitchRearDrawbarPoint != null &&
+            child.hitchType == HitchType.drawbar)
           MenuItemButton(
-            onPressed: child.hitchType == HitchType.towbar
+            onPressed: child.hitchType == HitchType.drawbar
                 ? () => ref.read(simInputProvider.notifier).send((
                     parentUuid: parent.uuid,
                     child: child,
-                    position: Hitch.rearTowbar,
+                    position: Hitch.rearDrawbar,
                   ))
                 : null,
             closeOnActivate: false,
-            child: Text('Tow bar', style: textStyle),
+            child: Text(
+              strings.hitchOption(Hitch.rearDrawbar.name),
+              style: textStyle,
+            ),
           ),
       ],
     );
@@ -631,9 +655,10 @@ class _AttachEquipmentSetupMenu extends ConsumerWidget {
     if (!hasHitches || setup == null) {
       return const SizedBox.shrink();
     }
-
+    final strings = AppLocalizations.of(context);
     return MenuButtonWithChildren(
-      text: 'Attach setup\n${setup.name}',
+      text:
+          '${strings.attachValue(strings.setup.toLowerCase())}\n${setup.name}',
       icon: Icons.commit,
       menuChildren: [
         _RecursiveAttachEquipmentSetupMenu(
@@ -662,8 +687,10 @@ class _RecursiveAttachEquipmentSetupMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final text = [
-      if (parent.parentHitch != null) parent.parentHitch!.name,
+      if (parent.parentHitch != null)
+        strings.hitchOption(parent.parentHitch!.name),
       (parent.name ?? parent.uuid),
     ].join('\n');
 
@@ -699,9 +726,9 @@ class _RecursiveAttachEquipmentSetupMenu extends ConsumerWidget {
             parent: parent.hitchRearFixedChild!,
             setup: setup,
           ),
-        if (parent.hitchRearTowbarChild != null)
+        if (parent.hitchRearDrawbarChild != null)
           _RecursiveAttachEquipmentSetupMenu(
-            parent: parent.hitchRearTowbarChild!,
+            parent: parent.hitchRearDrawbarChild!,
             setup: setup,
           ),
       ],
@@ -724,9 +751,10 @@ class _DetachMenu extends ConsumerWidget {
     if (!hasChildren) {
       return const SizedBox.shrink();
     }
+    final strings = AppLocalizations.of(context);
 
     return MenuButtonWithChildren(
-      text: 'Detach',
+      text: strings.detach,
       icon: Icons.commit,
       menuChildren: [
         MenuItemButton(
@@ -737,7 +765,7 @@ class _DetachMenu extends ConsumerWidget {
             ),
           )),
           child: Text(
-            'Detach all',
+            strings.detachAll,
             style: Theme.of(context).menuButtonWithChildrenText,
           ),
         ),
@@ -759,8 +787,10 @@ class _RecursiveDetachMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final text = [
-      if (parent.parentHitch != null) parent.parentHitch!.name,
+      if (parent.parentHitch != null)
+        strings.hitchOption(parent.parentHitch!.name),
       (parent.name ?? parent.uuid),
     ].join('\n');
 
@@ -790,15 +820,16 @@ class _EquipmentTrajectoryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
     return MenuButtonWithChildren(
-      text: 'Trajectory',
+      text: strings.trajectory,
       icon: Icons.straight,
       menuChildren: [
         ConstrainedBox(
           constraints: const BoxConstraints(minWidth: 350),
           child: Consumer(
-            child: Text('Trajectory', style: textStyle),
+            child: Text(strings.trajectory, style: textStyle),
             builder: (context, ref, child) => CheckboxListTile(
               title: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -807,7 +838,7 @@ class _EquipmentTrajectoryButton extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Time'),
+                      Text(strings.time),
                       Slider.adaptive(
                         value: ref.watch(
                           debugEquipmentTrajectorySecondsProvider,
@@ -828,7 +859,7 @@ class _EquipmentTrajectoryButton extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Min'),
+                      Text(strings.min),
                       Slider.adaptive(
                         value: ref.watch(
                           debugEquipmentTrajectoryMinLengthProvider,
@@ -869,13 +900,17 @@ class _EqiupmentDebugMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
     return MenuButtonWithChildren(
-      text: 'Debug',
+      text: strings.debug,
       icon: Icons.bug_report,
       menuChildren: [
         Consumer(
-          child: Text('Draw equipment', style: textStyle),
+          child: Text(
+            strings.drawValue(strings.equipment.toLowerCase()),
+            style: textStyle,
+          ),
           builder: (context, ref, child) => CheckboxListTile(
             title: child,
             value: ref.watch(showEquipmentDrawingLayerProvider),
@@ -889,7 +924,7 @@ class _EqiupmentDebugMenu extends StatelessWidget {
           ),
         ),
         Consumer(
-          child: Text('Sections', style: textStyle),
+          child: Text(strings.sections(0), style: textStyle),
           builder: (context, ref, child) => CheckboxListTile(
             title: child,
             value: ref.watch(debugEquipmentSectionsProvider),
@@ -901,7 +936,7 @@ class _EqiupmentDebugMenu extends StatelessWidget {
           ),
         ),
         Consumer(
-          child: Text('Turning', style: textStyle),
+          child: Text(strings.steering, style: textStyle),
           builder: (context, ref, child) => CheckboxListTile(
             title: child,
             value: ref.watch(debugEquipmentTurningProvider),
@@ -913,7 +948,7 @@ class _EqiupmentDebugMenu extends StatelessWidget {
           ),
         ),
         Consumer(
-          child: Text('Hitches', style: textStyle),
+          child: Text(strings.hitches(0), style: textStyle),
           builder: (context, ref, child) => CheckboxListTile(
             title: child,
             value: ref.watch(debugEquipmentHitchesProvider),
@@ -926,7 +961,7 @@ class _EqiupmentDebugMenu extends StatelessWidget {
         ),
         const _EquipmentTrajectoryButton(),
         Consumer(
-          child: Text('Travelled path', style: textStyle),
+          child: Text(strings.travelledPath, style: textStyle),
           builder: (context, ref, child) => CheckboxListTile(
             title: Column(
               mainAxisSize: MainAxisSize.min,

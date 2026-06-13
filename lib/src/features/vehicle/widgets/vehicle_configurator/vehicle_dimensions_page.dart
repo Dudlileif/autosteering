@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,19 +27,20 @@ class VehicleDimensionsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final vehicle = ref.watch(configuredVehicleProvider);
 
     final children = [
       Center(
         child: Text(
-          'Dimensions',
+          strings.dimensions(0),
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
       TextFormField(
-        decoration: const InputDecoration(
-          icon: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
-          labelText: 'Vehicle body width, excluding wheels',
+        decoration: InputDecoration(
+          icon: const RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
+          labelText: strings.vehicleBodyWidth,
           suffixText: 'm',
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -54,9 +56,9 @@ class VehicleDimensionsPage extends ConsumerWidget {
         },
       ),
       TextFormField(
-        decoration: const InputDecoration(
-          icon: Icon(Icons.expand),
-          labelText: 'Vehicle body length, excluding wheels',
+        decoration: InputDecoration(
+          icon: const Icon(Icons.expand),
+          labelText: strings.vehicleBodyLength,
           suffixText: 'm',
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -74,12 +76,11 @@ class VehicleDimensionsPage extends ConsumerWidget {
       TextFormField(
         decoration: InputDecoration(
           icon: const RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
-          labelText:
-              'Track width, between the centers of the ${switch (vehicle) {
-                Tractor() => 'rear wheels',
-                ArticulatedTractor() => 'rear wheels',
-                Harvester() => 'front wheels',
-              }}',
+          labelText: strings.trackWidth(switch (vehicle) {
+            Tractor() ||
+            ArticulatedTractor() => strings.rearWheels.toLowerCase(),
+            Harvester() => strings.frontWheels.toLowerCase(),
+          }),
           suffixText: 'm',
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -98,9 +99,9 @@ class VehicleDimensionsPage extends ConsumerWidget {
       ),
       if (vehicle is AxleSteeredVehicle)
         TextFormField(
-          decoration: const InputDecoration(
-            icon: Icon(Icons.expand),
-            labelText: 'Wheelbase',
+          decoration: InputDecoration(
+            icon: const Icon(Icons.expand),
+            labelText: strings.wheelbase,
             suffixText: 'm',
           ),
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -119,9 +120,11 @@ class VehicleDimensionsPage extends ConsumerWidget {
         )
       else if (vehicle is ArticulatedTractor) ...[
         TextFormField(
-          decoration: const InputDecoration(
-            icon: Icon(Icons.expand),
-            labelText: 'Pivot center to front axle',
+          decoration: InputDecoration(
+            icon: const Icon(Icons.expand),
+            labelText: strings.pivotCenterToValue(
+              strings.frontAxle.toLowerCase(),
+            ),
             suffixText: 'm',
           ),
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -140,9 +143,11 @@ class VehicleDimensionsPage extends ConsumerWidget {
           },
         ),
         TextFormField(
-          decoration: const InputDecoration(
-            icon: Icon(Icons.expand),
-            labelText: 'Pivot center to rear axle',
+          decoration: InputDecoration(
+            icon: const Icon(Icons.expand),
+            labelText: strings.pivotCenterToValue(
+              strings.rearAxle.toLowerCase(),
+            ),
             suffixText: 'm',
           ),
           keyboardType: const TextInputType.numberWithOptions(decimal: true),

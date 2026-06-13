@@ -27,7 +27,7 @@ final class Tractor extends AxleSteeredVehicle {
     required super.trackWidth,
     super.solidAxleToFrontHitchDistance = 3.5,
     super.solidAxleToRearHitchDistance = 0.9,
-    super.solidAxleToRearTowbarDistance = 0.65,
+    super.solidAxleToRearDrawbarDistance = 0.65,
     super.ackermannSteeringRatio,
     super.ackermannPercentage,
     super.steeringAxleWheelDiameter,
@@ -56,7 +56,7 @@ final class Tractor extends AxleSteeredVehicle {
     super.wheelsRolledDistance,
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
-    super.hitchRearTowbarChild,
+    super.hitchRearDrawbarChild,
     super.name,
     super.uuid,
     super.lastUsed,
@@ -102,8 +102,8 @@ final class Tractor extends AxleSteeredVehicle {
           hitches['solid_axle_to_front_hitch_distance'] as double?,
       solidAxleToRearHitchDistance:
           hitches['solid_axle_to_rear_hitch_distance'] as double?,
-      solidAxleToRearTowbarDistance:
-          hitches['solid_axle_to_rear_towbar_distance'] as double?,
+      solidAxleToRearDrawbarDistance:
+          hitches['solid_axle_to_rear_drawbar_distance'] as double?,
     );
   }
 
@@ -154,7 +154,7 @@ final class Tractor extends AxleSteeredVehicle {
     double? antennaToSolidAxleDistance,
     double? solidAxleToFrontHitchDistance,
     double? solidAxleToRearHitchDistance,
-    double? solidAxleToRearTowbarDistance,
+    double? solidAxleToRearDrawbarDistance,
     double? ackermannSteeringRatio,
     double? ackermannPercentage,
     double? steeringAxleWheelDiameter,
@@ -184,7 +184,7 @@ final class Tractor extends AxleSteeredVehicle {
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,
     Hitchable? hitchRearFixedChild,
-    Hitchable? hitchRearTowbarChild,
+    Hitchable? hitchRearDrawbarChild,
     String? name,
     String? uuid,
     DateTime? lastUsed,
@@ -200,8 +200,8 @@ final class Tractor extends AxleSteeredVehicle {
         solidAxleToFrontHitchDistance ?? this.solidAxleToFrontHitchDistance,
     solidAxleToRearHitchDistance:
         solidAxleToRearHitchDistance ?? this.solidAxleToRearHitchDistance,
-    solidAxleToRearTowbarDistance:
-        solidAxleToRearTowbarDistance ?? this.solidAxleToRearTowbarDistance,
+    solidAxleToRearDrawbarDistance:
+        solidAxleToRearDrawbarDistance ?? this.solidAxleToRearDrawbarDistance,
     ackermannSteeringRatio:
         ackermannSteeringRatio ?? this.ackermannSteeringRatio,
     ackermannPercentage: ackermannPercentage ?? this.ackermannPercentage,
@@ -234,7 +234,7 @@ final class Tractor extends AxleSteeredVehicle {
     wheelsRolledDistance: wheelsRolledDistance ?? this.wheelsRolledDistance,
     hitchFrontFixedChild: hitchFrontFixedChild ?? this.hitchFrontFixedChild,
     hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
-    hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
+    hitchRearDrawbarChild: hitchRearDrawbarChild ?? this.hitchRearDrawbarChild,
     name: name ?? this.name,
     uuid: uuid ?? this.uuid,
     lastUsed: lastUsed ?? this.lastUsed,

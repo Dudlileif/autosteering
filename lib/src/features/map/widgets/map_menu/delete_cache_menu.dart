@@ -18,6 +18,7 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/theme/utils/menu_button_text_extension.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -36,15 +37,21 @@ class DeleteCacheMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
+
     if (Device.isWeb) {
       final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
       return MenuItemButton(
         leadingIcon: const Padding(
           padding: EdgeInsets.only(left: 8),
           child: Icon(Icons.delete),
         ),
         onPressed: FastCachedImageConfig.clearAllCachedImages,
-        child: Text('Delete cache', style: textStyle),
+        child: Text(
+          strings.deleteValue(strings.cache.toLowerCase()),
+          style: textStyle,
+        ),
       );
     }
     final directories = ref
@@ -58,7 +65,7 @@ class DeleteCacheMenu extends ConsumerWidget {
     return directories.isNotEmpty
         ? MenuButtonWithChildren(
             hideInDadMode: true,
-            text: 'Delete cache',
+            text: strings.deleteValue(strings.cache.toLowerCase()),
             icon: Icons.delete,
             menuChildren: directories.map(_CacheDeleter.new).toList(),
           )
@@ -79,11 +86,15 @@ class _CacheDeleter extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
+
     final pathSplit = path_handler.split(path).reversed;
     final size = ref
         .watch(directorySizeProvider(path))
         .maybeWhen(
-          data: (data) => data != null ? fileEntitySize(data) : null,
+          data: (data) => data != null
+              ? fileEntitySize(data, locale: strings.localeName)
+              : null,
           orElse: () => '-',
           skipLoadingOnRefresh: false,
         );
@@ -106,11 +117,11 @@ class _CacheDeleter extends ConsumerWidget {
             false => '${pathSplit.elementAt(1)} - ${pathSplit.first}',
           }),
           Text(
-            'Size: $size',
+            '${strings.size}: $size',
             style: const TextStyle(fontWeight: FontWeight.w300),
           ),
           Text(
-            'Created: $created',
+            '${strings.created}: $created',
             style: const TextStyle(fontWeight: FontWeight.w300),
           ),
         ],

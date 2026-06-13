@@ -19,6 +19,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -30,7 +31,9 @@ class NudgingControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
+
     return Card(
       color: Colors.transparent,
       child: SizedBox(
@@ -39,7 +42,10 @@ class NudgingControls extends StatelessWidget {
           backgroundColor: theme.scaffoldBackgroundColor.withValues(alpha: 0.7),
           primary: false,
           appBar: AppBar(
-            title: Text('Nudge controls', style: theme.textTheme.titleLarge),
+            title: Text(
+              strings.nudgeControls,
+              style: theme.textTheme.titleLarge,
+            ),
             scrolledUnderElevation: 0,
             primary: false,
             actions: [
@@ -68,7 +74,7 @@ class NudgingControls extends StatelessWidget {
                               (value) => value.nudgeDistance,
                             ),
                           );
-                          var text = 'Current: ';
+                          var text = '${strings.current}: ';
                           if (distance.abs() > 1) {
                             text += '${distance.toStringAsPrecision(3)} m'
                                 .padLeft(7);
@@ -91,7 +97,7 @@ class NudgingControls extends StatelessWidget {
                               .read(simInputProvider.notifier)
                               .send((nudgeDistance: 0)),
                           child: TextWithStroke(
-                            'Reset',
+                            strings.reset,
                             style: GoogleFonts.robotoMono(
                               color: Colors.white,
                               textStyle: theme.textTheme.titleMedium,
@@ -228,7 +234,7 @@ class NudgingControls extends StatelessWidget {
                           (value) => value.nudgeDistance,
                         ),
                       );
-                      var text = 'To line: ';
+                      var text = '${strings.toLine}: ';
                       if (currentDistance.abs() > 1) {
                         text += '${currentDistance.toStringAsPrecision(3)} m'
                             .padLeft(7);

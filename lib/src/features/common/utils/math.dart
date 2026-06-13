@@ -19,6 +19,7 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
+import 'package:intl/intl.dart';
 
 /// Find the [value] modulo 2π.
 double mod2pi(double value) => value % (2 * pi);
@@ -123,11 +124,16 @@ double bearingStandardDeviation(Iterable<double> bearings) =>
 /// Provides the size [bytes] in a more readable format with binary suffix.
 ///
 /// Number of [decimals] can be adjusted.
-String fileEntitySize(int bytes, {int decimals = 1}) {
+String fileEntitySize(int bytes, {int decimals = 1, String locale = 'en'}) {
   const suffixes = ['B', 'kB', 'MB', 'GB'];
   final i = (log(bytes) / log(1024)).floor();
 
-  final value = (bytes / pow(1024, i)).toStringAsFixed(decimals);
+  final numberFormatter = NumberFormat.decimalPatternDigits(
+    decimalDigits: decimals,
+    locale: locale,
+  );
+
+  final value = numberFormatter.format(bytes / pow(1024, i));
 
   return '$value ${suffixes.elementAtOrNull(i)}';
 }

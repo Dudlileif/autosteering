@@ -19,6 +19,7 @@ import 'dart:math';
 
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -32,6 +33,8 @@ class EnableAutosteeringButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
+
     return Consumer(
       builder: (context, ref, child) {
         final state = ref.watch(activeAutosteeringStateProvider);
@@ -47,8 +50,8 @@ class EnableAutosteeringButton extends StatelessWidget {
           },
           foregroundColor: Colors.white,
           tooltip: switch (state != AutosteeringState.disabled) {
-            false => 'Enable auto steering',
-            true => 'Disable auto steering',
+            false => strings.enableAutosteering,
+            true => strings.disableAutosteering,
           },
           child: Stack(
             children: [
@@ -81,11 +84,9 @@ class EnableAutosteeringButton extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Text(
-                  switch (state) {
-                    AutosteeringState.disabled => 'OFF',
-                    AutosteeringState.standby => 'STBY',
-                    AutosteeringState.enabled => 'AUTO',
-                  },
+                  strings
+                      .autosteeringStateOptionShort(state.name)
+                      .toUpperCase(),
                   style: GoogleFonts.robotoMono(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,

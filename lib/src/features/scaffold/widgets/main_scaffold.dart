@@ -27,6 +27,7 @@ import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -142,6 +143,8 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
           );
         }
       });
+    final strings = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 20,
@@ -152,7 +155,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                 true => MenuBar(
                   children: [
                     MenuButtonWithChildren(
-                      text: 'Menu',
+                      text: strings.menu,
                       icon: Icons.menu,
                       menuChildren: [
                         const SettingsMenu(),

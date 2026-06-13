@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,11 +27,12 @@ class ThemeModeButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final themeMode = ref.watch(activeThemeModeProvider);
 
     return IconButton(
       padding: const EdgeInsets.all(8),
-      tooltip: 'Cycle Light/System/Dark mode',
+      tooltip: strings.cycleLightSystemDarkMode,
       onPressed: ref.read(activeThemeModeProvider.notifier).cycle,
       icon: Icon(switch (themeMode) {
         ThemeMode.light => Icons.light_mode,

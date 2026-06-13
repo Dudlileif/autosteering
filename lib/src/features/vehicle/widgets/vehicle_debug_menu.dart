@@ -20,6 +20,7 @@ import 'package:autosteering/src/features/gnss/providers/device_position_provide
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -32,14 +33,15 @@ class VehicleDebugMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
-      text: 'Debug',
+      text: strings.debug,
       icon: Icons.bug_report,
       menuChildren: [
         Consumer(
-          child: Text('Vehicle image', style: textStyle),
+          child: Text(strings.vehicleImage, style: textStyle),
           builder: (context, ref, child) => CheckboxListTile(
             value: ref.watch(showVehicleDrawingLayerProvider),
             onChanged: (value) => value != null
@@ -51,7 +53,7 @@ class VehicleDebugMenu extends StatelessWidget {
           ),
         ),
         Consumer(
-          child: Text('Hitches', style: textStyle),
+          child: Text(strings.hitches(0), style: textStyle),
           builder: (context, ref, child) => CheckboxListTile(
             value: ref.watch(debugVehicleHitchesProvider),
             onChanged: (value) => value != null
@@ -63,7 +65,7 @@ class VehicleDebugMenu extends StatelessWidget {
           ),
         ),
         Consumer(
-          child: Text('Steering', style: textStyle),
+          child: Text(strings.steering, style: textStyle),
           builder: (context, ref, child) => CheckboxListTile(
             value: ref.watch(debugVehicleSteeringProvider),
             onChanged: (value) => value != null
@@ -76,7 +78,7 @@ class VehicleDebugMenu extends StatelessWidget {
         ),
         const VehicleTrajectoryButton(),
         Consumer(
-          child: Text('Travelled path', style: textStyle),
+          child: Text(strings.travelledPath, style: textStyle),
           builder: (context, ref, child) => CheckboxListTile(
             value: ref.watch(debugVehicleTravelledPathProvider),
             onChanged: (value) => value != null
@@ -108,7 +110,7 @@ class VehicleDebugMenu extends StatelessWidget {
           ),
         ),
         Consumer(
-          child: Text('Polygons', style: textStyle),
+          child: Text(strings.polygons(0), style: textStyle),
           builder: (context, ref, child) => CheckboxListTile(
             value: ref.watch(debugVehiclePolygonsProvider),
             onChanged: (value) => value != null
@@ -120,7 +122,7 @@ class VehicleDebugMenu extends StatelessWidget {
           ),
         ),
         Consumer(
-          child: Text('Antenna position', style: textStyle),
+          child: Text(strings.antennaPosition, style: textStyle),
           builder: (context, ref, child) => CheckboxListTile(
             value: ref.watch(debugVehicleAntennaPositionProvider),
             onChanged: (value) => value != null
@@ -134,7 +136,7 @@ class VehicleDebugMenu extends StatelessWidget {
           ),
         ),
         Consumer(
-          child: Text('Use device position', style: textStyle),
+          child: Text(strings.useDevicePosition, style: textStyle),
           builder: (context, ref, child) => CheckboxListTile(
             value: ref.watch(devicePositionAsVehiclePositionProvider),
             onChanged: (value) => value != null
@@ -161,15 +163,17 @@ class VehicleTrajectoryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     return MenuButtonWithChildren(
-      text: 'Trajectory',
+      text: strings.trajectory,
       icon: Icons.straight,
       menuChildren: [
         ConstrainedBox(
           constraints: const BoxConstraints(minWidth: 350),
           child: Consumer(
-            child: Text('Trajectory', style: textStyle),
+            child: Text(strings.trajectory, style: textStyle),
             builder: (context, ref, child) => CheckboxListTile(
               value: ref.watch(debugVehicleTrajectoryProvider),
               onChanged: (value) => value != null
@@ -184,7 +188,7 @@ class VehicleTrajectoryButton extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Time'),
+                      Text(strings.time),
                       Slider.adaptive(
                         value: ref.watch(
                           debugVehicleTrajectorySecondsProvider,
@@ -205,7 +209,7 @@ class VehicleTrajectoryButton extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Min'),
+                      Text(strings.min),
                       Slider.adaptive(
                         value: ref.watch(
                           debugVehicleTrajectoryMinLengthProvider,
