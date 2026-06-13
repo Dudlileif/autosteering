@@ -22,6 +22,7 @@ import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,12 +36,13 @@ class PathTrackingMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final textStyle = theme.menuButtonWithChildrenText;
     final dadMode = ref.watch(enableDadModeProvider);
 
     return MenuButtonWithChildren(
-      text: 'Path tracking',
+      text: strings.pathTracking,
       icon: Icons.route,
       menuChildren: [
         MenuItemButton(
@@ -62,7 +64,7 @@ class PathTrackingMenu extends ConsumerWidget {
                         context: context,
                         builder: (context) => Consumer(
                           builder: (context, ref, child) => ConfirmationDialog(
-                            title: 'Close active AB tracking?',
+                            title: strings.closeActiveValue(strings.abTracking),
                             onConfirmation: () async => ref
                                 .read(
                                   configuredPathTrackingProvider.notifier,
@@ -83,7 +85,7 @@ class PathTrackingMenu extends ConsumerWidget {
             padding: EdgeInsets.only(left: 8),
             child: Icon(Icons.check),
           ),
-          child: Text('Apply and use', style: textStyle),
+          child: Text(strings.applyAndUse, style: textStyle),
         ),
         switch (ref.watch(
           displayPathTrackingProvider.select((value) => value != null),
@@ -110,7 +112,10 @@ class PathTrackingMenu extends ConsumerWidget {
                       ),
                     );
               },
-              child: Text('Edit path', style: textStyle),
+              child: Text(
+                strings.editValue(strings.path.toLowerCase()),
+                style: textStyle,
+              ),
             ),
             EditablePathType.pathTracking => MenuItemButton(
               closeOnActivate: false,
@@ -123,7 +128,7 @@ class PathTrackingMenu extends ConsumerWidget {
                 ref.read(pathTrackingPointsProvider.notifier).update(wayPoints);
                 ref.read(activeEditablePathTypeProvider.notifier).update(null);
               },
-              child: Text('Finish editing', style: textStyle),
+              child: Text(strings.finishEditing, style: textStyle),
             ),
             _ => const SizedBox.shrink(),
           },
@@ -142,12 +147,12 @@ class PathTrackingMenu extends ConsumerWidget {
                   .read(showPathRecordingMenuProvider.notifier)
                   .update(value: true);
             },
-            child: Text('Path recording', style: textStyle),
+            child: Text(strings.pathRecording, style: textStyle),
           ),
         },
         if (!dadMode)
           Consumer(
-            child: Text('Show', style: textStyle),
+            child: Text(strings.show, style: textStyle),
             builder: (context, ref, child) {
               return CheckboxListTile(
                 secondary: switch (ref.watch(showPathTrackingProvider)) {
@@ -165,7 +170,7 @@ class PathTrackingMenu extends ConsumerWidget {
             },
           ),
         ListTile(
-          leading: Text('Loop', style: textStyle),
+          leading: Text(strings.loop, style: textStyle),
           title: Consumer(
             builder: (context, ref, child) {
               final loopMode = ref.watch(pathTrackingLoopProvider);
@@ -199,7 +204,10 @@ class PathTrackingMenu extends ConsumerWidget {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Interpolation distance: $distance m', style: textStyle),
+                  Text(
+                    strings.interpolationDistance(distance),
+                    style: textStyle,
+                  ),
                   Slider(
                     value: distance,
                     onChanged: ref
@@ -218,7 +226,7 @@ class PathTrackingMenu extends ConsumerWidget {
           Consumer(
             builder: (context, ref, child) => CheckboxListTile(
               secondary: const Icon(Icons.bug_report),
-              title: Text('Debug', style: textStyle),
+              title: Text(strings.debug, style: textStyle),
               value: ref.watch(debugPathTrackingProvider),
               onChanged: (value) => value != null
                   ? ref

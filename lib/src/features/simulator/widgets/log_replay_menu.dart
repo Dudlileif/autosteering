@@ -20,6 +20,7 @@ import 'dart:ui';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -41,15 +42,16 @@ class LogReplayMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
       icon: Icons.history,
       hideInDadMode: true,
-      text: 'Log replay',
+      text: strings.logReplay,
       menuChildren: [
         Consumer(
-          child: Text('Choose log', style: textStyle),
+          child: Text(strings.chooseLog, style: textStyle),
           builder: (context, ref, child) => ListTile(
             leading: const Icon(Icons.folder_open),
             title: child,
@@ -60,7 +62,7 @@ class LogReplayMenu extends ConsumerWidget {
           builder: (context, ref, child) => ConstrainedBox(
             constraints: const BoxConstraints(minWidth: 175),
             child: CheckboxListTile(
-              title: const Text('Loop', maxLines: 1, softWrap: false),
+              title: Text(strings.loop, maxLines: 1, softWrap: false),
               secondary: const Icon(Icons.loop),
               value: ref.watch(loopLogReplayProvider),
               onChanged: (value) => value != null
@@ -72,7 +74,7 @@ class LogReplayMenu extends ConsumerWidget {
           ),
         ),
         Consumer(
-          child: Text('Resume', style: textStyle),
+          child: Text(strings.resume, style: textStyle),
           builder: (context, ref, child) => ListTile(
             leading: const Icon(Icons.play_arrow),
             title: child,
@@ -82,7 +84,7 @@ class LogReplayMenu extends ConsumerWidget {
           ),
         ),
         Consumer(
-          child: Text('Pause', style: textStyle),
+          child: Text(strings.pause, style: textStyle),
           builder: (context, ref, child) => ListTile(
             leading: const Icon(Icons.pause),
             title: child,
@@ -92,7 +94,7 @@ class LogReplayMenu extends ConsumerWidget {
           ),
         ),
         Consumer(
-          child: Text('Cancel', style: textStyle),
+          child: Text(strings.cancel, style: textStyle),
           builder: (context, ref, child) => ListTile(
             leading: const Icon(Icons.clear),
             title: child,
@@ -102,7 +104,7 @@ class LogReplayMenu extends ConsumerWidget {
           ),
         ),
         Consumer(
-          child: Text('Restart', style: textStyle),
+          child: Text(strings.restart, style: textStyle),
           builder: (context, ref, child) => ListTile(
             leading: const Icon(Icons.refresh),
             title: child,

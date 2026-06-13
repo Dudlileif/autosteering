@@ -17,6 +17,7 @@
 
 import 'package:autosteering/src/features/common/widgets/widgets.dart';
 import 'package:autosteering/src/features/graph/graph.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,7 +29,9 @@ class GraphWithSelector extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
+
     return Card(
       color: Colors.transparent,
       child: SizedBox.square(
@@ -37,7 +40,7 @@ class GraphWithSelector extends ConsumerWidget {
           backgroundColor: theme.scaffoldBackgroundColor.withValues(alpha: 0.7),
           appBar: AppBar(
             primary: false,
-            title: const Text('Graph'),
+            title: Text(strings.graph),
             actions: [
               MenuAnchor(
                 builder: (context, menuController, child) => IconButton(

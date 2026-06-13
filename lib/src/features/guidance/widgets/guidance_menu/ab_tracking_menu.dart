@@ -27,6 +27,7 @@ import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -39,6 +40,7 @@ class ABTrackingMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
     final abTrackingType = ref.watch(currentABTrackingTypeProvider);
@@ -70,7 +72,7 @@ class ABTrackingMenu extends ConsumerWidget {
           ),
         ),
       ),
-      text: 'AB tracking',
+      text: strings.abTracking,
       menuChildren: [
         if (!workSessionGuidanceActive)
           Padding(
@@ -93,7 +95,10 @@ class ABTrackingMenu extends ConsumerWidget {
             ),
           ),
         Consumer(
-          child: Text('Apply and use', style: theme.menuButtonWithChildrenText),
+          child: Text(
+            strings.applyAndUse,
+            style: theme.menuButtonWithChildrenText,
+          ),
           builder: (context, ref, child) => menuConfiguredTracking.when(
             data: (data) => MenuItemButton(
               closeOnActivate: false,
@@ -159,7 +164,10 @@ class ABTrackingMenu extends ConsumerWidget {
             (abTrackingType == ABTrackingType.aPlusLine ||
                 abTrackingType == ABTrackingType.abLine))
           Consumer(
-            child: Text('Set A', style: theme.menuButtonWithChildrenText),
+            child: Text(
+              strings.setValue('A'),
+              style: theme.menuButtonWithChildrenText,
+            ),
             builder: (context, ref, child) {
               final pointIsSet = ref.watch(aBPointAProvider) != null;
               return MenuItemButton(
@@ -207,7 +215,10 @@ class ABTrackingMenu extends ConsumerWidget {
           ),
         if (abTrackingType == ABTrackingType.abLine)
           Consumer(
-            child: Text('Set B', style: theme.menuButtonWithChildrenText),
+            child: Text(
+              strings.setValue('B'),
+              style: theme.menuButtonWithChildrenText,
+            ),
             builder: (context, ref, child) {
               final pointIsSet = ref.watch(aBPointBProvider) != null;
               return MenuItemButton(
@@ -274,7 +285,7 @@ class ABTrackingMenu extends ConsumerWidget {
                   onPressed: () => ref.invalidate(aPlusLineBearingProvider),
                 ),
                 child: Text(
-                  '''Bearing: ${bearing != null ? '${bearing.toStringAsFixed(2)}°' : ''}''',
+                  '''${strings.bearing}: ${bearing != null ? '${bearing.toStringAsFixed(2)}°' : ''}''',
                   style: theme.menuButtonWithChildrenText,
                 ),
               );
@@ -284,7 +295,7 @@ class ABTrackingMenu extends ConsumerWidget {
           Consumer(
             builder: (context, ref, child) => ListTile(
               title: Text(
-                '''Bearing: ${abTracking != null ? '${abTracking.initialBearing.toStringAsFixed(1)}°' : ''}''',
+                '''${strings.bearing}: ${abTracking != null ? '${abTracking.initialBearing.toStringAsFixed(1)}°' : ''}''',
                 style: theme.menuButtonWithChildrenText,
               ),
             ),
@@ -316,7 +327,7 @@ class ABTrackingMenu extends ConsumerWidget {
                       );
                 },
                 child: Text(
-                  'Edit path',
+                  strings.editValue(strings.path.toLowerCase()),
                   style: theme.menuButtonWithChildrenText,
                 ),
               ),
@@ -334,7 +345,7 @@ class ABTrackingMenu extends ConsumerWidget {
                       .update(null);
                 },
                 child: Text(
-                  'Finish editing',
+                  strings.finishEditing,
                   style: theme.menuButtonWithChildrenText,
                 ),
               ),
@@ -359,7 +370,7 @@ class ABTrackingMenu extends ConsumerWidget {
                       .update(value: true);
                 },
                 child: Text(
-                  'Record curve',
+                  [strings.record, strings.curve].join(' '),
                   style: theme.menuButtonWithChildrenText,
                 ),
               ),
@@ -575,81 +586,87 @@ class _APlusLineBearingDialogState
   }
 
   @override
-  Widget build(BuildContext context) => SimpleDialog(
-    title: const Text('A+ line bearing'),
-    contentPadding: const EdgeInsets.only(
-      left: 24,
-      top: 12,
-      right: 24,
-      bottom: 16,
-    ),
-    children: [
-      Padding(
-        padding: const EdgeInsets.all(8),
-        child: Consumer(
-          builder: (context, ref, child) {
-            final aPlusLine = ref.watch(aPlusLineProvider);
-            return TextFormField(
-              decoration: const InputDecoration(
-                icon: Icon(Icons.navigation),
-                labelText: 'Bearing',
-                suffixText: '°',
-              ),
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-              ),
-              initialValue:
-                  (aPlusLine.value?.initialBearing ??
-                          ref.read(aBPointAProvider)?.bearing ??
-                          ref.read(
-                            mainVehicleProvider.select(
-                              (value) => value.bearing,
-                            ),
-                          ) ??
-                          0)
-                      .toStringAsFixed(2),
-              onChanged: (value) {
-                final updated =
-                    double.tryParse(value.replaceAll(',', '.')) ?? bearing;
-                setState(() => bearing = updated);
-              },
-            );
-          },
-        ),
+  Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
+
+    return SimpleDialog(
+      title: Text([strings.aPlusLine, strings.bearing].join(' ')),
+      contentPadding: const EdgeInsets.only(
+        left: 24,
+        top: 12,
+        right: 24,
+        bottom: 16,
       ),
-      Padding(
-        padding: const EdgeInsets.only(top: 16),
-        child: Align(
-          alignment: Alignment.centerRight,
-          child: Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              ElevatedButton.icon(
-                onPressed: () => Navigator.of(context).pop(),
-                icon: const Icon(Icons.clear),
-                label: const Text('Cancel'),
-              ),
-              Consumer(
-                builder: (context, ref, child) => FilledButton.icon(
-                  onPressed: bearing != null
-                      ? () {
-                          ref
-                              .read(aPlusLineBearingProvider.notifier)
-                              .update(bearing);
-                          Navigator.of(context).pop();
-                        }
-                      : null,
-                  icon: const Icon(Icons.check),
-                  label: Text('Use ${bearing?.toStringAsFixed(2)}°'),
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: Consumer(
+            builder: (context, ref, child) {
+              final aPlusLine = ref.watch(aPlusLineProvider);
+              return TextFormField(
+                decoration: InputDecoration(
+                  icon: const Icon(Icons.navigation),
+                  labelText: strings.bearing,
+                  suffixText: '°',
                 ),
-              ),
-            ],
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
+                initialValue:
+                    (aPlusLine.value?.initialBearing ??
+                            ref.read(aBPointAProvider)?.bearing ??
+                            ref.read(
+                              mainVehicleProvider.select(
+                                (value) => value.bearing,
+                              ),
+                            ) ??
+                            0)
+                        .toStringAsFixed(2),
+                onChanged: (value) {
+                  final updated =
+                      double.tryParse(value.replaceAll(',', '.')) ?? bearing;
+                  setState(() => bearing = updated);
+                },
+              );
+            },
           ),
         ),
-      ),
-    ],
-  );
+        Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.clear),
+                  label: Text(strings.cancel),
+                ),
+                Consumer(
+                  builder: (context, ref, child) => FilledButton.icon(
+                    onPressed: bearing != null
+                        ? () {
+                            ref
+                                .read(aPlusLineBearingProvider.notifier)
+                                .update(bearing);
+                            Navigator.of(context).pop();
+                          }
+                        : null,
+                    icon: const Icon(Icons.check),
+                    label: Text(
+                      strings.useValue('${bearing?.toStringAsFixed(2)}°'),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 /// A [Column] widget with common menu items for the different AB-tracking
@@ -664,6 +681,7 @@ class _ABCommonMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
     final dadMode = ref.watch(enableDadModeProvider);
     final limitModeActive = ref.watch(
@@ -676,7 +694,7 @@ class _ABCommonMenu extends ConsumerWidget {
       children: [
         if (!dadMode)
           Consumer(
-            child: Text('Show', style: textStyle),
+            child: Text(strings.show, style: textStyle),
             builder: (context, ref, child) => CheckboxListTile(
               secondary: switch (ref.watch(showABTrackingProvider)) {
                 true => const Icon(Icons.visibility),
@@ -692,7 +710,7 @@ class _ABCommonMenu extends ConsumerWidget {
             ),
           ),
         Consumer(
-          child: Text('Show all lines', style: textStyle),
+          child: Text(strings.showAllLines, style: textStyle),
           builder: (context, ref, child) => CheckboxListTile(
             secondary: switch (ref.watch(aBTrackingShowAllLinesProvider)) {
               true => const Icon(Icons.visibility),
@@ -710,7 +728,7 @@ class _ABCommonMenu extends ConsumerWidget {
         if (ref.watch(displayABTrackingProvider) != null &&
             ref.watch(displayABTrackingProvider)!.finishedOffsets.isNotEmpty)
           Consumer(
-            child: Text('Reset finished lines', style: textStyle),
+            child: Text(strings.resetFinishedLines, style: textStyle),
             builder: (context, ref, child) => MenuItemButton(
               closeOnActivate: false,
               leadingIcon: const Padding(
@@ -727,7 +745,7 @@ class _ABCommonMenu extends ConsumerWidget {
           builder: (context, ref, child) {
             final limitMode = ref.watch(aBTrackingLimitModeProvider);
             return MenuButtonWithChildren(
-              text: 'Limit mode',
+              text: strings.limitMode,
               icon: Icons.u_turn_right,
               menuChildren: ABLimitMode.values
                   .map(
@@ -761,7 +779,7 @@ class _ABCommonMenu extends ConsumerWidget {
               child: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
             ),
             child: Text(
-              'Spacing: ${ref.watch(aBWidthProvider).toStringAsFixed(1)} m',
+              '''${strings.spacing}: ${ref.watch(aBWidthProvider).toStringAsFixed(1)} m''',
               style: textStyle,
             ),
           ),
@@ -772,11 +790,11 @@ class _ABCommonMenu extends ConsumerWidget {
             onPressed: () => showDialog<void>(
               context: context,
               builder: (context) => SimpleDialog(
-                title: const Row(
+                title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Offset from base line'),
-                    CloseButton(),
+                    Text(strings.offsetFromBaseLine),
+                    const CloseButton(),
                   ],
                 ),
                 contentPadding: const EdgeInsets.only(
@@ -791,8 +809,8 @@ class _ABCommonMenu extends ConsumerWidget {
                       controller: TextEditingController(
                         text: ref.watch(aBSidewaysOffsetProvider).toString(),
                       ),
-                      decoration: const InputDecoration(
-                        labelText: 'Offset (-left / +right)',
+                      decoration: InputDecoration(
+                        labelText: strings.offsetLeftRight,
                         suffixText: 'm',
                       ),
                       keyboardType: const TextInputType.numberWithOptions(
@@ -819,7 +837,7 @@ class _ABCommonMenu extends ConsumerWidget {
               child: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
             ),
             child: Text(
-              '''Sideways offset: ${ref.watch(aBSidewaysOffsetProvider).toStringAsFixed(1)} m''',
+              strings.sidewaysOffsetValue(ref.watch(aBSidewaysOffsetProvider)),
               style: textStyle,
             ),
           ),
@@ -831,11 +849,11 @@ class _ABCommonMenu extends ConsumerWidget {
               onPressed: () => showDialog<void>(
                 context: context,
                 builder: (context) => SimpleDialog(
-                  title: const Row(
+                  title: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('AB turning radius'),
-                      CloseButton(),
+                      Text(strings.abTurningRadius),
+                      const CloseButton(),
                     ],
                   ),
                   contentPadding: const EdgeInsets.only(
@@ -847,8 +865,8 @@ class _ABCommonMenu extends ConsumerWidget {
                   children: [
                     Consumer(
                       builder: (context, ref, child) => TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'Turning radius',
+                        decoration: InputDecoration(
+                          labelText: strings.turningRadius,
                           suffixText: 'm',
                         ),
                         keyboardType: TextInputType.number,
@@ -882,8 +900,8 @@ class _ABCommonMenu extends ConsumerWidget {
                               );
                             },
                             icon: const Icon(Icons.agriculture),
-                            label: const Text(
-                              '''Set to 1.25 x vehicle turning radius''',
+                            label: Text(
+                              strings.setToValueXVehicleTurningRadius(1.25),
                             ),
                           ),
                         );
@@ -897,7 +915,7 @@ class _ABCommonMenu extends ConsumerWidget {
                 child: Icon(Icons.looks),
               ),
               child: Text(
-                '''Turning radius: ${ref.watch(aBTurningRadiusProvider).toStringAsFixed(1)} m''',
+                '''${strings.turningRadius}: ${ref.watch(aBTurningRadiusProvider).toStringAsFixed(1)} m''',
                 style: textStyle,
               ),
             ),
@@ -912,7 +930,7 @@ class _ABCommonMenu extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Min offset skips: $turnOffsetMinSkips',
+                    '${strings.minOffsetSkips}: $turnOffsetMinSkips',
                     style: textStyle,
                   ),
                   Slider.adaptive(
@@ -931,7 +949,7 @@ class _ABCommonMenu extends ConsumerWidget {
           Consumer(
             builder: (context, ref, child) => CheckboxListTile(
               secondary: const Icon(Icons.bug_report),
-              title: Text('Debug', style: textStyle),
+              title: Text(strings.debug, style: textStyle),
               value: ref.watch(debugABTrackingProvider),
               onChanged: (value) => value != null
                   ? ref
@@ -948,7 +966,7 @@ class _ABCommonMenu extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Step size: ${stepSize.toStringAsFixed(1)} m',
+                      '${strings.stepSize}: ${stepSize.toStringAsFixed(1)} m',
                       style: textStyle,
                     ),
                     Slider.adaptive(
@@ -969,7 +987,10 @@ class _ABCommonMenu extends ConsumerWidget {
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('Points ahead: $numPointsAhead', style: textStyle),
+                    Text(
+                      '${strings.pointsAhead}: $numPointsAhead',
+                      style: textStyle,
+                    ),
                     Slider.adaptive(
                       value: numPointsAhead.toDouble(),
                       onChanged: (value) => ref
@@ -990,7 +1011,10 @@ class _ABCommonMenu extends ConsumerWidget {
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('Points behind: $numPointsBehind', style: textStyle),
+                    Text(
+                      '${strings.pointsBehind}: $numPointsBehind',
+                      style: textStyle,
+                    ),
                     Slider.adaptive(
                       value: numPointsBehind.toDouble(),
                       onChanged: (value) => ref
@@ -1021,73 +1045,77 @@ class __ABSpacingDialogState extends ConsumerState<_ABSpacingDialog> {
   late double spacing = ref.read(aBWidthProvider);
 
   @override
-  Widget build(BuildContext context) => SimpleDialog(
-    title: const Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [Text('AB spacing/width'), CloseButton()],
-    ),
-    contentPadding: const EdgeInsets.only(
-      left: 24,
-      top: 12,
-      right: 24,
-      bottom: 16,
-    ),
-    children: [
-      Column(
-        spacing: 16,
-        children: [
-          TextFormField(
-            controller: TextEditingController(text: spacing.toString()),
-            decoration: const InputDecoration(
-              labelText: 'Spacing/width',
-              suffixText: 'm',
-            ),
-            keyboardType: TextInputType.number,
-            onFieldSubmitted: (value) {
-              final newSpacing = double.tryParse(value);
-              if (newSpacing != null && newSpacing >= 0) {
-                setState(() => spacing = newSpacing);
-              }
-            },
-          ),
-          ElevatedButton.icon(
-            onPressed: () {
-              setState(
-                () => spacing =
-                    ref.read(
-                      loadedEquipmentProvider.select(
-                        (value) => value?.width,
-                      ),
-                    ) ??
-                    15,
-              );
-            },
-            icon: const Icon(Icons.handyman),
-            label: const Text('Set to equipment width'),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            spacing: 8,
-            children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: const Icon(Icons.clear),
-                label: const Text('Cancel'),
-              ),
-              FilledButton.icon(
-                onPressed: () {
-                  ref.read(aBWidthProvider.notifier).update(spacing);
-                  Navigator.of(context).pop();
-                },
-                icon: const Icon(Icons.check),
-                label: const Text('Confirm'),
-              ),
-            ],
-          ),
-        ],
+  Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
+
+    return SimpleDialog(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [Text(strings.abSpacing), const CloseButton()],
       ),
-    ],
-  );
+      contentPadding: const EdgeInsets.only(
+        left: 24,
+        top: 12,
+        right: 24,
+        bottom: 16,
+      ),
+      children: [
+        Column(
+          spacing: 16,
+          children: [
+            TextFormField(
+              controller: TextEditingController(text: spacing.toString()),
+              decoration: InputDecoration(
+                labelText: strings.spacing,
+                suffixText: 'm',
+              ),
+              keyboardType: TextInputType.number,
+              onFieldSubmitted: (value) {
+                final newSpacing = double.tryParse(value);
+                if (newSpacing != null && newSpacing >= 0) {
+                  setState(() => spacing = newSpacing);
+                }
+              },
+            ),
+            ElevatedButton.icon(
+              onPressed: () {
+                setState(
+                  () => spacing =
+                      ref.read(
+                        loadedEquipmentProvider.select(
+                          (value) => value?.width,
+                        ),
+                      ) ??
+                      15,
+                );
+              },
+              icon: const Icon(Icons.handyman),
+              label: Text(strings.setToEquipmentWidth),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              spacing: 8,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  icon: const Icon(Icons.clear),
+                  label: Text(strings.cancel),
+                ),
+                FilledButton.icon(
+                  onPressed: () {
+                    ref.read(aBWidthProvider.notifier).update(spacing);
+                    Navigator.of(context).pop();
+                  },
+                  icon: const Icon(Icons.check),
+                  label: Text(strings.confirm),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 }

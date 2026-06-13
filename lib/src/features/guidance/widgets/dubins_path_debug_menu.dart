@@ -19,6 +19,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geobase/geobase.dart';
@@ -32,14 +33,15 @@ class DubinsPathDebugMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
       icon: Icons.route,
-      text: 'Dubins path',
+      text: strings.dubinsPath,
       menuChildren: [
         Consumer(
-          child: Text('Debugging', style: textStyle),
+          child: Text(strings.debugging, style: textStyle),
           builder: (context, ref, child) {
             return CheckboxListTile(
               value: ref.watch(enableDubinsPathDebugProvider),
@@ -53,7 +55,7 @@ class DubinsPathDebugMenu extends StatelessWidget {
           },
         ),
         Consumer(
-          child: Text('Turning circles', style: textStyle),
+          child: Text(strings.turningCircles, style: textStyle),
           builder: (context, ref, child) {
             return CheckboxListTile(
               value: ref.watch(showDubinsPathDebugCirclesProvider),
@@ -75,7 +77,7 @@ class DubinsPathDebugMenu extends StatelessWidget {
             return MenuButtonWithChildren(
               icon: Icons.abc,
               text:
-                  '''Path type: ${(selectedPathType?.name ?? dubinsPath?.bestPathData?.pathType.name)?.toUpperCase()}\n${(dubinsPath?.pathData(selectedPathType)?.totalLength ?? dubinsPath?.bestPathData?.totalLength)?.round()} m''',
+                  '''${strings.pathType}: ${(selectedPathType?.name ?? dubinsPath?.bestPathData?.pathType.name)?.toUpperCase()}\n${(dubinsPath?.pathData(selectedPathType)?.totalLength ?? dubinsPath?.bestPathData?.totalLength)?.round()} m''',
               menuChildren: DubinsPathType.values
                   .map(
                     (pathType) => CheckboxListTile(
@@ -113,13 +115,16 @@ class DubinsPathDebugMenu extends StatelessWidget {
 
             return MenuButtonWithChildren(
               icon: Icons.threesixty,
-              text: 'Rotate points',
+              text: strings.rotatePoints,
               menuChildren: [
                 if (start != null)
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('Start:${start.bearing.round()}', style: textStyle),
+                      Text(
+                        '${strings.start}: ${start.bearing.round()}',
+                        style: textStyle,
+                      ),
                       Slider(
                         value: start.bearing,
                         onChanged: (value) => ref
@@ -135,7 +140,10 @@ class DubinsPathDebugMenu extends StatelessWidget {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('End: ${end.bearing.round()}', style: textStyle),
+                      Text(
+                        '${strings.end}: ${end.bearing.round()}',
+                        style: textStyle,
+                      ),
                       Slider(
                         value: end.bearing,
                         onChanged: (value) => ref
@@ -155,16 +163,19 @@ class DubinsPathDebugMenu extends StatelessWidget {
             Consumer(
               builder: (context, ref, child) {
                 return Text(
-                  '''Step size: ${ref.watch(dubinsPathDebugStepSizeProvider).toStringAsFixed(1)} m''',
+                  '''${strings.stepSize}: ${ref.watch(dubinsPathDebugStepSizeProvider).toStringAsFixed(1)} m''',
                   style: textStyle,
                 );
               },
             ),
-            const StepSizeSlider(),
+            const _StepSizeSlider(),
           ],
         ),
         Consumer(
-          child: Text('Reset points', style: textStyle),
+          child: Text(
+            strings.resetValue(strings.points(0).toLowerCase()),
+            style: textStyle,
+          ),
           builder: (context, ref, child) {
             return ListTile(
               onTap: () {
@@ -196,7 +207,7 @@ class DubinsPathDebugMenu extends StatelessWidget {
           },
         ),
         Consumer(
-          child: Text('Clear points', style: textStyle),
+          child: Text(strings.clearPoints, style: textStyle),
           builder: (context, ref, child) {
             return ListTile(
               onTap: () => ref
@@ -213,10 +224,10 @@ class DubinsPathDebugMenu extends StatelessWidget {
 }
 
 /// A slider for specifying the step size for the Dubins path debugging.
-class StepSizeSlider extends ConsumerWidget {
+class _StepSizeSlider extends ConsumerWidget {
   /// A slider for specifying the step size for the Dubins path debugging.
 
-  const StepSizeSlider({super.key});
+  const _StepSizeSlider();
 
   List<double> get _values => <double>[0.1, 0.5, 1, 2, 5, 10];
 

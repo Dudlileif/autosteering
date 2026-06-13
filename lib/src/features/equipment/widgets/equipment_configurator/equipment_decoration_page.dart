@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/equipment/equipment.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,14 +27,15 @@ class EquipmentDecorationPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final equipment = ref.watch(configuredEquipmentProvider);
 
     final children = [
-      Text('Decoration', style: Theme.of(context).textTheme.titleLarge),
+      Text(strings.decoration, style: Theme.of(context).textTheme.titleLarge),
       TextFormField(
-        decoration: const InputDecoration(
-          icon: Icon(Icons.expand),
-          labelText: 'Hitch to decoration start',
+        decoration: InputDecoration(
+          icon: const Icon(Icons.expand),
+          labelText: strings.hitchToDecorationStart,
           suffixText: 'm',
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -52,9 +54,12 @@ class EquipmentDecorationPage extends ConsumerWidget {
       ),
 
       TextFormField(
-        decoration: const InputDecoration(
-          icon: Icon(Icons.expand),
-          labelText: 'Decoration length',
+        decoration: InputDecoration(
+          icon: const Icon(Icons.expand),
+          labelText: [
+            strings.decoration,
+            strings.length.toLowerCase(),
+          ].join(' '),
           suffixText: 'm',
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -72,9 +77,12 @@ class EquipmentDecorationPage extends ConsumerWidget {
         },
       ),
       TextFormField(
-        decoration: const InputDecoration(
-          icon: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
-          labelText: 'Decoration width',
+        decoration: InputDecoration(
+          icon: const RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
+          labelText: [
+            strings.decoration,
+            strings.width.toLowerCase(),
+          ].join(' '),
           suffixText: 'm',
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -92,9 +100,9 @@ class EquipmentDecorationPage extends ConsumerWidget {
         },
       ),
       TextFormField(
-        decoration: const InputDecoration(
-          icon: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
-          labelText: 'Decoration sideways offset (-left / +right)',
+        decoration: InputDecoration(
+          icon: const RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
+          labelText: strings.decorationSidewaysOffset,
           suffixText: 'm',
         ),
         keyboardType: const TextInputType.numberWithOptions(

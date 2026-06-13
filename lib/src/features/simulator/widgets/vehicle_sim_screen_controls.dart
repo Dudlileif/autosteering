@@ -25,6 +25,7 @@ import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 /// Basic on screen controls for the simulated vehicle.
 ///
@@ -37,8 +38,13 @@ class SimVehicleVelocityControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final strings = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      decimalDigits: 1,
+      locale: strings.localeName,
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -56,7 +62,7 @@ class SimVehicleVelocityControls extends StatelessWidget {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Text(
-                    'STOP',
+                    strings.stopButtonText.toUpperCase(),
                     style: GoogleFonts.robotoMono(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -72,7 +78,7 @@ class SimVehicleVelocityControls extends StatelessWidget {
               )),
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
-              tooltip: 'Stop the vehicle',
+              tooltip: strings.stopTheVehicle,
               child: child,
             ),
           ),
@@ -96,7 +102,7 @@ class SimVehicleVelocityControls extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: TextWithStroke(
-                          'Velocity',
+                          strings.velocity,
                           style: GoogleFonts.robotoMono(
                             color: Colors.white,
                             textStyle: theme.textTheme.titleMedium,
@@ -105,7 +111,7 @@ class SimVehicleVelocityControls extends StatelessWidget {
                         ),
                       ),
                       TextWithStroke(
-                        '''${unit.fromUnit(velocity).toStringAsFixed(1).padLeft(5)} ${strings.unitVelocityDisplay(unit.symbol)}''',
+                        '''${numberFormatter.format(unit.fromUnit(velocity)).padLeft(5)} ${strings.unitVelocityDisplay(unit.symbol)}''',
                         style: GoogleFonts.robotoMono(
                           color: Colors.white,
                           textStyle: theme.textTheme.titleMedium,
@@ -176,6 +182,9 @@ class SimVehicleSteeringSlider extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+
     final showOverrideToggle = ref.watch(showOverrideSteeringProvider);
     final overrideEnabled = ref.watch(overrideSteeringProvider);
     final steeringAngle = overrideEnabled
@@ -191,14 +200,19 @@ class SimVehicleSteeringSlider extends ConsumerWidget {
     final steeringAngleMax = ref.watch(
       mainVehicleProvider.select((vehicle) => vehicle.steeringAngleMax),
     );
-    final theme = Theme.of(context);
+
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      decimalDigits: 1,
+      locale: strings.localeName,
+    );
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         if (showOverrideToggle)
           CheckboxListTile(
             title: Text(
-              'Motor target override',
+              strings.motorTargetOverride,
               style: theme.textTheme.titleMedium,
             ),
             value: overrideEnabled,
@@ -209,7 +223,7 @@ class SimVehicleSteeringSlider extends ConsumerWidget {
                 : null,
           ),
         TextWithStroke(
-          '''Steering:${steeringAngle.toStringAsFixed(1).padLeft(6)}°''',
+          '''${strings.steering}: ${numberFormatter.format(steeringAngle).padLeft(6)}°''',
           style: GoogleFonts.robotoMono(
             color: Colors.white,
             textStyle: theme.textTheme.titleMedium,

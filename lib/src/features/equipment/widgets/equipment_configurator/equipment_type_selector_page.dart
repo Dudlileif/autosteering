@@ -19,6 +19,7 @@ import 'dart:math';
 
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiver/strings.dart';
@@ -48,7 +49,9 @@ class _EquipmentTypeSelectorPageState
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
+
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -65,9 +68,9 @@ class _EquipmentTypeSelectorPageState
                   Consumer(
                     builder: (context, ref, child) {
                       return TextFormField(
-                        decoration: const InputDecoration(
-                          icon: Icon(Icons.label_outline),
-                          labelText: 'Name',
+                        decoration: InputDecoration(
+                          icon: const Icon(Icons.label_outline),
+                          labelText: strings.name,
                         ),
                         controller: nameController,
                         onFieldSubmitted: ref
@@ -75,8 +78,11 @@ class _EquipmentTypeSelectorPageState
                             .updateName,
                         keyboardType: TextInputType.text,
                         autovalidateMode: AutovalidateMode.always,
-                        validator: (value) =>
-                            isBlank(value) ? 'No name entered!' : null,
+                        validator: (value) => isBlank(value)
+                            ? strings.noNameEnteredValue(
+                                strings.equipment.toLowerCase(),
+                              )
+                            : null,
                       );
                     },
                   ),
@@ -115,6 +121,7 @@ class _EquipmentTypeSelector extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
     final equipment = ref.watch(configuredEquipmentProvider);
@@ -152,24 +159,27 @@ class _EquipmentTypeSelector extends ConsumerWidget {
         },
         selected: {equipment.hitchType},
         segments: [
-          const ButtonSegment(
+          ButtonSegment(
             value: HitchType.fixed,
             label: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Fixed hitch', textAlign: TextAlign.center),
+                Text(
+                  strings.hitchType(HitchType.fixed.name),
+                  textAlign: TextAlign.center,
+                ),
                 // TODO(dudlileif): Make three point hitch drawing
-                Icon(Icons.workspaces),
+                const Icon(Icons.workspaces),
               ],
             ),
           ),
           ButtonSegment(
-            value: HitchType.towbar,
+            value: HitchType.drawbar,
             label: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Towbar hitch',
+                  strings.hitchType(HitchType.drawbar.name),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.bold,
@@ -178,7 +188,7 @@ class _EquipmentTypeSelector extends ConsumerWidget {
                         : Colors.black,
                   ),
                 ),
-                // TODO(dudlileif): Make towbar drawing
+                // TODO(dudlileif): Make drawbar drawing
                 const Icon(Icons.commit),
               ],
             ),

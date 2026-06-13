@@ -18,6 +18,7 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/theme/utils/menu_button_text_extension.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,11 +29,12 @@ class HardwareSerialMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
       hideInDadMode: true,
-      text: 'USB / Serial',
+      text: strings.usbSerial,
       iconOverrideWidget: Consumer(
         builder: (context, ref, child) => Icon(
           Icons.usb,
@@ -57,7 +59,7 @@ class HardwareSerialMenu extends StatelessWidget {
                 closeOnActivate: false,
                 leadingIcon: const Icon(Icons.clear),
                 onPressed: () => ref.invalidate(hardwareSerialProvider),
-                child: Text('Close', style: textStyle),
+                child: Text(strings.close, style: textStyle),
               );
             }
             return const SizedBox.shrink();
@@ -66,7 +68,7 @@ class HardwareSerialMenu extends StatelessWidget {
         Consumer(
           builder: (context, ref, child) => MenuButtonWithChildren(
             icon: Icons.usb,
-            text: 'Serial port',
+            text: strings.serialPort,
             menuChildren: ref
                 .watch(availableSerialPortsProvider)
                 .maybeWhen(
@@ -98,7 +100,7 @@ class HardwareSerialMenu extends StatelessWidget {
 
             return MenuButtonWithChildren(
               icon: Icons.speed,
-              text: 'Baud rate',
+              text: strings.baudRate,
               menuChildren: HardwareSerialBaudRate.rates
                   .map(
                     (baudRate) => MenuItemButton(

@@ -45,7 +45,7 @@ class Equipment extends Hitchable {
   ///
   /// To add child hitches to the equipment, set the distance from the hitch
   /// point to the corresponding [hitchToChildFrontFixedHitchLength],
-  /// [hitchToChildRearFixedHitchLength], [hitchToChildRearTowbarHitchLength]
+  /// [hitchToChildRearFixedHitchLength], [hitchToChildRearDrawbarHitchLength]
   /// depending on which hitch(es) you wan't to add.
   ///
   /// The [bearing] and [_position] parameters generally doesn't need to be
@@ -56,7 +56,7 @@ class Equipment extends Hitchable {
     super.hitchParent,
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
-    super.hitchRearTowbarChild,
+    super.hitchRearDrawbarChild,
     super.name,
     super.uuid,
     super.lastUsed,
@@ -66,7 +66,7 @@ class Equipment extends Hitchable {
     this.recordingPositionFraction = 1,
     this.hitchToChildFrontFixedHitchLength,
     this.hitchToChildRearFixedHitchLength,
-    this.hitchToChildRearTowbarHitchLength,
+    this.hitchToChildRearDrawbarHitchLength,
     this.hitchToDecorationStartLength,
     this.decorationSidewaysOffset,
     this.decorationLength,
@@ -100,6 +100,7 @@ class Equipment extends Hitchable {
     final equipment = Equipment(
       hitchType: HitchType.values.firstWhere(
         (element) => element.name == info['hitch_type'] as String,
+        orElse: () => .drawbar,
       ),
       name: info['name'] as String?,
       uuid: info['uuid'] as String,
@@ -113,8 +114,8 @@ class Equipment extends Hitchable {
           hitches['hitch_to_child_front_fixed_hitch_length'] as double?,
       hitchToChildRearFixedHitchLength:
           hitches['hitch_to_child_rear_fixed_hitch_length'] as double?,
-      hitchToChildRearTowbarHitchLength:
-          hitches['hitch_to_child_rear_towbar_hitch_length'] as double?,
+      hitchToChildRearDrawbarHitchLength:
+          hitches['hitch_to_child_rear_drawbar_hitch_length'] as double?,
       hitchToDecorationStartLength:
           decoration?['hitch_to_decoration_start_length'] as double?,
       decorationLength: decoration?['decoration_length'] as double?,
@@ -138,9 +139,9 @@ class Equipment extends Hitchable {
             Map<String, dynamic>.from(children!['rear_fixed']!),
           )
         : null;
-    final hitchRearTowbarChild = children?['rear_towbar'] != null
+    final hitchRearDrawbarChild = children?['rear_drawbar'] != null
         ? Equipment.fromJson(
-            Map<String, dynamic>.from(children!['rear_towbar']!),
+            Map<String, dynamic>.from(children!['rear_drawbar']!),
           )
         : null;
 
@@ -150,8 +151,8 @@ class Equipment extends Hitchable {
     if (hitchRearFixedChild != null) {
       equipment.attachChild(hitchRearFixedChild);
     }
-    if (hitchRearTowbarChild != null) {
-      equipment.attachChild(hitchRearTowbarChild, Hitch.rearTowbar);
+    if (hitchRearDrawbarChild != null) {
+      equipment.attachChild(hitchRearDrawbarChild, Hitch.rearDrawbar);
     }
 
     return equipment;
@@ -200,9 +201,9 @@ class Equipment extends Hitchable {
   /// rear, if there is one.
   double? hitchToChildRearFixedHitchLength;
 
-  /// The length from the primary hitch point to the child rear towbar hitch at
+  /// The length from the primary hitch point to the child rear drawbar hitch at
   /// the rear, if there is one.
-  double? hitchToChildRearTowbarHitchLength;
+  double? hitchToChildRearDrawbarHitchLength;
 
   /// The distance from the hitch [position] to the start of the decoration
   /// polygon.
@@ -227,19 +228,19 @@ class Equipment extends Hitchable {
   double _bearing = 0;
 
   /// The previous position of the [workingCenter], only used in
-  /// [updateTowbar].
+  /// [updateDrawbar].
   late Geographic _prevWorkingCenter = workingCenter;
 
-  /// The previous [bearing] of this, only used in [updateTowbar].
+  /// The previous [bearing] of this, only used in [updateDrawbar].
   double _prevBearing = 0;
 
-  /// The previous hitch angle, only used in [updateTowbar].
+  /// The previous hitch angle, only used in [updateDrawbar].
   double _prevHitchAngle = 0;
 
-  /// The turning radius of this, only used in [updateTowbar].
+  /// The turning radius of this, only used in [updateDrawbar].
   double? _turningRadius;
 
-  /// The turning radius center of this, only used in [updateTowbar].
+  /// The turning radius center of this, only used in [updateDrawbar].
   Geographic? _turningRadiusCenter;
 
   @override
@@ -292,7 +293,7 @@ class Equipment extends Hitchable {
   /// connection is fixed, otherwise the explicitly set [_velocity].
   @override
   double get velocity {
-    if (hitchParent != null && parentHitch != Hitch.rearTowbar) {
+    if (hitchParent != null && parentHitch != Hitch.rearDrawbar) {
       return hitchParent!.velocity;
     }
     return _velocity;
@@ -306,7 +307,7 @@ class Equipment extends Hitchable {
   /// connection is fixed, otherwise the explicitly set [_bearing].
   @override
   double get bearing {
-    if (hitchParent != null && parentHitch != Hitch.rearTowbar) {
+    if (hitchParent != null && parentHitch != Hitch.rearDrawbar) {
       return switch (hitchParent! is ArticulatedTractor) {
         true =>
           parentHitch == Hitch.frontFixed
@@ -439,7 +440,7 @@ class Equipment extends Hitchable {
     true => switch (parentHitch!) {
       Hitch.frontFixed => hitchParent!.hitchFrontFixedPoint,
       Hitch.rearFixed => hitchParent!.hitchRearFixedPoint,
-      Hitch.rearTowbar => hitchParent!.hitchRearTowbarPoint,
+      Hitch.rearDrawbar => hitchParent!.hitchRearDrawbarPoint,
     },
     false => null,
   };
@@ -468,26 +469,26 @@ class Equipment extends Hitchable {
         false => null,
       };
 
-  /// The position of the rear towbar child hitch on this equipment, if there is
-  /// one.
+  /// The position of the rear drawbar child hitch on this equipment, if there
+  /// is one.
   @override
-  Geographic? get hitchRearTowbarPoint =>
-      switch (hitchToChildRearTowbarHitchLength != null) {
+  Geographic? get hitchRearDrawbarPoint =>
+      switch (hitchToChildRearDrawbarHitchLength != null) {
         true => position.rhumb.destinationPoint(
-          distance: hitchToChildRearTowbarHitchLength!,
+          distance: hitchToChildRearDrawbarHitchLength!,
           bearing: bearing + 180,
         ),
         false => null,
       };
 
   /// Update the [bearing] and [velocity] of the equipment when connected to
-  /// parent with a towbar.
+  /// parent with a drawbar.
   ///
   /// Depends on the parent having a turning circle and radius, so it will not
   /// work without a steering angle on the main vehicle (i.e. WAS is required
   /// on physical vehicle).
-  void updateTowbar(double period) {
-    if (hitchParent != null && parentHitch == Hitch.rearTowbar) {
+  void updateDrawbar(double period) {
+    if (hitchParent != null && parentHitch == Hitch.rearDrawbar) {
       var hitchAngle = _prevHitchAngle;
       final prevBearing = bearing;
 
@@ -528,12 +529,12 @@ class Equipment extends Hitchable {
             : null;
 
         final hitchToParentTurningCircleBase = switch (hitchParent) {
-          AxleSteeredVehicle(solidAxleToRearTowbarDistance: final distance) =>
+          AxleSteeredVehicle(solidAxleToRearDrawbarDistance: final distance) =>
             distance,
-          ArticulatedTractor(rearAxleToTowbarDistance: final distance) =>
+          ArticulatedTractor(rearAxleToDrawbarDistance: final distance) =>
             distance,
           Equipment(
-            hitchToChildRearTowbarHitchLength: final distance,
+            hitchToChildRearDrawbarHitchLength: final distance,
             drawbarLength: final length,
           ) =>
             distance! - length,
@@ -602,10 +603,10 @@ class Equipment extends Hitchable {
   }
 
   /// Update the children connected to this. Also checks and updates this
-  /// equipment if it's connected to parent with a towbar.
+  /// equipment if it's connected to parent with a drawbar.
   @override
   void updateChildren(double period) {
-    updateTowbar(period);
+    updateDrawbar(period);
     super.updateChildren(period);
   }
 
@@ -617,7 +618,7 @@ class Equipment extends Hitchable {
         bearing: switch (parentHitch) {
           Hitch.frontFixed => bearing,
           Hitch.rearFixed => bearing + 180,
-          Hitch.rearTowbar => bearing + 180,
+          Hitch.rearDrawbar => bearing + 180,
           null => bearing,
         },
       )
@@ -644,7 +645,7 @@ class Equipment extends Hitchable {
         distance: drawbarLength,
         bearing: calculationBearing + 180,
       ),
-      Hitch.rearTowbar => calculationPosition.rhumb.destinationPoint(
+      Hitch.rearDrawbar => calculationPosition.rhumb.destinationPoint(
         distance: drawbarLength,
         bearing: calculationBearing + 180,
       ),
@@ -971,7 +972,7 @@ class Equipment extends Hitchable {
       ),
     ],
     ...switch (hitchType) {
-      HitchType.towbar => [
+      HitchType.drawbar => [
         map.Polygon(
           borderStrokeWidth: 3,
           color: Colors.grey.shade800,
@@ -1229,7 +1230,7 @@ class Equipment extends Hitchable {
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,
     Hitchable? hitchRearFixedChild,
-    Hitchable? hitchRearTowbarChild,
+    Hitchable? hitchRearDrawbarChild,
     List<Section>? sections,
     double? workingAreaLength,
     double? drawbarLength,
@@ -1239,7 +1240,7 @@ class Equipment extends Hitchable {
     Geographic? position,
     double? hitchToChildFrontFixedHitchLength,
     double? hitchToChildRearFixedHitchLength,
-    double? hitchToChildRearTowbarHitchLength,
+    double? hitchToChildRearDrawbarHitchLength,
     double? hitchToDecorationStartLength,
     double? decorationSidewaysOffset,
     double? decorationLength,
@@ -1251,7 +1252,7 @@ class Equipment extends Hitchable {
     hitchType: hitchType ?? this.hitchType,
     hitchParent: hitchParent ?? this.hitchParent,
     hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
-    hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
+    hitchRearDrawbarChild: hitchRearDrawbarChild ?? this.hitchRearDrawbarChild,
     sections: sections ?? this.sections,
     workingAreaLength: workingAreaLength ?? this.workingAreaLength,
     drawbarLength: drawbarLength ?? this.drawbarLength,
@@ -1266,9 +1267,9 @@ class Equipment extends Hitchable {
     hitchToChildRearFixedHitchLength:
         hitchToChildRearFixedHitchLength ??
         this.hitchToChildRearFixedHitchLength,
-    hitchToChildRearTowbarHitchLength:
-        hitchToChildRearTowbarHitchLength ??
-        this.hitchToChildRearTowbarHitchLength,
+    hitchToChildRearDrawbarHitchLength:
+        hitchToChildRearDrawbarHitchLength ??
+        this.hitchToChildRearDrawbarHitchLength,
     hitchToDecorationStartLength:
         hitchToDecorationStartLength ?? this.hitchToDecorationStartLength,
     decorationLength: decorationLength ?? this.decorationLength,
@@ -1319,8 +1320,8 @@ class Equipment extends Hitchable {
           hitchToChildFrontFixedHitchLength,
       'hitch_to_child_rear_fixed_hitch_length':
           hitchToChildRearFixedHitchLength,
-      'hitch_to_child_rear_towbar_hitch_length':
-          hitchToChildRearTowbarHitchLength,
+      'hitch_to_child_rear_drawbar_hitch_length':
+          hitchToChildRearDrawbarHitchLength,
     };
 
     return map;

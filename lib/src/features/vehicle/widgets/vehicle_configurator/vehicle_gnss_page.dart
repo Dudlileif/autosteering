@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -27,17 +28,18 @@ class VehicleGnssPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final vehicle = ref.watch(configuredVehicleProvider);
 
     final children = [
       Center(
-        child: Text('GNSS', style: theme.textTheme.titleLarge),
+        child: Text(strings.gnss, style: theme.textTheme.titleLarge),
       ),
       TextFormField(
-        decoration: const InputDecoration(
-          icon: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
-          labelText: 'Antenna lateral offset (-left / +right)',
+        decoration: InputDecoration(
+          icon: const RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
+          labelText: strings.antennaLateralOffset,
           suffixText: 'm',
         ),
         keyboardType: const TextInputType.numberWithOptions(
@@ -65,9 +67,9 @@ class VehicleGnssPage extends ConsumerWidget {
         },
       ),
       TextFormField(
-        decoration: const InputDecoration(
-          icon: Icon(Icons.expand),
-          labelText: 'Antenna height',
+        decoration: InputDecoration(
+          icon: const Icon(Icons.expand),
+          labelText: strings.antennaHeight,
           suffixText: 'm',
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -128,11 +130,11 @@ class VehicleGnssPage extends ConsumerWidget {
           },
         ),
         ArticulatedTractor() => TextFormField(
-          decoration: const InputDecoration(
-            icon: Icon(Icons.expand),
-            labelText: 'Pivot to antenna',
+          decoration: InputDecoration(
+            icon: const Icon(Icons.expand),
+            labelText: strings.pivotToAntenna,
             suffixText: 'm',
-            helperText: 'Antenna MUST be on the front body of the vehicle!',
+            helperText: strings.pivotAntennaWarning,
           ),
           keyboardType: const TextInputType.numberWithOptions(
             decimal: true,
@@ -165,7 +167,7 @@ class VehicleGnssPage extends ConsumerWidget {
             vehicle.gnssAntennaConfig.useDualHeading ||
             vehicle.gnssAntennaConfig.useDualRoll,
         leading: const Icon(Icons.hdr_weak),
-        title: const Text('Dual antenna'),
+        title: Text(strings.dualAntenna),
         childrenPadding: const EdgeInsets.symmetric(vertical: 16),
         children: [
           Column(
@@ -173,7 +175,12 @@ class VehicleGnssPage extends ConsumerWidget {
             children: [
               CheckboxListTile(
                 secondary: const Icon(Icons.navigation_outlined),
-                title: const Text('Dual antenna heading'),
+                title: Text(
+                  [
+                    strings.dualAntenna,
+                    strings.heading.toLowerCase(),
+                  ].join(' '),
+                ),
                 value: vehicle.gnssAntennaConfig.useDualHeading,
                 onChanged: (value) {
                   if (value != null) {
@@ -203,7 +210,9 @@ class VehicleGnssPage extends ConsumerWidget {
                     ],
                   ),
                 ),
-                title: const Text('Dual antenna roll'),
+                title: Text(
+                  [strings.dualAntenna, strings.roll.toLowerCase()].join(' '),
+                ),
                 value: vehicle.gnssAntennaConfig.useDualRoll,
                 onChanged: (value) {
                   if (value != null) {
@@ -231,12 +240,12 @@ class VehicleGnssPage extends ConsumerWidget {
                         spacing: 16,
                         children: [
                           TextFormField(
-                            decoration: const InputDecoration(
-                              icon: RotatedBox(
+                            decoration: InputDecoration(
+                              icon: const RotatedBox(
                                 quarterTurns: 1,
                                 child: Icon(Icons.expand),
                               ),
-                              labelText: 'Dual baseline',
+                              labelText: strings.dualAntennaBaseline,
                               suffixText: 'm',
                             ),
                             keyboardType: const TextInputType.numberWithOptions(
@@ -268,9 +277,9 @@ class VehicleGnssPage extends ConsumerWidget {
                             },
                           ),
                           TextFormField(
-                            decoration: const InputDecoration(
-                              icon: Icon(Icons.signal_cellular_0_bar),
-                              labelText: 'Dual angle, relative to forward',
+                            decoration: InputDecoration(
+                              icon: const Icon(Icons.signal_cellular_0_bar),
+                              labelText: strings.dualAntennaAngle,
                               suffixText: '°',
                             ),
                             keyboardType: const TextInputType.numberWithOptions(
@@ -307,7 +316,7 @@ class VehicleGnssPage extends ConsumerWidget {
                           if (vehicle.gnssAntennaConfig.useDualRoll) ...[
                             CheckboxListTile(
                               value: vehicle.gnssAntennaConfig.invertDualRoll,
-                              title: const Text('Invert roll'),
+                              title: Text(strings.invertRoll),
                               secondary: const Icon(
                                 Symbols.compare_arrows_rounded,
                               ),
@@ -342,7 +351,7 @@ class VehicleGnssPage extends ConsumerWidget {
                                             Icons.show_chart_rounded,
                                           ),
                                           title: Text(
-                                            '''Roll gain: ${gain.toStringAsFixed(2)}''',
+                                            '''${strings.roll} ${strings.gain.toLowerCase()}: ${gain.toStringAsFixed(2)}''',
                                             style: theme.textTheme.bodyLarge,
                                           ),
                                           trailing: IconButton(
@@ -406,9 +415,9 @@ class VehicleGnssPage extends ConsumerWidget {
         ],
       ),
       TextFormField(
-        decoration: const InputDecoration(
-          icon: Icon(Symbols.settings),
-          labelText: 'Receiver configuration',
+        decoration: InputDecoration(
+          icon: const Icon(Symbols.settings),
+          labelText: strings.receiverConfiguration,
         ),
         minLines: 5,
         maxLines: 20,

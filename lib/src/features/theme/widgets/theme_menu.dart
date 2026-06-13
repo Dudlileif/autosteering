@@ -17,6 +17,7 @@
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,9 +30,11 @@ class ThemeMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     return MenuButtonWithChildren(
-      text: 'Theme',
+      text: strings.theme,
       icon: Icons.palette,
       menuChildren: [
         Consumer(
@@ -39,7 +42,7 @@ class ThemeMenu extends StatelessWidget {
             final themeMode = ref.watch(activeThemeModeProvider);
 
             return MenuButtonWithChildren(
-              text: 'Theme mode',
+              text: strings.themeMode,
               icon: switch (themeMode) {
                 ThemeMode.light => Icons.light_mode,
                 ThemeMode.dark => Icons.dark_mode,
@@ -49,7 +52,7 @@ class ThemeMenu extends StatelessWidget {
                 Consumer(
                   builder: (context, ref, child) => ListTile(
                     leading: const Icon(Icons.light_mode),
-                    title: const Text('Light mode'),
+                    title: Text(strings.themeLightMode),
                     onTap: () => ref
                         .read(activeThemeModeProvider.notifier)
                         .update(ThemeMode.light),
@@ -59,7 +62,7 @@ class ThemeMenu extends StatelessWidget {
                 Consumer(
                   builder: (context, ref, child) => ListTile(
                     leading: const Icon(Icons.dark_mode),
-                    title: const Text('Dark mode'),
+                    title: Text(strings.themeDarkMode),
                     onTap: () => ref
                         .read(activeThemeModeProvider.notifier)
                         .update(ThemeMode.dark),
@@ -69,7 +72,7 @@ class ThemeMenu extends StatelessWidget {
                 Consumer(
                   builder: (context, ref, child) => ListTile(
                     leading: const Icon(Icons.settings_brightness),
-                    title: const Text('Auto mode'),
+                    title: Text(strings.themeAutoMode),
                     onTap: () => ref
                         .read(activeThemeModeProvider.notifier)
                         .update(ThemeMode.system),
@@ -87,7 +90,7 @@ class ThemeMenu extends StatelessWidget {
             );
 
             final listTile = CheckboxListTile(
-              title: Text('Inherit colors from vehicle', style: textStyle),
+              title: Text(strings.inheritColorsFromVehicle, style: textStyle),
               value: inheritFromVehicle,
               onChanged: (value) => value != null
                   ? ref
@@ -108,7 +111,7 @@ class ThemeMenu extends StatelessWidget {
                       final colorTheme = ref.watch(manufacturerProvider);
 
                       return MenuButtonWithChildren(
-                        text: 'Color theme',
+                        text: strings.colorTheme,
                         iconOverrideWidget: Icon(
                           Icons.palette,
                           color: colorTheme.primary,

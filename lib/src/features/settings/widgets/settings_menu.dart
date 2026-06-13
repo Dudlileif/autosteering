@@ -35,10 +35,12 @@ class SettingsMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
+
     final dadMode = ref.watch(enableDadModeProvider);
     return MenuButtonWithChildren(
       icon: Icons.settings,
-      text: 'Settings',
+      text: strings.settings,
       menuChildren: [
         const MapMenu(),
         const SimCoreMenu(),
@@ -59,34 +61,42 @@ class _ImportExportMenu extends StatelessWidget {
   const _ImportExportMenu();
 
   @override
-  Widget build(BuildContext context) => MenuButtonWithChildren(
-    text: 'Import/Export',
-    icon: Icons.import_export,
-    menuChildren: [
-      const _ExportLogsButton(),
-      const _ExportEverythingButton(),
-      const _ImportExportSettingsButton(),
-      if (Device.isNative) const _ImportEverythingButton(),
-    ],
-  );
+  Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
+
+    return MenuButtonWithChildren(
+      text: strings.importExport,
+      icon: Icons.import_export,
+      menuChildren: [
+        const _ExportLogsButton(),
+        const _ExportEverythingButton(),
+        const _ImportExportSettingsButton(),
+        if (Device.isNative) const _ImportEverythingButton(),
+      ],
+    );
+  }
 }
 
 class _ExportLogsButton extends ConsumerWidget {
   const _ExportLogsButton();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => MenuItemButton(
-    onPressed: () => ref.read(exportLogsProvider()),
-    closeOnActivate: false,
-    leadingIcon: const Padding(
-      padding: EdgeInsets.only(left: 8),
-      child: Icon(Symbols.export_notes),
-    ),
-    child: Text(
-      'Export logs',
-      style: Theme.of(context).menuButtonWithChildrenText,
-    ),
-  );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
+
+    return MenuItemButton(
+      onPressed: () => ref.read(exportLogsProvider()),
+      closeOnActivate: false,
+      leadingIcon: const Padding(
+        padding: EdgeInsets.only(left: 8),
+        child: Icon(Symbols.export_notes),
+      ),
+      child: Text(
+        strings.exportValue(strings.logs.toLowerCase()),
+        style: Theme.of(context).menuButtonWithChildrenText,
+      ),
+    );
+  }
 }
 
 class _ImportExportSettingsButton extends ConsumerWidget {
@@ -94,9 +104,11 @@ class _ImportExportSettingsButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
+
     return MenuButtonWithChildren(
-      text: 'Import/Export settings',
+      text: [strings.importExport, strings.settings.toLowerCase()].join(' '),
       icon: Icons.import_export,
       menuChildren: [
         MenuItemButton(
@@ -106,7 +118,10 @@ class _ImportExportSettingsButton extends ConsumerWidget {
           ),
           closeOnActivate: false,
           onPressed: () => ref.read(importSettingsProvider),
-          child: Text('Import', style: theme.menuButtonWithChildrenText),
+          child: Text(
+            strings.importAction,
+            style: theme.menuButtonWithChildrenText,
+          ),
         ),
         MenuItemButton(
           leadingIcon: const Padding(
@@ -122,7 +137,9 @@ class _ImportExportSettingsButton extends ConsumerWidget {
                 return StatefulBuilder(
                   builder: (context, setState) {
                     return SimpleDialog(
-                      title: const Text('Export settings'),
+                      title: Text(
+                        strings.exportValue(strings.settings.toLowerCase()),
+                      ),
                       contentPadding: const EdgeInsets.only(
                         left: 24,
                         top: 12,
@@ -136,14 +153,12 @@ class _ImportExportSettingsButton extends ConsumerWidget {
                             () => removeSensitiveData =
                                 value ?? removeSensitiveData,
                           ),
-                          title: const Text('Remove sensitive data'),
+                          title: Text(strings.removeSensitiveData),
                           subtitle: ConstrainedBox(
                             constraints: const BoxConstraints(
                               maxWidth: 200,
                             ),
-                            child: const Text(
-                              '''Removes NTRIP profiles (username, password), Copernicus ID and home position''',
-                            ),
+                            child: Text(strings.removeSensitiveDataDescription),
                           ),
                         ),
                         Padding(
@@ -157,7 +172,7 @@ class _ImportExportSettingsButton extends ConsumerWidget {
                                 ElevatedButton.icon(
                                   onPressed: Navigator.of(context).pop,
                                   icon: const Icon(Icons.clear),
-                                  label: const Text('Cancel'),
+                                  label: Text(strings.cancel),
                                 ),
                                 FilledButton.icon(
                                   onPressed: () async {
@@ -173,7 +188,7 @@ class _ImportExportSettingsButton extends ConsumerWidget {
                                     }
                                   },
                                   icon: const Icon(Icons.check),
-                                  label: const Text('Confirm'),
+                                  label: Text(strings.confirm),
                                 ),
                               ],
                             ),
@@ -186,7 +201,10 @@ class _ImportExportSettingsButton extends ConsumerWidget {
               },
             ),
           ),
-          child: Text('Export', style: theme.menuButtonWithChildrenText),
+          child: Text(
+            strings.exportAction,
+            style: theme.menuButtonWithChildrenText,
+          ),
         ),
       ],
     );
@@ -197,75 +215,90 @@ class _DadModeButton extends ConsumerWidget {
   const _DadModeButton();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => CheckboxListTile(
-    value: ref.watch(enableDadModeProvider),
-    onChanged: (value) => value != null
-        ? ref.read(enableDadModeProvider.notifier).update(value: value)
-        : null,
-    title: Text(
-      'Dad mode',
-      style: Theme.of(context).menuButtonWithChildrenText,
-    ),
-    secondary: const Icon(Icons.elderly),
-  );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
+
+    return CheckboxListTile(
+      value: ref.watch(enableDadModeProvider),
+      onChanged: (value) => value != null
+          ? ref.read(enableDadModeProvider.notifier).update(value: value)
+          : null,
+      title: Text(
+        strings.dadMode,
+        style: Theme.of(context).menuButtonWithChildrenText,
+      ),
+      secondary: const Icon(Icons.elderly),
+    );
+  }
 }
 
 class _DebugModeButton extends ConsumerWidget {
   const _DebugModeButton();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => CheckboxListTile(
-    value: ref.watch(enableDebugModeProvider),
-    onChanged: (value) => value != null
-        ? ref.read(enableDebugModeProvider.notifier).update(value: value)
-        : null,
-    title: Text(
-      'Debug mode',
-      style: Theme.of(context).menuButtonWithChildrenText,
-    ),
-    secondary: const Icon(Icons.bug_report),
-  );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
+
+    return CheckboxListTile(
+      value: ref.watch(enableDebugModeProvider),
+      onChanged: (value) => value != null
+          ? ref.read(enableDebugModeProvider.notifier).update(value: value)
+          : null,
+      title: Text(
+        strings.debugMode,
+        style: Theme.of(context).menuButtonWithChildrenText,
+      ),
+      secondary: const Icon(Icons.bug_report),
+    );
+  }
 }
 
 class _LicenseButton extends StatelessWidget {
   const _LicenseButton();
 
   @override
-  Widget build(BuildContext context) => MenuItemButton(
-    closeOnActivate: false,
-    leadingIcon: const Padding(
-      padding: EdgeInsets.only(left: 8),
-      child: Icon(Symbols.info),
-    ),
-    child: Text('About', style: Theme.of(context).menuButtonWithChildrenText),
-    onPressed: () async {
-      final packageInfo = await PackageInfo.fromPlatform();
-      if (context.mounted) {
-        showAboutDialog(
-          context: context,
-          applicationName: 'Autosteering',
-          applicationVersion:
-              '${packageInfo.version}+${packageInfo.buildNumber}',
-          applicationLegalese: '''
-Copyright (C) 2025 Gaute Hagen
+  Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
 
-Autosteering is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Autosteering is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Autosteering. If not, see https://www.gnu.org/licenses/.
-''',
-        );
-      }
-    },
-  );
+    return MenuItemButton(
+      closeOnActivate: false,
+      leadingIcon: const Padding(
+        padding: EdgeInsets.only(left: 8),
+        child: Icon(Symbols.info),
+      ),
+      child: Text(
+        strings.about,
+        style: Theme.of(context).menuButtonWithChildrenText,
+      ),
+      onPressed: () async {
+        final packageInfo = await PackageInfo.fromPlatform();
+        if (context.mounted) {
+          showAboutDialog(
+            context: context,
+            applicationName: 'Autosteering',
+            applicationVersion:
+                '${packageInfo.version}+${packageInfo.buildNumber}',
+            applicationLegalese: '''
+  Copyright (C) 2025 Gaute Hagen
+  
+  Autosteering is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  Autosteering is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with Autosteering. If not, see https://www.gnu.org/licenses/.
+  ''',
+          );
+        }
+      },
+    );
+  }
 }
 
 class _ExportEverythingButton extends ConsumerWidget {
@@ -273,14 +306,19 @@ class _ExportEverythingButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     return MenuItemButton(
       closeOnActivate: false,
       leadingIcon: const Padding(
         padding: EdgeInsets.only(left: 8),
         child: Icon(Icons.folder_zip_outlined),
       ),
-      child: Text('Export everything', style: textStyle),
+      child: Text(
+        strings.exportValue(strings.everything.toLowerCase()),
+        style: textStyle,
+      ),
       onPressed: () => ref.read(exportWholeFileDirectoryProvider),
     );
   }
@@ -291,14 +329,19 @@ class _ImportEverythingButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     return MenuItemButton(
       closeOnActivate: false,
       leadingIcon: const Padding(
         padding: EdgeInsets.only(left: 8),
         child: Icon(Icons.folder_zip_outlined),
       ),
-      child: Text('Import everything', style: textStyle),
+      child: Text(
+        strings.importValue(strings.everything.toLowerCase()),
+        style: textStyle,
+      ),
       onPressed: () => ref.read(importWholeFileDirectoryProvider),
     );
   }
@@ -308,19 +351,26 @@ class _GraphButton extends ConsumerWidget {
   const _GraphButton();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => switch (ref.watch(
-    enableDebugModeProvider,
-  )) {
-    true => CheckboxListTile(
-      value: ref.watch(showDraggableGraphProvider),
-      onChanged: (value) => value != null
-          ? ref.read(showDraggableGraphProvider.notifier).update(value: value)
-          : null,
-      title: Text('Graph', style: Theme.of(context).menuButtonWithChildrenText),
-      secondary: const Icon(Icons.line_axis),
-    ),
-    false => const SizedBox.shrink(),
-  };
+  Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
+
+    return switch (ref.watch(
+      enableDebugModeProvider,
+    )) {
+      true => CheckboxListTile(
+        value: ref.watch(showDraggableGraphProvider),
+        onChanged: (value) => value != null
+            ? ref.read(showDraggableGraphProvider.notifier).update(value: value)
+            : null,
+        title: Text(
+          strings.graph,
+          style: Theme.of(context).menuButtonWithChildrenText,
+        ),
+        secondary: const Icon(Icons.line_axis),
+      ),
+      false => const SizedBox.shrink(),
+    };
+  }
 }
 
 class _UnitMenu extends ConsumerWidget {
@@ -417,7 +467,7 @@ class _UnitMenu extends ConsumerWidget {
             builder: (context, ref, child) {
               final count = ref.watch(gaugesAverageCountProvider);
               return ListTile(
-                title: const Text('Gauge average count'),
+                title: Text(strings.gaugeAverageCount),
                 subtitle: Row(
                   spacing: 8,
                   mainAxisAlignment: .spaceEvenly,
@@ -467,7 +517,11 @@ class _LocaleMenu extends ConsumerWidget {
       menuChildren: AppLocalizations.supportedLocales
           .map(
             (locale) => ListTile(
-              title: Text(strings.localeOption(locale.languageCode)),
+              title: Text(switch (locale) {
+                Locale(languageCode: 'en') => 'English',
+                Locale(languageCode: 'nb') => 'Norsk',
+                _ => strings.unknownLocale,
+              }),
               selected: locale == selectedLocale,
               onTap: () => ref.read(uiLocaleProvider.notifier).update(locale),
             ),

@@ -23,6 +23,7 @@ import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/simulator/widgets/log_replay_menu.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,17 +35,19 @@ class SimCoreMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final manualSimulationMode = ref.watch(simCoreAllowManualInputProvider);
-    final dadMode = ref.watch(enableDadModeProvider);
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
+    final manualSimulationMode = ref.watch(simCoreAllowManualInputProvider);
+    final dadMode = ref.watch(enableDadModeProvider);
+
     return MenuButtonWithChildren(
-      text: 'Sim core',
+      text: strings.simCore,
       icon: Icons.memory,
       menuChildren: [
         if (!dadMode)
           Consumer(
-            child: Text('Manual simulation mode', style: textStyle),
+            child: Text(strings.manualSimulationMode, style: textStyle),
             builder: (context, ref, child) => CheckboxListTile(
               secondary: const Icon(Icons.gamepad),
               title: child,
@@ -60,11 +63,11 @@ class SimCoreMenu extends ConsumerWidget {
           ),
         if (!manualSimulationMode && !dadMode)
           Consumer(
-            child: Text('Allow sim interpolation', style: textStyle),
+            child: Text(strings.allowSimInterpolation, style: textStyle),
             builder: (context, ref, child) => CheckboxListTile(
               secondary: const Icon(Icons.timer_outlined),
               title: child,
-              subtitle: const Text('Interpolation between GNSS updates'),
+              subtitle: Text(strings.interpolationDescription),
               value: ref.watch(simCoreAllowInterpolationProvider),
               onChanged: (value) => value != null
                   ? ref
@@ -77,7 +80,10 @@ class SimCoreMenu extends ConsumerWidget {
           ),
         if (manualSimulationMode) const VehicleSimMenu(),
         Consumer(
-          child: Text('Reset position', style: textStyle),
+          child: Text(
+            strings.resetValue(strings.position.toLowerCase()),
+            style: textStyle,
+          ),
           builder: (context, ref, child) => ListTile(
             onTap: () {
               // The simulation has to have a stationary vehicle for the
@@ -95,7 +101,10 @@ class SimCoreMenu extends ConsumerWidget {
         ),
         if (Device.isNative)
           Consumer(
-            child: Text('Restart sim core', style: textStyle),
+            child: Text(
+              [strings.restart, strings.simCore.toLowerCase()].join(' '),
+              style: textStyle,
+            ),
             builder: (context, ref, child) => ListTile(
               onTap: () => ref.invalidate(simCoreIsolateStreamProvider),
               leading: const Icon(Icons.replay),
@@ -104,7 +113,7 @@ class SimCoreMenu extends ConsumerWidget {
           ),
         if (kDebugMode)
           Consumer(
-            child: Text('Allow long breaks', style: textStyle),
+            child: Text(strings.allowLongBreaks, style: textStyle),
             builder: (context, ref, child) {
               final allowBreaks = ref.watch(
                 simCoreDebugAllowLongBreaksProvider,
@@ -141,7 +150,7 @@ class SimCoreMenu extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Simulation frequency: $targetHz Hz',
+                        strings.simulationFrequency(targetHz),
                         style: textStyle,
                       ),
                       Slider(
@@ -188,10 +197,12 @@ class SimCoreMenu extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Keep logs for $value ${value == 1 ? 'day' : 'days'}',
+                        strings.keepLogsForValue(
+                          strings.days(value).toLowerCase(),
+                        ),
                         style: textStyle,
                       ),
-                      const Text('Effective on restart'),
+                      Text(strings.effectiveOnRestart),
                       Slider(
                         value: value.toDouble(),
                         onChanged: dadMode

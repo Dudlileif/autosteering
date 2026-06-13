@@ -1,9 +1,674 @@
 {
     "@@locale": "en",
+    "abTurningRadius": "AB turning radius",
+    "@abTurningRadius": {},
+    "abCurve": "AB curve",
+    "@abCurve": {},
+    "abSpacing": "AB spacing/width",
+    "@abSpacing": {},
+    "abTracking": "AB tracking",
+    "@abTracking": {},
+    "about": "About",
+    "@about": {},
+    "acceleration": "Acceleration",
+    "@acceleration": {},
+    "ackermannPercentage": "Ackermann percentage",
+    "@ackermannPercentage": {},
+    "activateAll": "Activate all",
+    "@activateAll": {},
+    "activeCenter": "Active center",
+    "@activeCenter": {},
+    "actualRpm": "Actual RPM: {value}",
+    "@actualRpm": {
+        "placeholders": {
+            "value": {
+                "type": "num",
+                "format": "decimalPatternDigits",
+                "optionalParameters": {
+                    "decimalDigits": 1
+                },
+                "example": "90.2"
+            }
+        }
+    },
+    "addButton": "Add button",
+    "@addButton": {},
+    "addInteriorBoundary": "Add interior boundary",
+    "@addInteriorBoundary": {},
+    "addPoint": "Add point",
+    "@addPoint": {},
+    "allowDownload": "Allow download",
+    "@allowDownload": {},
+    "allowLongBreaks": "Allow long breaks",
+    "@allowLongBreaks": {},
+    "allowSimInterpolation": "Allow sim interpolation",
+    "@allowSimInterpolation": {},
+    "alwaysPointMapNorth": "Always point map north",
+    "@alwaysPointMapNorth": {},
+    "antenna": "Antenna",
+    "@antenna": {},
+    "antennaHeight": "Antenna height",
+    "@antennaHeight": {},
+    "antennaLateralOffset": "Antenna lateral offset (-left / +right)",
+    "@antennaLateralOffset": {},
+    "antennaPosition": "Antenna position",
+    "@antennaPosition": {},
+    "apHost": "AP host",
+    "@apHost": {},
+    "aPlusLine": "A+ line",
+    "@aPlusLine": {},
+    "apply": "Apply",
+    "@apply": {},
+    "applyAndUse": "Apply and use",
+    "@applyAndUse": {},
+    "applyConfiguration": "Apply configuration",
+    "@applyConfiguration": {},
     "area": "Area",
     "@area": {},
+    "asymmetricRollGain": "Asymmetric roll gain",
+    "@asymmetricRollGain": {},
+    "attach": "Attach",
+    "@attach": {},
+    "attachValue": "Attach {value}",
+    "@attachValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "equipment"
+            }
+        }
+    },
+    "audioLevels": "Audio levels",
+    "@audioLevels": {},
+    "audioLevelAutosteeringDisabled": "Autosteering disabled",
+    "@audioLevelAutosteeringDisabled": {},
+    "audioLevelAutosteeringEnabled": "Autosteering enabled",
+    "@audioLevelAutosteeringEnabled": {},
+    "audioLevelAutosteeringStandby": "Autosteering standby",
+    "@audioLevelAutosteeringStandby": {},
+    "audioLevelRtkLostAlarm": "RTK lost alarm",
+    "@audioLevelRtkLostAlarm": {},
+    "autoCenterSteering": "Auto center styring",
+    "@autoCenterSteering": {},
+    "automatic": "Automatic",
+    "@automatic": {},
+    "autoSlowDown": "Auto slow down",
+    "@autoSlowDown": {},
+    "autosteeringAngularVelocityDescription": "Autosteering limits steering to stay below this.",
+    "@autosteeringAngularVelocityDescription": {},
+    "autosteeringDisabledAboveThreshold": "Autosteering disabled above threshold",
+    "@autosteeringDisabledAboveThreshold": {},
+    "autosteeringDisabledBelowThreshold": "Autosteering disabled below threshold",
+    "@autosteeringDisabledBelowThreshold": {},
+    "autosteeringParameters": "Autosteering parameters",
+    "@autosteeringParameters": {},
+    "autosteeringStateOptionShort": "{option,select, other{Unknown} disabled{Off} enabled{On} standby{Stby}}",
+    "@autosteeringStateOptionShort": {
+        "placeholders": {
+            "option": {
+                "type": "String",
+                "example": "disabled"
+            }
+        }
+    },
+    "barWidth": "Bar width",
+    "@barWidth": {},
+    "baudRate": "Baud rate",
+    "@baudRate": {},
+    "bearing": "Bearing",
+    "@bearing": {},
+    "bits": "Bits",
+    "@bits": {},
+    "border": "Border",
+    "@border": {},
+    "borderPoints": "Border points",
+    "@borderPoints": {},
+    "boundingBox": "Bounding box",
+    "@boundingBox": {},
+    "bufferedBoundingBox": "Buffered bounding box",
+    "@bufferedBoundingBox": {},
+    "bufferDistance": "Buffer distance",
+    "@bufferDistance": {},
+    "bufferedField": "Buffered field",
+    "@bufferedField": {},
+    "bufferJoinMode": "Buffer join mode",
+    "@bufferJoinMode": {},
+    "button": "Button",
+    "@button": {},
+    "buttonColor": "Button color",
+    "@buttonColor": {},
+    "cache": "Cache",
+    "@cache": {},
+    "calibrateMotor": "Calibrate motor",
+    "@calibrateMotor": {},
+    "cancel": "Cancel",
+    "@cancel": {},
+    "center": "Center",
+    "@center": {},
+    "centerLeds": "Center LEDs",
+    "@centerLeds": {},
+    "childHitches": "Child hitches",
+    "@childHitches": {},
+    "chooseLog": "Choose log",
+    "@chooseLog": {},
+    "clearPoints": "Clear points",
+    "@clearPoints": {},
+    "clearRecordedPath": "Clear recorded path",
+    "@clearRecordedPath": {},
+    "clearUnused": "Clear unused",
+    "@clearUnused": {},
+    "clearWorkedArea": "Clear worked area",
+    "@clearWorkedArea": {},
+    "close": "Close",
+    "@close": {},
+    "closeActive": "Close active",
+    "@closeActive": {},
+    "closeActiveValue": "Close active {value}?",
+    "@closeActiveValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "AB tracking"
+            }
+        }
+    },
+    "closeValue": "Close {value}",
+    "@closeValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "field"
+            }
+        }
+    },
+    "colorTheme": "Color theme",
+    "@colorTheme": {},
+    "combined": "Combined",
+    "@combined": {},
+    "configure": "Configure",
+    "@configure": {},
+    "configureValue": "Configure {value}",
+    "@configureValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "equipment"
+            }
+        }
+    },
+    "confirm": "Confirm",
+    "@confirm": {},
+    "coolStepMinRpm": "{option, select, disabled{CoolStep min: Disabled} other{CoolStep min: {rpm} RPM}}",
+    "@coolStepMinRpm": {
+        "placeholders": {
+            "option": {
+                "type": "String",
+                "example": "disabled"
+            },
+            "rpm": {
+                "type": "num",
+                "format": "decimalPatternDigits",
+                "optionalParameters": {
+                    "decimalDigits": 1
+                },
+                "example": "200.0"
+            }
+        }
+    },
+    "copernicusId": "Copernicus ID",
+    "@copernicusId": {},
+    "copyFromValue": "Copy from {value}",
+    "@copyFromValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "work session"
+            }
+        }
+    },
+    "copyWorkSessionDescription": "Copy field, equipment and guidance from this.",
+    "@copyWorkSessionDescription": {},
+    "create": "Create",
+    "@create": {},
+    "created": "Created",
+    "@created": {},
+    "createFieldFromPathTracking": "Create field from path tracking",
+    "@createFieldFromPathTracking": {},
+    "createFieldFromRecording": "Create field from recording",
+    "@createFieldFromRecording": {},
+    "createNew": "Create new",
+    "@createNew": {},
+    "createPathTrackingFromBufferedFieldExterior": "Create path tracking from buffered field exterior",
+    "@createPathTrackingFromBufferedFieldExterior": {},
+    "createValue": "Create {value}",
+    "@createValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "field"
+            }
+        }
+    },
+    "crossDistanceGain": "Cross distance gain: {value}",
+    "@crossDistanceGain": {
+        "placeholders": {
+            "value": {
+                "type": "num",
+                "format": "decimalPatternDigits",
+                "optionalParameters": {
+                    "decimalDigits": 1
+                },
+                "example": "2.7"
+            }
+        }
+    },
+    "current": "Current",
+    "@current": {},
+    "curve": "Curve",
+    "@curve": {},
+    "cycleLightSystemDarkMode": "Cycle light/system/dark mode",
+    "@cycleLightSystemDarkMode": {},
+    "dadMode": "Dad mode",
+    "@dadMode": {},
+    "dataUsageMonth": "Data usage (month):",
+    "@dataUsageMonth": {},
+    "dataUsageSession": "Data usage (session):",
+    "@dataUsageSession": {},
+    "days": "{count, plural, other{Days} zero{Days} one{Day} two{Days} few{Days} many{Days}}",
+    "@days": {
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "example": "1"
+            }
+        }
+    },
+    "dcStepMinRpm": "{option, select, disabled{DcStep min: Disabled} other{DcStep min: {rpm} RPM}}",
+    "@dcStepMinRpm": {
+        "placeholders": {
+            "option": {
+                "type": "String",
+                "example": "disabled"
+            },
+            "rpm": {
+                "type": "num",
+                "format": "decimalPatternDigits",
+                "optionalParameters": {
+                    "decimalDigits": 1
+                },
+                "example": "200.0"
+            }
+        }
+    },
+    "deactivateAll": "Deactivate all",
+    "@deactivateAll": {},
+    "debug": "Debug",
+    "@debug": {},
+    "debugging": "Debugging",
+    "@debugging": {},
+    "debugMode": "Debug mode",
+    "@debugMode": {},
+    "decoration": "Decoration",
+    "@decoration": {},
+    "decorationSidewaysOffset": "Decoration sideways offset (-left / +right)",
+    "@decorationSidewaysOffset": {},
+    "defaultOption": "Default",
+    "@defaultOption": {},
+    "delayValueMs": "Delay: {value} ms",
+    "@delayValueMs": {
+        "placeholders": {
+            "value": {
+                "type": "int",
+                "example": "50"
+            }
+        }
+    },
+    "delayReadings": "Delay readings: {value} ms",
+    "@delayReadings": {
+        "placeholders": {
+            "value": {
+                "type": "num",
+                "example": "150"
+            }
+        }
+    },
+    "deleteValue": "Delete {value}",
+    "@deleteValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "cache"
+            }
+        }
+    },
+    "detach": "Detach",
+    "@detach": {},
+    "detachAll": "Detach all",
+    "@detachAll": {},
+    "dimensions": "{count, plural, other{Dimensions} zero{Dimensions} one{Dimension} two{Dimensions} few{Dimensions} many{Dimensions}}",
+    "@dimensions": {
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "example": "1"
+            }
+        }
+    },
+    "disableAutosteering": "Disable autosteering",
+    "@disableAutosteering": {},
+    "discrete": "Discrete",
+    "@discrete": {},
+    "distancePerLed": "Distance / LED",
+    "@distancePerLed": {},
+    "doNotDisable": "Do not disable",
+    "@doNotDisable": {},
+    "drawValue": "Draw {value}",
+    "@drawValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "equipment"
+            }
+        }
+    },
+    "dualAntenna": "Dual antenna",
+    "@dualAntenna": {},
+    "dualAntennaAngle": "Dual angle, relative to forward",
+    "@dualAntennaAngle": {},
+    "dualAntennaBaseline": "Dual antenna baseline",
+    "@dualAntennaBaseline": {},
+    "dubinsPath": "Dubins path",
+    "@dubinsPath": {},
+    "editNote": "Edit note",
+    "@editNote": {},
+    "editValue": "Edit {value}",
+    "@editValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "path"
+            }
+        }
+    },
+    "editRecordedPath": "Edit recorded path",
+    "@editRecordedPath": {},
+    "effectiveOnRestart": "Effective on restart",
+    "@effectiveOnRestart": {},
+    "enable": "Enable",
+    "@enable": {},
+    "enable3d": "Enable 3D",
+    "@enable3d": {},
+    "enableAutosteering": "Enable autosteering",
+    "@enableAutosteering": {},
+    "enabled": "Enabled",
+    "@enabled": {},
+    "end": "End",
+    "@end": {},
+    "endLeds": "End LEDs",
+    "@endLeds": {},
+    "enteredIdMustBeAValidUuid": "The entered ID must be a valid UUID.",
+    "@enteredIdMustBeAValidUuid": {},
+    "enterValue": "Enter {value}",
+    "@enterValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "name"
+            }
+        }
+    },
+    "equalWidths": "Equal widths",
+    "@equalWidths": {},
+    "equalWorkingWidths": "Equal working widths",
+    "@equalWorkingWidths": {},
+    "equipment": "Equipment",
+    "@equipment": {},
+    "equipmentDrawbarLength": "Equipment drawbar length",
+    "@equipmentDrawbarLength": {},
+    "equipmentSetup": "Equipment setup",
+    "@equipmentSetup": {},
+    "error": "Error",
+    "@error": {},
+    "errorOverTime": "Error over time",
+    "@errorOverTime": {},
+    "errorRateOfChange": "Error rate of change",
+    "@errorRateOfChange": {},
+    "ethernet": "Ethernet",
+    "@ethernet": {},
+    "everything": "Everything",
+    "@everything": {},
+    "exportAction": "Export",
+    "@exportAction": {},
+    "exportAll": "Export all",
+    "@exportAll": {},
+    "exportValue": "Export {value}",
+    "@exportValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "setup"
+            }
+        }
+    },
+    "exterior": "Exterior",
+    "@exterior": {},
+    "exteriorBoundary": "Exterior boundary",
+    "@exteriorBoundary": {},
+    "field": "Field",
+    "@field": {},
+    "fieldBuffer": "Field buffer",
+    "@fieldBuffer": {},
+    "finishEditing": "Finish editing",
+    "@finishEditing": {},
+    "finishRecording": "Finish recording",
+    "@finishRecording": {},
+    "front": "Front",
+    "@front": {},
+    "frontAxle": "Front axle",
+    "@frontAxle": {},
+    "frontAxleToFrontHitchDistance": "Front axle to front hitch distance",
+    "@frontAxleToFrontHitchDistance": {},
+    "frontAxleToRearDrawbarDistance": "Front axle to rear drawbar distance",
+    "@frontAxleToRearDrawbarDistance": {},
+    "frontAxleToRearHitchDistance": "Front axle to rear hitch distance",
+    "@frontAxleToRearHitchDistance": {},
+    "frontWheels": "Front wheels",
+    "@frontWheels": {},
+    "fullstep": "Fullstep",
+    "@fullstep": {},
+    "gain": "Gain",
+    "@gain": {},
+    "gaugeAverageCount": "Gauge average count",
+    "@gaugeAverageCount": {},
+    "getHardwareConfig": "Get hardware config",
+    "@getHardwareConfig": {},
+    "gnss": "GNSS",
+    "@gnss": {},
+    "graph": "Graph",
+    "@graph": {},
+    "grid": "Grid",
+    "@grid": {},
+    "guidance": "Guidance",
+    "@guidance": {},
+    "hardware": "Hardware",
+    "@hardware": {},
+    "hardwareConnected": "Hardware connected",
+    "@hardwareConnected": {},
+    "hardwareNotConnected": "Hardware not connected",
+    "@hardwareNotConnected": {},
+    "heading": "Heading",
+    "@heading": {},
+    "hideUnlitLeds": "Hide unlit LEDs",
+    "@hideUnlitLeds": {},
+    "highVelocityMinRpm": "{option,select,disabled{High velocity min: Disabled} other{High velocity min: {rpm} RPM}}",
+    "@highVelocityMinRpm": {
+        "placeholders": {
+            "option": {
+                "type": "String",
+                "example": "disabled"
+            },
+            "rpm": {
+                "type": "num",
+                "format": "decimalPatternDigits",
+                "optionalParameters": {
+                    "decimalDigits": 1
+                },
+                "example": "200.0"
+            }
+        }
+    },
+    "hitchOption": "{option, select, other{Hitch} frontFixed{Front fixed} rearFixed{Rear fixed} rearDrawbar{Rear drawbar}}",
+    "@hitchOption": {
+        "placeholders": {
+            "option": {
+                "type": "String",
+                "example": "rearFixed"
+            }
+        }
+    },
+    "hitchToDecorationStart": "Hitch to decoration start",
+    "@hitchToDecorationStart": {},
+    "hitchToFrontFixedHitchDistance": "Hitch to front fixed hitch distance",
+    "@hitchToFrontFixedHitchDistance": {},
+    "hitchToRearFixedHitchDistance": "Hitch to rear fixed hitch distance",
+    "@hitchToRearFixedHitchDistance": {},
+    "hitchToRearDrawbarDistance": "Hitch to rear drawbar distance",
+    "@hitchToRearDrawbarDistance": {},
+    "hitchType": "{type, select, other{Hitch} fixed{Fixed} drawbar{Drawbar}}",
+    "@hitchType": {
+        "placeholders": {
+            "type": {
+                "type": "String",
+                "example": "fixed"
+            }
+        }
+    },
+    "hitches": "{count, plural, other{Hitches} zero{Hitches} one{Hitch} two{Hitches} few{Hitches} many{Hitches}}",
+    "@hitches": {
+        "description": "hitches",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "example": "1"
+            }
+        }
+    },
+    "holdToReset": "Hold to reset",
+    "@holdToReset": {},
+    "home": "Home",
+    "@home": {},
+    "homeEnterPosition": "Enter home position",
+    "@homeEnterPosition": {},
+    "homeSetToScreenCenter": "Set to screen center",
+    "@homeSetToScreenCenter": {},
+    "homeUseEnteredPosition": "Use entered position",
+    "@homeUseEnteredPosition": {},
+    "importAction": "Import",
+    "@importAction": {},
+    "importExport": "Import/Export",
+    "@importExport": {},
+    "importValue": "Import {value}",
+    "@importValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "setup"
+            }
+        }
+    },
+    "imu": "IMU",
+    "@imu": {},
+    "imuConfigurator": "IMU configurator",
+    "@imuConfigurator": {},
+    "inheritColorsFromVehicle": "Inherit colors from vehicle",
+    "@inheritColorsFromVehicle": {},
+    "inner": "Inner",
+    "@inner": {},
+    "interior": "Interior",
+    "@interior": {},
+    "interiorBorderBufferDistance": "Interior border (holes) buffer distance",
+    "@interiorBorderBufferDistance": {},
+    "intermediateLeds": "Intermediate LEDs",
+    "@intermediateLeds": {},
+    "interpolationDescription": "Interpolation between GNSS updates",
+    "@interpolationDescription": {},
+    "interpolationDistance": "Interpolation distance: {value} m",
+    "@interpolationDistance": {
+        "placeholders": {
+            "value": {
+                "type": "num",
+                "format": "decimalPatternDigits",
+                "optionalParameters": {
+                    "decimalDigits": 1
+                },
+                "example": "4.3"
+            }
+        }
+    },
+    "interval": "Interval",
+    "@interval": {},
+    "invalidValue": "Invalid {value}",
+    "@invalidValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "Port"
+            }
+        }
+    },
+    "invertLedBar": "Invert light bar",
+    "@invertLedBar": {},
+    "invertPitch": "Invert pitch",
+    "@invertPitch": {},
+    "invertRoll": "Invert roll",
+    "@invertRoll": {},
+    "invertSensorInput": "Invert sensor input",
+    "@invertSensorInput": {},
+    "keepLogsForValue": "Keep logs for {value} ",
+    "@keepLogsForValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "30 days"
+            }
+        }
+    },
+    "sinceLastValueMs": "Since last: {value} ms",
+    "@sinceLastValueMs": {
+        "placeholders": {
+            "value": {
+                "type": "int",
+                "example": "50"
+            }
+        }
+    },
+    "lateralOffset": "Lateral offset",
+    "@lateralOffset": {},
+    "latitudeNS": "Latitude (N/S)",
+    "@latitudeNS": {},
+    "latitudeShort": "Lat",
+    "@latitudeShort": {},
+    "ledSize": "LED Size",
+    "@ledSize": {},
+    "left": "Left",
+    "@left": {},
     "length": "Length",
     "@length": {},
+    "limitMode": "Limit mode",
+    "@limitMode": {},
+    "line": "Line",
+    "@line": {},
+    "load": "Load",
+    "@load": {},
+    "loadValue": "Load {value}",
+    "@loadValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "setup"
+            }
+        }
+    },
     "locale": "Locale",
     "@locale": {
         "description": "Name on menu entry for selecting app locale."
@@ -18,8 +683,758 @@
             }
         }
     },
-    "units": "Units",
-    "@units": {},
+    "lockMapToVehicle": "Lock map to vehicle",
+    "@lockMapToVehicle": {},
+    "lockToField": "Lock to field",
+    "@lockToField": {},
+    "logging": "Logging",
+    "@logging": {},
+    "logReplay": "Log replay",
+    "@logReplay": {},
+    "logs": "Logs",
+    "@logs": {},
+    "longitudeEW": "Longitude (E/W)",
+    "@longitudeEW": {},
+    "longitudinalOffset": "Longitudinal offset",
+    "@longitudinalOffset": {},
+    "longitudeShort": "Lon",
+    "@longitudeShort": {},
+    "lookAheadMinDistance": "Look ahead min distance: {value} m",
+    "@lookAheadMinDistance": {
+        "placeholders": {
+            "value": {
+                "type": "num",
+                "format": "decimalPatternDigits",
+                "optionalParameters": {
+                    "decimalDigits": 1
+                },
+                "example": "1.7"
+            }
+        }
+    },
+    "lookAheadTime": "Look ahead time: {value} s",
+    "@lookAheadTime": {
+        "placeholders": {
+            "value": {
+                "type": "num",
+                "format": "decimalPatternDigits",
+                "optionalParameters": {
+                    "decimalDigits": 1
+                },
+                "example": "1.5"
+            }
+        }
+    },
+    "loop": "Loop",
+    "@loop": {},
+    "lowerThreshold": "Lower threshold",
+    "@lowerThreshold": {},
+    "manual": "Manual",
+    "@manual": {},
+    "manualSimulationMode": "Manual simulation mode",
+    "@manualSimulationMode": {},
+    "map": "Map",
+    "@map": {},
+    "max": "Max",
+    "@max": {},
+    "maxAccelerationRpms": "Max acceleration: {value} RPM/s",
+    "@maxAccelerationRpms": {
+        "placeholders": {
+            "value": {
+                "type": "int",
+                "example": "100"
+            }
+        }
+    },
+    "maxAngularVelocity": "Max angular velocity: {value} °/s",
+    "@maxAngularVelocity": {
+        "placeholders": {
+            "value": {
+                "type": "int",
+                "example": "10"
+            }
+        }
+    },
+    "maxDecelerationRpms": "Max deceleration: {value} RPM/s",
+    "@maxDecelerationRpms": {
+        "placeholders": {
+            "value": {
+                "type": "int",
+                "example": "100"
+            }
+        }
+    },
+    "maxDistance": "Max distance",
+    "@maxDistance": {},
+    "maxReversingVelocity": "Max reversing velocity: {value} {unit}",
+    "@maxReversingVelocity": {
+        "placeholders": {
+            "value": {
+                "type": "num",
+                "format": "decimalPatternDigits",
+                "optionalParameters": {
+                    "decimalDigits": 1
+                },
+                "example": "14.2"
+            },
+            "unit": {
+                "type": "String",
+                "example": "km/h"
+            }
+        }
+    },
+    "maxSteeringAngle": "Max steering angle (inner wheel)",
+    "@maxSteeringAngle": {},
+    "maxVelocityRpm": "Max velocity: {value} RPM",
+    "@maxVelocityRpm": {
+        "placeholders": {
+            "value": {
+                "type": "int",
+                "example": "299"
+            }
+        }
+    },
+    "menu": "Menu",
+    "@menu": {},
+    "microsteps": "Microsteps",
+    "@microsteps": {},
+    "min": "Min",
+    "@min": {
+        "description": "Minimum short form"
+    },
+    "minDistance": "Min distance",
+    "@minDistance": {},
+    "miniMap": "Mini map",
+    "@miniMap": {},
+    "minimumTurningRadius": "Minimum turning radius",
+    "@minimumTurningRadius": {},
+    "minOffsetSkips": "Min offset skips",
+    "@minOffsetSkips": {},
+    "motor": "Motor",
+    "@motor": {},
+    "motorStatusOption": "{option, select, other{Unknown motor status} disabled{Motor disabled} freeWheeling{Motor freewheeling} running{Motor running} stalled{Motor stalled} noCommand{Motor stopped, too long since last command} standby{Motor is disabled, but will be enabled automatically}}",
+    "@motorStatusOption": {
+        "placeholders": {
+            "option": {
+                "type": "String",
+                "example": "running"
+            }
+        }
+    },
+    "motorTargetOverride": "Motor target override",
+    "@motorTargetOverride": {},
+    "name": "Name",
+    "@name": {},
+    "nameAlreadyInUse": "Name already in use",
+    "@nameAlreadyInUse": {},
+    "nameTheValue": "Name the {value}",
+    "@nameTheValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "field"
+            }
+        }
+    },
+    "network": "Network",
+    "@network": {},
+    "noAction": "No action",
+    "@noAction": {},
+    "noName": "No name",
+    "@noName": {},
+    "noNameEnteredValue": "No name entered! Please enter a name so that the {value} can be saved!",
+    "@noNameEnteredValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "field"
+            }
+        }
+    },
+    "normalized": "Normalized",
+    "@normalized": {},
+    "note": "Note",
+    "@note": {},
+    "notReceivingSensorReadings": "Not receiving {sensor} readings",
+    "@notReceivingSensorReadings": {
+        "placeholders": {
+            "sensor": {
+                "type": "String",
+                "example": "WAS"
+            }
+        }
+    },
+    "ntripActiveProfile": "Active profile: {profile}",
+    "@ntripActiveProfile": {
+        "placeholders": {
+            "profile": {
+                "type": "String",
+                "example": "RTK2go"
+            }
+        }
+    },
+    "ntripAddProfile": "Add profile",
+    "@ntripAddProfile": {},
+    "ntripCasterSourcetable": "NTRIP caster sourcetable",
+    "@ntripCasterSourcetable": {},
+    "ntripCreateProfileTitle": "Create NTRIP profile",
+    "@ntripCreateProfileTitle": {},
+    "ntripEditProfile": "Edit profile",
+    "@ntripEditProfile": {},
+    "ntripEditProfileTitle": "Edit NTRIP profile",
+    "@ntripEditProfileTitle": {},
+    "ntripFindClosestBaseStation": "Find closest base station",
+    "@ntripFindClosestBaseStation": {},
+    "ntripGgaSendingInterval": "GGA sending interval (s)",
+    "@ntripGgaSendingInterval": {},
+    "ntripHostAddress": "Host address",
+    "@ntripHostAddress": {},
+    "ntripHostPort": "Host port",
+    "@ntripHostPort": {},
+    "ntripInputWholeSeconds": "Input whole seconds from 1 or empty",
+    "@ntripInputWholeSeconds": {},
+    "ntripLoadProfile": "Load profile",
+    "@ntripLoadProfile": {},
+    "ntripMountPointBaseStation": "Mount point / base station",
+    "@ntripMountPointBaseStation": {},
+    "ntripNoProfileSelected": "No profile selected",
+    "@ntripNoProfileSelected": {},
+    "ntripRtk": "NTRIP (RTK)",
+    "@ntripRtk": {},
+    "nudgeControls": "Nudge controls",
+    "@nudgeControls": {},
+    "numberOfSections": "Number of sections",
+    "@numberOfSections": {},
+    "numberOfWheelsDescription": "Number of wheels,\ni.e. does your vehicle have twin\nor triple wheels",
+    "@numberOfWheelsDescription": {},
+    "off": "Off",
+    "@off": {},
+    "offsetFromBaseLine": "Offset from base line",
+    "@offsetFromBaseLine": {},
+    "offsetLeftRight": "Offset (-left / +right)",
+    "@offsetLeftRight": {},
+    "on": "On",
+    "@on": {},
+    "onlyUseGnssSyncedReadings": "Only use GNSS synced readings",
+    "@onlyUseGnssSyncedReadings": {},
+    "opacity": "Opacity",
+    "@opacity": {},
+    "outer": "Outer",
+    "@outer": {},
+    "password": "Password",
+    "@password": {},
+    "path": "Path",
+    "@path": {},
+    "pathColor": "Path color",
+    "@pathColor": {},
+    "pathRecording": "Path recording",
+    "@pathRecording": {},
+    "pathTracking": "Path tracking",
+    "@pathTracking": {},
+    "pathType": "Path type",
+    "@pathType": {},
+    "pause": "Pause",
+    "@pause": {},
+    "perspective": "Perspective",
+    "@perspective": {},
+    "pid": "PID",
+    "@pid": {},
+    "pitch": "Pitch",
+    "@pitch": {},
+    "pitchGain": "Pitch gain",
+    "@pitchGain": {},
+    "pivotAntennaWarning": "Antenna MUST be on the front body of the vehicle!",
+    "@pivotAntennaWarning": {},
+    "pivotCenterToValue": "Pivot center to {value}",
+    "@pivotCenterToValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "front axle"
+            }
+        }
+    },
+    "pivotToAntenna": "Pivot to antenna",
+    "@pivotToAntenna": {},
+    "points": "{count, plural, other{Points} zero{Points} one{Point} two{Points} few{Points} many{Points}}",
+    "@points": {
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "example": "1"
+            }
+        }
+    },
+    "pointsAhead": "Points ahead",
+    "@pointsAhead": {},
+    "pointsBehind": "Points behind",
+    "@pointsBehind": {},
+    "polygons": "{count, plural, other{Polygons} zero{Polygons} one{Polygon} two{Polygons} few{Polygons} many{Polygons}}",
+    "@polygons": {
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "example": "1"
+            }
+        }
+    },
+    "portNetwork": "Port",
+    "@portNetwork": {},
+    "position": "Position",
+    "@position": {},
+    "rawBufferPoints": "Raw buffer points",
+    "@rawBufferPoints": {},
+    "rawSensorReading": "Raw {sensor} reading",
+    "@rawSensorReading": {
+        "placeholders": {
+            "sensor": {
+                "type": "String",
+                "example": "WAS"
+            }
+        }
+    },
+    "rear": "Rear",
+    "@rear": {},
+    "rearAxle": "Rear axle",
+    "@rearAxle": {},
+    "rearAxleToFrontHitchDistance": "Rear axle to front hitch distance",
+    "@rearAxleToFrontHitchDistance": {},
+    "rearAxleToRearDrawbarDistance": "Rear axle to rear drawbar distance",
+    "@rearAxleToRearDrawbarDistance": {},
+    "rearAxleToRearHitchDistance": "Rear axle to rear hitch distance",
+    "@rearAxleToRearHitchDistance": {},
+    "rearWheels": "Rear wheels",
+    "@rearWheels": {},
+    "receivePort": "Receive port",
+    "@receivePort": {},
+    "receiverConfiguration": "Receiver configuration",
+    "@receiverConfiguration": {},
+    "record": "Record",
+    "@record": {},
+    "recording": "Recording",
+    "@recording": {},
+    "recordingPosition": "Recording position",
+    "@recordingPosition": {},
+    "recordingPositionFromWorkingAreaStart": "Recording position from working area start",
+    "@recordingPositionFromWorkingAreaStart": {},
+    "recordingTapToPause": "Recording, tap to pause",
+    "@recordingTapToPause": {},
+    "remoteControl": "Remote control",
+    "@remoteControl": {},
+    "remoteControlAction": "{option, select, other{No action} toggleEquipmentSections{Toggle equipment sections} toggleAutosteering{Toggle autosteering} toggleABSnap{Toggle AB-line snap to closest line} resetNudgeDistance{Reset nudge distance to 0}}",
+    "@remoteControlAction": {
+        "placeholders": {
+            "option": {
+                "type": "String",
+                "example": "toggleAutosteering"
+            }
+        }
+    },
+    "remoteControlConfigurator": "Remove control configurator",
+    "@remoteControlConfigurator": {},
+    "remoteControlHardwareAddress": "Remove control hardware address",
+    "@remoteControlHardwareAddress": {},
+    "removeValue": "Remove {value}?",
+    "@removeValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "tracking"
+            }
+        }
+    },
+    "removeSensitiveData": "Remove sensitive data",
+    "@removeSensitiveData": {},
+    "removeSensitiveDataDescription": "Removes NTRIP profiles (username, password), Copernicus ID and home position",
+    "@removeSensitiveDataDescription": {},
+    "rename": "Rename",
+    "@rename": {},
+    "renameAndSave": "Rename and save",
+    "@renameAndSave": {},
+    "renameValue": "Rename {value}",
+    "@renameValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "path tracking"
+            }
+        }
+    },
+    "reset": "Reset",
+    "@reset": {},
+    "resetFinishedLines": "Reset finished lines",
+    "@resetFinishedLines": {},
+    "resetValue": "Reset {value}",
+    "@resetValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "points"
+            }
+        }
+    },
+    "restart": "Restart",
+    "@restart": {},
+    "resume": "Resume",
+    "@resume": {},
+    "reverseMotorDirection": "Reverse motor direction",
+    "@reverseMotorDirection": {},
+    "right": "Right",
+    "@right": {},
+    "rmsCurrent": "RMS current: {value} mA",
+    "@rmsCurrent": {
+        "placeholders": {
+            "value": {
+                "type": "int",
+                "example": "1900"
+            }
+        }
+    },
+    "roll": "Roll",
+    "@roll": {},
+    "rollGain": "Roll gain",
+    "@rollGain": {},
+    "rotatePoints": "Rotate points",
+    "@rotatePoints": {},
+    "rotation": "Rotation",
+    "@rotation": {},
+    "save": "Save",
+    "@save": {},
+    "saveEquipmentSetup": "Save equipment setup",
+    "@saveEquipmentSetup": {},
+    "saveSetup": "Save setup",
+    "@saveSetup": {},
+    "saveValue": "Save {value}",
+    "@saveValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "tracking"
+            }
+        }
+    },
+    "sections": "{count, plural, other{Sections} zero{Sections} one{Section} two{Sections} few{Sections} many{Sections}}",
+    "@sections": {
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "example": "1"
+            }
+        }
+    },
+    "sectionWidth": "Section width",
+    "@sectionWidth": {},
+    "sectionWorkingWidth": "Section working width",
+    "@sectionWorkingWidth": {},
+    "sendGnssConfig": "Send GNSS config",
+    "@sendGnssConfig": {},
+    "sendHardwareConfig": "Send hardware config",
+    "@sendHardwareConfig": {},
+    "sendOverProtocol": "Send over {protocol}",
+    "@sendOverProtocol": {
+        "placeholders": {
+            "protocol": {
+                "type": "String",
+                "example": "UDP"
+            }
+        }
+    },
+    "sendPort": "Send port",
+    "@sendPort": {},
+    "serialPort": "Serial port",
+    "@serialPort": {},
+    "setDate": "Set date",
+    "@setDate": {},
+    "setTimeOfDay": "Set time of day",
+    "@setTimeOfDay": {},
+    "settings": "Settings",
+    "@settings": {},
+    "setToEquipmentWidth": "Set to equipment width",
+    "@setToEquipmentWidth": {},
+    "setToValueXVehicleTurningRadius": "Set to {value}x vehicle turnung radius",
+    "@setToValueXVehicleTurningRadius": {
+        "placeholders": {
+            "value": {
+                "type": "num",
+                "format": "decimalPatternDigits",
+                "optionalParameters": {
+                    "decimalDigits": 2
+                },
+                "example": "1.25"
+            }
+        }
+    },
+    "setToLiveReading": "Set to live reading",
+    "@setToLiveReading": {},
+    "setToZeroToDisableInReverse": "Set to 0 to completely disable in reverse.",
+    "@setToZeroToDisableInReverse": {},
+    "setup": "Setup",
+    "@setup": {},
+    "setValue": "Set {value}",
+    "@setValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "A"
+            }
+        }
+    },
+    "show": "Show",
+    "@show": {},
+    "showAllLines": "Show all lines",
+    "@showAllLines": {},
+    "showLastRecordedPath": "Show last recorded path",
+    "@showLastRecordedPath": {},
+    "showMotorTargetOverride": "Show motor target override",
+    "@showMotorTargetOverride": {},
+    "showValue": "Show {value}",
+    "@showValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "field"
+            }
+        }
+    },
+    "sidewaysOffsetLeftRight": "Sideways offset (-left / +right)",
+    "@sidewaysOffsetLeftRight": {},
+    "sidewaysOffsetValue": "Sideways offset: {value} m",
+    "@sidewaysOffsetValue": {
+        "placeholders": {
+            "value": {
+                "type": "num",
+                "format": "decimalPatternDigits",
+                "optionalParameters": {
+                    "decimalDigits": 1
+                },
+                "example": "1.0"
+            }
+        }
+    },
+    "simCore": "Sim core",
+    "@simCore": {},
+    "simulationFrequency": "Simulation frequency: {value} Hz",
+    "@simulationFrequency": {
+        "placeholders": {
+            "value": {
+                "type": "int",
+                "example": "1"
+            }
+        }
+    },
+    "size": "Size",
+    "@size": {},
+    "sizeIndicator": "Size indicator",
+    "@sizeIndicator": {},
+    "snap": "Snap",
+    "@snap": {},
+    "softeningGain": "Softening gain: {value}",
+    "@softeningGain": {
+        "placeholders": {
+            "value": {
+                "type": "num",
+                "format": "decimalPatternDigits",
+                "optionalParameters": {
+                    "decimalDigits": 1
+                },
+                "example": "1.0"
+            }
+        }
+    },
+    "spacing": "Spacing",
+    "@spacing": {},
+    "stallGuardThreshold": "StallGuard threshold: {value}",
+    "@stallGuardThreshold": {
+        "placeholders": {
+            "value": {
+                "type": "int",
+                "example": "32"
+            }
+        }
+    },
+    "stallingSensitivity": "Stalling sensitivity",
+    "@stallingSensitivity": {},
+    "start": "Start",
+    "@start": {},
+    "stealthChopMaxRpm": "{option,select,disabled{StealthChop max: Disabled} other{StealthChop max: {rpm} RPM}}",
+    "@stealthChopMaxRpm": {
+        "placeholders": {
+            "option": {
+                "type": "String",
+                "example": "disabled"
+            },
+            "rpm": {
+                "type": "num",
+                "format": "decimalPatternDigits",
+                "optionalParameters": {
+                    "decimalDigits": 1
+                },
+                "example": "200.0"
+            }
+        }
+    },
+    "steering": "Steering",
+    "@steering": {},
+    "steeringActual": "Steering actual: {value}°",
+    "@steeringActual": {
+        "placeholders": {
+            "value": {
+                "type": "num",
+                "format": "decimalPatternDigits",
+                "optionalParameters": {
+                    "decimalDigits": 1
+                },
+                "example": "15.4"
+            }
+        }
+    },
+    "steeringDelta": "Steering Δ: {value}°",
+    "@steeringDelta": {
+        "placeholders": {
+            "value": {
+                "type": "num",
+                "format": "decimalPatternDigits",
+                "optionalParameters": {
+                    "decimalDigits": 1
+                },
+                "example": "15.4"
+            }
+        }
+    },
+    "steeringTarget": "Steering target: {value}°",
+    "@steeringTarget": {
+        "placeholders": {
+            "value": {
+                "type": "num",
+                "format": "decimalPatternDigits",
+                "optionalParameters": {
+                    "decimalDigits": 1
+                },
+                "example": "15.4"
+            }
+        }
+    },
+    "steeringConfigurator": "Steering configurator",
+    "@steeringConfigurator": {},
+    "steeringHardwareAddress": "Steering hardware address",
+    "@steeringHardwareAddress": {},
+    "stepsIncrement": "Steps / increment",
+    "@stepsIncrement": {},
+    "stepsCenterMax": "Center-Max: {value}",
+    "@stepsCenterMax": {
+        "placeholders": {
+            "value": {
+                "type": "num",
+                "example": "2000"
+            }
+        }
+    },
+    "stepsMinCenter": "Min-Center: {value}",
+    "@stepsMinCenter": {
+        "placeholders": {
+            "value": {
+                "type": "num",
+                "example": "1500"
+            }
+        }
+    },
+    "stepsPerRotation": "Steps per rotation: {value}",
+    "@stepsPerRotation": {
+        "placeholders": {
+            "value": {
+                "type": "int",
+                "example": "200"
+            }
+        }
+    },
+    "stepSize": "Step size",
+    "@stepSize": {},
+    "stopButtonText": "Stop",
+    "@stopButtonText": {},
+    "stopTheVehicle": "Stop the vehicle",
+    "@stopTheVehicle": {},
+    "swapPitchAndRollAxes": "Swap pitch and roll",
+    "@swapPitchAndRollAxes": {},
+    "swaths": "{count, plural, other{Swaths} zero{Swaths} one{Swath} two{Swaths} few{Swaths} many{Swaths}}",
+    "@swaths": {
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "example": "1"
+            }
+        }
+    },
+    "target": "Target",
+    "@target": {},
+    "test": "Test",
+    "@test": {},
+    "testDistance": "Test distance",
+    "@testDistance": {},
+    "theme": "Theme",
+    "@theme": {},
+    "themeAutoMode": "Auto mode",
+    "@themeAutoMode": {},
+    "themeDarkMode": "Dark mode",
+    "@themeDarkMode": {},
+    "themeLightMode": "Light mode",
+    "@themeLightMode": {},
+    "themeMode": "Theme mode",
+    "@themeMode": {},
+    "theoretical": "Theoretical",
+    "@theoretical": {},
+    "thisDeviceValue": "This device {value}",
+    "@thisDeviceValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "Ethernet"
+            }
+        }
+    },
+    "thresholdVelocities": "Threshold velocities",
+    "@thresholdVelocities": {},
+    "time": "Time",
+    "@time": {},
+    "toLine": "To line",
+    "@toLine": {},
+    "totalWidth": "Total width: {value} m",
+    "@totalWidth": {
+        "placeholders": {
+            "value": {
+                "type": "num",
+                "example": "5.0"
+            }
+        }
+    },
+    "tracking": "Tracking",
+    "@tracking": {},
+    "trackingMode": "Tracking mode",
+    "@trackingMode": {},
+    "trackingModePurePursuit": "Pure pursuit",
+    "@trackingModePurePursuit": {},
+    "trackingModeStanley": "Stanley",
+    "@trackingModeStanley": {},
+    "trackWidth": "Track width, between centers of the {value}",
+    "@trackWidth": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "rear wheels"
+            }
+        }
+    },
+    "trajectory": "Trajectory",
+    "@trajectory": {},
+    "travelledPath": "Travelled path",
+    "@travelledPath": {},
+    "turningCircles": "Turning circles",
+    "@turningCircles": {},
+    "turningRadius": "Turning radius",
+    "@turningRadius": {},
+    "turnTriggerAngle": "Turn trigger angle",
+    "@turnTriggerAngle": {},
+    "type": "Type",
+    "@type": {},
     "unitAreaDisplay": "{arg, select, other{Area unit} m2{m²} ac{ac} ha{haa} daa{daa}}",
     "@unitAreaDisplay": {
         "context": "unit.area",
@@ -86,6 +1501,168 @@
             }
         }
     },
+    "units": "Units",
+    "@units": {},
+    "unknownLocale": "Unknown locale",
+    "@unknownLocale": {},
+    "update": "Update",
+    "@update": {},
+    "updateFrequency": "Update frequency: {value} Hz",
+    "@updateFrequency": {
+        "placeholders": {
+            "value": {
+                "type": "num",
+                "format": "decimalPatternDigits",
+                "optionalParameters": {
+                    "decimalDigits": 1
+                },
+                "example": "50"
+            }
+        }
+    },
+    "upperThreshold": "Upper threshold",
+    "@upperThreshold": {},
+    "useDevicePosition": "Use device position",
+    "@useDevicePosition": {},
+    "useAsValue": "Use as {value}",
+    "@useAsValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "exterior boundary"
+            }
+        }
+    },
+    "usbSerial": "USB / serial",
+    "@usbSerial": {},
+    "useValue": "Use {value}",
+    "@useValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "Station"
+            }
+        }
+    },
+    "useImuValue": "Use IMU {value}",
+    "@useImuValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "roll"
+            }
+        }
+    },
+    "username": "Username",
+    "@username": {},
+    "validValue": "Valid {value}",
+    "@validValue": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "Port"
+            }
+        }
+    },
+    "value": "Value",
+    "@value": {},
+    "vehicle": "Vehicle",
+    "@vehicle": {},
+    "vehicleBodyLength": "Vehicle body length, excluding wheels",
+    "@vehicleBodyLength": {},
+    "vehicleBodyWidth": "Vehicle body width, excluding wheels",
+    "@vehicleBodyWidth": {},
+    "vehicleImage": "Vehicle image",
+    "@vehicleImage": {},
+    "vehicleType": "{option, select, other{Vehicle} Tractor{Tractor} Harvester{Harvester} ArticulatedTractor{Articulated tractor}}",
+    "@vehicleType": {
+        "placeholders": {
+            "option": {
+                "type": "String",
+                "example": "tractor"
+            }
+        }
+    },
     "velocity": "Velocity",
-    "@velocity": {}
+    "@velocity": {},
+    "velocityGain": "Velocity gain: {value}",
+    "@velocityGain": {
+        "placeholders": {
+            "value": {
+                "type": "num",
+                "format": "decimalPatternDigits",
+                "optionalParameters": {
+                    "decimalDigits": 1
+                },
+                "example": "3.2"
+            }
+        }
+    },
+    "virtualLedBar": "Virtual LED bar",
+    "@virtualLedBar": {},
+    "was": "WAS",
+    "@was": {},
+    "wasMotorConfigurator": "WAS & motor configurator",
+    "@wasMotorConfigurator": {},
+    "wasReading": "WAS reading: {value}",
+    "@wasReading": {
+        "placeholders": {
+            "value": {
+                "type": "int",
+                "example": "2098"
+            }
+        }
+    },
+    "wasTarget": "WAS target: {value}",
+    "@wasTarget": {
+        "placeholders": {
+            "value": {
+                "type": "int",
+                "example": "2098"
+            }
+        }
+    },
+    "wheelbase": "Wheelbase",
+    "@wheelbase": {},
+    "wheelDiameter": "Wheel diameter",
+    "@wheelDiameter": {},
+    "wheelSpacing": "Wheel spacing",
+    "@wheelSpacing": {},
+    "wheelWidth": "Wheel width",
+    "@wheelWidth": {},
+    "wheels": "{count, plural, other{Wheels} zero{Wheels} one{Wheel} two{Wheels} few{Wheels} many{Wheels}}",
+    "@wheels": {
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "example": "1"
+            }
+        }
+    },
+    "width": "Width",
+    "@width": {},
+    "wifi": "WiFi",
+    "@wifi": {},
+    "workingAreaLength": "Working area length",
+    "@workingAreaLength": {},
+    "workingWidth": "Working width",
+    "@workingWidth": {},
+    "workSession": "Work session",
+    "@workSession": {},
+    "yaw": "Yaw",
+    "@yaw": {},
+    "yawFromStartup": "Yaw from startup",
+    "@yawFromStartup": {},
+    "zeroBearingToGnssBearing": "Zero bearing to GNSS bearing",
+    "@zeroBearingToGnssBearing": {},
+    "zeroBearingToNorth": "Zero bearing to north",
+    "@zeroBearingToNorth": {},
+    "zeroImuDescription": "Ensure that you are on a flat and horizontal surface, preferably concrete or asphalt.",
+    "@zeroImuDescription": {},
+    "zeroImuPitchAndRoll": "Zero IMU pitch and roll",
+    "@zeroImuPitchAndRoll": {},
+    "zoomIn": "Zoom in",
+    "@zoomIn": {},
+    "zoomOut": "Zoom out",
+    "@zoomOut": {}
 }

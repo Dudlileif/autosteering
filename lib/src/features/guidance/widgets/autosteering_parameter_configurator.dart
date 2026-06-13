@@ -21,6 +21,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -31,14 +32,11 @@ class AutosteeringParameterConfigurator extends StatelessWidget {
   /// on the fly.
   const AutosteeringParameterConfigurator({super.key});
 
-  static const List<Tab> _tabs = [
-    Tab(text: 'Pure\nPursuit'),
-    Tab(text: 'Stanley'),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
+
     return Card(
       color: Colors.transparent,
       child: SizedBox(
@@ -51,7 +49,7 @@ class AutosteeringParameterConfigurator extends StatelessWidget {
             ),
             appBar: AppBar(
               primary: false,
-              title: const Text('Steering parameters'),
+              title: Text(strings.autosteeringParameters),
               actions: [
                 Padding(
                   padding: const EdgeInsets.all(8),
@@ -78,7 +76,10 @@ class AutosteeringParameterConfigurator extends StatelessWidget {
                   unselectedLabelStyle: theme.textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w300,
                   ),
-                  tabs: _tabs,
+                  tabs: [
+                    Tab(text: strings.trackingModePurePursuit),
+                    Tab(text: strings.trackingModeStanley),
+                  ],
                 ),
                 const Expanded(
                   child: Padding(
@@ -117,6 +118,8 @@ class _PurePursuitConfigurator extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -131,9 +134,7 @@ class _PurePursuitConfigurator extends ConsumerWidget {
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  '''Look ahead min distance: ${lookAhead.toStringAsFixed(1)} m''',
-                ),
+                Text(strings.lookAheadMinDistance(lookAhead)),
                 Slider(
                   value: lookAhead,
                   max: 10,
@@ -173,7 +174,7 @@ class _PurePursuitConfigurator extends ConsumerWidget {
         // Look ahead time
         Consumer(
           builder: (context, ref, child) {
-            final velocityGain = ref.watch(
+            final lookAheadTime = ref.watch(
               mainVehicleProvider.select(
                 (vehicle) => vehicle.purePursuitParameters.lookAheadSeconds,
               ),
@@ -181,9 +182,9 @@ class _PurePursuitConfigurator extends ConsumerWidget {
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Look ahead time: ${velocityGain.toStringAsFixed(1)} s'),
+                Text(strings.lookAheadTime(lookAheadTime)),
                 Slider(
-                  value: velocityGain,
+                  value: lookAheadTime,
                   max: 5,
                   divisions: 50,
                   onChanged: (value) {
@@ -240,6 +241,8 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -254,7 +257,9 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Cross distance gain: ${crossGain.toStringAsFixed(1)}'),
+                Text(
+                  strings.crossDistanceGain(crossGain),
+                ),
                 Slider(
                   value: crossGain,
                   max: 3,
@@ -302,9 +307,7 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  'Softening gain: ${softeningGain.toStringAsExponential(1)}',
-                ),
+                Text(strings.softeningGain(softeningGain)),
                 Slider(
                   value: softeningGain,
                   max: 10e-5,
@@ -352,7 +355,7 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Velocity gain: ${velocityGain.toStringAsFixed(1)}'),
+                Text(strings.velocityGain(velocityGain)),
                 Slider(
                   value: velocityGain,
                   max: 3,

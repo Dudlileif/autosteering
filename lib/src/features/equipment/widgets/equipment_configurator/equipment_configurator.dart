@@ -25,6 +25,7 @@ import 'package:autosteering/src/features/equipment/widgets/equipment_configurat
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiver/strings.dart';
@@ -78,213 +79,227 @@ class _EquipmentConfiguratorState extends ConsumerState<EquipmentConfigurator>
   }
 
   @override
-  Widget build(BuildContext context) => Dialog(
-    child: Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Wrap(
-                  alignment: WrapAlignment.spaceBetween,
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    Text(
-                      'Configure equipment',
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    const _ApplyConfigurationToAttachedEquipmentButton(),
-                  ],
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(left: 8),
-                child: CloseButton(),
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final disabled = ref.watch(
-                configuredEquipmentProvider.select(
-                  (value) => isBlank(value.name),
-                ),
-              );
-
-              final orientation = MediaQuery.orientationOf(context);
-              if (orientation == Orientation.portrait ||
-                  (constraints.maxHeight > 250 && constraints.maxWidth > 800)) {
-                final tabs = [
-                  const Tab(icon: Icon(Icons.handyman), text: 'Type'),
-                  const Tab(icon: Icon(Icons.expand), text: 'Dimensions'),
-                  const Tab(icon: Icon(Icons.view_column), text: 'Sections'),
-                  const Tab(
-                    icon: Icon(Icons.square_rounded),
-                    text: 'Decoration',
+  Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
+    return Dialog(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Wrap(
+                    alignment: WrapAlignment.spaceBetween,
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      Text(
+                        strings.configureValue(strings.equipment.toLowerCase()),
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      const _ApplyConfigurationToAttachedEquipmentButton(),
+                    ],
                   ),
-                  const Tab(icon: Icon(Icons.commit), text: 'Hitches'),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: CloseButton(),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final disabled = ref.watch(
+                  configuredEquipmentProvider.select(
+                    (value) => isBlank(value.name),
+                  ),
+                );
+
+                final orientation = MediaQuery.orientationOf(context);
+                if (orientation == Orientation.portrait ||
+                    (constraints.maxHeight > 250 &&
+                        constraints.maxWidth > 800)) {
+                  final tabs = [
+                    Tab(icon: const Icon(Icons.handyman), text: strings.type),
+                    Tab(
+                      icon: const Icon(Icons.expand),
+                      text: strings.dimensions(0),
+                    ),
+                    Tab(
+                      icon: const Icon(Icons.view_column),
+                      text: strings.sections(0),
+                    ),
+                    Tab(
+                      icon: const Icon(Icons.square_rounded),
+                      text: strings.decoration,
+                    ),
+                    Tab(
+                      icon: const Icon(Icons.commit),
+                      text: strings.hitches(0),
+                    ),
+                  ];
+
+                  return Column(
+                    children: [
+                      Consumer(
+                        builder: (context, ref, child) {
+                          final tabBar = TabBar(
+                            tabAlignment: constraints.maxWidth < 500
+                                ? TabAlignment.center
+                                : TabAlignment.fill,
+                            isScrollable: constraints.maxWidth < 500,
+                            padding: const EdgeInsets.all(8),
+                            dividerHeight: 1,
+                            dividerColor: Theme.of(context).dividerColor,
+                            controller: tabController,
+                            tabs: tabs,
+                          );
+                          if (disabled) {
+                            return IgnorePointer(child: tabBar);
+                          }
+                          return tabBar;
+                        },
+                      ),
+                      Expanded(
+                        child: TabBarView(
+                          controller: tabController,
+                          physics: disabled
+                              ? const NeverScrollableScrollPhysics()
+                              : null,
+                          children: pages,
+                        ),
+                      ),
+                    ],
+                  );
+                }
+
+                final destinations = [
+                  NavigationRailDestination(
+                    icon: const Icon(Icons.handyman),
+                    label: Text(strings.type),
+                  ),
+                  NavigationRailDestination(
+                    icon: const Icon(Icons.expand),
+                    label: Text(strings.dimensions(0)),
+                    disabled: disabled,
+                  ),
+                  NavigationRailDestination(
+                    icon: const Icon(Icons.view_column),
+                    label: Text(strings.sections(0)),
+                    disabled: disabled,
+                  ),
+                  NavigationRailDestination(
+                    icon: const Icon(Icons.square_rounded),
+                    label: Text(strings.decoration),
+                    disabled: disabled,
+                  ),
+                  NavigationRailDestination(
+                    icon: const Icon(Icons.commit),
+                    label: Text(strings.hitches(0)),
+                    disabled: disabled,
+                  ),
                 ];
 
-                return Column(
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Consumer(
-                      builder: (context, ref, child) {
-                        final tabBar = TabBar(
-                          tabAlignment: constraints.maxWidth < 500
-                              ? TabAlignment.center
-                              : TabAlignment.fill,
-                          isScrollable: constraints.maxWidth < 500,
-                          padding: const EdgeInsets.all(8),
-                          dividerHeight: 1,
-                          dividerColor: Theme.of(context).dividerColor,
-                          controller: tabController,
-                          tabs: tabs,
-                        );
-                        if (disabled) {
-                          return IgnorePointer(child: tabBar);
-                        }
-                        return tabBar;
-                      },
+                    SingleChildScrollView(
+                      child: IntrinsicHeight(
+                        child: Consumer(
+                          builder: (context, ref, child) => NavigationRail(
+                            backgroundColor: Colors.transparent,
+                            labelType: NavigationRailLabelType.all,
+                            destinations: destinations,
+                            selectedIndex: ref.watch(
+                              equipmentConfiguratorIndexProvider,
+                            ),
+                            onDestinationSelected: tabController.animateTo,
+                          ),
+                        ),
+                      ),
                     ),
+                    const VerticalDivider(),
                     Expanded(
-                      child: TabBarView(
-                        controller: tabController,
-                        physics: disabled
-                            ? const NeverScrollableScrollPhysics()
-                            : null,
-                        children: pages,
+                      child: Consumer(
+                        builder: (context, ref, child) => Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ListenableBuilder(
+                              listenable: tabController,
+                              builder: (context, child) => AnimatedOpacity(
+                                opacity: tabController.index > 0 ? 1 : 0,
+                                duration: Durations.medium1,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: IconButton.filled(
+                                    icon: const Icon(Icons.arrow_left),
+                                    onPressed: tabController.index > 0
+                                        ? () => tabController.animateTo(
+                                            tabController.index - 1,
+                                          )
+                                        : null,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Consumer(
+                                builder: (context, ref, child) {
+                                  return TabBarView(
+                                    controller: tabController,
+                                    physics: switch (disabled) {
+                                      true =>
+                                        const NeverScrollableScrollPhysics(),
+                                      _ => null,
+                                    },
+                                    children: pages,
+                                  );
+                                },
+                              ),
+                            ),
+                            ListenableBuilder(
+                              listenable: tabController,
+                              builder: (context, child) => AnimatedOpacity(
+                                opacity:
+                                    tabController.index < pages.length - 1 &&
+                                        !disabled
+                                    ? 1
+                                    : 0,
+                                duration: Durations.medium1,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: IconButton.filled(
+                                    onPressed:
+                                        tabController.index <
+                                                pages.length - 1 &&
+                                            !disabled
+                                        ? () => tabController.animateTo(
+                                            tabController.index + 1,
+                                          )
+                                        : null,
+                                    icon: const Icon(Icons.arrow_right),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 );
-              }
-
-              final destinations = [
-                const NavigationRailDestination(
-                  icon: Icon(Icons.handyman),
-                  label: Text('Type'),
-                ),
-                NavigationRailDestination(
-                  icon: const Icon(Icons.expand),
-                  label: const Text('Dimensions'),
-                  disabled: disabled,
-                ),
-                NavigationRailDestination(
-                  icon: const Icon(Icons.view_column),
-                  label: const Text('Sections'),
-                  disabled: disabled,
-                ),
-                NavigationRailDestination(
-                  icon: const Icon(Icons.square_rounded),
-                  label: const Text('Decoration'),
-                  disabled: disabled,
-                ),
-                NavigationRailDestination(
-                  icon: const Icon(Icons.commit),
-                  label: const Text('Hitches'),
-                  disabled: disabled,
-                ),
-              ];
-
-              return Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SingleChildScrollView(
-                    child: IntrinsicHeight(
-                      child: Consumer(
-                        builder: (context, ref, child) => NavigationRail(
-                          backgroundColor: Colors.transparent,
-                          labelType: NavigationRailLabelType.all,
-                          destinations: destinations,
-                          selectedIndex: ref.watch(
-                            equipmentConfiguratorIndexProvider,
-                          ),
-                          onDestinationSelected: tabController.animateTo,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const VerticalDivider(),
-                  Expanded(
-                    child: Consumer(
-                      builder: (context, ref, child) => Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ListenableBuilder(
-                            listenable: tabController,
-                            builder: (context, child) => AnimatedOpacity(
-                              opacity: tabController.index > 0 ? 1 : 0,
-                              duration: Durations.medium1,
-                              child: Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: IconButton.filled(
-                                  icon: const Icon(Icons.arrow_left),
-                                  onPressed: tabController.index > 0
-                                      ? () => tabController.animateTo(
-                                          tabController.index - 1,
-                                        )
-                                      : null,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Consumer(
-                              builder: (context, ref, child) {
-                                return TabBarView(
-                                  controller: tabController,
-                                  physics: switch (disabled) {
-                                    true =>
-                                      const NeverScrollableScrollPhysics(),
-                                    _ => null,
-                                  },
-                                  children: pages,
-                                );
-                              },
-                            ),
-                          ),
-                          ListenableBuilder(
-                            listenable: tabController,
-                            builder: (context, child) => AnimatedOpacity(
-                              opacity:
-                                  tabController.index < pages.length - 1 &&
-                                      !disabled
-                                  ? 1
-                                  : 0,
-                              duration: Durations.medium1,
-                              child: Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: IconButton.filled(
-                                  onPressed:
-                                      tabController.index < pages.length - 1 &&
-                                          !disabled
-                                      ? () => tabController.animateTo(
-                                          tabController.index + 1,
-                                        )
-                                      : null,
-                                  icon: const Icon(Icons.arrow_right),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
+              },
+            ),
           ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 }
 
 /// A button that applies the equipment configuration in
@@ -297,59 +312,65 @@ class _ApplyConfigurationToAttachedEquipmentButton extends ConsumerWidget {
   const _ApplyConfigurationToAttachedEquipmentButton();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => FilledButton.icon(
-    onPressed:
-        ref.watch(
-          configuredEquipmentProvider.select((value) => isNotBlank(value.name)),
-        )
-        ? () async {
-            await Future<void>(() async {
-              final equipment = ref.watch(configuredEquipmentProvider)
-                ..lastUsed = DateTime.now();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
+    return FilledButton.icon(
+      onPressed:
+          ref.watch(
+            configuredEquipmentProvider.select(
+              (value) => isNotBlank(value.name),
+            ),
+          )
+          ? () async {
+              await Future<void>(() async {
+                final equipment = ref.watch(configuredEquipmentProvider)
+                  ..lastUsed = DateTime.now();
 
-              ref.read(simInputProvider.notifier).send((
-                updatedEquipment: equipment,
-              ));
-              final updatedSetups = await ref.watch(
-                savedEquipmentSetupsProvider.selectAsync(
-                  (data) =>
-                      data.where((element) => element.updateChild(equipment)),
-                ),
-              );
-
-              ref.read(
-                activeWorkSessionProvider.select(
-                  (value) =>
-                      value?.equipmentSetup?.updateChild(equipment) ?? false,
-                ),
-              );
-
-              final updatedWorkSessions = await ref.watch(
-                savedWorkSessionsProvider.selectAsync(
-                  (data) => data.where(
-                    (element) =>
-                        element.equipmentSetup?.updateChild(equipment) ?? false,
+                ref.read(simInputProvider.notifier).send((
+                  updatedEquipment: equipment,
+                ));
+                final updatedSetups = await ref.watch(
+                  savedEquipmentSetupsProvider.selectAsync(
+                    (data) =>
+                        data.where((element) => element.updateChild(equipment)),
                   ),
-                ),
-              );
-              if (Device.isNative) {
-                await ref.read(saveEquipmentProvider(equipment).future);
-                for (final setup in updatedSetups) {
-                  await ref.read(saveEquipmentSetupProvider(setup).future);
-                }
-                for (final session in updatedWorkSessions) {
-                  await ref.read(saveWorkSessionProvider(session).future);
-                }
-              }
-              ref.read(loadedEquipmentProvider.notifier).update(equipment);
-            });
+                );
 
-            if (context.mounted) {
-              Navigator.of(context).pop();
+                ref.read(
+                  activeWorkSessionProvider.select(
+                    (value) =>
+                        value?.equipmentSetup?.updateChild(equipment) ?? false,
+                  ),
+                );
+
+                final updatedWorkSessions = await ref.watch(
+                  savedWorkSessionsProvider.selectAsync(
+                    (data) => data.where(
+                      (element) =>
+                          element.equipmentSetup?.updateChild(equipment) ??
+                          false,
+                    ),
+                  ),
+                );
+                if (Device.isNative) {
+                  await ref.read(saveEquipmentProvider(equipment).future);
+                  for (final setup in updatedSetups) {
+                    await ref.read(saveEquipmentSetupProvider(setup).future);
+                  }
+                  for (final session in updatedWorkSessions) {
+                    await ref.read(saveWorkSessionProvider(session).future);
+                  }
+                }
+                ref.read(loadedEquipmentProvider.notifier).update(equipment);
+              });
+
+              if (context.mounted) {
+                Navigator.of(context).pop();
+              }
             }
-          }
-        : null,
-    icon: const Icon(Icons.check),
-    label: const Text('Apply configuration'),
-  );
+          : null,
+      icon: const Icon(Icons.check),
+      label: Text(strings.applyConfiguration),
+    );
+  }
 }

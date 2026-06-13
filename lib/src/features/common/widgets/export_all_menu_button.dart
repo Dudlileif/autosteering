@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,6 +30,7 @@ class ExportAllMenuButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
     return MenuItemButton(
       leadingIcon: const Padding(
@@ -37,7 +39,7 @@ class ExportAllMenuButton extends ConsumerWidget {
       ),
       closeOnActivate: false,
       onPressed: onPressed,
-      child: Text('Export all', style: textStyle),
+      child: Text(strings.exportAll, style: textStyle),
     );
   }
 }

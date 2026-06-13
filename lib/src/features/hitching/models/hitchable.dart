@@ -25,26 +25,20 @@ enum HitchType {
   /// A three point hitch.
   fixed,
 
-  /// A towbar or similar articulating hitch.
-  towbar,
+  /// A drawbar or similar articulating hitch.
+  drawbar,
 }
 
 /// Which position and hitch type a hitch is.
 enum Hitch {
   /// The front three point hitch.
-  frontFixed('Front fixed'),
+  frontFixed,
 
   /// The rear three point hitch.
-  rearFixed('Rear fixed'),
+  rearFixed,
 
-  /// The rear towbar or similar articulating hitch.
-  rearTowbar('Rear towbar')
-  ;
-
-  const Hitch(this.name);
-
-  /// The name of this enumeration value.
-  final String name;
+  /// The rear drawbar or similar articulating hitch.
+  rearDrawbar,
 }
 
 //?: make this sealed/final for vehicle and equipment
@@ -60,14 +54,14 @@ abstract class Hitchable {
   /// Set a [hitchParent] if this hitchable is a child/equipment attached to
   /// said parent.
   /// Attach [hitchFrontFixedChild], [hitchRearFixedChild] and/or
-  /// [hitchRearTowbarChild] to attach children to this hitchable.
+  /// [hitchRearDrawbarChild] to attach children to this hitchable.
   ///
   Hitchable({
     this.name,
     this.hitchParent,
     this.hitchFrontFixedChild,
     this.hitchRearFixedChild,
-    this.hitchRearTowbarChild,
+    this.hitchRearDrawbarChild,
     String? uuid,
     DateTime? lastUsed,
   }) : uuid = uuid ?? const Uuid().v4(),
@@ -94,8 +88,8 @@ abstract class Hitchable {
   /// The child of this rear fixed hitch.
   Hitchable? hitchRearFixedChild;
 
-  /// The child of this rear towbar hitch.
-  Hitchable? hitchRearTowbarChild;
+  /// The child of this rear drawbar hitch.
+  Hitchable? hitchRearDrawbarChild;
 
   /// The position of this hitchable.
   Geographic get position;
@@ -174,8 +168,8 @@ abstract class Hitchable {
       case Hitch.rearFixed:
         hitchRearFixedChild = childToAttach..parentHitch = Hitch.rearFixed;
 
-      case Hitch.rearTowbar:
-        hitchRearTowbarChild = childToAttach..parentHitch = Hitch.rearTowbar;
+      case Hitch.rearDrawbar:
+        hitchRearDrawbarChild = childToAttach..parentHitch = Hitch.rearDrawbar;
     }
     updateChildren(0);
   }
@@ -248,7 +242,7 @@ abstract class Hitchable {
       child.copyWith(
         hitchFrontFixedChild: foundChild.hitchFrontFixedChild,
         hitchRearFixedChild: foundChild.hitchRearFixedChild,
-        hitchRearTowbarChild: foundChild.hitchRearTowbarChild,
+        hitchRearDrawbarChild: foundChild.hitchRearDrawbarChild,
       ),
       foundChild.parentHitch ?? Hitch.rearFixed,
     );
@@ -265,8 +259,8 @@ abstract class Hitchable {
       case Hitch.rearFixed:
         foundChild?.hitchParent?.hitchRearFixedChild = null;
 
-      case Hitch.rearTowbar:
-        foundChild?.hitchParent?.hitchRearTowbarChild = null;
+      case Hitch.rearDrawbar:
+        foundChild?.hitchParent?.hitchRearDrawbarChild = null;
       case null:
     }
     foundChild?.hitchParent = null;
@@ -282,15 +276,15 @@ abstract class Hitchable {
     foundChild?.hitchRearFixedChild?.hitchParent = null;
     foundChild?.hitchRearFixedChild = null;
 
-    foundChild?.hitchRearTowbarChild?.hitchParent = null;
-    foundChild?.hitchRearTowbarChild = null;
+    foundChild?.hitchRearDrawbarChild?.hitchParent = null;
+    foundChild?.hitchRearDrawbarChild = null;
   }
 
   /// A list of the directly attached children.
   List<Hitchable> get hitchChildren => [
     ?hitchFrontFixedChild,
     ?hitchRearFixedChild,
-    ?hitchRearTowbarChild,
+    ?hitchRearDrawbarChild,
   ];
 
   /// A list of the all the recursively attached children.
@@ -303,9 +297,9 @@ abstract class Hitchable {
       hitchRearFixedChild!,
       ...hitchRearFixedChild!.hitchChildrenRecursively,
     ],
-    if (hitchRearTowbarChild != null) ...[
-      hitchRearTowbarChild!,
-      ...hitchRearTowbarChild!.hitchChildrenRecursively,
+    if (hitchRearDrawbarChild != null) ...[
+      hitchRearDrawbarChild!,
+      ...hitchRearDrawbarChild!.hitchChildrenRecursively,
     ],
   ];
 
@@ -315,14 +309,14 @@ abstract class Hitchable {
   /// The position of the rear fixed hitch point, if there is one.
   Geographic? get hitchRearFixedPoint;
 
-  /// The position of the rear towbar hitch point, if there is one.
-  Geographic? get hitchRearTowbarPoint;
+  /// The position of the rear drawbar hitch point, if there is one.
+  Geographic? get hitchRearDrawbarPoint;
 
   /// The hitch positions of this that are not null.
   Iterable<Geographic> get hitchPoints => [
     hitchFrontFixedPoint,
     hitchRearFixedPoint,
-    hitchRearTowbarPoint,
+    hitchRearDrawbarPoint,
   ].nonNulls;
 
   /// The number of children recursively attached to this.
@@ -339,9 +333,9 @@ abstract class Hitchable {
     hitchRearFixedChild?.hitchParent = this;
     hitchRearFixedChild?.lastUsed = lastUsed;
     hitchRearFixedChild?.updateChildren(period);
-    hitchRearTowbarChild?.hitchParent = this;
-    hitchRearTowbarChild?.lastUsed = lastUsed;
-    hitchRearTowbarChild?.updateChildren(period);
+    hitchRearDrawbarChild?.hitchParent = this;
+    hitchRearDrawbarChild?.lastUsed = lastUsed;
+    hitchRearDrawbarChild?.updateChildren(period);
   }
 
   /// Create a new [Hitchable] based on this one, but with parameters/variables
@@ -350,7 +344,7 @@ abstract class Hitchable {
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,
     Hitchable? hitchRearFixedChild,
-    Hitchable? hitchRearTowbarChild,
+    Hitchable? hitchRearDrawbarChild,
     String? name,
     String? uuid,
     DateTime? lastUsed,
@@ -367,7 +361,7 @@ abstract class Hitchable {
     map['children'] = {
       'front_fixed': hitchFrontFixedChild?.toJsonWithChildren(),
       'rear_fixed': hitchRearFixedChild?.toJsonWithChildren(),
-      'rear_towbar': hitchRearTowbarChild?.toJsonWithChildren(),
+      'rear_drawbar': hitchRearDrawbarChild?.toJsonWithChildren(),
     };
 
     return map;

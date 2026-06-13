@@ -18,6 +18,7 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/theme/utils/menu_button_text_extension.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,10 +29,11 @@ class HardwareLoggingMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuButtonWithChildren(
-      text: 'Logging',
+      text: strings.logging,
       iconOverrideWidget: Consumer(
         builder: (context, ref, child) => Icon(
           Icons.pending_actions,
@@ -43,7 +45,7 @@ class HardwareLoggingMenu extends StatelessWidget {
       ),
       menuChildren: [
         Consumer(
-          child: Text('GNSS', style: textStyle),
+          child: Text(strings.gnss, style: textStyle),
           builder: (context, ref, child) => CheckboxListTile(
             secondary: child,
             value: ref.watch(hardwareLogGnssProvider),
@@ -55,7 +57,7 @@ class HardwareLoggingMenu extends StatelessWidget {
           ),
         ),
         Consumer(
-          child: Text('IMU', style: textStyle),
+          child: Text(strings.imu, style: textStyle),
           builder: (context, ref, child) => CheckboxListTile(
             secondary: child,
             value: ref.watch(hardwareLogImuProvider),
@@ -65,7 +67,7 @@ class HardwareLoggingMenu extends StatelessWidget {
           ),
         ),
         Consumer(
-          child: Text('WAS', style: textStyle),
+          child: Text(strings.was, style: textStyle),
           builder: (context, ref, child) => CheckboxListTile(
             secondary: child,
             value: ref.watch(hardwareLogWasProvider),
@@ -75,7 +77,7 @@ class HardwareLoggingMenu extends StatelessWidget {
           ),
         ),
         Consumer(
-          child: Text('Combined', style: textStyle),
+          child: Text(strings.combined, style: textStyle),
           builder: (context, ref, child) => CheckboxListTile(
             secondary: child,
             value: ref.watch(hardwareLogCombinedProvider),

@@ -21,9 +21,11 @@ import 'dart:ui';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
+import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/providers/providers.dart';
 import 'package:autosteering/src/features/vehicle/models/threshold_velocities.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -32,14 +34,9 @@ class SteeringHardwareConfigurator extends StatelessWidget {
   /// A configurator widget for configuring how to use the WAS with the vehicle.
   const SteeringHardwareConfigurator({super.key});
 
-  static const List<Tab> _tabs = [
-    Tab(text: 'Motor'),
-    Tab(text: 'WAS'),
-    Tab(text: 'PID'),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
     return Card(
@@ -47,7 +44,7 @@ class SteeringHardwareConfigurator extends StatelessWidget {
       child: SizedBox(
         width: 325,
         child: DefaultTabController(
-          length: _tabs.length,
+          length: 3,
           child: Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor.withValues(
               alpha: 0.7,
@@ -55,7 +52,7 @@ class SteeringHardwareConfigurator extends StatelessWidget {
             appBar: AppBar(
               primary: false,
               scrolledUnderElevation: 0,
-              title: const Text('Steering Configurator'),
+              title: Text(strings.steeringConfigurator),
               actions: [
                 Padding(
                   padding: const EdgeInsets.all(8),
@@ -78,7 +75,11 @@ class SteeringHardwareConfigurator extends StatelessWidget {
                   unselectedLabelStyle: theme.textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w300,
                   ),
-                  tabs: _tabs,
+                  tabs: [
+                    Tab(text: strings.motor),
+                    Tab(text: strings.was),
+                    Tab(text: strings.pid),
+                  ],
                   dividerColor: theme.dividerColor,
                 ),
                 const Expanded(
@@ -177,6 +178,7 @@ class __SteeringHardwareConfigDialogState
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final text = Text(widget.text(_value), style: theme.textTheme.bodyLarge);
 
@@ -230,7 +232,7 @@ class __SteeringHardwareConfigDialogState
               ElevatedButton.icon(
                 onPressed: Navigator.of(context).pop,
                 icon: const Icon(Icons.clear),
-                label: const Text('Cancel'),
+                label: Text(strings.cancel),
               ),
               FilledButton.icon(
                 onPressed: () {
@@ -238,7 +240,7 @@ class __SteeringHardwareConfigDialogState
                   Navigator.of(context).pop();
                 },
                 icon: const Icon(Icons.check),
-                label: const Text('Apply'),
+                label: Text(strings.apply),
               ),
             ],
           ),
@@ -253,6 +255,7 @@ class _MotorPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
     final maxRPM = ref.watch(
@@ -265,7 +268,7 @@ class _MotorPage extends ConsumerWidget {
       // Reverse motor output
       Consumer(
         child: Text(
-          'Reverse motor direction',
+          strings.reverseMotorDirection,
           style: theme.textTheme.bodyLarge,
         ),
         builder: (context, ref, child) => CheckboxListTile(
@@ -312,7 +315,7 @@ class _MotorPage extends ConsumerWidget {
       // Threshold velocities
       Consumer(
         child: Text(
-          'Threshold velocities',
+          strings.thresholdVelocities,
           style: theme.textTheme.bodyLarge,
         ),
         builder: (context, ref, child) => ListTile(
@@ -331,7 +334,7 @@ class _MotorPage extends ConsumerWidget {
           ),
         ),
         resetValue: 200,
-        text: (value) => 'Max speed: ${value.round()} RPM',
+        text: (value) => strings.maxVelocityRpm(value.round()),
         onChangeEnd: (value) {
           final oldConfig = ref.read(
             mainVehicleProvider.select((value) => value.steeringHardwareConfig),
@@ -391,7 +394,7 @@ class _MotorPage extends ConsumerWidget {
           ),
         ),
         resetValue: 100,
-        text: (value) => 'Max acceleration: ${value.round()} RPM/s',
+        text: (value) => strings.maxAccelerationRpms(value.round()),
         onChangeEnd: (value) {
           final oldValue = ref.read(
             mainVehicleProvider.select(
@@ -437,7 +440,7 @@ class _MotorPage extends ConsumerWidget {
           ),
         ),
         resetValue: 160,
-        text: (value) => 'Max Deceleration: ${value.round()} RPM/s',
+        text: (value) => strings.maxDecelerationRpms(value.round()),
         onChangeEnd: (value) {
           final oldValue = ref.read(
             mainVehicleProvider.select(
@@ -483,8 +486,8 @@ class _MotorPage extends ConsumerWidget {
           ),
         ),
         text: (value) =>
-            'Microsteps: ${switch (value.round()) {
-              0 => 'Fullstep',
+            '${strings.microsteps}: ${switch (value.round()) {
+              0 => strings.fullstep,
               _ => value.round(),
             }}',
         onChangeEnd: (value) {
@@ -531,7 +534,7 @@ class _MotorPage extends ConsumerWidget {
             (value) => value.steeringHardwareConfig.stepsPerRotation,
           ),
         ),
-        text: (value) => 'Steps per rotation: ${value.round()}',
+        text: (value) => strings.stepsPerRotation(value.round()),
         onChangeEnd: (value) {
           final oldValue = ref.read(
             mainVehicleProvider.select(
@@ -576,7 +579,7 @@ class _MotorPage extends ConsumerWidget {
             (value) => value.steeringHardwareConfig.rmsCurrent,
           ),
         ),
-        text: (value) => 'RMS current: ${value.round()} mA',
+        text: (value) => strings.rmsCurrent(value.round()),
         onChangeEnd: (value) {
           final oldValue = ref.read(
             mainVehicleProvider.select(
@@ -622,7 +625,7 @@ class _MotorPage extends ConsumerWidget {
             (value) => value.steeringHardwareConfig.stallguardThreshold,
           ),
         ),
-        text: (value) => 'StallGuard threshold: ${value.round()}',
+        text: (value) => strings.stallGuardThreshold(value.round()),
         onChangeEnd: (value) {
           final oldValue = ref.read(
             mainVehicleProvider.select(
@@ -661,7 +664,7 @@ class _MotorPage extends ConsumerWidget {
         min: -64,
         divisions: 127,
         resetValue: 0,
-        subtitle: 'Stalling sensitivity',
+        subtitle: strings.stallingSensitivity,
       ),
       // StealthChop upper threshold
       _SteeringHardwareConfigListTile(
@@ -672,7 +675,7 @@ class _MotorPage extends ConsumerWidget {
           ),
         ),
         text: (value) =>
-            '''StealthChop max: ${value > 0 ? '${value.toStringAsFixed(1)} RPM' : 'Disabled'}''',
+            strings.stealthChopMaxRpm(value > 0 ? '' : 'disabled', value),
         onChangeEnd: (value) {
           final oldValue = ref.read(
             mainVehicleProvider.select(
@@ -710,7 +713,7 @@ class _MotorPage extends ConsumerWidget {
         max: maxRPM,
         divisions: maxRPM ~/ 5,
         resetValue: 0,
-        subtitle: 'Upper threshold',
+        subtitle: strings.upperThreshold,
       ),
       // High velocity chopper change threshold
       _SteeringHardwareConfigListTile(
@@ -723,7 +726,7 @@ class _MotorPage extends ConsumerWidget {
           ),
         ),
         text: (value) =>
-            '''High velocity min: ${value > 0 ? '${value.toStringAsFixed(1)} RPM' : 'Disabled'}''',
+            strings.highVelocityMinRpm(value > 0 ? '' : 'disabled', value),
         onChangeEnd: (value) {
           final oldValue = ref.read(
             mainVehicleProvider.select(
@@ -764,7 +767,7 @@ class _MotorPage extends ConsumerWidget {
         max: maxRPM,
         divisions: maxRPM ~/ 5,
         resetValue: 0,
-        subtitle: 'Lower threshold',
+        subtitle: strings.lowerThreshold,
       ),
       // CoolStep threshold
       _SteeringHardwareConfigListTile(
@@ -775,7 +778,7 @@ class _MotorPage extends ConsumerWidget {
           ),
         ),
         text: (value) =>
-            '''CoolStep min: ${value > 0 ? '${value.toStringAsFixed(1)} RPM' : 'Disabled'}''',
+            strings.coolStepMinRpm(value > 0 ? '' : 'disabled', value),
         onChangeEnd: (value) {
           final oldValue = ref.read(
             mainVehicleProvider.select(
@@ -813,7 +816,7 @@ class _MotorPage extends ConsumerWidget {
         max: maxRPM,
         divisions: maxRPM ~/ 5,
         resetValue: 0,
-        subtitle: 'Lower threshold',
+        subtitle: strings.lowerThreshold,
       ),
       // DcStep threshold
       _SteeringHardwareConfigListTile(
@@ -824,7 +827,7 @@ class _MotorPage extends ConsumerWidget {
           ),
         ),
         text: (value) =>
-            '''DcStep min: ${value > 0 ? '${value.toStringAsFixed(1)} RPM' : 'Disabled'}''',
+            strings.dcStepMinRpm(value > 0 ? '' : 'disabled', value),
         onChangeEnd: (value) {
           final oldValue = ref.read(
             mainVehicleProvider.select(
@@ -862,7 +865,7 @@ class _MotorPage extends ConsumerWidget {
         max: maxRPM,
         divisions: maxRPM ~/ 5,
         resetValue: 0,
-        subtitle: 'Lower threshold',
+        subtitle: strings.lowerThreshold,
       ),
     ];
 
@@ -878,12 +881,17 @@ class _WasPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
+
     return ListView(
       children: [
         // Use WAS
         Consumer(
-          child: Text('Use WAS', style: theme.textTheme.bodyLarge),
+          child: Text(
+            strings.useValue(strings.was),
+            style: theme.textTheme.bodyLarge,
+          ),
           builder: (context, ref, child) => CheckboxListTile(
             value: ref.watch(
               mainVehicleProvider.select(
@@ -919,7 +927,10 @@ class _WasPage extends ConsumerWidget {
         ),
         // Invert sensor
         Consumer(
-          child: Text('Invert sensor input', style: theme.textTheme.bodyLarge),
+          child: Text(
+            strings.invertSensorInput,
+            style: theme.textTheme.bodyLarge,
+          ),
           builder: (context, ref, child) => CheckboxListTile(
             value: ref.watch(
               mainVehicleProvider.select(
@@ -959,7 +970,7 @@ class _WasPage extends ConsumerWidget {
           initialValue: ref.read(
             mainVehicleProvider.select((value) => value.was.config.bits),
           ),
-          text: (value) => 'Bits: ${value.round()}',
+          text: (value) => '${strings.bits}: ${value.round()}',
           onChangeEnd: (value) {
             final oldValue = ref.read(
               mainVehicleProvider.select((value) => value.was.config.bits),
@@ -1008,7 +1019,7 @@ class _WasPage extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Discrete: $reading',
+                      '${strings.discrete}: $reading',
                       style: theme.textTheme.bodyLarge,
                     ),
                     IconButton(
@@ -1062,7 +1073,7 @@ class _WasPage extends ConsumerWidget {
             return Column(
               children: [
                 Text(
-                  'Normalized: ${reading.toStringAsFixed(3)}',
+                  '${strings.normalized}: ${reading.toStringAsFixed(3)}',
                   style: theme.textTheme.bodyLarge,
                 ),
                 Slider(value: reading, onChanged: null, min: -1),
@@ -1078,7 +1089,8 @@ class _WasPage extends ConsumerWidget {
             ),
           ),
           resetValue: 250,
-          text: (value) => 'WAS min: ${value.round()}',
+          text: (value) =>
+              '${strings.was} ${strings.min.toLowerCase()}: ${value.round()}',
           onChangeEnd: (value) {
             final oldValue = ref.read(
               mainVehicleProvider.select(
@@ -1162,7 +1174,7 @@ class _WasPage extends ConsumerWidget {
             },
             child: Consumer(
               builder: (context, ref, child) => Text(
-                '''Set to live reading: ${ref.watch(mainVehicleProvider.select((value) => value.was.reading.value))}''',
+                '''${strings.setToLiveReading}: ${ref.watch(mainVehicleProvider.select((value) => value.was.reading.value))}''',
               ),
             ),
           ),
@@ -1186,7 +1198,8 @@ class _WasPage extends ConsumerWidget {
                       ) -
                       1)
                   .round(),
-          text: (value) => 'WAS center: ${value.round()}',
+          text: (value) =>
+              '''${strings.was} ${strings.center.toLowerCase()}: ${value.round()}''',
           onChangeEnd: (value) {
             final oldValue = ref.read(
               mainVehicleProvider.select(
@@ -1270,7 +1283,7 @@ class _WasPage extends ConsumerWidget {
             },
             child: Consumer(
               builder: (context, ref, child) => Text(
-                '''Set to live reading: ${ref.watch(mainVehicleProvider.select((value) => value.was.reading.value))}''',
+                '''${strings.setToLiveReading}: ${ref.watch(mainVehicleProvider.select((value) => value.was.reading.value))}''',
               ),
             ),
           ),
@@ -1293,7 +1306,8 @@ class _WasPage extends ConsumerWidget {
                       ) -
                       1)
                   .round(),
-          text: (value) => 'WAS max: ${value.round()}',
+          text: (value) =>
+              '${strings.was} ${strings.max.toLowerCase()}: ${value.round()}',
           onChangeEnd: (value) {
             final oldValue = ref.read(
               mainVehicleProvider.select(
@@ -1377,7 +1391,7 @@ class _WasPage extends ConsumerWidget {
             },
             child: Consumer(
               builder: (context, ref, child) => Text(
-                '''Set to live reading: ${ref.watch(mainVehicleProvider.select((value) => value.was.reading.value))}''',
+                '''${strings.setToLiveReading}: ${ref.watch(mainVehicleProvider.select((value) => value.was.reading.value))}''',
               ),
             ),
           ),
@@ -1392,20 +1406,26 @@ class _WasPage extends ConsumerWidget {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Raw WAS reading', style: theme.textTheme.bodyLarge),
+                  Text(
+                    strings.rawSensorReading(strings.was),
+                    style: theme.textTheme.bodyLarge,
+                  ),
                   if (reading != null) ...[
-                    Text('Value: ${reading.value}'),
+                    Text('${strings.value}: ${reading.value}'),
                     Consumer(
                       builder: (context, ref, child) {
                         final freq = ref.watch(wasCurrentFrequencyProvider);
 
-                        return Text(
-                          '''Update frequency: ${freq?.toStringAsFixed(1)} Hz''',
-                        );
+                        return switch (freq) {
+                          final double freq => Text(
+                            strings.updateFrequency(freq),
+                          ),
+                          _ => const SizedBox.shrink(),
+                        };
                       },
                     ),
                   ] else
-                    const Text('Not receiving WAS readings'),
+                    Text(strings.notReceivingSensorReadings(strings.was)),
                 ],
               );
             },
@@ -1438,7 +1458,9 @@ class _PidPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -1455,7 +1477,10 @@ class _PidPage extends ConsumerWidget {
                   'P: ${p.round()}',
                   style: theme.textTheme.bodyLarge,
                 ),
-                Text('Current error', style: theme.textTheme.bodySmall),
+                Text(
+                  [strings.current, strings.error.toLowerCase()].join(' '),
+                  style: theme.textTheme.bodySmall,
+                ),
                 Slider(
                   value: p,
                   max: 50,
@@ -1506,7 +1531,7 @@ class _PidPage extends ConsumerWidget {
                   'I: ${i.round()}',
                   style: theme.textTheme.bodyLarge,
                 ),
-                Text('Error over time', style: theme.textTheme.bodySmall),
+                Text(strings.errorOverTime, style: theme.textTheme.bodySmall),
                 Slider(
                   value: i,
                   max: 50,
@@ -1557,7 +1582,10 @@ class _PidPage extends ConsumerWidget {
                   'D: ${d.round()}',
                   style: theme.textTheme.bodyLarge,
                 ),
-                Text('Error rate of change', style: theme.textTheme.bodySmall),
+                Text(
+                  strings.errorRateOfChange,
+                  style: theme.textTheme.bodySmall,
+                ),
                 Slider(
                   value: d,
                   max: 50,
@@ -1616,19 +1644,22 @@ class __ThresholdVelocitiesDialogState
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final textTheme = TextTheme.of(context);
+    final velocityUnit = ref.watch(uiUnitVelocityProvider);
+
     return SimpleDialog(
-      title: const Text('Threshold velocities'),
+      title: Text(strings.thresholdVelocities),
       children: [
         Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Min velocity: ${(thresholdVelocities.minVelocity * 3.6).toStringAsFixed(1)} km/h',
+              '${strings.min} ${strings.velocity.toLowerCase()}: ${(thresholdVelocities.minVelocity * 3.6).toStringAsFixed(1)} km/h',
               style: textTheme.bodyLarge,
             ),
             Text(
-              'Autosteering disabled below threshold.',
+              strings.autosteeringDisabledBelowThreshold,
               style: textTheme.bodySmall,
             ),
             Slider(
@@ -1652,11 +1683,11 @@ class __ThresholdVelocitiesDialogState
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Max velocity: ${(thresholdVelocities.maxVelocity * 3.6).toStringAsFixed(1)} km/h',
+              '${strings.max} ${strings.velocity.toLowerCase()}: ${(thresholdVelocities.maxVelocity * 3.6).toStringAsFixed(1)} km/h',
               style: textTheme.bodyLarge,
             ),
             Text(
-              'Autosteering disabled above threshold.',
+              strings.autosteeringDisabledAboveThreshold,
               style: textTheme.bodySmall,
             ),
             Slider(
@@ -1676,13 +1707,19 @@ class __ThresholdVelocitiesDialogState
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Max reversing velocity: ${(thresholdVelocities.maxReversingVelocity * 3.6).toStringAsFixed(1)} km/h',
+              strings.maxReversingVelocity(
+                velocityUnit.fromUnit(thresholdVelocities.maxReversingVelocity),
+                strings.unitVelocityDisplay(velocityUnit.symbol),
+              ),
               style: textTheme.bodyLarge,
             ),
             ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 300),
               child: Text(
-                '''Autosteering disabled above threshold. Set to 0 to completely disable in reverse.''',
+                [
+                  strings.autosteeringDisabledAboveThreshold,
+                  strings.setToZeroToDisableInReverse,
+                ].join(' '),
                 style: textTheme.bodySmall,
                 textAlign: .center,
               ),
@@ -1703,11 +1740,13 @@ class __ThresholdVelocitiesDialogState
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Max angular velocity: ${thresholdVelocities.maxAngularVelocity.round()} °/s',
+              strings.maxAngularVelocity(
+                thresholdVelocities.maxAngularVelocity.round(),
+              ),
               style: textTheme.bodyLarge,
             ),
             Text(
-              'Autosteering limits steering to stay below this.',
+              strings.autosteeringAngularVelocityDescription,
               style: textTheme.bodySmall,
             ),
             Slider(
@@ -1732,12 +1771,12 @@ class __ThresholdVelocitiesDialogState
               runSpacing: 8,
               children: [
                 ElevatedButton.icon(
-                  label: const Text('Cancel'),
+                  label: Text(strings.cancel),
                   icon: const Icon(Icons.clear),
                   onPressed: () => Navigator.of(context).pop(),
                 ),
                 FilledButton.icon(
-                  label: const Text('Confirm'),
+                  label: Text(strings.confirm),
                   icon: const Icon(Icons.check),
                   onPressed: () {
                     final oldValues = ref.read(

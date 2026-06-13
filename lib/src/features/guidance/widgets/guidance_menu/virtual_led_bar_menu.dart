@@ -20,6 +20,7 @@ import 'dart:ui';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,13 +31,14 @@ class VirtualLedBarMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final textStyle = theme.menuButtonWithChildrenText;
 
     final config = ref.watch(virtualLedBarConfigurationProvider);
 
     return MenuButtonWithChildren(
-      text: 'Virtual LED bar',
+      text: strings.virtualLedBar,
       icon: Icons.light_mode,
       menuChildren: [
         Consumer(
@@ -47,11 +49,11 @@ class VirtualLedBarMenu extends ConsumerWidget {
                       .read(virtualLedBarEnabledProvider.notifier)
                       .update(value: value)
                 : null,
-            secondary: Text('Enabled', style: textStyle),
+            secondary: Text(strings.enabled, style: textStyle),
           ),
         ),
         _LedCountSelector(
-          text: 'Center LEDs',
+          text: strings.centerLeds,
           count: config.centerCount,
           onChanged: (value) => ref
               .read(virtualLedBarConfigurationProvider.notifier)
@@ -72,18 +74,18 @@ class VirtualLedBarMenu extends ConsumerWidget {
                           ),
                         )
                   : null,
-              secondary: Text('Active center', style: textStyle),
+              secondary: Text(strings.activeCenter, style: textStyle),
             ),
           ),
         _LedCountSelector(
-          text: 'Intermediate LEDs',
+          text: strings.intermediateLeds,
           count: config.intermediateCount,
           onChanged: (value) => ref
               .read(virtualLedBarConfigurationProvider.notifier)
               .update(config.copyWith(intermediateCount: value)),
         ),
         _LedCountSelector(
-          text: 'End LEDs',
+          text: strings.endLeds,
           count: config.endCount,
           onChanged: (value) => ref
               .read(virtualLedBarConfigurationProvider.notifier)
@@ -96,7 +98,7 @@ class VirtualLedBarMenu extends ConsumerWidget {
               builder: (context, setState) => Column(
                 children: [
                   Text(
-                    'Distance / LED: ${(distancePerLed * 100).round()} cm',
+                    '''${strings.distancePerLed}: ${(distancePerLed * 100).round()} cm''',
                     style: textStyle,
                   ),
                   Slider(
@@ -125,7 +127,7 @@ class VirtualLedBarMenu extends ConsumerWidget {
             return StatefulBuilder(
               builder: (context, setState) => Column(
                 children: [
-                  Text('LED Size: ${size.round()}', style: textStyle),
+                  Text('${strings.ledSize}: ${size.round()}', style: textStyle),
                   Slider(
                     value: size,
                     onChanged: (value) => setState(() => size = value),
@@ -149,7 +151,10 @@ class VirtualLedBarMenu extends ConsumerWidget {
             return StatefulBuilder(
               builder: (context, setState) => Column(
                 children: [
-                  Text('Bar width: ${width.round()}', style: textStyle),
+                  Text(
+                    '${strings.barWidth}: ${width.round()}',
+                    style: textStyle,
+                  ),
                   Slider(
                     value: width,
                     onChanged: (value) => setState(() => width = value),
@@ -179,7 +184,7 @@ class VirtualLedBarMenu extends ConsumerWidget {
                         config.copyWith(showInactiveLeds: !value),
                       )
                 : null,
-            secondary: Text('Hide unlit LEDs', style: textStyle),
+            secondary: Text(strings.hideUnlitLeds, style: textStyle),
           ),
         ),
         Consumer(
@@ -192,7 +197,7 @@ class VirtualLedBarMenu extends ConsumerWidget {
                       )
                       .update(config.copyWith(reverseBar: value))
                 : null,
-            secondary: Text('Reverse bar', style: textStyle),
+            secondary: Text(strings.invertLedBar, style: textStyle),
           ),
         ),
         Consumer(
@@ -203,7 +208,7 @@ class VirtualLedBarMenu extends ConsumerWidget {
                       .read(virtualLedBarTestingProvider.notifier)
                       .update(value: value)
                 : null,
-            secondary: Text('Test', style: textStyle),
+            secondary: Text(strings.test, style: textStyle),
           ),
         ),
         Consumer(
@@ -222,7 +227,7 @@ class VirtualLedBarMenu extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Test distance: ${distance.toStringAsFixed(2)} m',
+                    '${strings.testDistance}: ${distance.toStringAsFixed(2)} m',
                     style: textStyle,
                   ),
                   Slider.adaptive(

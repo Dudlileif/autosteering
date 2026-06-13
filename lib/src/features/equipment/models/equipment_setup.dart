@@ -28,7 +28,7 @@ class EquipmentSetup {
     required this.name,
     this.frontFixedChild,
     this.rearFixedChild,
-    this.rearTowbarChild,
+    this.rearDrawbarChild,
     DateTime? lastUsed,
   }) : lastUsed = lastUsed ?? DateTime.now();
 
@@ -49,9 +49,9 @@ class EquipmentSetup {
           )
         : null;
 
-    final rearTowbarChild = json['rear_towbar_child'] != null
+    final rearDrawbarChild = json['rear_drawbar_child'] != null
         ? Equipment.fromJson(
-            Map<String, dynamic>.from(json['rear_towbar_child'] as Map),
+            Map<String, dynamic>.from(json['rear_drawbar_child'] as Map),
           )
         : null;
 
@@ -60,7 +60,7 @@ class EquipmentSetup {
       lastUsed: lastUsed,
       frontFixedChild: frontFixedChild,
       rearFixedChild: rearFixedChild,
-      rearTowbarChild: rearTowbarChild,
+      rearDrawbarChild: rearDrawbarChild,
     );
   }
 
@@ -73,8 +73,8 @@ class EquipmentSetup {
   /// The rear fixed [Hitchable] of the setup.
   Hitchable? rearFixedChild;
 
-  /// The rear towbar [Hitchable] of the setup.
-  Hitchable? rearTowbarChild;
+  /// The rear drawbar [Hitchable] of the setup.
+  Hitchable? rearDrawbarChild;
 
   /// The last time the setup was used/saved.
   DateTime lastUsed;
@@ -87,8 +87,8 @@ class EquipmentSetup {
     if (rearFixedChild != null) {
       parent.attachChild(rearFixedChild!);
     }
-    if (rearTowbarChild != null) {
-      parent.attachChild(rearTowbarChild!, Hitch.rearTowbar);
+    if (rearDrawbarChild != null) {
+      parent.attachChild(rearDrawbarChild!, Hitch.rearDrawbar);
     }
   }
 
@@ -100,7 +100,7 @@ class EquipmentSetup {
         ..copyWith(
           hitchFrontFixedChild: frontFixedChild!.hitchFrontFixedChild,
           hitchRearFixedChild: frontFixedChild!.hitchRearFixedChild,
-          hitchRearTowbarChild: frontFixedChild!.hitchRearTowbarChild,
+          hitchRearDrawbarChild: frontFixedChild!.hitchRearDrawbarChild,
         );
       updated = true;
     } else if (rearFixedChild?.uuid == child.uuid) {
@@ -108,22 +108,22 @@ class EquipmentSetup {
         ..copyWith(
           hitchFrontFixedChild: rearFixedChild!.hitchFrontFixedChild,
           hitchRearFixedChild: rearFixedChild!.hitchRearFixedChild,
-          hitchRearTowbarChild: rearFixedChild!.hitchRearTowbarChild,
+          hitchRearDrawbarChild: rearFixedChild!.hitchRearDrawbarChild,
         );
       updated = true;
-    } else if (rearTowbarChild?.uuid == child.uuid) {
-      rearTowbarChild = child
+    } else if (rearDrawbarChild?.uuid == child.uuid) {
+      rearDrawbarChild = child
         ..copyWith(
-          hitchFrontFixedChild: rearTowbarChild!.hitchFrontFixedChild,
-          hitchRearFixedChild: rearTowbarChild!.hitchRearFixedChild,
-          hitchRearTowbarChild: rearTowbarChild!.hitchRearTowbarChild,
+          hitchFrontFixedChild: rearDrawbarChild!.hitchFrontFixedChild,
+          hitchRearFixedChild: rearDrawbarChild!.hitchRearFixedChild,
+          hitchRearDrawbarChild: rearDrawbarChild!.hitchRearDrawbarChild,
         );
       updated = true;
     } else {
       updated =
           (frontFixedChild?.updateChild(child) ?? false) ||
           (rearFixedChild?.updateChild(child) ?? false) ||
-          (rearTowbarChild?.updateChild(child) ?? false);
+          (rearDrawbarChild?.updateChild(child) ?? false);
     }
     return updated;
   }
@@ -139,9 +139,9 @@ class EquipmentSetup {
         rearFixedChild!,
         ...rearFixedChild!.hitchChildrenRecursively,
       ],
-      if (rearTowbarChild != null) ...[
-        rearTowbarChild!,
-        ...rearTowbarChild!.hitchChildrenRecursively,
+      if (rearDrawbarChild != null) ...[
+        rearDrawbarChild!,
+        ...rearDrawbarChild!.hitchChildrenRecursively,
       ],
     ];
 
@@ -157,8 +157,8 @@ class EquipmentSetup {
     if (child.uuid == rearFixedChild?.uuid) {
       return Hitch.rearFixed;
     }
-    if (child.uuid == rearTowbarChild?.uuid) {
-      return Hitch.rearTowbar;
+    if (child.uuid == rearDrawbarChild?.uuid) {
+      return Hitch.rearDrawbar;
     }
     final recursiveChild = allAttached.firstWhereOrNull(
       (element) => element.uuid == child.uuid,
@@ -172,7 +172,7 @@ class EquipmentSetup {
     'last_used': lastUsed.toIso8601String(),
     'front_fixed_child': frontFixedChild?.toJsonWithChildren(),
     'rear_fixed_child': rearFixedChild?.toJsonWithChildren(),
-    'rear_towbar_child': rearTowbarChild?.toJsonWithChildren(),
+    'rear_drawbar_child': rearDrawbarChild?.toJsonWithChildren(),
   };
 }
 
@@ -186,6 +186,6 @@ extension EquipmentSetupOfHitchable on Hitchable {
     name: name,
     frontFixedChild: hitchFrontFixedChild,
     rearFixedChild: hitchRearFixedChild,
-    rearTowbarChild: hitchRearTowbarChild,
+    rearDrawbarChild: hitchRearDrawbarChild,
   );
 }

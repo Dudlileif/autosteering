@@ -60,7 +60,7 @@ sealed class Vehicle extends Hitchable {
     this.thresholdVelocities = const ThresholdVelocities(),
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
-    super.hitchRearTowbarChild,
+    super.hitchRearDrawbarChild,
     super.name,
     super.uuid,
     Imu? imu,
@@ -118,9 +118,9 @@ sealed class Vehicle extends Hitchable {
             Map<String, dynamic>.from(children!['rear_fixed']!),
           )
         : null;
-    final hitchRearTowbarChild = children?['rear_towbar'] != null
+    final hitchRearDrawbarChild = children?['rear_drawbar'] != null
         ? Equipment.fromJson(
-            Map<String, dynamic>.from(children!['rear_towbar']!),
+            Map<String, dynamic>.from(children!['rear_drawbar']!),
           )
         : null;
 
@@ -130,8 +130,8 @@ sealed class Vehicle extends Hitchable {
     if (hitchRearFixedChild != null) {
       vehicle.attachChild(hitchRearFixedChild);
     }
-    if (hitchRearTowbarChild != null) {
-      vehicle.attachChild(hitchRearTowbarChild, Hitch.rearTowbar);
+    if (hitchRearDrawbarChild != null) {
+      vehicle.attachChild(hitchRearDrawbarChild, Hitch.rearDrawbar);
     }
 
     final steering = Map<String, dynamic>.from(json['steering'] as Map);
@@ -778,7 +778,7 @@ sealed class Vehicle extends Hitchable {
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,
     Hitchable? hitchRearFixedChild,
-    Hitchable? hitchRearTowbarChild,
+    Hitchable? hitchRearDrawbarChild,
     String? name,
     String? uuid,
     DateTime? lastUsed,

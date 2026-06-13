@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,12 +27,16 @@ class VehicleWheelsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final vehicle = ref.watch(configuredVehicleProvider);
 
     final children = [
       Center(
-        child: Text('Wheels', style: Theme.of(context).textTheme.titleLarge),
+        child: Text(
+          strings.wheels(0),
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
       ),
       ...switch (vehicle) {
         AxleSteeredVehicle() => [
@@ -41,11 +46,13 @@ class VehicleWheelsPage extends ConsumerWidget {
                 quarterTurns: 1,
                 child: Icon(Icons.expand),
               ),
-              labelText:
-                  '${switch (vehicle) {
-                    Tractor() => 'Front',
-                    Harvester() => 'Rear',
-                  }} wheel width',
+              labelText: [
+                switch (vehicle) {
+                  Tractor() => strings.front,
+                  Harvester() => strings.rear,
+                },
+                strings.wheelWidth,
+              ].join(' '),
               suffixText: 'm',
             ),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -69,11 +76,13 @@ class VehicleWheelsPage extends ConsumerWidget {
                 quarterTurns: 1,
                 child: Icon(Icons.expand),
               ),
-              labelText:
-                  '${switch (vehicle) {
-                    Tractor() => 'Rear',
-                    Harvester() => 'Front',
-                  }} wheel width',
+              labelText: [
+                switch (vehicle) {
+                  Tractor() => strings.rear,
+                  Harvester() => strings.front,
+                },
+                strings.wheelWidth,
+              ].join(' '),
               suffixText: 'm',
             ),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -96,11 +105,13 @@ class VehicleWheelsPage extends ConsumerWidget {
               icon: const Stack(
                 children: [Icon(Icons.expand), Icon(Icons.circle_outlined)],
               ),
-              labelText:
-                  '${switch (vehicle) {
-                    Tractor() => 'Front',
-                    Harvester() => 'Rear',
-                  }} wheel diameter',
+              labelText: [
+                switch (vehicle) {
+                  Tractor() => strings.front,
+                  Harvester() => strings.rear,
+                },
+                strings.wheelDiameter,
+              ].join(' '),
               suffixText: 'm',
             ),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -126,11 +137,13 @@ class VehicleWheelsPage extends ConsumerWidget {
               icon: const Stack(
                 children: [Icon(Icons.expand), Icon(Icons.circle_outlined)],
               ),
-              labelText:
-                  '${switch (vehicle) {
-                    Tractor() => 'Rear',
-                    Harvester() => 'Front',
-                  }} wheel diameter',
+              labelText: [
+                switch (vehicle) {
+                  Tractor() => strings.rear,
+                  Harvester() => strings.front,
+                },
+                strings.wheelDiameter,
+              ].join(' '),
               suffixText: 'm',
             ),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -151,9 +164,12 @@ class VehicleWheelsPage extends ConsumerWidget {
         ],
         ArticulatedTractor() => [
           TextFormField(
-            decoration: const InputDecoration(
-              icon: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
-              labelText: 'Wheel width',
+            decoration: InputDecoration(
+              icon: const RotatedBox(
+                quarterTurns: 1,
+                child: Icon(Icons.expand),
+              ),
+              labelText: strings.wheelWidth,
               suffixText: 'm',
             ),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -171,11 +187,11 @@ class VehicleWheelsPage extends ConsumerWidget {
             },
           ),
           TextFormField(
-            decoration: const InputDecoration(
-              icon: Stack(
+            decoration: InputDecoration(
+              icon: const Stack(
                 children: [Icon(Icons.expand), Icon(Icons.circle_outlined)],
               ),
-              labelText: 'Wheel diameter',
+              labelText: strings.wheelDiameter,
               suffixText: 'm',
             ),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -199,10 +215,7 @@ class VehicleWheelsPage extends ConsumerWidget {
         spacing: 8,
         runSpacing: 8,
         children: [
-          const Text('''
-Number of wheels,
-i.e. does your vehicle have twin 
-or triple wheels'''),
+          Text(strings.numberOfWheelsDescription),
           const VerticalDivider(),
           SegmentedButton<int>(
             style: theme.segmentedButtonTheme.style?.copyWith(
@@ -225,9 +238,9 @@ or triple wheels'''),
       ),
       if (vehicle.numWheels > 1)
         TextFormField(
-          decoration: const InputDecoration(
-            icon: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
-            labelText: 'Wheel spacing',
+          decoration: InputDecoration(
+            icon: const RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
+            labelText: strings.wheelSpacing,
             suffixText: 'm',
           ),
           keyboardType: const TextInputType.numberWithOptions(decimal: true),

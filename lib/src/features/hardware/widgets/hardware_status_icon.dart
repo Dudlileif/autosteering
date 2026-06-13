@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/hardware/hardware.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -31,11 +32,13 @@ class HardwareStatusIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
+
     return Consumer(
       builder: (context, ref, child) => Tooltip(
         message: ref.watch(hardwareAliveProvider)
-            ? 'HW connected'
-            : 'HW not connected',
+            ? strings.hardwareConnected
+            : strings.hardwareNotConnected,
         child: Icon(
           Icons.router,
           size: size,

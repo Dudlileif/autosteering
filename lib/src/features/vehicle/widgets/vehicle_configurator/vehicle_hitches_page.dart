@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,22 +27,25 @@ class VehicleHitchesPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final vehicle = ref.watch(configuredVehicleProvider);
 
     final children = [
       Center(
-        child: Text('Hitches', style: Theme.of(context).textTheme.titleLarge),
+        child: Text(
+          strings.hitches(0),
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
       ),
       ...switch (vehicle) {
         AxleSteeredVehicle() => [
           TextFormField(
             decoration: InputDecoration(
               icon: const Icon(Icons.expand),
-              labelText:
-                  '${switch (vehicle) {
-                    Tractor() => 'Rear',
-                    Harvester() => 'Front',
-                  }} axle to front hitch distance',
+              labelText: switch (vehicle) {
+                Tractor() => strings.rearAxleToFrontHitchDistance,
+                Harvester() => strings.frontAxleToFrontHitchDistance,
+              },
               suffixText: 'm',
             ),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -65,11 +69,10 @@ class VehicleHitchesPage extends ConsumerWidget {
           TextFormField(
             decoration: InputDecoration(
               icon: const Icon(Icons.expand),
-              labelText:
-                  '${switch (vehicle) {
-                    Tractor() => 'Rear',
-                    Harvester() => 'Front',
-                  }} axle to rear hitch distance',
+              labelText: switch (vehicle) {
+                Tractor() => strings.rearAxleToRearHitchDistance,
+                Harvester() => strings.frontAxleToRearHitchDistance,
+              },
               suffixText: 'm',
             ),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -93,18 +96,17 @@ class VehicleHitchesPage extends ConsumerWidget {
           TextFormField(
             decoration: InputDecoration(
               icon: const Icon(Icons.expand),
-              labelText:
-                  '${switch (vehicle) {
-                    Tractor() => 'Rear',
-                    Harvester() => 'Front',
-                  }} axle to rear towbar distance',
+              labelText: switch (vehicle) {
+                Tractor() => strings.rearAxleToRearDrawbarDistance,
+                Harvester() => strings.frontAxleToRearDrawbarDistance,
+              },
               suffixText: 'm',
             ),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
                 (value) => (value as AxleSteeredVehicle)
-                    .solidAxleToRearTowbarDistance
+                    .solidAxleToRearDrawbarDistance
                     ?.toString(),
               ),
             ),
@@ -114,16 +116,16 @@ class VehicleHitchesPage extends ConsumerWidget {
               ref
                   .read(configuredVehicleProvider.notifier)
                   .update(
-                    vehicle..solidAxleToRearTowbarDistance = distance?.abs(),
+                    vehicle..solidAxleToRearDrawbarDistance = distance?.abs(),
                   );
             },
           ),
         ],
         ArticulatedTractor() => [
           TextFormField(
-            decoration: const InputDecoration(
-              icon: Icon(Icons.expand),
-              labelText: 'Front axle to front hitch distance',
+            decoration: InputDecoration(
+              icon: const Icon(Icons.expand),
+              labelText: strings.frontAxleToFrontHitchDistance,
               suffixText: 'm',
             ),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -143,9 +145,9 @@ class VehicleHitchesPage extends ConsumerWidget {
             },
           ),
           TextFormField(
-            decoration: const InputDecoration(
-              icon: Icon(Icons.expand),
-              labelText: 'Rear axle to rear hitch distance',
+            decoration: InputDecoration(
+              icon: const Icon(Icons.expand),
+              labelText: strings.rearAxleToRearHitchDistance,
               suffixText: 'm',
             ),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -164,16 +166,16 @@ class VehicleHitchesPage extends ConsumerWidget {
             },
           ),
           TextFormField(
-            decoration: const InputDecoration(
-              icon: Icon(Icons.expand),
-              labelText: 'Rear axle to rear towbar distance',
+            decoration: InputDecoration(
+              icon: const Icon(Icons.expand),
+              labelText: strings.rearAxleToRearDrawbarDistance,
               suffixText: 'm',
             ),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
                 (value) => (value as ArticulatedTractor)
-                    .rearAxleToTowbarDistance
+                    .rearAxleToDrawbarDistance
                     ?.toString(),
               ),
             ),
@@ -182,7 +184,7 @@ class VehicleHitchesPage extends ConsumerWidget {
 
               ref
                   .read(configuredVehicleProvider.notifier)
-                  .update(vehicle..rearAxleToTowbarDistance = distance?.abs());
+                  .update(vehicle..rearAxleToDrawbarDistance = distance?.abs());
             },
           ),
         ],

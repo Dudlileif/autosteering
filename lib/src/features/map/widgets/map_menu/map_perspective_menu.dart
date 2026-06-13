@@ -18,6 +18,7 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,14 +29,16 @@ class MapPerspectiveMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
+
     return MenuButtonWithChildren(
       hideInDadMode: true,
       icon: Icons.threed_rotation,
-      text: 'Perspective',
+      text: strings.perspective,
       menuChildren: [
         Consumer(
           child: Text(
-            'Enable 3D',
+            strings.enable3d,
             style: Theme.of(context).menuButtonWithChildrenText,
           ),
           builder: (context, ref, child) {

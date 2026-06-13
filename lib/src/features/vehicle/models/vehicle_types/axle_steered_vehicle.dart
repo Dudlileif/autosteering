@@ -32,7 +32,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     required super.steeringAngleMax,
     this.solidAxleToFrontHitchDistance,
     this.solidAxleToRearHitchDistance,
-    this.solidAxleToRearTowbarDistance,
+    this.solidAxleToRearDrawbarDistance,
     this.ackermannSteeringRatio = 1,
     this.ackermannPercentage = 100,
     this.steeringAxleWheelDiameter = 1.1,
@@ -62,7 +62,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     super.wheelsRolledDistance,
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
-    super.hitchRearTowbarChild,
+    super.hitchRearDrawbarChild,
     super.name,
     super.uuid,
     super.lastUsed,
@@ -105,8 +105,8 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// The distance to the rear hitch point from the solid axle.
   double? solidAxleToRearHitchDistance;
 
-  /// The distance to the rear towbar hitch point from the solid axle.
-  double? solidAxleToRearTowbarDistance;
+  /// The distance to the rear drawbar hitch point from the solid axle.
+  double? solidAxleToRearDrawbarDistance;
 
   /// A modifier ratio for the Ackermann central angle. Defaults to 1.
   ///
@@ -175,10 +175,10 @@ sealed class AxleSteeredVehicle extends Vehicle {
       };
 
   @override
-  Geographic? get hitchRearTowbarPoint =>
-      switch (solidAxleToRearTowbarDistance != null) {
+  Geographic? get hitchRearDrawbarPoint =>
+      switch (solidAxleToRearDrawbarDistance != null) {
         true => solidAxlePosition.rhumb.destinationPoint(
-          distance: solidAxleToRearTowbarDistance!,
+          distance: solidAxleToRearDrawbarDistance!,
           bearing: bearing + 180,
         ),
         false => null,
@@ -697,7 +697,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     double? solidAxleWheelWidth,
     double? solidAxleToFrontHitchDistance,
     double? solidAxleToRearHitchDistance,
-    double? solidAxleToRearTowbarDistance,
+    double? solidAxleToRearDrawbarDistance,
     int? numWheels,
     double? wheelSpacing,
     Imu? imu,
@@ -720,7 +720,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,
     Hitchable? hitchRearFixedChild,
-    Hitchable? hitchRearTowbarChild,
+    Hitchable? hitchRearDrawbarChild,
     String? name,
     String? uuid,
     DateTime? lastUsed,
@@ -759,7 +759,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     map['hitches'] = {
       'solid_axle_to_front_hitch_distance': solidAxleToFrontHitchDistance,
       'solid_axle_to_rear_hitch_distance': solidAxleToRearHitchDistance,
-      'solid_axle_to_rear_towbar_distance': solidAxleToRearTowbarDistance,
+      'solid_axle_to_rear_drawbar_distance': solidAxleToRearDrawbarDistance,
     };
 
     return map;

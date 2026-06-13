@@ -25,6 +25,7 @@ import 'package:autosteering/src/features/hardware/widgets/hardware_serial_menu.
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -35,12 +36,14 @@ class HardwareMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     ref.watch(combinedCommunicationProvider);
     final dadMode = ref.watch(enableDadModeProvider);
 
     return MenuButtonWithChildren(
-      text: 'Hardware',
+      text: strings.hardware,
       icon: Icons.router,
       menuChildren: [
         if (!dadMode)
@@ -54,7 +57,7 @@ class HardwareMenu extends ConsumerWidget {
               context: context,
               builder: (context) => const HardwareNetworkDialog(),
             ),
-            child: Text('Network', style: textStyle),
+            child: Text(strings.network, style: textStyle),
           ),
         if (Device.isNative) const NtripMenu(),
         if (Device.supportsSerial) const HardwareSerialMenu(),
@@ -70,7 +73,7 @@ class HardwareMenu extends ConsumerWidget {
               context: context,
               builder: (context) => const RemoteControlConfigurator(),
             ),
-            child: Text('Remote control', style: textStyle),
+            child: Text(strings.remoteControl, style: textStyle),
           ),
         if (Device.isNative && !dadMode)
           Consumer(
@@ -80,7 +83,7 @@ class HardwareMenu extends ConsumerWidget {
                 padding: EdgeInsets.only(left: 8),
                 child: Icon(Icons.upload),
               ),
-              child: Text('Send GNSS config', style: textStyle),
+              child: Text(strings.sendGnssConfig, style: textStyle),
               onPressed: () => showDialog<void>(
                 context: context,
                 builder: (context) => const _GnssConfigDialog(),
@@ -94,11 +97,11 @@ class HardwareMenu extends ConsumerWidget {
               padding: EdgeInsets.only(left: 8),
               child: Icon(Icons.download),
             ),
-            child: Text('Get hardware config', style: textStyle),
+            child: Text(strings.getHardwareConfig, style: textStyle),
             onPressed: () => showDialog<void>(
               context: context,
               builder: (context) => ConfirmationDialog(
-                title: 'Get hardware config?',
+                title: '${strings.getHardwareConfig}?',
                 onConfirmation: () async =>
                     ref.read(getSteeringHardwareConfigProvider),
               ),
@@ -111,11 +114,11 @@ class HardwareMenu extends ConsumerWidget {
               padding: EdgeInsets.only(left: 8),
               child: Icon(Icons.upload),
             ),
-            child: Text('Send hardware config', style: textStyle),
+            child: Text(strings.sendHardwareConfig, style: textStyle),
             onPressed: () => showDialog<void>(
               context: context,
               builder: (context) => ConfirmationDialog(
-                title: 'Send hardware config?',
+                title: '${strings.sendHardwareConfig}?',
                 onConfirmation: () async =>
                     ref.read(sendSteeringHardwareConfigProvider),
               ),
@@ -123,7 +126,7 @@ class HardwareMenu extends ConsumerWidget {
           ),
         if (!dadMode)
           Consumer(
-            child: Text('Calibrate motor', style: textStyle),
+            child: Text(strings.calibrateMotor, style: textStyle),
             builder: (context, ref, child) {
               return CheckboxListTile(
                 secondary: child,
@@ -172,8 +175,10 @@ class __GnssConfigDialogState extends ConsumerState<_GnssConfigDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
+
     return ConfirmationDialog(
-      title: 'Send GNSS config?',
+      title: '${strings.sendGnssConfig}?',
       content: SingleChildScrollView(
         child: TextField(minLines: 5, maxLines: 20, controller: controller),
       ),

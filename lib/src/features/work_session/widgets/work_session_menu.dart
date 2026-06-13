@@ -27,6 +27,7 @@ import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,11 +44,13 @@ class WorkSessionMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final dadMode = ref.watch(enableDadModeProvider);
     final theme = Theme.of(context);
     final textStyle = theme.menuButtonWithChildrenText;
+
     return MenuButtonWithChildren(
-      text: 'Work session',
+      text: strings.workSession,
       icon: Icons.work_outline,
       menuChildren: [
         if (ref.watch(
@@ -63,11 +66,11 @@ class WorkSessionMenu extends ConsumerWidget {
               context: context,
               builder: (context) => const _CloseDialog(),
             ),
-            child: Text('Close', style: textStyle),
+            child: Text(strings.close, style: textStyle),
           ),
           const _ExportButton(),
           Consumer(
-            child: Text('Rename', style: textStyle),
+            child: Text(strings.rename, style: textStyle),
             builder: (context, ref, child) => MenuItemButton(
               closeOnActivate: false,
               leadingIcon: const Padding(
@@ -86,7 +89,7 @@ class WorkSessionMenu extends ConsumerWidget {
               padding: EdgeInsets.only(left: 8),
               child: Icon(Icons.edit_note),
             ),
-            child: Text('Edit note', style: textStyle),
+            child: Text(strings.editNote, style: textStyle),
             onPressed: () => showDialog<void>(
               context: context,
               builder: (context) => const _EditNoteDialog(),
@@ -109,7 +112,7 @@ class WorkSessionMenu extends ConsumerWidget {
                 child: Icon(Icons.clear),
               ),
               child: Text(
-                'Close active guidance',
+                strings.closeActiveValue(strings.guidance.toLowerCase()),
                 style: Theme.of(context).menuButtonWithChildrenText,
               ),
             )
@@ -147,6 +150,8 @@ class __RenameDialogState extends ConsumerState<_RenameDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
+
     final otherSessionNames = ref.watch(
       savedWorkSessionsProvider.select(
         (value) => value.maybeWhen(
@@ -158,7 +163,7 @@ class __RenameDialogState extends ConsumerState<_RenameDialog> {
       ),
     );
     return SimpleDialog(
-      title: const Text('Name the work session'),
+      title: Text(strings.nameTheValue(strings.workSession.toLowerCase())),
       contentPadding: const EdgeInsets.only(
         left: 24,
         top: 12,
@@ -169,9 +174,9 @@ class __RenameDialogState extends ConsumerState<_RenameDialog> {
         Padding(
           padding: const EdgeInsets.all(8),
           child: TextFormField(
-            decoration: const InputDecoration(
-              icon: Icon(Icons.label_outline),
-              labelText: 'Name',
+            decoration: InputDecoration(
+              icon: const Icon(Icons.label_outline),
+              labelText: strings.name,
             ),
             initialValue: name,
             onChanged: (value) => setState(() => name = value.trim()),
@@ -179,9 +184,9 @@ class __RenameDialogState extends ConsumerState<_RenameDialog> {
             keyboardType: TextInputType.text,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (value) => isBlank(value?.trim())
-                ? '''No name entered! Please enter a name so that the session can be saved!'''
+                ? strings.noNameEnteredValue(strings.workSession)
                 : otherSessionNames.any((element) => element == value?.trim())
-                ? 'Name already in use'
+                ? strings.nameAlreadyInUse
                 : null,
           ),
         ),
@@ -204,7 +209,7 @@ class __RenameDialogState extends ConsumerState<_RenameDialog> {
                         Navigator.of(context).pop();
                       }
                     : null,
-                child: const Text('Rename and save'),
+                child: Text(strings.renameAndSave),
               ),
             ),
           ),
@@ -221,10 +226,15 @@ class _CloseDialog extends ConsumerWidget {
     final theme = Theme.of(context);
     final workSession = ref.watch(activeWorkSessionProvider);
     if (workSession != null) {
+      final strings = AppLocalizations.of(context);
+
       return SimpleDialog(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [Text('Close ${workSession.name}'), const CloseButton()],
+          children: [
+            Text(strings.closeValue(workSession.name ?? workSession.uuid)),
+            const CloseButton(),
+          ],
         ),
         contentPadding: const EdgeInsets.only(
           left: 24,
@@ -240,7 +250,7 @@ class _CloseDialog extends ConsumerWidget {
               children: [
                 Column(
                   children: [
-                    Text('Start', style: theme.textTheme.titleLarge),
+                    Text(strings.start, style: theme.textTheme.titleLarge),
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
@@ -277,7 +287,7 @@ class _CloseDialog extends ConsumerWidget {
                             );
                           },
                           icon: const Icon(Icons.calendar_today),
-                          label: const Text('Set date'),
+                          label: Text(strings.setDate),
                         ),
                         ElevatedButton.icon(
                           onPressed: () {
@@ -306,7 +316,7 @@ class _CloseDialog extends ConsumerWidget {
                             );
                           },
                           icon: const Icon(Icons.schedule),
-                          label: const Text('Set time of day'),
+                          label: Text(strings.setTimeOfDay),
                         ),
                       ],
                     ),
@@ -314,7 +324,7 @@ class _CloseDialog extends ConsumerWidget {
                 ),
                 Column(
                   children: [
-                    Text('End', style: theme.textTheme.titleLarge),
+                    Text(strings.end, style: theme.textTheme.titleLarge),
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
@@ -350,7 +360,7 @@ class _CloseDialog extends ConsumerWidget {
                             );
                           },
                           icon: const Icon(Icons.calendar_today),
-                          label: const Text('Set date'),
+                          label: Text(strings.setDate),
                         ),
                         ElevatedButton.icon(
                           onPressed: () {
@@ -379,7 +389,7 @@ class _CloseDialog extends ConsumerWidget {
                             );
                           },
                           icon: const Icon(Icons.schedule),
-                          label: const Text('Set time of day'),
+                          label: Text(strings.setTimeOfDay),
                         ),
                       ],
                     ),
@@ -399,7 +409,7 @@ class _CloseDialog extends ConsumerWidget {
                   ElevatedButton.icon(
                     onPressed: Navigator.of(context).pop,
                     icon: const Icon(Icons.clear),
-                    label: const Text('Cancel'),
+                    label: Text(strings.cancel),
                   ),
                   FilledButton.icon(
                     onPressed: () async {
@@ -439,7 +449,7 @@ class _CloseDialog extends ConsumerWidget {
                         );
                     },
                     icon: const Icon(Icons.check),
-                    label: const Text('Confirm'),
+                    label: Text(strings.confirm),
                   ),
                 ],
               ),
@@ -458,7 +468,9 @@ class _ExportButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     return MenuItemButton(
       leadingIcon: const Padding(
         padding: EdgeInsets.only(left: 8),
@@ -476,7 +488,7 @@ class _ExportButton extends ConsumerWidget {
               exportWorkSessionProvider(ref.watch(activeWorkSessionProvider)!),
             )
           : null,
-      child: Text('Export', style: textStyle),
+      child: Text(strings.exportAction, style: textStyle),
     );
   }
 }
@@ -486,6 +498,7 @@ class _ImportButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuItemButton(
@@ -495,7 +508,7 @@ class _ImportButton extends ConsumerWidget {
       ),
       closeOnActivate: false,
       onPressed: () => ref.read(importWorkSessionProvider),
-      child: Text('Import', style: textStyle),
+      child: Text(strings.importAction, style: textStyle),
     );
   }
 }
@@ -505,6 +518,8 @@ class _CreateWorkSessionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
+
     return MenuItemButton(
       closeOnActivate: false,
       leadingIcon: const Padding(
@@ -512,7 +527,7 @@ class _CreateWorkSessionButton extends StatelessWidget {
         child: Icon(Icons.add),
       ),
       child: Text(
-        'Create new',
+        strings.createNew,
         style: Theme.of(context).menuButtonWithChildrenText,
       ),
       onPressed: () => showDialog<void>(
@@ -539,6 +554,8 @@ class _CreateWorkSessionDialogState
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
+
     final workSessions = ref
         .watch(savedWorkSessionsProvider)
         .maybeWhen(
@@ -575,18 +592,18 @@ class _CreateWorkSessionDialogState
     final name = ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 300),
       child: TextFormField(
-        decoration: const InputDecoration(
-          label: Text('Name'),
-          prefixIcon: Icon(Icons.label_outline),
+        decoration: InputDecoration(
+          label: Text(strings.name),
+          prefixIcon: const Icon(Icons.label_outline),
         ),
         initialValue: workSession.name,
         onChanged: (value) => setState(() => workSession.name = value.trim()),
         keyboardType: TextInputType.text,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         validator: (value) => isBlank(value?.trim())
-            ? 'Enter a name for the session'
+            ? strings.nameTheValue(strings.workSession)
             : workSessions.any((e) => e.name == value?.trim())
-            ? 'Name already in use'
+            ? strings.nameAlreadyInUse
             : null,
       ),
     );
@@ -598,7 +615,7 @@ class _CreateWorkSessionDialogState
         alignment: Alignment.center,
         children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
       ),
-      hintText: 'Field',
+      hintText: strings.field,
       onSelected: (value) => setState(() => workSession.field = value),
       initialSelection: fields.firstWhereOrNull(
         (element) => element.uuid == workSession.field?.uuid,
@@ -612,7 +629,7 @@ class _CreateWorkSessionDialogState
       controller: equipmentSetupController,
       width: 300,
       leadingIcon: const Icon(Icons.handyman),
-      hintText: 'Equipment setup',
+      hintText: strings.equipmentSetup,
       onSelected: (value) => setState(() => workSession.equipmentSetup = value),
       initialSelection: equipmentSetups.firstWhereOrNull(
         (element) => element.name == workSession.equipmentSetup?.name,
@@ -630,15 +647,15 @@ class _CreateWorkSessionDialogState
     final fromSession = DropdownMenu<WorkSession>(
       enabled: workSessions.isNotEmpty,
       leadingIcon: const Icon(Icons.work_outline),
-      helperText: 'Copy field, equipment and guidance from this.',
-      hintText: 'Copy from work session',
+      helperText: strings.copyWorkSessionDescription,
+      hintText: strings.copyFromValue(strings.workSession.toLowerCase()),
       width: 300,
       dropdownMenuEntries: workSessions
           .map(
             (session) => DropdownMenuEntry(
-              label: session.name ?? 'No name',
+              label: session.name ?? strings.noName,
               labelWidget: ListTile(
-                title: Text(session.name ?? 'No name'),
+                title: Text(session.name ?? strings.noName),
                 subtitle: Builder(
                   builder: (context) {
                     var text = '';
@@ -692,7 +709,7 @@ class _CreateWorkSessionDialogState
               runSpacing: 8,
               children: [
                 Text(
-                  'Create work session',
+                  strings.createValue(strings.workSession.toLowerCase()),
                   style: theme.textTheme.headlineSmall,
                 ),
               ],
@@ -741,7 +758,7 @@ class _CreateWorkSessionDialogState
                 ElevatedButton.icon(
                   onPressed: () => Navigator.of(context).pop(),
                   icon: const Icon(Icons.cancel),
-                  label: const Text('Cancel'),
+                  label: Text(strings.cancel),
                 ),
                 FilledButton.icon(
                   onPressed:
@@ -775,7 +792,7 @@ class _CreateWorkSessionDialogState
                         }
                       : null,
                   icon: const Icon(Icons.check),
-                  label: const Text('Create'),
+                  label: Text(strings.create),
                 ),
               ],
             ),
@@ -807,9 +824,10 @@ class _LoadWorkSessionMenu extends ConsumerWidget {
     if (workSessionYears.isEmpty) {
       return const SizedBox.shrink();
     }
+    final strings = AppLocalizations.of(context);
 
     return MenuButtonWithChildren(
-      text: 'Load',
+      text: strings.load,
       icon: Icons.history,
       menuChildren: workSessionYears.entries
           .map(
@@ -830,12 +848,13 @@ class _WorkSessionMenuItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return ConstrainedBox(
       constraints: const BoxConstraints(minWidth: 200),
       child: ListTile(
-        title: Text(workSession.name ?? 'No name', style: textStyle),
+        title: Text(workSession.name ?? strings.noName, style: textStyle),
         subtitle: Builder(
           builder: (context) {
             var text = '';
@@ -963,7 +982,7 @@ class _WorkSessionMenuItem extends ConsumerWidget {
                     context: context,
                     builder: (context) => Consumer(
                       builder: (context, ref, child) => DeleteDialog(
-                        name: workSession.name ?? 'Session',
+                        name: workSession.name ?? strings.workSession,
                         onDelete: () async => await ref.watch(
                           deleteWorkSessionProvider(workSession).future,
                         ),
@@ -984,12 +1003,13 @@ class _ABTrackingMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
     final trackings = ref.watch(activeWorkSessionProvider)?.abTracking;
     if (trackings != null && trackings.isNotEmpty) {
       return MenuButtonWithChildren(
-        text: 'AB Trackings',
+        text: strings.abTracking,
         iconOverrideWidget: SizedBox.square(
           dimension: 24,
           child: SvgPicture.asset(
@@ -1049,8 +1069,9 @@ class _ABTrackingMenu extends ConsumerWidget {
                         context: context,
                         builder: (context) => Consumer(
                           builder: (context, ref, child) => ConfirmationDialog(
-                            title:
-                                '''Remove ${tracking.name ?? tracking.uuid}?''',
+                            title: strings.removeValue(
+                              tracking.name ?? tracking.uuid,
+                            ),
                             onConfirmation: () async => ref
                                 .read(activeWorkSessionProvider.notifier)
                                 .removeABTracking(tracking.uuid),
@@ -1075,7 +1096,7 @@ class _ABTrackingMenu extends ConsumerWidget {
                       text += '${tracking.initialBearing.toStringAsFixed(0)}° ';
                     }
                     text += '| ${tracking.width} m |';
-                    text += ' ${tracking.lines.length} swaths';
+                    text += ''' ${tracking.lines.length} ${strings.swaths(tracking.lines.length)}''';
 
                     return Text(text);
                   },
@@ -1092,13 +1113,19 @@ class _ABTrackingMenu extends ConsumerWidget {
 class _RenameABTrackingDialog extends StatelessWidget {
   const _RenameABTrackingDialog(this.tracking);
   final ABTracking tracking;
+
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final controller = TextEditingController(text: tracking.name);
+
     return SimpleDialog(
-      title: const Row(
+      title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [Text('Rename AB Tracking'), CloseButton()],
+        children: [
+          Text(strings.renameValue(strings.abTracking)),
+          const CloseButton(),
+        ],
       ),
       contentPadding: const EdgeInsets.only(
         left: 24,
@@ -1108,7 +1135,7 @@ class _RenameABTrackingDialog extends StatelessWidget {
       ),
       children: [
         TextField(
-          decoration: const InputDecoration(labelText: 'Name'),
+          decoration: InputDecoration(labelText: strings.name),
           controller: controller,
         ),
         Padding(
@@ -1122,7 +1149,7 @@ class _RenameABTrackingDialog extends StatelessWidget {
                 ElevatedButton.icon(
                   onPressed: () => Navigator.of(context).pop(),
                   icon: const Icon(Icons.cancel),
-                  label: const Text('Cancel'),
+                  label: Text(strings.cancel),
                 ),
                 ListenableBuilder(
                   listenable: controller,
@@ -1139,7 +1166,7 @@ class _RenameABTrackingDialog extends StatelessWidget {
                             }
                           : null,
                       icon: const Icon(Icons.check),
-                      label: const Text('Rename'),
+                      label: Text(strings.rename),
                     ),
                   ),
                 ),
@@ -1157,12 +1184,13 @@ class _PathTrackingMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
     final trackings = ref.watch(activeWorkSessionProvider)?.pathTracking;
     if (trackings != null && trackings.isNotEmpty) {
       return MenuButtonWithChildren(
-        text: 'Path Trackings',
+        text: strings.pathTracking,
         icon: Icons.route,
         menuChildren: trackings
             .map(
@@ -1191,8 +1219,9 @@ class _PathTrackingMenu extends ConsumerWidget {
                         context: context,
                         builder: (context) => Consumer(
                           builder: (context, ref, child) => ConfirmationDialog(
-                            title:
-                                '''Remove ${tracking.name ?? tracking.uuid}?''',
+                            title: strings.removeValue(
+                              tracking.name ?? tracking.uuid,
+                            ),
                             onConfirmation: () async => ref
                                 .read(activeWorkSessionProvider.notifier)
                                 .removePathTracking(tracking.uuid),
@@ -1230,11 +1259,16 @@ class _RenamePathTrackingDialog extends StatelessWidget {
   final PathTracking tracking;
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final controller = TextEditingController(text: tracking.name);
+
     return SimpleDialog(
-      title: const Row(
+      title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [Text('Rename Path Tracking'), CloseButton()],
+        children: [
+          Text(strings.renameValue(strings.pathTracking.toLowerCase())),
+          const CloseButton(),
+        ],
       ),
       contentPadding: const EdgeInsets.only(
         left: 24,
@@ -1244,7 +1278,7 @@ class _RenamePathTrackingDialog extends StatelessWidget {
       ),
       children: [
         TextField(
-          decoration: const InputDecoration(labelText: 'Name'),
+          decoration: InputDecoration(labelText: strings.name),
           controller: controller,
         ),
         Padding(
@@ -1258,7 +1292,7 @@ class _RenamePathTrackingDialog extends StatelessWidget {
                 ElevatedButton.icon(
                   onPressed: () => Navigator.of(context).pop(),
                   icon: const Icon(Icons.cancel),
-                  label: const Text('Cancel'),
+                  label: Text(strings.cancel),
                 ),
                 ListenableBuilder(
                   listenable: controller,
@@ -1275,7 +1309,7 @@ class _RenamePathTrackingDialog extends StatelessWidget {
                             }
                           : null,
                       icon: const Icon(Icons.check),
-                      label: const Text('Rename'),
+                      label: Text(strings.rename),
                     ),
                   ),
                 ),
@@ -1293,13 +1327,15 @@ class _EditNoteDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final controller = TextEditingController(
       text: ref.read(activeWorkSessionProvider.select((value) => value?.note)),
     );
+
     return SimpleDialog(
-      title: const Row(
+      title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [Text('Edit note'), CloseButton()],
+        children: [Text(strings.editNote), const CloseButton()],
       ),
       contentPadding: const EdgeInsets.only(
         left: 24,
@@ -1309,7 +1345,7 @@ class _EditNoteDialog extends ConsumerWidget {
       ),
       children: [
         TextField(
-          decoration: const InputDecoration(labelText: 'Note'),
+          decoration: InputDecoration(labelText: strings.note),
           controller: controller,
           maxLines: null,
           minLines: 5,
@@ -1325,7 +1361,7 @@ class _EditNoteDialog extends ConsumerWidget {
                 ElevatedButton.icon(
                   onPressed: () => Navigator.of(context).pop(),
                   icon: const Icon(Icons.cancel),
-                  label: const Text('Cancel'),
+                  label: Text(strings.cancel),
                 ),
                 ListenableBuilder(
                   listenable: controller,
@@ -1342,7 +1378,7 @@ class _EditNoteDialog extends ConsumerWidget {
                         Navigator.of(context).pop();
                       },
                       icon: const Icon(Icons.check),
-                      label: const Text('Confirm'),
+                      label: Text(strings.confirm),
                     ),
                   ),
                 ),

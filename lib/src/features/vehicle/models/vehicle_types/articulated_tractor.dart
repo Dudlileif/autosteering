@@ -34,7 +34,7 @@ final class ArticulatedTractor extends Vehicle {
     required super.trackWidth,
     this.frontAxleToHitchDistance,
     this.rearAxleToHitchDistance = 1.9,
-    this.rearAxleToTowbarDistance = 1.6,
+    this.rearAxleToDrawbarDistance = 1.6,
     this.wheelDiameter = 1.8,
     this.wheelWidth = 1.3,
     super.wheelSpacing,
@@ -63,7 +63,7 @@ final class ArticulatedTractor extends Vehicle {
     super.wheelsRolledDistance,
     super.hitchFrontFixedChild,
     super.hitchRearFixedChild,
-    super.hitchRearTowbarChild,
+    super.hitchRearDrawbarChild,
     super.name,
     super.uuid,
     super.lastUsed,
@@ -107,8 +107,8 @@ final class ArticulatedTractor extends Vehicle {
           hitches['front_axle_to_front_hitch_distance'] as double?,
       rearAxleToHitchDistance:
           hitches['rear_axle_to_hitch_distance'] as double?,
-      rearAxleToTowbarDistance:
-          hitches['rear_axle_to_towbar_distance'] as double?,
+      rearAxleToDrawbarDistance:
+          hitches['rear_axle_to_drawbar_distance'] as double?,
     );
   }
 
@@ -130,8 +130,8 @@ final class ArticulatedTractor extends Vehicle {
   /// The distance from the rear axle to the rear fixed hitch point.
   double? rearAxleToHitchDistance;
 
-  /// The distance from the rear axle to the rear towbar hitch point.
-  double? rearAxleToTowbarDistance;
+  /// The distance from the rear axle to the rear drawbar hitch point.
+  double? rearAxleToDrawbarDistance;
 
   /// The diameter of the wheels.
   double wheelDiameter;
@@ -202,10 +202,10 @@ final class ArticulatedTractor extends Vehicle {
       };
 
   @override
-  Geographic? get hitchRearTowbarPoint =>
-      switch (rearAxleToTowbarDistance != null) {
+  Geographic? get hitchRearDrawbarPoint =>
+      switch (rearAxleToDrawbarDistance != null) {
         true => rearAxlePosition.rhumb.destinationPoint(
-          distance: rearAxleToTowbarDistance!,
+          distance: rearAxleToDrawbarDistance!,
           bearing: rearAxleAngle,
         ),
         false => null,
@@ -787,7 +787,7 @@ final class ArticulatedTractor extends Vehicle {
     double? pivotToRearAxle,
     double? frontAxleToHitchDistance,
     double? rearAxleToHitchDistance,
-    double? rearAxleToTowbarDistance,
+    double? rearAxleToDrawbarDistance,
     Geographic? antennaPosition,
     double? antennaHeight,
     double? antennaLateralOffset,
@@ -818,7 +818,7 @@ final class ArticulatedTractor extends Vehicle {
     Hitchable? hitchParent,
     Hitchable? hitchFrontFixedChild,
     Hitchable? hitchRearFixedChild,
-    Hitchable? hitchRearTowbarChild,
+    Hitchable? hitchRearDrawbarChild,
     String? name,
     String? uuid,
     DateTime? lastUsed,
@@ -839,8 +839,8 @@ final class ArticulatedTractor extends Vehicle {
         frontAxleToHitchDistance ?? this.frontAxleToHitchDistance,
     rearAxleToHitchDistance:
         rearAxleToHitchDistance ?? this.rearAxleToHitchDistance,
-    rearAxleToTowbarDistance:
-        rearAxleToTowbarDistance ?? this.rearAxleToTowbarDistance,
+    rearAxleToDrawbarDistance:
+        rearAxleToDrawbarDistance ?? this.rearAxleToDrawbarDistance,
     imu: imu ?? this.imu,
     was: was ?? this.was,
     gnssAntennaConfig: gnssAntennaConfig ?? this.gnssAntennaConfig,
@@ -861,7 +861,7 @@ final class ArticulatedTractor extends Vehicle {
     wheelsRolledDistance: wheelsRolledDistance ?? this.wheelsRolledDistance,
     hitchFrontFixedChild: hitchFrontFixedChild ?? this.hitchFrontFixedChild,
     hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
-    hitchRearTowbarChild: hitchRearTowbarChild ?? this.hitchRearTowbarChild,
+    hitchRearDrawbarChild: hitchRearDrawbarChild ?? this.hitchRearDrawbarChild,
     name: name ?? this.name,
     uuid: uuid ?? this.uuid,
     lastUsed: lastUsed ?? this.lastUsed,
@@ -890,7 +890,7 @@ final class ArticulatedTractor extends Vehicle {
     map['hitches'] = {
       'front_axle_to_front_hitch_distance': frontAxleToHitchDistance,
       'rear_axle_to_hitch_distance': rearAxleToHitchDistance,
-      'rear_axle_to_towbar_distance': rearAxleToTowbarDistance,
+      'rear_axle_to_drawbar_distance': rearAxleToDrawbarDistance,
     };
 
     return map;

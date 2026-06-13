@@ -25,6 +25,7 @@ import 'package:autosteering/src/features/map/widgets/map_menu/map_perspective_m
 import 'package:autosteering/src/features/map/widgets/map_menu/mini_map_menu.dart';
 import 'package:autosteering/src/features/map/widgets/map_menu/osm_layer_button.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
@@ -36,10 +37,12 @@ class MapMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MenuButtonWithChildren(
-      text: 'Map',
+    final strings = AppLocalizations.of(context);
+
+    return MenuButtonWithChildren(
+      text: strings.map,
       icon: Icons.map,
-      menuChildren: [
+      menuChildren: const [
         MiniMapMenu(),
         HomePositionMenu(),
         GridLayerButton(),
@@ -60,17 +63,21 @@ class _MapAllowDownloadTile extends ConsumerWidget {
   const _MapAllowDownloadTile();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => CheckboxListTile(
-    secondary: const Icon(Icons.download),
-    title: Text(
-      'Allow download',
-      style: Theme.of(context).menuButtonWithChildrenText,
-    ),
-    value: ref.watch(mapAllowDownloadProvider),
-    onChanged: (value) => value != null
-        ? ref.read(mapAllowDownloadProvider.notifier).update(value: value)
-        : null,
-  );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
+
+    return CheckboxListTile(
+      secondary: const Icon(Icons.download),
+      title: Text(
+        strings.allowDownload,
+        style: Theme.of(context).menuButtonWithChildrenText,
+      ),
+      value: ref.watch(mapAllowDownloadProvider),
+      onChanged: (value) => value != null
+          ? ref.read(mapAllowDownloadProvider.notifier).update(value: value)
+          : null,
+    );
+  }
 }
 
 class _CopernicusIDButton extends ConsumerWidget {
@@ -78,6 +85,7 @@ class _CopernicusIDButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final id = ref.watch(copernicusInstanceIdProvider);
 
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
@@ -86,7 +94,7 @@ class _CopernicusIDButton extends ConsumerWidget {
       return MenuButtonWithChildren(
         icon: Icons.check,
         hideInDadMode: true,
-        text: 'Copernicus ID',
+        text: strings.copernicusId,
         menuChildren: [
           MenuItemButton(
             closeOnActivate: false,
@@ -94,7 +102,7 @@ class _CopernicusIDButton extends ConsumerWidget {
               padding: EdgeInsets.only(left: 8),
               child: Icon(Icons.clear),
             ),
-            child: Text('Reset', style: textStyle),
+            child: Text(strings.reset, style: textStyle),
             onPressed: () =>
                 ref.read(copernicusInstanceIdProvider.notifier).update(null),
           ),
@@ -107,14 +115,14 @@ class _CopernicusIDButton extends ConsumerWidget {
         padding: EdgeInsets.only(left: 8),
         child: Icon(Icons.satellite_alt),
       ),
-      child: Text('Enter Copernicus ID', style: textStyle),
+      child: Text(strings.enterValue(strings.copernicusId), style: textStyle),
       onPressed: () => showDialog<void>(
         context: context,
         builder: (context) {
           var id = '';
           return StatefulBuilder(
             builder: (context, setState) => SimpleDialog(
-              title: const Text('Enter Copernicus ID'),
+              title: Text(strings.enterValue(strings.copernicusId)),
               contentPadding: const EdgeInsets.only(
                 left: 24,
                 top: 12,
@@ -123,9 +131,9 @@ class _CopernicusIDButton extends ConsumerWidget {
               ),
               children: [
                 TextFormField(
-                  decoration: const InputDecoration(
-                    icon: Icon(Icons.label_outline),
-                    labelText: 'Copernicus ID',
+                  decoration: InputDecoration(
+                    icon: const Icon(Icons.label_outline),
+                    labelText: strings.copernicusId,
                   ),
                   initialValue: id,
                   onChanged: (value) => setState(() => id = value),
@@ -135,7 +143,7 @@ class _CopernicusIDButton extends ConsumerWidget {
                   validator: (value) =>
                       value != null && Uuid.isValidUUID(fromString: value)
                       ? null
-                      : '''The entered ID must be a valid UUID.''',
+                      : strings.enteredIdMustBeAValidUuid,
                 ),
 
                 Padding(
@@ -149,7 +157,7 @@ class _CopernicusIDButton extends ConsumerWidget {
                         ElevatedButton.icon(
                           onPressed: () => Navigator.of(context).pop(),
                           icon: const Icon(Icons.clear),
-                          label: const Text('Cancel'),
+                          label: Text(strings.cancel),
                         ),
                         Consumer(
                           builder: (context, ref, child) => FilledButton.icon(
@@ -162,7 +170,9 @@ class _CopernicusIDButton extends ConsumerWidget {
                               Navigator.of(context).pop();
                             },
                             icon: const Icon(Icons.check),
-                            label: const Text('Save ID'),
+                            label: Text(
+                              strings.saveValue(strings.copernicusId),
+                            ),
                           ),
                         ),
                       ],

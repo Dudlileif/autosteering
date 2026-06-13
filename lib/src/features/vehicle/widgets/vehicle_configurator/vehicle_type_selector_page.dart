@@ -19,6 +19,7 @@ import 'dart:math';
 
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,6 +33,7 @@ class VehicleTypeSelectorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
     return SingleChildScrollView(
       child: Align(
@@ -90,17 +92,20 @@ class VehicleTypeSelectorPage extends StatelessWidget {
                 width: 300,
                 child: Consumer(
                   builder: (context, ref, child) => TextFormField(
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.label_outline),
-                      labelText: 'Name',
+                    decoration: InputDecoration(
+                      icon: const Icon(Icons.label_outline),
+                      labelText: strings.name,
                     ),
                     controller: ref.watch(
                       configuredVehicleNameTextControllerProvider,
                     ),
                     keyboardType: TextInputType.text,
                     autovalidateMode: AutovalidateMode.always,
-                    validator: (value) =>
-                        isBlank(value) ? 'No name entered!' : null,
+                    validator: (value) => isBlank(value)
+                        ? strings.noNameEnteredValue(
+                            strings.vehicle.toLowerCase(),
+                          )
+                        : null,
                   ),
                 ),
               ),

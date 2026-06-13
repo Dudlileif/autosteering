@@ -19,6 +19,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,11 +32,12 @@ class NtripMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
     final dadMode = ref.watch(enableDadModeProvider);
 
     return MenuButtonWithChildren(
-      text: 'NTRIP (RTK)',
+      text: strings.ntripRtk,
       iconOverrideWidget: Consumer(
         builder: (context, ref, child) => Icon(
           Icons.straighten,
@@ -49,7 +51,7 @@ class NtripMenu extends ConsumerWidget {
             onChanged: (value) => value != null
                 ? ref.read(ntripEnabledProvider.notifier).update(value: value)
                 : null,
-            secondary: Text('Enabled', style: textStyle),
+            secondary: Text(strings.enabled, style: textStyle),
           ),
         ),
 
@@ -59,13 +61,19 @@ class NtripMenu extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.tune),
             title: Text(
-              '''Active profile: ${ref.watch(activeNtripProfileProvider.select((value) => value?.name ?? 'No profile selected'))}''',
+              strings.ntripActiveProfile(
+                ref.watch(
+                  activeNtripProfileProvider.select(
+                    (value) => value?.name ?? strings.ntripNoProfileSelected,
+                  ),
+                ),
+              ),
               style: textStyle,
             ),
           ),
           if (!dadMode)
             ListTile(
-              title: Text('Edit profile', style: textStyle),
+              title: Text(strings.ntripEditProfile, style: textStyle),
               leading: const Icon(Icons.edit),
               onTap: () => showDialog<void>(
                 context: context,
@@ -77,7 +85,7 @@ class NtripMenu extends ConsumerWidget {
         ],
         if (!dadMode)
           ListTile(
-            title: Text('Add profile', style: textStyle),
+            title: Text(strings.ntripAddProfile, style: textStyle),
             leading: const Icon(Icons.add),
             onTap: () => showDialog<void>(
               context: context,
@@ -89,7 +97,7 @@ class NtripMenu extends ConsumerWidget {
         ))
           Consumer(
             builder: (context, ref, child) => MenuButtonWithChildren(
-              text: 'Load profile',
+              text: strings.ntripLoadProfile,
               icon: Icons.history,
               menuChildren: ref
                   .watch(ntripProfilesProvider)
@@ -152,11 +160,15 @@ class NtripMenu extends ConsumerWidget {
               leading: const Icon(Icons.data_usage),
               title: RichText(
                 text: TextSpan(
-                  text: 'Data usage (session): ',
+                  text: strings.dataUsageSession,
                   style: textStyle,
                   children: [
+                    TextSpan(text: ' ', style: textStyle),
                     TextSpan(
-                      text: fileEntitySize(dataUsage),
+                      text: fileEntitySize(
+                        dataUsage,
+                        locale: strings.localeName,
+                      ),
                       style: GoogleFonts.robotoMono(textStyle: textStyle),
                     ),
                   ],
@@ -179,11 +191,15 @@ class NtripMenu extends ConsumerWidget {
                 leading: const Icon(Icons.data_usage),
                 title: RichText(
                   text: TextSpan(
-                    text: 'Data usage (month): ',
+                    text: strings.dataUsageMonth,
                     style: textStyle,
                     children: [
+                      TextSpan(text: ' ', style: textStyle),
                       TextSpan(
-                        text: fileEntitySize(dataUsage),
+                        text: fileEntitySize(
+                          dataUsage,
+                          locale: strings.localeName,
+                        ),
                         style: GoogleFonts.robotoMono(textStyle: textStyle),
                       ),
                     ],
@@ -201,7 +217,10 @@ class NtripMenu extends ConsumerWidget {
                         .read(sendNtripOverUDPProvider.notifier)
                         .update(value: value)
                   : null,
-              secondary: Text('Send over UDP', style: textStyle),
+              secondary: Text(
+                strings.sendOverProtocol('UDP'),
+                style: textStyle,
+              ),
             ),
           ),
         if (!dadMode)
@@ -213,7 +232,10 @@ class NtripMenu extends ConsumerWidget {
                         .read(sendNtripOverTCPProvider.notifier)
                         .update(value: value)
                   : null,
-              secondary: Text('Send over TCP', style: textStyle),
+              secondary: Text(
+                strings.sendOverProtocol('TCP'),
+                style: textStyle,
+              ),
             ),
           ),
       ],
@@ -243,11 +265,12 @@ class _NtripSourcetableDialogState extends State<_NtripSourcetableDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final textStyle = theme.menuButtonWithChildrenText;
     return SimpleDialog(
       title: Text(
-        'NTRIP caster sourcetable',
+        strings.ntripCasterSourcetable,
         style: theme.textTheme.headlineSmall,
       ),
       contentPadding: const EdgeInsets.only(
@@ -281,7 +304,7 @@ class _NtripSourcetableDialogState extends State<_NtripSourcetableDialog> {
                         ),
                         dropdownMenuEntries: entries.map((station) {
                           final label = <String>[];
-                          final name = station.key.name ?? 'No name';
+                          final name = station.key.name ?? strings.noName;
                           label.add(name);
                           final identifier = station.key.identifier;
                           if (identifier != null) {
@@ -327,16 +350,16 @@ class _NtripSourcetableDialogState extends State<_NtripSourcetableDialog> {
                 ElevatedButton.icon(
                   onPressed: () => Navigator.of(context).pop(),
                   icon: const Icon(Icons.cancel),
-                  label: const Text('Cancel'),
+                  label: Text(strings.cancel),
                 ),
-                if (selectedMountPoint != null)
+                if (selectedMountPoint case final selected?)
                   Consumer(
                     builder: (context, ref, child) => FilledButton.icon(
                       onPressed: () {
-                        Navigator.of(context).pop(selectedMountPoint);
+                        Navigator.of(context).pop(selected);
                       },
                       icon: const Icon(Icons.check),
-                      label: Text('Use $selectedMountPoint'),
+                      label: Text(strings.useValue(selected)),
                     ),
                   ),
               ],
@@ -375,16 +398,18 @@ class __NtripProfileDialogState extends State<_NtripProfileDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final textStyle = theme.menuButtonWithChildrenText;
+
     return SimpleDialog(
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             widget.profile != null
-                ? 'Edit NTRIP profile'
-                : 'Create NTRIP profile',
+                ? strings.ntripEditProfileTitle
+                : strings.ntripCreateProfileTitle,
           ),
           const CloseButton(),
         ],
@@ -397,18 +422,18 @@ class __NtripProfileDialogState extends State<_NtripProfileDialog> {
       ),
       children: [
         TextFormField(
-          decoration: const InputDecoration(
-            labelText: 'Name',
-            icon: Icon(Icons.label_outlined),
+          decoration: InputDecoration(
+            labelText: strings.name,
+            icon: const Icon(Icons.label_outlined),
           ),
           controller: name,
         ),
         Padding(
           padding: const EdgeInsets.only(top: 8),
           child: TextFormField(
-            decoration: const InputDecoration(
-              labelText: 'Host address',
-              icon: Icon(Icons.public),
+            decoration: InputDecoration(
+              labelText: strings.ntripHostAddress,
+              icon: const Icon(Icons.public),
             ),
             controller: hostAddress,
           ),
@@ -417,7 +442,7 @@ class __NtripProfileDialogState extends State<_NtripProfileDialog> {
           padding: const EdgeInsets.only(top: 8),
           child: TextFormField(
             decoration: InputDecoration(
-              labelText: 'Host port',
+              labelText: strings.ntripHostPort,
               labelStyle: textStyle,
               floatingLabelStyle: textStyle,
               icon: const Icon(Icons.tag),
@@ -430,8 +455,8 @@ class __NtripProfileDialogState extends State<_NtripProfileDialog> {
               final port = value != null ? int.tryParse(value) : null;
 
               return port != null && port >= 1 && port <= 65535
-                  ? 'Valid Port'
-                  : 'Invalid Port';
+                  ? strings.validValue(strings.portNetwork)
+                  : strings.invalidValue(strings.portNetwork);
             },
             controller: port,
           ),
@@ -439,9 +464,9 @@ class __NtripProfileDialogState extends State<_NtripProfileDialog> {
         Padding(
           padding: const EdgeInsets.only(top: 8),
           child: TextFormField(
-            decoration: const InputDecoration(
-              labelText: 'Username',
-              icon: Icon(Icons.email),
+            decoration: InputDecoration(
+              labelText: strings.username,
+              icon: const Icon(Icons.email),
             ),
             controller: username,
           ),
@@ -449,9 +474,9 @@ class __NtripProfileDialogState extends State<_NtripProfileDialog> {
         Padding(
           padding: const EdgeInsets.only(top: 8),
           child: TextFormField(
-            decoration: const InputDecoration(
-              labelText: 'Password',
-              icon: Icon(Icons.password),
+            decoration: InputDecoration(
+              labelText: strings.password,
+              icon: const Icon(Icons.password),
             ),
             obscureText: true,
             controller: password,
@@ -460,9 +485,9 @@ class __NtripProfileDialogState extends State<_NtripProfileDialog> {
         Padding(
           padding: const EdgeInsets.only(top: 8),
           child: TextFormField(
-            decoration: const InputDecoration(
-              labelText: 'Mount point / base station',
-              icon: Icon(Icons.router),
+            decoration: InputDecoration(
+              labelText: strings.ntripMountPointBaseStation,
+              icon: const Icon(Icons.router),
             ),
             controller: mountPoint,
           ),
@@ -488,7 +513,10 @@ class __NtripProfileDialogState extends State<_NtripProfileDialog> {
                           setState(() => mountPoint.text = value);
                         }
                       }),
-                  child: Text('Find closest base station', style: textStyle),
+                  child: Text(
+                    strings.ntripFindClosestBaseStation,
+                    style: textStyle,
+                  ),
                 ),
               );
             }
@@ -499,7 +527,7 @@ class __NtripProfileDialogState extends State<_NtripProfileDialog> {
           padding: const EdgeInsets.only(top: 8),
           child: TextFormField(
             decoration: InputDecoration(
-              labelText: 'GGA sending interval (s)',
+              labelText: strings.ntripGgaSendingInterval,
               icon: const Icon(Icons.timer_outlined),
               suffixIcon: IconButton(
                 onPressed: () => setState(() => ggaSendingInterval.clear()),
@@ -515,8 +543,8 @@ class __NtripProfileDialogState extends State<_NtripProfileDialog> {
               return value == null ||
                       value.isEmpty ||
                       (interval != null && interval >= 1)
-                  ? 'Valid interval'
-                  : 'Input whole seconds from 1 or empty';
+                  ? strings.validValue(strings.interval)
+                  : strings.ntripInputWholeSeconds;
             },
             controller: ggaSendingInterval,
           ),
@@ -532,7 +560,7 @@ class __NtripProfileDialogState extends State<_NtripProfileDialog> {
                 ElevatedButton.icon(
                   onPressed: () => Navigator.of(context).pop(),
                   icon: const Icon(Icons.clear),
-                  label: const Text('Cancel'),
+                  label: Text(strings.cancel),
                 ),
                 Consumer(
                   builder: (context, ref, child) {
@@ -581,7 +609,9 @@ class __NtripProfileDialogState extends State<_NtripProfileDialog> {
                             : null,
                         icon: const Icon(Icons.check),
                         label: Text(
-                          widget.profile != null ? 'Update' : 'Create',
+                          widget.profile != null
+                              ? strings.update
+                              : strings.create,
                         ),
                       ),
                     );

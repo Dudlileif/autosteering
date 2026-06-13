@@ -17,6 +17,7 @@
 
 import 'package:autosteering/src/features/audio/audio.dart';
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,24 +30,26 @@ class AudioVolumeMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MenuButtonWithChildren(
-      text: 'Audio levels',
+    final strings = AppLocalizations.of(context);
+
+    return MenuButtonWithChildren(
+      text: strings.audioLevels,
       icon: Icons.volume_up,
       menuChildren: [
         _AudioVolumeTile(
-          title: 'Autosteering enabled',
+          title: strings.audioLevelAutosteeringEnabled,
           audioAsset: AudioAsset.autosteeringEnabled,
         ),
         _AudioVolumeTile(
-          title: 'Autosteering disable',
+          title: strings.audioLevelAutosteeringDisabled,
           audioAsset: AudioAsset.autosteeringDisabled,
         ),
         _AudioVolumeTile(
-          title: 'Autosteering standby',
+          title: strings.audioLevelAutosteeringStandby,
           audioAsset: AudioAsset.autosteeringStandby,
         ),
         _AudioVolumeTile(
-          title: 'RTK lost alarm',
+          title: strings.audioLevelRtkLostAlarm,
           audioAsset: AudioAsset.rtkLostAlarm,
         ),
       ],

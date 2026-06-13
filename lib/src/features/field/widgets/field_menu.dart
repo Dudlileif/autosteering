@@ -32,6 +32,7 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geobase/geobase.dart';
+import 'package:intl/intl.dart';
 import 'package:quiver/strings.dart';
 
 /// A menu with attached submenu for interacting with the field feature.
@@ -41,6 +42,7 @@ class FieldMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final textStyle = theme.menuButtonWithChildrenText;
     final dadMode = ref.watch(enableDadModeProvider);
@@ -48,7 +50,7 @@ class FieldMenu extends ConsumerWidget {
     final activeField = ref.watch(activeFieldProvider);
 
     return MenuButtonWithChildren(
-      text: 'Field',
+      text: strings.field,
       iconOverrideWidget: const Stack(
         children: [Icon(Icons.texture), Icon(Icons.square_outlined)],
       ),
@@ -74,10 +76,13 @@ class FieldMenu extends ConsumerWidget {
                   ..read(activeEditablePathTypeProvider.notifier).update(null);
               }
             },
-            child: Text('Close', style: textStyle),
+            child: Text(strings.close, style: textStyle),
           ),
           Consumer(
-            child: Text('Save field', style: textStyle),
+            child: Text(
+              strings.saveValue(strings.field.toLowerCase()),
+              style: textStyle,
+            ),
             builder: (context, ref, child) {
               final field = ref.watch(activeFieldProvider);
 
@@ -128,7 +133,10 @@ class FieldMenu extends ConsumerWidget {
           if (!dadMode) ...[
             const _EditFieldBorderButton(),
             Consumer(
-              child: Text('Show field', style: textStyle),
+              child: Text(
+                strings.showValue(strings.field.toLowerCase()),
+                style: textStyle,
+              ),
               builder: (context, ref, child) => CheckboxListTile(
                 secondary: switch (ref.watch(showFieldProvider)) {
                   true => const Icon(Icons.visibility),
@@ -146,7 +154,10 @@ class FieldMenu extends ConsumerWidget {
                   ref.watch(showBufferedFieldProvider)) &&
               !dadMode)
             Consumer(
-              child: Text('Show border points', style: textStyle),
+              child: Text(
+                strings.showValue(strings.borderPoints.toLowerCase()),
+                style: textStyle,
+              ),
               builder: (context, ref, child) => CheckboxListTile(
                 secondary: switch (ref.watch(
                   showFieldBorderPointsProvider,
@@ -167,7 +178,10 @@ class FieldMenu extends ConsumerWidget {
             ),
           if (ref.watch(showFieldProvider) && !dadMode)
             Consumer(
-              child: Text('Show bounding box', style: textStyle),
+              child: Text(
+                strings.showValue(strings.boundingBox.toLowerCase()),
+                style: textStyle,
+              ),
               builder: (context, ref, child) => CheckboxListTile(
                 secondary: switch (ref.watch(
                   showFieldBoundingBoxProvider,
@@ -185,7 +199,10 @@ class FieldMenu extends ConsumerWidget {
               ),
             ),
           Consumer(
-            child: Text('Enable field buffer', style: textStyle),
+            child: Text(
+              [strings.enable, strings.fieldBuffer.toLowerCase()].join(' '),
+              style: textStyle,
+            ),
             builder: (context, ref, child) => CheckboxListTile(
               secondary: child,
               value: ref.watch(fieldBufferEnabledProvider),
@@ -198,7 +215,10 @@ class FieldMenu extends ConsumerWidget {
           ),
           if (ref.watch(fieldBufferEnabledProvider)) ...[
             Consumer(
-              child: Text('Show buffered field', style: textStyle),
+              child: Text(
+                strings.showValue(strings.bufferedField.toLowerCase()),
+                style: textStyle,
+              ),
               builder: (context, ref, child) => CheckboxListTile(
                 secondary: switch (ref.watch(showBufferedFieldProvider)) {
                   true => const Icon(Icons.visibility),
@@ -216,7 +236,10 @@ class FieldMenu extends ConsumerWidget {
             if (ref.watch(showFieldProvider)) ...[
               if (!dadMode)
                 Consumer(
-                  child: Text('Show buffered bounding box', style: textStyle),
+                  child: Text(
+                    strings.showValue(strings.bufferedBoundingBox),
+                    style: textStyle,
+                  ),
                   builder: (context, ref, child) => CheckboxListTile(
                     secondary: switch (ref.watch(
                       showBufferedFieldBoundingBoxProvider,
@@ -245,7 +268,7 @@ class FieldMenu extends ConsumerWidget {
                   context: context,
                   builder: (context) => const _BufferDistancesDialog(),
                 ),
-                child: Text('Buffer distances', style: textStyle),
+                child: Text(strings.bufferDistance, style: textStyle),
               ),
               if (ref.watch(showBufferedFieldProvider) && !dadMode)
                 Consumer(
@@ -254,7 +277,10 @@ class FieldMenu extends ConsumerWidget {
                       fieldExteriorBufferJoinProvider,
                     );
                     return MenuButtonWithChildren(
-                      text: 'Exterior buffer join mode',
+                      text: [
+                        strings.exterior,
+                        strings.bufferJoinMode.toLowerCase(),
+                      ].join(' '),
                       icon: Icons.rounded_corner,
                       menuChildren: BufferJoin.values
                           .map(
@@ -294,7 +320,10 @@ class FieldMenu extends ConsumerWidget {
                       fieldInteriorBufferJoinProvider,
                     );
                     return MenuButtonWithChildren(
-                      text: 'Interior buffer join mode',
+                      text: [
+                        strings.interior,
+                        strings.bufferJoinMode.toLowerCase(),
+                      ].join(' '),
                       icon: Icons.rounded_corner,
                       menuChildren: BufferJoin.values
                           .map(
@@ -322,7 +351,7 @@ class FieldMenu extends ConsumerWidget {
                 ),
               if (!dadMode)
                 Consumer(
-                  child: Text('Raw buffer points', style: textStyle),
+                  child: Text(strings.rawBufferPoints, style: textStyle),
                   builder: (context, ref, child) => CheckboxListTile(
                     secondary: child,
                     value: ref.watch(fieldBufferGetRawPointsProvider),
@@ -366,13 +395,16 @@ class _LoadFieldMenu extends ConsumerWidget {
     if (fields.isEmpty) {
       return const SizedBox.shrink();
     }
-
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 2,
+    );
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     final unit = ref.watch(uiUnitAreaProvider);
 
     return MenuButtonWithChildren(
-      text: 'Load',
+      text: strings.load,
       icon: Icons.history,
       menuChildren: fields.map(
         (field) {
@@ -410,7 +442,7 @@ class _LoadFieldMenu extends ConsumerWidget {
                   : null,
               title: Text(field.name, style: textStyle),
               subtitle: Text(
-                '''${area.toStringAsFixed(2)} ${strings.unitAreaDisplay(unit.symbol)}''',
+                '''${numberFormatter.format(area)} ${strings.unitAreaDisplay(unit.symbol)}''',
               ),
             ),
           );
@@ -425,6 +457,7 @@ class _ImportButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuItemButton(
@@ -434,7 +467,7 @@ class _ImportButton extends ConsumerWidget {
       ),
       closeOnActivate: false,
       onPressed: () => ref.read(importFieldProvider),
-      child: Text('Import', style: textStyle),
+      child: Text(strings.importAction, style: textStyle),
     );
   }
 }
@@ -444,6 +477,7 @@ class _ExportButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
     return MenuItemButton(
       leadingIcon: const Padding(
@@ -461,7 +495,7 @@ class _ExportButton extends ConsumerWidget {
               exportFieldProvider(ref.watch(activeFieldProvider)!),
             )
           : null,
-      child: Text('Export', style: textStyle),
+      child: Text(strings.exportAction, style: textStyle),
     );
   }
 }
@@ -473,6 +507,7 @@ class _CreateFieldButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     return MenuItemButton(
@@ -488,7 +523,7 @@ class _CreateFieldButton extends ConsumerWidget {
             .update(PathRecordingTarget.field);
         ref.read(showPathRecordingMenuProvider.notifier).update(value: true);
       },
-      child: Text('Create field from recording', style: textStyle),
+      child: Text(strings.createFieldFromRecording, style: textStyle),
     );
   }
 }
@@ -498,6 +533,7 @@ class _CreateFieldFromPathTracking extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
     return MenuItemButton(
       leadingIcon: const Padding(
@@ -505,14 +541,14 @@ class _CreateFieldFromPathTracking extends ConsumerWidget {
         child: Icon(Icons.route),
       ),
       closeOnActivate: false,
-      child: Text('Create from path tracking', style: textStyle),
+      child: Text(strings.createFieldFromPathTracking, style: textStyle),
       onPressed: () => showDialog<void>(
         context: context,
         builder: (context) => Consumer(
           builder: (context, ref, child) {
             final controller = TextEditingController();
             return SimpleDialog(
-              title: const Text('Create field from path tracking'),
+              title: Text(strings.createFieldFromPathTracking),
               contentPadding: const EdgeInsets.only(
                 left: 24,
                 top: 12,
@@ -523,15 +559,17 @@ class _CreateFieldFromPathTracking extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: TextFormField(
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.label_outline),
-                      labelText: 'Name',
+                    decoration: InputDecoration(
+                      icon: const Icon(Icons.label_outline),
+                      labelText: strings.name,
                     ),
                     controller: controller,
                     keyboardType: TextInputType.text,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value) => isBlank(value)
-                        ? '''No name entered! Please enter a name so that the field can be saved!'''
+                        ? strings.noNameEnteredValue(
+                            strings.field.toLowerCase(),
+                          )
                         : null,
                   ),
                 ),
@@ -576,7 +614,9 @@ class _CreateFieldFromPathTracking extends ConsumerWidget {
                                 }
                               }
                             : null,
-                        child: const Text('Save field'),
+                        child: Text(
+                          strings.saveValue(strings.field.toLowerCase()),
+                        ),
                       ),
                     ),
                   ),
@@ -595,7 +635,9 @@ class _RenameFieldButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
     return MenuItemButton(
       closeOnActivate: false,
       leadingIcon: const Padding(
@@ -609,7 +651,7 @@ class _RenameFieldButton extends ConsumerWidget {
           var name = field?.name ?? '';
           return StatefulBuilder(
             builder: (context, setState) => SimpleDialog(
-              title: const Text('Name the field'),
+              title: Text(strings.nameTheValue(strings.field.toLowerCase())),
               contentPadding: const EdgeInsets.only(
                 left: 24,
                 top: 12,
@@ -620,9 +662,9 @@ class _RenameFieldButton extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: TextFormField(
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.label_outline),
-                      labelText: 'Name',
+                    decoration: InputDecoration(
+                      icon: const Icon(Icons.label_outline),
+                      labelText: strings.name,
                     ),
                     initialValue: name,
                     onChanged: (value) => setState(() => name = value),
@@ -630,7 +672,9 @@ class _RenameFieldButton extends ConsumerWidget {
                     keyboardType: TextInputType.text,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value) => isBlank(value)
-                        ? '''No name entered! Please enter a name so that the field can be saved!'''
+                        ? strings.noNameEnteredValue(
+                            strings.field.toLowerCase(),
+                          )
                         : null,
                   ),
                 ),
@@ -658,7 +702,9 @@ class _RenameFieldButton extends ConsumerWidget {
                           }
                           Navigator.of(context).pop();
                         },
-                        child: const Text('Save field'),
+                        child: Text(
+                          strings.saveValue(strings.field.toLowerCase()),
+                        ),
                       ),
                     ),
                   ),
@@ -667,7 +713,7 @@ class _RenameFieldButton extends ConsumerWidget {
           );
         },
       ),
-      child: Text('Rename', style: textStyle),
+      child: Text(strings.rename, style: textStyle),
     );
   }
 }
@@ -677,6 +723,7 @@ class _EditFieldBorderButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
     final activeField = ref.watch(activeFieldProvider);
     final editablePathType = ref.watch(activeEditablePathTypeProvider);
@@ -688,7 +735,10 @@ class _EditFieldBorderButton extends ConsumerWidget {
           padding: EdgeInsets.only(left: 8),
           child: Icon(Icons.check),
         ),
-        child: Text('Finish editing border', style: textStyle),
+        child: Text(
+          [strings.finishEditing, strings.border.toLowerCase()].join(' '),
+          style: textStyle,
+        ),
         onPressed: () {
           final exterior = ref.watch(editablePathPointsProvider);
           if (exterior != null && activeField != null) {
@@ -712,7 +762,10 @@ class _EditFieldBorderButton extends ConsumerWidget {
           padding: EdgeInsets.only(left: 8),
           child: Icon(Icons.edit),
         ),
-        child: Text('Edit border', style: textStyle),
+        child: Text(
+          strings.editValue(strings.border.toLowerCase()),
+          style: textStyle,
+        ),
         onPressed: () {
           ref
             ..read(
@@ -733,14 +786,15 @@ class _BufferDistancesDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final distanceType = ref.watch(activeFieldBufferDistanceTypeProvider);
     final field = ref.watch(activeFieldProvider);
 
     return SimpleDialog(
-      title: const Row(
+      title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [Text('Buffer distance'), CloseButton()],
+        children: [Text(strings.bufferDistance), const CloseButton()],
       ),
       contentPadding: const EdgeInsets.only(
         left: 24,
@@ -813,7 +867,10 @@ class _BufferDistancesDialog extends ConsumerWidget {
 
               return TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'Border buffer distance',
+                  labelText: [
+                    strings.border,
+                    strings.bufferDistance.toLowerCase(),
+                  ].join(' '),
                   suffix: ListenableBuilder(
                     listenable: controller,
                     builder: (context, child) => Text(
@@ -887,7 +944,7 @@ class _BufferDistancesDialog extends ConsumerWidget {
 
                 return TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Interior border (holes) buffer distance',
+                    labelText: strings.interiorBorderBufferDistance,
                     suffix: ListenableBuilder(
                       listenable: controller,
                       builder: (context, child) => Text(
@@ -918,6 +975,7 @@ class _SaveBufferedFieldButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     final field = ref
@@ -939,7 +997,11 @@ class _SaveBufferedFieldButton extends ConsumerWidget {
                     var name = '';
                     return StatefulBuilder(
                       builder: (context, setState) => SimpleDialog(
-                        title: const Text('Name the bufferd field'),
+                        title: Text(
+                          strings.nameTheValue(
+                            strings.bufferedField.toLowerCase(),
+                          ),
+                        ),
                         contentPadding: const EdgeInsets.only(
                           left: 24,
                           top: 12,
@@ -950,9 +1012,9 @@ class _SaveBufferedFieldButton extends ConsumerWidget {
                           Padding(
                             padding: const EdgeInsets.all(8),
                             child: TextFormField(
-                              decoration: const InputDecoration(
-                                icon: Icon(Icons.label_outline),
-                                labelText: 'Name',
+                              decoration: InputDecoration(
+                                icon: const Icon(Icons.label_outline),
+                                labelText: strings.name,
                               ),
                               initialValue: name,
                               onChanged: (value) =>
@@ -963,7 +1025,9 @@ class _SaveBufferedFieldButton extends ConsumerWidget {
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               validator: (value) => isBlank(value)
-                                  ? '''No name entered! Please enter a name so that the field can be saved!'''
+                                  ? strings.noNameEnteredValue(
+                                      strings.field.toLowerCase(),
+                                    )
                                   : null,
                             ),
                           ),
@@ -987,7 +1051,11 @@ class _SaveBufferedFieldButton extends ConsumerWidget {
                                   );
                                   Navigator.of(context).pop();
                                 },
-                                child: const Text('Save bufferd field'),
+                                child: Text(
+                                  strings.saveValue(
+                                    strings.bufferedField.toLowerCase(),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -999,7 +1067,10 @@ class _SaveBufferedFieldButton extends ConsumerWidget {
               );
             }
           : null,
-      child: Text('Save buffered field', style: textStyle),
+      child: Text(
+        strings.saveValue(strings.bufferedField.toLowerCase()),
+        style: textStyle,
+      ),
     );
   }
 }
@@ -1010,6 +1081,7 @@ class _CreatePathTrackingFromBufferedFieldExteriorButton
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     final wayPoints = ref
@@ -1051,7 +1123,7 @@ class _CreatePathTrackingFromBufferedFieldExteriorButton
             }
           : null,
       child: Text(
-        'Create path tracking from buffered field exterior',
+        strings.createPathTrackingFromBufferedFieldExterior,
         style: textStyle,
       ),
     );
