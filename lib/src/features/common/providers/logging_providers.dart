@@ -233,5 +233,10 @@ Logger logging(Ref ref) {
 
 /// A provider for exporting all log files.
 @riverpod
-FutureOr<void> exportLogs(Ref ref, {bool zip = true}) async =>
-    await ref.watch(exportAllProvider(directory: 'logs').future);
+FutureOr<void> exportLogs(
+  Ref ref, {
+  required String dialogTitle,
+  bool zip = true,
+}) async => await ref.watch(
+  exportAllProvider(directory: 'logs', dialogTitle: dialogTitle).future,
+);

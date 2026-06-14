@@ -179,6 +179,7 @@ FutureOr<void> exportJsonToFileDirectory(
   Ref ref, {
   required dynamic object,
   required String fileName,
+  required String dialogTitle,
   String? folder,
   String? subFolder,
   bool downloadIfWeb = true,
@@ -196,7 +197,7 @@ FutureOr<void> exportJsonToFileDirectory(
   } else {
     try {
       final exportFolder = await FilePicker.getDirectoryPath(
-        dialogTitle: 'Select export folder',
+        dialogTitle: dialogTitle,
       );
       if (exportFolder != null) {
         await Isolate.run<LogEvent>(() async {
@@ -460,12 +461,15 @@ FutureOr<void> deleteDirectoryFromFileDirectory(
 
 /// A provider for exporting the whole file directory to a ZIP file.
 @riverpod
-FutureOr<void> exportWholeFileDirectory(Ref ref) async {
+FutureOr<void> exportWholeFileDirectory(
+  Ref ref, {
+  required String dialogTitle,
+}) async {
   ref.keepAlive();
   try {
     if (Device.isNative) {
       final exportFolder = await FilePicker.getDirectoryPath(
-        dialogTitle: 'Select export folder',
+        dialogTitle: dialogTitle,
       );
       if (exportFolder != null) {
         ref.read(exportProgressProvider.notifier).update(0);
@@ -535,13 +539,14 @@ class ExportProgress extends _$ExportProgress {
 FutureOr<void> exportAll(
   Ref ref, {
   required String directory,
+  required String dialogTitle,
   bool zip = true,
 }) async {
   ref.keepAlive();
   try {
     if (Device.isNative) {
       final exportFolder = await FilePicker.getDirectoryPath(
-        dialogTitle: 'Select export folder',
+        dialogTitle: dialogTitle,
       );
       if (exportFolder != null) {
         final dirPath = ref.watch(fileDirectoryProvider).requireValue.path;
@@ -632,12 +637,15 @@ class ImportProgress extends _$ImportProgress {
 
 /// A provider for importing all directory files from a zip file.
 @riverpod
-FutureOr<void> importWholeFileDirectory(Ref ref) async {
+FutureOr<void> importWholeFileDirectory(
+  Ref ref, {
+  required String dialogTitle,
+}) async {
   ref.keepAlive();
   try {
     if (Device.isNative) {
       final importFile = await FilePicker.pickFiles(
-        dialogTitle: 'Select ZIP file to import',
+        dialogTitle: dialogTitle,
         type: FileType.custom,
         allowedExtensions: ['zip'],
       );

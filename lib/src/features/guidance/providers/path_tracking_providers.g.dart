@@ -702,7 +702,12 @@ final class ExportPathTrackingProvider
   /// Override the file name with [overrideName].
   ExportPathTrackingProvider._({
     required ExportPathTrackingFamily super.from,
-    required (PathTracking, {String? overrideName, bool downloadIfWeb})
+    required (
+      PathTracking, {
+      String dialogTitle,
+      String? overrideName,
+      bool downloadIfWeb,
+    })
     super.argument,
   }) : super(
          retry: null,
@@ -731,10 +736,16 @@ final class ExportPathTrackingProvider
   FutureOr<void> create(Ref ref) {
     final argument =
         this.argument
-            as (PathTracking, {String? overrideName, bool downloadIfWeb});
+            as (
+              PathTracking, {
+              String dialogTitle,
+              String? overrideName,
+              bool downloadIfWeb,
+            });
     return exportPathTracking(
       ref,
       argument.$1,
+      dialogTitle: argument.dialogTitle,
       overrideName: argument.overrideName,
       downloadIfWeb: argument.downloadIfWeb,
     );
@@ -752,7 +763,7 @@ final class ExportPathTrackingProvider
 }
 
 String _$exportPathTrackingHash() =>
-    r'db15fe7381f02c1a3312bee2ecd235c8360e7640';
+    r'd2caa2c17999f5cd488a2283718079235b72a527';
 
 /// A provider for saving [tracking] to a file in the user file directory.
 ///
@@ -762,7 +773,12 @@ final class ExportPathTrackingFamily extends $Family
     with
         $FunctionalFamilyOverride<
           FutureOr<void>,
-          (PathTracking, {String? overrideName, bool downloadIfWeb})
+          (
+            PathTracking, {
+            String dialogTitle,
+            String? overrideName,
+            bool downloadIfWeb,
+          })
         > {
   ExportPathTrackingFamily._()
     : super(
@@ -779,11 +795,13 @@ final class ExportPathTrackingFamily extends $Family
 
   ExportPathTrackingProvider call(
     PathTracking tracking, {
+    required String dialogTitle,
     String? overrideName,
     bool downloadIfWeb = false,
   }) => ExportPathTrackingProvider._(
     argument: (
       tracking,
+      dialogTitle: dialogTitle,
       overrideName: overrideName,
       downloadIfWeb: downloadIfWeb,
     ),
@@ -959,7 +977,7 @@ final class DeletePathTrackingFamily extends $Family
 /// the [ConfiguredPathTracking] provider.
 
 @ProviderFor(importPathTracking)
-final importPathTrackingProvider = ImportPathTrackingProvider._();
+final importPathTrackingProvider = ImportPathTrackingFamily._();
 
 /// A provider for importing a [PathTracking] from a file and applying it to
 /// the [ConfiguredPathTracking] provider.
@@ -974,19 +992,26 @@ final class ImportPathTrackingProvider
     with $FutureModifier<PathTracking?>, $FutureProvider<PathTracking?> {
   /// A provider for importing a [PathTracking] from a file and applying it to
   /// the [ConfiguredPathTracking] provider.
-  ImportPathTrackingProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'importPathTrackingProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+  ImportPathTrackingProvider._({
+    required ImportPathTrackingFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'importPathTrackingProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$importPathTrackingHash();
+
+  @override
+  String toString() {
+    return r'importPathTrackingProvider'
+        ''
+        '($argument)';
+  }
 
   @$internal
   @override
@@ -996,12 +1021,47 @@ final class ImportPathTrackingProvider
 
   @override
   FutureOr<PathTracking?> create(Ref ref) {
-    return importPathTracking(ref);
+    final argument = this.argument as String;
+    return importPathTracking(ref, dialogTitle: argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ImportPathTrackingProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
   }
 }
 
 String _$importPathTrackingHash() =>
-    r'0232d12f7d56e617da15344ff5a5e84d886ea4bd';
+    r'75371e12f41f04fe902fa7bdbe9464606f2a57b3';
+
+/// A provider for importing a [PathTracking] from a file and applying it to
+/// the [ConfiguredPathTracking] provider.
+
+final class ImportPathTrackingFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<PathTracking?>, String> {
+  ImportPathTrackingFamily._()
+    : super(
+        retry: null,
+        name: r'importPathTrackingProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// A provider for importing a [PathTracking] from a file and applying it to
+  /// the [ConfiguredPathTracking] provider.
+
+  ImportPathTrackingProvider call({required String dialogTitle}) =>
+      ImportPathTrackingProvider._(argument: dialogTitle, from: this);
+
+  @override
+  String toString() => r'importPathTrackingProvider';
+}
 
 /// A provider for exporting all guidance files.
 
@@ -1016,7 +1076,7 @@ final class ExportGuidancesProvider
   /// A provider for exporting all guidance files.
   ExportGuidancesProvider._({
     required ExportGuidancesFamily super.from,
-    required bool super.argument,
+    required ({String dialogTitle, bool zip}) super.argument,
   }) : super(
          retry: null,
          name: r'exportGuidancesProvider',
@@ -1032,7 +1092,7 @@ final class ExportGuidancesProvider
   String toString() {
     return r'exportGuidancesProvider'
         ''
-        '($argument)';
+        '$argument';
   }
 
   @$internal
@@ -1042,8 +1102,12 @@ final class ExportGuidancesProvider
 
   @override
   FutureOr<void> create(Ref ref) {
-    final argument = this.argument as bool;
-    return exportGuidances(ref, zip: argument);
+    final argument = this.argument as ({String dialogTitle, bool zip});
+    return exportGuidances(
+      ref,
+      dialogTitle: argument.dialogTitle,
+      zip: argument.zip,
+    );
   }
 
   @override
@@ -1057,12 +1121,16 @@ final class ExportGuidancesProvider
   }
 }
 
-String _$exportGuidancesHash() => r'c3a70f44a023ff06985977bc6f6cbf05b7d30e7b';
+String _$exportGuidancesHash() => r'131471762a317cc09649e04a3f90f4476fe72294';
 
 /// A provider for exporting all guidance files.
 
 final class ExportGuidancesFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<void>, bool> {
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<void>,
+          ({String dialogTitle, bool zip})
+        > {
   ExportGuidancesFamily._()
     : super(
         retry: null,
@@ -1074,8 +1142,13 @@ final class ExportGuidancesFamily extends $Family
 
   /// A provider for exporting all guidance files.
 
-  ExportGuidancesProvider call({bool zip = true}) =>
-      ExportGuidancesProvider._(argument: zip, from: this);
+  ExportGuidancesProvider call({
+    required String dialogTitle,
+    bool zip = true,
+  }) => ExportGuidancesProvider._(
+    argument: (dialogTitle: dialogTitle, zip: zip),
+    from: this,
+  );
 
   @override
   String toString() => r'exportGuidancesProvider';

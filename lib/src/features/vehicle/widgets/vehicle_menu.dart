@@ -299,7 +299,13 @@ class _ImportExportMenu extends StatelessWidget {
           builder: (context, ref, child) {
             return MenuItemButton(
               closeOnActivate: false,
-              onPressed: () => ref.read(importVehicleProvider),
+              onPressed: () => ref.read(
+                importVehicleProvider(
+                  dialogTitle: strings.selectValueFile(
+                    strings.vehicle.toLowerCase(),
+                  ),
+                ),
+              ),
               leadingIcon: const Padding(
                 padding: EdgeInsets.only(left: 8),
                 child: Icon(Icons.file_open),
@@ -322,6 +328,7 @@ class _ImportExportMenu extends StatelessWidget {
                   ? () => ref.watch(
                       exportVehicleProvider(
                         ref.watch(configuredVehicleProvider),
+                        dialogTitle: strings.selectExportFolder,
                       ),
                     )
                   : null,
@@ -335,7 +342,12 @@ class _ImportExportMenu extends StatelessWidget {
         ),
         Consumer(
           builder: (context, ref, child) => ExportAllMenuButton(
-            onPressed: () => ref.read(exportAllProvider(directory: 'vehicles')),
+            onPressed: () => ref.read(
+              exportAllProvider(
+                directory: 'vehicles',
+                dialogTitle: strings.selectExportFolder,
+              ),
+            ),
           ),
         ),
       ],

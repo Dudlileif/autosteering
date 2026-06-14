@@ -269,7 +269,7 @@ final class LoadLogReplayFromFileFamily extends $Family
 /// A provider for importing a [LogReplay] from a file.
 
 @ProviderFor(importLogReplay)
-final importLogReplayProvider = ImportLogReplayProvider._();
+final importLogReplayProvider = ImportLogReplayFamily._();
 
 /// A provider for importing a [LogReplay] from a file.
 
@@ -282,19 +282,26 @@ final class ImportLogReplayProvider
         >
     with $FutureModifier<LogReplay?>, $FutureProvider<LogReplay?> {
   /// A provider for importing a [LogReplay] from a file.
-  ImportLogReplayProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'importLogReplayProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+  ImportLogReplayProvider._({
+    required ImportLogReplayFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'importLogReplayProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$importLogReplayHash();
+
+  @override
+  String toString() {
+    return r'importLogReplayProvider'
+        ''
+        '($argument)';
+  }
 
   @$internal
   @override
@@ -303,8 +310,41 @@ final class ImportLogReplayProvider
 
   @override
   FutureOr<LogReplay?> create(Ref ref) {
-    return importLogReplay(ref);
+    final argument = this.argument as String;
+    return importLogReplay(ref, dialogTitle: argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ImportLogReplayProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
   }
 }
 
-String _$importLogReplayHash() => r'4b64b899ede595f36390d001726b0aa68915f198';
+String _$importLogReplayHash() => r'b52700897b191de4b639359f856921dddc1accfc';
+
+/// A provider for importing a [LogReplay] from a file.
+
+final class ImportLogReplayFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<LogReplay?>, String> {
+  ImportLogReplayFamily._()
+    : super(
+        retry: null,
+        name: r'importLogReplayProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// A provider for importing a [LogReplay] from a file.
+
+  ImportLogReplayProvider call({required String dialogTitle}) =>
+      ImportLogReplayProvider._(argument: dialogTitle, from: this);
+
+  @override
+  String toString() => r'importLogReplayProvider';
+}

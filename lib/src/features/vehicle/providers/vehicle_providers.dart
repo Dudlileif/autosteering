@@ -118,6 +118,7 @@ FutureOr<void> saveVehicle(
 FutureOr<void> exportVehicle(
   Ref ref,
   Vehicle vehicle, {
+  required String dialogTitle,
   String? overrideName,
   bool downloadIfWeb = true,
 }) async => ref.watch(
@@ -126,6 +127,7 @@ FutureOr<void> exportVehicle(
     fileName: overrideName ?? vehicle.name ?? vehicle.uuid,
     folder: 'vehicles',
     downloadIfWeb: downloadIfWeb,
+    dialogTitle: dialogTitle,
   ).future,
 );
 
@@ -207,13 +209,13 @@ class VehicleSteeringAngleTarget extends _$VehicleSteeringAngleTarget {
 /// A provider for importing a vehicle configuration from a file and applying it
 /// to the [ConfiguredVehicle] provider.
 @riverpod
-FutureOr<Vehicle?> importVehicle(Ref ref) async {
+FutureOr<Vehicle?> importVehicle(Ref ref, {required String dialogTitle}) async {
   ref.keepAlive();
   Timer(const Duration(seconds: 5), ref.invalidateSelf);
   final pickedFiles = await FilePicker.pickFiles(
     allowedExtensions: ['json'],
     type: FileType.custom,
-    dialogTitle: 'Choose vehicle file',
+    dialogTitle: dialogTitle,
   );
 
   Vehicle? vehicle;
@@ -337,5 +339,13 @@ class OverrideSteeringAngle extends _$OverrideSteeringAngle {
 
 /// A provider for exporting all vehicle files.
 @riverpod
-FutureOr<void> exportVehicles(Ref ref, {bool zip = true}) async =>
-    await ref.watch(exportAllProvider(directory: 'vehicles').future);
+FutureOr<void> exportVehicles(
+  Ref ref, {
+  required String dialogTitle,
+  bool zip = true,
+}) async => await ref.watch(
+  exportAllProvider(
+    directory: 'vehicles',
+    dialogTitle: dialogTitle,
+  ).future,
+);

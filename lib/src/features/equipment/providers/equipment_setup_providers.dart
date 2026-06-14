@@ -76,6 +76,7 @@ FutureOr<void> saveEquipmentSetup(
 FutureOr<void> exportEquipmentSetup(
   Ref ref,
   EquipmentSetup setup, {
+  required String dialogTitle,
   String? overrideName,
   bool downloadIfWeb = false,
 }) async => await ref.watch(
@@ -84,6 +85,7 @@ FutureOr<void> exportEquipmentSetup(
     fileName: overrideName ?? setup.name,
     folder: path.join('equipment', 'setups'),
     downloadIfWeb: downloadIfWeb,
+    dialogTitle: dialogTitle,
   ).future,
 );
 
@@ -145,13 +147,16 @@ FutureOr<EquipmentSetup?> loadEquipmentSetupFromFile(
 /// A provider for importing a equipment setup configuration from the user file
 /// directory and applying it to the [ConfiguredEquipmentSetup] provider.
 @riverpod
-FutureOr<EquipmentSetup?> importEquipmentSetup(Ref ref) async {
+FutureOr<EquipmentSetup?> importEquipmentSetup(
+  Ref ref, {
+  required String dialogTitle,
+}) async {
   ref.keepAlive();
   Timer(const Duration(seconds: 5), ref.invalidateSelf);
   final pickedFiles = await FilePicker.pickFiles(
     allowedExtensions: ['json'],
     type: FileType.custom,
-    dialogTitle: 'Choose equipment setup file',
+    dialogTitle: dialogTitle,
   );
 
   EquipmentSetup? equipmentSetup;

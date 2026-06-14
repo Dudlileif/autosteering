@@ -2168,6 +2168,30 @@ abstract class AppLocalizations {
   /// **'Section working width'**
   String get sectionWorkingWidth;
 
+  /// No description provided for @selectExportFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Select export folder'**
+  String get selectExportFolder;
+
+  /// No description provided for @selectValueFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Select {value} file'**
+  String selectValueFile(String value);
+
+  /// No description provided for @selectWorkSessionFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Select work session file'**
+  String get selectWorkSessionFile;
+
+  /// No description provided for @selectZipFileToImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Zip file to import'**
+  String get selectZipFileToImport;
+
   /// No description provided for @sendGnssConfig.
   ///
   /// In en, this message translates to:

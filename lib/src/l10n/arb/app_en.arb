@@ -1126,6 +1126,21 @@
     "@sectionWidth": {},
     "sectionWorkingWidth": "Section working width",
     "@sectionWorkingWidth": {},
+    "selectExportFolder": "Select export folder",
+    "@selectExportFolder": {},
+    "selectValueFile": "Select {value} file",
+    "@selectValueFile": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "equipment"
+            }
+        }
+    },
+    "selectWorkSessionFile": "Select work session file",
+    "@selectWorkSessionFile": {},
+    "selectZipFileToImport": "Select Zip file to import",
+    "@selectZipFileToImport": {},
     "sendGnssConfig": "Send GNSS config",
     "@sendGnssConfig": {},
     "sendHardwareConfig": "Send hardware config",

@@ -397,6 +397,7 @@ FutureOr<void> saveABTracking(
 FutureOr<void> exportABTracking(
   Ref ref,
   ABTracking tracking, {
+  required String dialogTitle,
   String? overrideName,
   bool downloadIfWeb = true,
 }) async => await ref.watch(
@@ -408,6 +409,7 @@ FutureOr<void> exportABTracking(
         '${tracking.runtimeType}-${DateTime.now().toIso8601String()}',
     folder: path.join('guidance', 'ab_tracking'),
     downloadIfWeb: downloadIfWeb,
+    dialogTitle: dialogTitle,
   ).future,
 );
 
@@ -445,14 +447,17 @@ FutureOr<void> deleteABTracking(
 /// A provider for importing an [ABTracking] from a file and applying it to
 /// the [ConfiguredABTracking] provider.
 @riverpod
-FutureOr<ABTracking?> importABTracking(Ref ref) async {
+FutureOr<ABTracking?> importABTracking(
+  Ref ref, {
+  required String dialogTitle,
+}) async {
   ref.keepAlive();
   Timer(const Duration(seconds: 5), ref.invalidateSelf);
 
   final pickedFiles = await FilePicker.pickFiles(
     allowedExtensions: ['json'],
     type: FileType.custom,
-    dialogTitle: 'Choose AB tracking file',
+    dialogTitle: dialogTitle,
   );
   ABTracking? abTracking;
   if (Device.isWeb) {

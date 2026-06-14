@@ -166,7 +166,7 @@ final class ExportLogsProvider
   /// A provider for exporting all log files.
   ExportLogsProvider._({
     required ExportLogsFamily super.from,
-    required bool super.argument,
+    required ({String dialogTitle, bool zip}) super.argument,
   }) : super(
          retry: null,
          name: r'exportLogsProvider',
@@ -182,7 +182,7 @@ final class ExportLogsProvider
   String toString() {
     return r'exportLogsProvider'
         ''
-        '($argument)';
+        '$argument';
   }
 
   @$internal
@@ -192,8 +192,12 @@ final class ExportLogsProvider
 
   @override
   FutureOr<void> create(Ref ref) {
-    final argument = this.argument as bool;
-    return exportLogs(ref, zip: argument);
+    final argument = this.argument as ({String dialogTitle, bool zip});
+    return exportLogs(
+      ref,
+      dialogTitle: argument.dialogTitle,
+      zip: argument.zip,
+    );
   }
 
   @override
@@ -207,12 +211,16 @@ final class ExportLogsProvider
   }
 }
 
-String _$exportLogsHash() => r'1a0452517f5ccf79309ad6c8e13cce8434e22cc5';
+String _$exportLogsHash() => r'd00ab49cbbfbdc606fc7e7b88f4d53c71ab238db';
 
 /// A provider for exporting all log files.
 
 final class ExportLogsFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<void>, bool> {
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<void>,
+          ({String dialogTitle, bool zip})
+        > {
   ExportLogsFamily._()
     : super(
         retry: null,
@@ -224,8 +232,11 @@ final class ExportLogsFamily extends $Family
 
   /// A provider for exporting all log files.
 
-  ExportLogsProvider call({bool zip = true}) =>
-      ExportLogsProvider._(argument: zip, from: this);
+  ExportLogsProvider call({required String dialogTitle, bool zip = true}) =>
+      ExportLogsProvider._(
+        argument: (dialogTitle: dialogTitle, zip: zip),
+        from: this,
+      );
 
   @override
   String toString() => r'exportLogsProvider';

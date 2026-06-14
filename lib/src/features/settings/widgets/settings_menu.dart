@@ -85,7 +85,11 @@ class _ExportLogsButton extends ConsumerWidget {
     final strings = AppLocalizations.of(context);
 
     return MenuItemButton(
-      onPressed: () => ref.read(exportLogsProvider()),
+      onPressed: () => ref.read(
+        exportLogsProvider(
+          dialogTitle: strings.selectExportFolder,
+        ),
+      ),
       closeOnActivate: false,
       leadingIcon: const Padding(
         padding: EdgeInsets.only(left: 8),
@@ -117,7 +121,13 @@ class _ImportExportSettingsButton extends ConsumerWidget {
             child: Icon(Icons.download),
           ),
           closeOnActivate: false,
-          onPressed: () => ref.read(importSettingsProvider),
+          onPressed: () => ref.read(
+            importSettingsProvider(
+              dialogTitle: strings.selectValueFile(
+                strings.settings.toLowerCase(),
+              ),
+            ),
+          ),
           child: Text(
             strings.importAction,
             style: theme.menuButtonWithChildrenText,
@@ -180,6 +190,7 @@ class _ImportExportSettingsButton extends ConsumerWidget {
                                       exportSettingsProvider(
                                         removeSensitiveData:
                                             removeSensitiveData,
+                                        dialogTitle: strings.selectExportFolder,
                                       ).future,
                                     );
 
@@ -319,7 +330,11 @@ class _ExportEverythingButton extends ConsumerWidget {
         strings.exportValue(strings.everything.toLowerCase()),
         style: textStyle,
       ),
-      onPressed: () => ref.read(exportWholeFileDirectoryProvider),
+      onPressed: () => ref.read(
+        exportWholeFileDirectoryProvider(
+          dialogTitle: strings.selectExportFolder,
+        ),
+      ),
     );
   }
 }
@@ -342,7 +357,11 @@ class _ImportEverythingButton extends ConsumerWidget {
         strings.importValue(strings.everything.toLowerCase()),
         style: textStyle,
       ),
-      onPressed: () => ref.read(importWholeFileDirectoryProvider),
+      onPressed: () => ref.read(
+        importWholeFileDirectoryProvider(
+          dialogTitle: strings.selectZipFileToImport,
+        ),
+      ),
     );
   }
 }

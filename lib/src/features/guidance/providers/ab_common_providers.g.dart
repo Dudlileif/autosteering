@@ -1552,7 +1552,12 @@ final class ExportABTrackingProvider
   /// Override the file name with [overrideName].
   ExportABTrackingProvider._({
     required ExportABTrackingFamily super.from,
-    required (ABTracking, {String? overrideName, bool downloadIfWeb})
+    required (
+      ABTracking, {
+      String dialogTitle,
+      String? overrideName,
+      bool downloadIfWeb,
+    })
     super.argument,
   }) : super(
          retry: null,
@@ -1581,10 +1586,16 @@ final class ExportABTrackingProvider
   FutureOr<void> create(Ref ref) {
     final argument =
         this.argument
-            as (ABTracking, {String? overrideName, bool downloadIfWeb});
+            as (
+              ABTracking, {
+              String dialogTitle,
+              String? overrideName,
+              bool downloadIfWeb,
+            });
     return exportABTracking(
       ref,
       argument.$1,
+      dialogTitle: argument.dialogTitle,
       overrideName: argument.overrideName,
       downloadIfWeb: argument.downloadIfWeb,
     );
@@ -1601,7 +1612,7 @@ final class ExportABTrackingProvider
   }
 }
 
-String _$exportABTrackingHash() => r'df3020bdcd032ce61d138a49315c1ae2e2be08c7';
+String _$exportABTrackingHash() => r'acaa25b052b9edb44f14254067b7315b7d88dc16';
 
 /// A provider for exporting [tracking] to a file.
 ///
@@ -1611,7 +1622,12 @@ final class ExportABTrackingFamily extends $Family
     with
         $FunctionalFamilyOverride<
           FutureOr<void>,
-          (ABTracking, {String? overrideName, bool downloadIfWeb})
+          (
+            ABTracking, {
+            String dialogTitle,
+            String? overrideName,
+            bool downloadIfWeb,
+          })
         > {
   ExportABTrackingFamily._()
     : super(
@@ -1628,11 +1644,13 @@ final class ExportABTrackingFamily extends $Family
 
   ExportABTrackingProvider call(
     ABTracking tracking, {
+    required String dialogTitle,
     String? overrideName,
     bool downloadIfWeb = true,
   }) => ExportABTrackingProvider._(
     argument: (
       tracking,
+      dialogTitle: dialogTitle,
       overrideName: overrideName,
       downloadIfWeb: downloadIfWeb,
     ),
@@ -1804,7 +1822,7 @@ final class DeleteABTrackingFamily extends $Family
 /// the [ConfiguredABTracking] provider.
 
 @ProviderFor(importABTracking)
-final importABTrackingProvider = ImportABTrackingProvider._();
+final importABTrackingProvider = ImportABTrackingFamily._();
 
 /// A provider for importing an [ABTracking] from a file and applying it to
 /// the [ConfiguredABTracking] provider.
@@ -1819,19 +1837,26 @@ final class ImportABTrackingProvider
     with $FutureModifier<ABTracking?>, $FutureProvider<ABTracking?> {
   /// A provider for importing an [ABTracking] from a file and applying it to
   /// the [ConfiguredABTracking] provider.
-  ImportABTrackingProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'importABTrackingProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+  ImportABTrackingProvider._({
+    required ImportABTrackingFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'importABTrackingProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$importABTrackingHash();
+
+  @override
+  String toString() {
+    return r'importABTrackingProvider'
+        ''
+        '($argument)';
+  }
 
   @$internal
   @override
@@ -1841,8 +1866,43 @@ final class ImportABTrackingProvider
 
   @override
   FutureOr<ABTracking?> create(Ref ref) {
-    return importABTracking(ref);
+    final argument = this.argument as String;
+    return importABTracking(ref, dialogTitle: argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ImportABTrackingProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
   }
 }
 
-String _$importABTrackingHash() => r'5ac9ef0b8feb8c14a76fffd54c6680a536526f7a';
+String _$importABTrackingHash() => r'c1726b7cb27a961631ff30bacd2b21789358d702';
+
+/// A provider for importing an [ABTracking] from a file and applying it to
+/// the [ConfiguredABTracking] provider.
+
+final class ImportABTrackingFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<ABTracking?>, String> {
+  ImportABTrackingFamily._()
+    : super(
+        retry: null,
+        name: r'importABTrackingProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// A provider for importing an [ABTracking] from a file and applying it to
+  /// the [ConfiguredABTracking] provider.
+
+  ImportABTrackingProvider call({required String dialogTitle}) =>
+      ImportABTrackingProvider._(argument: dialogTitle, from: this);
+
+  @override
+  String toString() => r'importABTrackingProvider';
+}

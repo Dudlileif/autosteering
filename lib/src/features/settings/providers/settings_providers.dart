@@ -219,6 +219,7 @@ class EnableDadMode extends _$EnableDadMode {
 @riverpod
 FutureOr<void> exportSettings(
   Ref ref, {
+  required String dialogTitle,
   String? overrideName,
   bool downloadIfWeb = true,
   bool removeSensitiveData = false,
@@ -235,19 +236,23 @@ FutureOr<void> exportSettings(
       object: settings,
       fileName: overrideName ?? 'settings',
       downloadIfWeb: downloadIfWeb,
+      dialogTitle: dialogTitle,
     ).future,
   );
 }
 
 /// A provider for importing [Settings] from a file.
 @riverpod
-FutureOr<Map<String, dynamic>?> importSettings(Ref ref) async {
+FutureOr<Map<String, dynamic>?> importSettings(
+  Ref ref, {
+  required String dialogTitle,
+}) async {
   ref.keepAlive();
   Timer(const Duration(seconds: 5), ref.invalidateSelf);
   final pickedFiles = await FilePicker.pickFiles(
     allowedExtensions: ['json'],
     type: FileType.custom,
-    dialogTitle: 'Choose settings file',
+    dialogTitle: dialogTitle,
   );
 
   Map<String, dynamic>? settings;

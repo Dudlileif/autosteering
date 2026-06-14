@@ -55,7 +55,13 @@ class LogReplayMenu extends ConsumerWidget {
           builder: (context, ref, child) => ListTile(
             leading: const Icon(Icons.folder_open),
             title: child,
-            onTap: () => ref.read(importLogReplayProvider),
+            onTap: () => ref.read(
+              importLogReplayProvider(
+                dialogTitle: strings.selectValueFile(
+                  strings.logReplay.toLowerCase(),
+                ),
+              ),
+            ),
           ),
         ),
         Consumer(

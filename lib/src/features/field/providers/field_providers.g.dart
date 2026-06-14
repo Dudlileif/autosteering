@@ -1075,7 +1075,13 @@ final class ExportFieldProvider
   /// Override the file name with [overrideName].
   ExportFieldProvider._({
     required ExportFieldFamily super.from,
-    required (Field, {String? overrideName, bool downloadIfWeb}) super.argument,
+    required (
+      Field, {
+      String dialogTitle,
+      String? overrideName,
+      bool downloadIfWeb,
+    })
+    super.argument,
   }) : super(
          retry: null,
          name: r'exportFieldProvider',
@@ -1102,10 +1108,17 @@ final class ExportFieldProvider
   @override
   FutureOr<void> create(Ref ref) {
     final argument =
-        this.argument as (Field, {String? overrideName, bool downloadIfWeb});
+        this.argument
+            as (
+              Field, {
+              String dialogTitle,
+              String? overrideName,
+              bool downloadIfWeb,
+            });
     return exportField(
       ref,
       argument.$1,
+      dialogTitle: argument.dialogTitle,
       overrideName: argument.overrideName,
       downloadIfWeb: argument.downloadIfWeb,
     );
@@ -1122,7 +1135,7 @@ final class ExportFieldProvider
   }
 }
 
-String _$exportFieldHash() => r'4c9db7fb3ea45483588c2578e42142f7ca6d8c16';
+String _$exportFieldHash() => r'256b61b1e74bf86a0959a96c343082269cc8c592';
 
 /// A provider for exporting [field] to a file.
 ///
@@ -1132,7 +1145,12 @@ final class ExportFieldFamily extends $Family
     with
         $FunctionalFamilyOverride<
           FutureOr<void>,
-          (Field, {String? overrideName, bool downloadIfWeb})
+          (
+            Field, {
+            String dialogTitle,
+            String? overrideName,
+            bool downloadIfWeb,
+          })
         > {
   ExportFieldFamily._()
     : super(
@@ -1149,10 +1167,16 @@ final class ExportFieldFamily extends $Family
 
   ExportFieldProvider call(
     Field field, {
+    required String dialogTitle,
     String? overrideName,
     bool downloadIfWeb = true,
   }) => ExportFieldProvider._(
-    argument: (field, overrideName: overrideName, downloadIfWeb: downloadIfWeb),
+    argument: (
+      field,
+      dialogTitle: dialogTitle,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    ),
     from: this,
   );
 
@@ -1384,7 +1408,7 @@ final class LoadFieldFromFileFamily extends $Family
 /// [ActiveField] provider.
 
 @ProviderFor(importField)
-final importFieldProvider = ImportFieldProvider._();
+final importFieldProvider = ImportFieldFamily._();
 
 /// A provider for importing a field from a file and applying
 /// [ActiveField] provider.
@@ -1394,19 +1418,26 @@ final class ImportFieldProvider
     with $FutureModifier<Field?>, $FutureProvider<Field?> {
   /// A provider for importing a field from a file and applying
   /// [ActiveField] provider.
-  ImportFieldProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'importFieldProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+  ImportFieldProvider._({
+    required ImportFieldFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'importFieldProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$importFieldHash();
+
+  @override
+  String toString() {
+    return r'importFieldProvider'
+        ''
+        '($argument)';
+  }
 
   @$internal
   @override
@@ -1415,11 +1446,46 @@ final class ImportFieldProvider
 
   @override
   FutureOr<Field?> create(Ref ref) {
-    return importField(ref);
+    final argument = this.argument as String;
+    return importField(ref, dialogTitle: argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ImportFieldProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
   }
 }
 
-String _$importFieldHash() => r'21198fae0bb188ba7d2caa75abbd8ae43d1f3b30';
+String _$importFieldHash() => r'8f91ca2cdd0832304d6854f5b7849bea5aace053';
+
+/// A provider for importing a field from a file and applying
+/// [ActiveField] provider.
+
+final class ImportFieldFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<Field?>, String> {
+  ImportFieldFamily._()
+    : super(
+        retry: null,
+        name: r'importFieldProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// A provider for importing a field from a file and applying
+  /// [ActiveField] provider.
+
+  ImportFieldProvider call({required String dialogTitle}) =>
+      ImportFieldProvider._(argument: dialogTitle, from: this);
+
+  @override
+  String toString() => r'importFieldProvider';
+}
 
 /// A provider for exporting all field files.
 
@@ -1434,7 +1500,7 @@ final class ExportFieldsProvider
   /// A provider for exporting all field files.
   ExportFieldsProvider._({
     required ExportFieldsFamily super.from,
-    required bool super.argument,
+    required ({String dialogTitle, bool zip}) super.argument,
   }) : super(
          retry: null,
          name: r'exportFieldsProvider',
@@ -1450,7 +1516,7 @@ final class ExportFieldsProvider
   String toString() {
     return r'exportFieldsProvider'
         ''
-        '($argument)';
+        '$argument';
   }
 
   @$internal
@@ -1460,8 +1526,12 @@ final class ExportFieldsProvider
 
   @override
   FutureOr<void> create(Ref ref) {
-    final argument = this.argument as bool;
-    return exportFields(ref, zip: argument);
+    final argument = this.argument as ({String dialogTitle, bool zip});
+    return exportFields(
+      ref,
+      dialogTitle: argument.dialogTitle,
+      zip: argument.zip,
+    );
   }
 
   @override
@@ -1475,12 +1545,16 @@ final class ExportFieldsProvider
   }
 }
 
-String _$exportFieldsHash() => r'c1d87b9901f7a889082e21769769226e46e4fcd8';
+String _$exportFieldsHash() => r'76b542a2997d81e7769be4bd5ec676caa0b6095e';
 
 /// A provider for exporting all field files.
 
 final class ExportFieldsFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<void>, bool> {
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<void>,
+          ({String dialogTitle, bool zip})
+        > {
   ExportFieldsFamily._()
     : super(
         retry: null,
@@ -1492,8 +1566,11 @@ final class ExportFieldsFamily extends $Family
 
   /// A provider for exporting all field files.
 
-  ExportFieldsProvider call({bool zip = true}) =>
-      ExportFieldsProvider._(argument: zip, from: this);
+  ExportFieldsProvider call({required String dialogTitle, bool zip = true}) =>
+      ExportFieldsProvider._(
+        argument: (dialogTitle: dialogTitle, zip: zip),
+        from: this,
+      );
 
   @override
   String toString() => r'exportFieldsProvider';

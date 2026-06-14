@@ -405,6 +405,7 @@ final class ExportWorkSessionProvider
     required ExportWorkSessionFamily super.from,
     required (
       WorkSession, {
+      String dialogTitle,
       String? overrideName,
       bool downloadIfWeb,
       bool withEquipmentLogs,
@@ -439,6 +440,7 @@ final class ExportWorkSessionProvider
         this.argument
             as (
               WorkSession, {
+              String dialogTitle,
               String? overrideName,
               bool downloadIfWeb,
               bool withEquipmentLogs,
@@ -446,6 +448,7 @@ final class ExportWorkSessionProvider
     return exportWorkSession(
       ref,
       argument.$1,
+      dialogTitle: argument.dialogTitle,
       overrideName: argument.overrideName,
       downloadIfWeb: argument.downloadIfWeb,
       withEquipmentLogs: argument.withEquipmentLogs,
@@ -463,7 +466,7 @@ final class ExportWorkSessionProvider
   }
 }
 
-String _$exportWorkSessionHash() => r'53118d9022733abb20b4a3efaaaeae147232aed4';
+String _$exportWorkSessionHash() => r'9a27e105a7bd6638286e2964ffcaa32f23659c76';
 
 /// A provider for exporting [workSession] to a file.
 ///
@@ -475,6 +478,7 @@ final class ExportWorkSessionFamily extends $Family
           FutureOr<void>,
           (
             WorkSession, {
+            String dialogTitle,
             String? overrideName,
             bool downloadIfWeb,
             bool withEquipmentLogs,
@@ -495,12 +499,14 @@ final class ExportWorkSessionFamily extends $Family
 
   ExportWorkSessionProvider call(
     WorkSession workSession, {
+    required String dialogTitle,
     String? overrideName,
     bool downloadIfWeb = false,
     bool withEquipmentLogs = true,
   }) => ExportWorkSessionProvider._(
     argument: (
       workSession,
+      dialogTitle: dialogTitle,
       overrideName: overrideName,
       downloadIfWeb: downloadIfWeb,
       withEquipmentLogs: withEquipmentLogs,
@@ -666,7 +672,7 @@ final class DeleteWorkSessionFamily extends $Family
 /// to the [ActiveWorkSession] provider.
 
 @ProviderFor(importWorkSession)
-final importWorkSessionProvider = ImportWorkSessionProvider._();
+final importWorkSessionProvider = ImportWorkSessionFamily._();
 
 /// A provider for importing a work session from a file and applying it
 /// to the [ActiveWorkSession] provider.
@@ -681,19 +687,26 @@ final class ImportWorkSessionProvider
     with $FutureModifier<WorkSession?>, $FutureProvider<WorkSession?> {
   /// A provider for importing a work session from a file and applying it
   /// to the [ActiveWorkSession] provider.
-  ImportWorkSessionProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'importWorkSessionProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+  ImportWorkSessionProvider._({
+    required ImportWorkSessionFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'importWorkSessionProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$importWorkSessionHash();
+
+  @override
+  String toString() {
+    return r'importWorkSessionProvider'
+        ''
+        '($argument)';
+  }
 
   @$internal
   @override
@@ -703,11 +716,46 @@ final class ImportWorkSessionProvider
 
   @override
   FutureOr<WorkSession?> create(Ref ref) {
-    return importWorkSession(ref);
+    final argument = this.argument as String;
+    return importWorkSession(ref, dialogTitle: argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ImportWorkSessionProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
   }
 }
 
-String _$importWorkSessionHash() => r'd46058572a84791ab88316eb086f344892e0e666';
+String _$importWorkSessionHash() => r'557584b4cc19f682b8c049326c0490a6c099e508';
+
+/// A provider for importing a work session from a file and applying it
+/// to the [ActiveWorkSession] provider.
+
+final class ImportWorkSessionFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<WorkSession?>, String> {
+  ImportWorkSessionFamily._()
+    : super(
+        retry: null,
+        name: r'importWorkSessionProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// A provider for importing a work session from a file and applying it
+  /// to the [ActiveWorkSession] provider.
+
+  ImportWorkSessionProvider call({required String dialogTitle}) =>
+      ImportWorkSessionProvider._(argument: dialogTitle, from: this);
+
+  @override
+  String toString() => r'importWorkSessionProvider';
+}
 
 /// A provider for exporting all work session files.
 
@@ -722,7 +770,7 @@ final class ExportWorkSessionsProvider
   /// A provider for exporting all work session files.
   ExportWorkSessionsProvider._({
     required ExportWorkSessionsFamily super.from,
-    required bool super.argument,
+    required ({String dialogTitle, bool zip}) super.argument,
   }) : super(
          retry: null,
          name: r'exportWorkSessionsProvider',
@@ -738,7 +786,7 @@ final class ExportWorkSessionsProvider
   String toString() {
     return r'exportWorkSessionsProvider'
         ''
-        '($argument)';
+        '$argument';
   }
 
   @$internal
@@ -748,8 +796,12 @@ final class ExportWorkSessionsProvider
 
   @override
   FutureOr<void> create(Ref ref) {
-    final argument = this.argument as bool;
-    return exportWorkSessions(ref, zip: argument);
+    final argument = this.argument as ({String dialogTitle, bool zip});
+    return exportWorkSessions(
+      ref,
+      dialogTitle: argument.dialogTitle,
+      zip: argument.zip,
+    );
   }
 
   @override
@@ -764,12 +816,16 @@ final class ExportWorkSessionsProvider
 }
 
 String _$exportWorkSessionsHash() =>
-    r'3a8b1b5b889e9f9d2e502fdae910660eb67fe7f9';
+    r'dd2147204f622808bab0568d1768e964c3bc9c20';
 
 /// A provider for exporting all work session files.
 
 final class ExportWorkSessionsFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<void>, bool> {
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<void>,
+          ({String dialogTitle, bool zip})
+        > {
   ExportWorkSessionsFamily._()
     : super(
         retry: null,
@@ -781,8 +837,13 @@ final class ExportWorkSessionsFamily extends $Family
 
   /// A provider for exporting all work session files.
 
-  ExportWorkSessionsProvider call({bool zip = true}) =>
-      ExportWorkSessionsProvider._(argument: zip, from: this);
+  ExportWorkSessionsProvider call({
+    required String dialogTitle,
+    bool zip = true,
+  }) => ExportWorkSessionsProvider._(
+    argument: (dialogTitle: dialogTitle, zip: zip),
+    from: this,
+  );
 
   @override
   String toString() => r'exportWorkSessionsProvider';

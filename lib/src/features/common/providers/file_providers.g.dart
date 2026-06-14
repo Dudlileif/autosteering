@@ -393,6 +393,7 @@ final class ExportJsonToFileDirectoryProvider
     required ({
       dynamic object,
       String fileName,
+      String dialogTitle,
       String? folder,
       String? subFolder,
       bool downloadIfWeb,
@@ -428,6 +429,7 @@ final class ExportJsonToFileDirectoryProvider
             as ({
               dynamic object,
               String fileName,
+              String dialogTitle,
               String? folder,
               String? subFolder,
               bool downloadIfWeb,
@@ -436,6 +438,7 @@ final class ExportJsonToFileDirectoryProvider
       ref,
       object: argument.object,
       fileName: argument.fileName,
+      dialogTitle: argument.dialogTitle,
       folder: argument.folder,
       subFolder: argument.subFolder,
       downloadIfWeb: argument.downloadIfWeb,
@@ -455,7 +458,7 @@ final class ExportJsonToFileDirectoryProvider
 }
 
 String _$exportJsonToFileDirectoryHash() =>
-    r'd31580af9bb0bd319ab5fd6047bfaa784005e6e4';
+    r'ccb8ae90d54a8ac0f656af8fdeefe9175bc654b6';
 
 /// A provider for saving [object] to [fileName].json to a file in the [folder]
 /// in the file drectory.
@@ -469,6 +472,7 @@ final class ExportJsonToFileDirectoryFamily extends $Family
           ({
             dynamic object,
             String fileName,
+            String dialogTitle,
             String? folder,
             String? subFolder,
             bool downloadIfWeb,
@@ -491,6 +495,7 @@ final class ExportJsonToFileDirectoryFamily extends $Family
   ExportJsonToFileDirectoryProvider call({
     required dynamic object,
     required String fileName,
+    required String dialogTitle,
     String? folder,
     String? subFolder,
     bool downloadIfWeb = true,
@@ -498,6 +503,7 @@ final class ExportJsonToFileDirectoryFamily extends $Family
     argument: (
       object: object,
       fileName: fileName,
+      dialogTitle: dialogTitle,
       folder: folder,
       subFolder: subFolder,
       downloadIfWeb: downloadIfWeb,
@@ -954,7 +960,7 @@ final class DeleteDirectoryFromFileDirectoryFamily extends $Family
 /// A provider for exporting the whole file directory to a ZIP file.
 
 @ProviderFor(exportWholeFileDirectory)
-final exportWholeFileDirectoryProvider = ExportWholeFileDirectoryProvider._();
+final exportWholeFileDirectoryProvider = ExportWholeFileDirectoryFamily._();
 
 /// A provider for exporting the whole file directory to a ZIP file.
 
@@ -962,19 +968,26 @@ final class ExportWholeFileDirectoryProvider
     extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
     with $FutureModifier<void>, $FutureProvider<void> {
   /// A provider for exporting the whole file directory to a ZIP file.
-  ExportWholeFileDirectoryProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'exportWholeFileDirectoryProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+  ExportWholeFileDirectoryProvider._({
+    required ExportWholeFileDirectoryFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'exportWholeFileDirectoryProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$exportWholeFileDirectoryHash();
+
+  @override
+  String toString() {
+    return r'exportWholeFileDirectoryProvider'
+        ''
+        '($argument)';
+  }
 
   @$internal
   @override
@@ -983,12 +996,46 @@ final class ExportWholeFileDirectoryProvider
 
   @override
   FutureOr<void> create(Ref ref) {
-    return exportWholeFileDirectory(ref);
+    final argument = this.argument as String;
+    return exportWholeFileDirectory(ref, dialogTitle: argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ExportWholeFileDirectoryProvider &&
+        other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
   }
 }
 
 String _$exportWholeFileDirectoryHash() =>
-    r'3f87076cb2d86a827c7ea565a4926d69d26ff8c3';
+    r'2c6b59cca9ffdbd33cdc61c9e7a540d9bb201c43';
+
+/// A provider for exporting the whole file directory to a ZIP file.
+
+final class ExportWholeFileDirectoryFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<void>, String> {
+  ExportWholeFileDirectoryFamily._()
+    : super(
+        retry: null,
+        name: r'exportWholeFileDirectoryProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// A provider for exporting the whole file directory to a ZIP file.
+
+  ExportWholeFileDirectoryProvider call({required String dialogTitle}) =>
+      ExportWholeFileDirectoryProvider._(argument: dialogTitle, from: this);
+
+  @override
+  String toString() => r'exportWholeFileDirectoryProvider';
+}
 
 /// A provider for the progress of the currently ongoing export, if there is
 /// one.
@@ -1065,7 +1112,7 @@ final class ExportAllProvider
   /// A provider for exporting all files in a [directory].
   ExportAllProvider._({
     required ExportAllFamily super.from,
-    required ({String directory, bool zip}) super.argument,
+    required ({String directory, String dialogTitle, bool zip}) super.argument,
   }) : super(
          retry: null,
          name: r'exportAllProvider',
@@ -1091,8 +1138,14 @@ final class ExportAllProvider
 
   @override
   FutureOr<void> create(Ref ref) {
-    final argument = this.argument as ({String directory, bool zip});
-    return exportAll(ref, directory: argument.directory, zip: argument.zip);
+    final argument =
+        this.argument as ({String directory, String dialogTitle, bool zip});
+    return exportAll(
+      ref,
+      directory: argument.directory,
+      dialogTitle: argument.dialogTitle,
+      zip: argument.zip,
+    );
   }
 
   @override
@@ -1106,7 +1159,7 @@ final class ExportAllProvider
   }
 }
 
-String _$exportAllHash() => r'8126e3133d99086283d7c55104b81a72355486ff';
+String _$exportAllHash() => r'44cf02848d426dc4eb2d627eabec7dffc5e8bc8a';
 
 /// A provider for exporting all files in a [directory].
 
@@ -1114,7 +1167,7 @@ final class ExportAllFamily extends $Family
     with
         $FunctionalFamilyOverride<
           FutureOr<void>,
-          ({String directory, bool zip})
+          ({String directory, String dialogTitle, bool zip})
         > {
   ExportAllFamily._()
     : super(
@@ -1127,11 +1180,14 @@ final class ExportAllFamily extends $Family
 
   /// A provider for exporting all files in a [directory].
 
-  ExportAllProvider call({required String directory, bool zip = true}) =>
-      ExportAllProvider._(
-        argument: (directory: directory, zip: zip),
-        from: this,
-      );
+  ExportAllProvider call({
+    required String directory,
+    required String dialogTitle,
+    bool zip = true,
+  }) => ExportAllProvider._(
+    argument: (directory: directory, dialogTitle: dialogTitle, zip: zip),
+    from: this,
+  );
 
   @override
   String toString() => r'exportAllProvider';
@@ -1202,7 +1258,7 @@ abstract class _$ImportProgress extends $Notifier<double?> {
 /// A provider for importing all directory files from a zip file.
 
 @ProviderFor(importWholeFileDirectory)
-final importWholeFileDirectoryProvider = ImportWholeFileDirectoryProvider._();
+final importWholeFileDirectoryProvider = ImportWholeFileDirectoryFamily._();
 
 /// A provider for importing all directory files from a zip file.
 
@@ -1210,19 +1266,26 @@ final class ImportWholeFileDirectoryProvider
     extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
     with $FutureModifier<void>, $FutureProvider<void> {
   /// A provider for importing all directory files from a zip file.
-  ImportWholeFileDirectoryProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'importWholeFileDirectoryProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+  ImportWholeFileDirectoryProvider._({
+    required ImportWholeFileDirectoryFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'importWholeFileDirectoryProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$importWholeFileDirectoryHash();
+
+  @override
+  String toString() {
+    return r'importWholeFileDirectoryProvider'
+        ''
+        '($argument)';
+  }
 
   @$internal
   @override
@@ -1231,9 +1294,43 @@ final class ImportWholeFileDirectoryProvider
 
   @override
   FutureOr<void> create(Ref ref) {
-    return importWholeFileDirectory(ref);
+    final argument = this.argument as String;
+    return importWholeFileDirectory(ref, dialogTitle: argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ImportWholeFileDirectoryProvider &&
+        other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
   }
 }
 
 String _$importWholeFileDirectoryHash() =>
-    r'c0b65b409be2eb3a647a7d3878d4ef2ba0fb90e3';
+    r'7d53eedb3c9c4061a84ca1815e00b52cd8396117';
+
+/// A provider for importing all directory files from a zip file.
+
+final class ImportWholeFileDirectoryFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<void>, String> {
+  ImportWholeFileDirectoryFamily._()
+    : super(
+        retry: null,
+        name: r'importWholeFileDirectoryProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// A provider for importing all directory files from a zip file.
+
+  ImportWholeFileDirectoryProvider call({required String dialogTitle}) =>
+      ImportWholeFileDirectoryProvider._(argument: dialogTitle, from: this);
+
+  @override
+  String toString() => r'importWholeFileDirectoryProvider';
+}

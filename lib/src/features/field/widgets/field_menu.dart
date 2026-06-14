@@ -118,7 +118,12 @@ class FieldMenu extends ConsumerWidget {
             ),
           ))
             ExportAllMenuButton(
-              onPressed: () => ref.read(exportAllProvider(directory: 'fields')),
+              onPressed: () => ref.read(
+                exportAllProvider(
+                  directory: 'fields',
+                  dialogTitle: strings.selectExportFolder,
+                ),
+              ),
             ),
           if (!dadMode) const _ImportButton(),
           if (ref.watch(
@@ -466,7 +471,11 @@ class _ImportButton extends ConsumerWidget {
         child: Icon(Icons.file_open),
       ),
       closeOnActivate: false,
-      onPressed: () => ref.read(importFieldProvider),
+      onPressed: () => ref.read(
+        importFieldProvider(
+          dialogTitle: strings.selectValueFile(strings.field.toLowerCase()),
+        ),
+      ),
       child: Text(strings.importAction, style: textStyle),
     );
   }
@@ -492,7 +501,10 @@ class _ExportButton extends ConsumerWidget {
             ),
           )
           ? () => ref.watch(
-              exportFieldProvider(ref.watch(activeFieldProvider)!),
+              exportFieldProvider(
+                ref.watch(activeFieldProvider)!,
+                dialogTitle: strings.selectExportFolder,
+              ),
             )
           : null,
       child: Text(strings.exportAction, style: textStyle),

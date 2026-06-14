@@ -27,6 +27,7 @@ import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:quiver/strings.dart';
 
 /// A menu with attached submenu for interacting with the equipment feature.
@@ -264,6 +265,10 @@ class _LoadEquipmentMenu extends ConsumerWidget {
     }
     final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 1,
+    );
 
     return MenuButtonWithChildren(
       text: strings.load,
@@ -287,7 +292,7 @@ class _LoadEquipmentMenu extends ConsumerWidget {
                   style: textStyle,
                 ),
                 subtitle: Text(
-                  '''${strings.hitchType(equipment.hitchType.name)} | ${equipment.width} m${equipment.sections.length > 1 ? ' | ${equipment.sections.length} ${strings.sections(equipment.sections.length)}' : ''}''',
+                  '''${strings.hitchType(equipment.hitchType.name)} | ${numberFormatter.format(equipment.width)} m${equipment.sections.length > 1 ? ' | ${equipment.sections.length} ${strings.sections(equipment.sections.length)}' : ''}''',
                 ),
                 trailing: Device.isNative
                     ? IconButton(
@@ -338,7 +343,13 @@ class _ImportExportMenu extends ConsumerWidget {
           builder: (context, ref, child) {
             return MenuItemButton(
               closeOnActivate: false,
-              onPressed: () => ref.read(importEquipmentProvider),
+              onPressed: () => ref.read(
+                importEquipmentProvider(
+                  dialogTitle: strings.selectValueFile(
+                    strings.equipment.toLowerCase(),
+                  ),
+                ),
+              ),
               leadingIcon: const Padding(
                 padding: EdgeInsets.only(left: 8),
                 child: Icon(Icons.file_open),
@@ -361,6 +372,7 @@ class _ImportExportMenu extends ConsumerWidget {
                   ? () => ref.watch(
                       exportEquipmentProvider(
                         ref.watch(loadedEquipmentProvider)!,
+                        dialogTitle: strings.selectExportFolder,
                       ),
                     )
                   : null,
@@ -376,7 +388,13 @@ class _ImportExportMenu extends ConsumerWidget {
           builder: (context, ref, child) {
             return MenuItemButton(
               closeOnActivate: false,
-              onPressed: () => ref.read(importEquipmentSetupProvider),
+              onPressed: () => ref.read(
+                importEquipmentSetupProvider(
+                  dialogTitle: strings.selectValueFile(
+                    strings.equipmentSetup.toLowerCase(),
+                  ),
+                ),
+              ),
               leadingIcon: const Padding(
                 padding: EdgeInsets.only(left: 8),
                 child: Icon(Icons.file_open),
@@ -404,6 +422,7 @@ class _ImportExportMenu extends ConsumerWidget {
                     ? () => ref.watch(
                         exportEquipmentSetupProvider(
                           ref.watch(configuredEquipmentSetupProvider)!,
+                          dialogTitle: strings.selectExportFolder,
                         ),
                       )
                     : null,
@@ -420,8 +439,12 @@ class _ImportExportMenu extends ConsumerWidget {
           ),
         Consumer(
           builder: (context, ref, child) => ExportAllMenuButton(
-            onPressed: () =>
-                ref.read(exportAllProvider(directory: 'equipment')),
+            onPressed: () => ref.read(
+              exportAllProvider(
+                directory: 'equipment',
+                dialogTitle: strings.selectExportFolder,
+              ),
+            ),
           ),
         ),
       ],

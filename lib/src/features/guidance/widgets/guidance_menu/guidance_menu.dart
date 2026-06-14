@@ -146,8 +146,12 @@ class GuidanceMenu extends ConsumerWidget {
                 displayABTrackingProvider.select((value) => value == null),
               ))
             ExportAllMenuButton(
-              onPressed: () =>
-                  ref.read(exportAllProvider(directory: 'guidance')),
+              onPressed: () => ref.read(
+                exportAllProvider(
+                  directory: 'guidance',
+                  dialogTitle: strings.selectExportFolder,
+                ),
+              ),
             ),
           if (!dadMode) const _ImportMenu(),
         ],
@@ -401,12 +405,22 @@ class _ImportMenu extends ConsumerWidget {
       text: strings.importAction,
       menuChildren: [
         MenuItemButton(
-          onPressed: () async => await ref.watch(importABTrackingProvider),
+          onPressed: () async => await ref.watch(
+            importABTrackingProvider(
+              dialogTitle: strings.selectValueFile(strings.abTracking),
+            ),
+          ),
           closeOnActivate: false,
           child: Text(strings.abTracking, style: textStyle),
         ),
         MenuItemButton(
-          onPressed: () async => await ref.watch(importPathTrackingProvider),
+          onPressed: () async => await ref.watch(
+            importPathTrackingProvider(
+              dialogTitle: strings.selectValueFile(
+                strings.pathTracking.toLowerCase(),
+              ),
+            ),
+          ),
           closeOnActivate: false,
           child: Text(strings.pathTracking, style: textStyle),
         ),
@@ -433,11 +447,18 @@ class _ExportButton extends ConsumerWidget {
         child: Icon(Icons.save_alt),
       ),
       onPressed: abTracking != null
-          ? () async =>
-                await ref.watch(exportABTrackingProvider(abTracking).future)
+          ? () async => await ref.watch(
+              exportABTrackingProvider(
+                abTracking,
+                dialogTitle: strings.selectExportFolder,
+              ).future,
+            )
           : pathTracking != null
           ? () async => await ref.watch(
-              exportPathTrackingProvider(pathTracking).future,
+              exportPathTrackingProvider(
+                pathTracking,
+                dialogTitle: strings.selectExportFolder,
+              ).future,
             )
           : null,
       child: Text(strings.exportAction, style: textStyle),

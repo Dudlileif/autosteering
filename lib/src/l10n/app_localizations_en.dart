@@ -1371,6 +1371,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sectionWorkingWidth => 'Section working width';
 
   @override
+  String get selectExportFolder => 'Select export folder';
+
+  @override
+  String selectValueFile(String value) {
+    return 'Select $value file';
+  }
+
+  @override
+  String get selectWorkSessionFile => 'Select work session file';
+
+  @override
+  String get selectZipFileToImport => 'Select Zip file to import';
+
+  @override
   String get sendGnssConfig => 'Send GNSS config';
 
   @override

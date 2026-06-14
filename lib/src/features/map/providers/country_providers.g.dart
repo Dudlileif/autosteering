@@ -118,7 +118,7 @@ final class AvailableCountryLayersProvider
 }
 
 String _$availableCountryLayersHash() =>
-    r'6ba57f2f132153fa6f1e20f2b30d1654a3e80cc3';
+    r'363bfb50f7fb381f6c7a47783444eecc5c6165a5';
 
 /// A provider that contains all the custom layers available for the
 /// [CurrentCountry].

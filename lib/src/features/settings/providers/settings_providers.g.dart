@@ -297,6 +297,7 @@ final class ExportSettingsProvider
   ExportSettingsProvider._({
     required ExportSettingsFamily super.from,
     required ({
+      String dialogTitle,
       String? overrideName,
       bool downloadIfWeb,
       bool removeSensitiveData,
@@ -330,12 +331,14 @@ final class ExportSettingsProvider
     final argument =
         this.argument
             as ({
+              String dialogTitle,
               String? overrideName,
               bool downloadIfWeb,
               bool removeSensitiveData,
             });
     return exportSettings(
       ref,
+      dialogTitle: argument.dialogTitle,
       overrideName: argument.overrideName,
       downloadIfWeb: argument.downloadIfWeb,
       removeSensitiveData: argument.removeSensitiveData,
@@ -353,7 +356,7 @@ final class ExportSettingsProvider
   }
 }
 
-String _$exportSettingsHash() => r'a30f6a519a4fe93718a98f15d053a84a61ef82d1';
+String _$exportSettingsHash() => r'95eec189e0fe56215ec81c403428640fa013f0c1';
 
 /// A provider for exporting [Settings] to a file.
 
@@ -361,7 +364,12 @@ final class ExportSettingsFamily extends $Family
     with
         $FunctionalFamilyOverride<
           FutureOr<void>,
-          ({String? overrideName, bool downloadIfWeb, bool removeSensitiveData})
+          ({
+            String dialogTitle,
+            String? overrideName,
+            bool downloadIfWeb,
+            bool removeSensitiveData,
+          })
         > {
   ExportSettingsFamily._()
     : super(
@@ -375,11 +383,13 @@ final class ExportSettingsFamily extends $Family
   /// A provider for exporting [Settings] to a file.
 
   ExportSettingsProvider call({
+    required String dialogTitle,
     String? overrideName,
     bool downloadIfWeb = true,
     bool removeSensitiveData = false,
   }) => ExportSettingsProvider._(
     argument: (
+      dialogTitle: dialogTitle,
       overrideName: overrideName,
       downloadIfWeb: downloadIfWeb,
       removeSensitiveData: removeSensitiveData,
@@ -394,7 +404,7 @@ final class ExportSettingsFamily extends $Family
 /// A provider for importing [Settings] from a file.
 
 @ProviderFor(importSettings)
-final importSettingsProvider = ImportSettingsProvider._();
+final importSettingsProvider = ImportSettingsFamily._();
 
 /// A provider for importing [Settings] from a file.
 
@@ -409,19 +419,26 @@ final class ImportSettingsProvider
         $FutureModifier<Map<String, dynamic>?>,
         $FutureProvider<Map<String, dynamic>?> {
   /// A provider for importing [Settings] from a file.
-  ImportSettingsProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'importSettingsProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+  ImportSettingsProvider._({
+    required ImportSettingsFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'importSettingsProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$importSettingsHash();
+
+  @override
+  String toString() {
+    return r'importSettingsProvider'
+        ''
+        '($argument)';
+  }
 
   @$internal
   @override
@@ -431,11 +448,44 @@ final class ImportSettingsProvider
 
   @override
   FutureOr<Map<String, dynamic>?> create(Ref ref) {
-    return importSettings(ref);
+    final argument = this.argument as String;
+    return importSettings(ref, dialogTitle: argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ImportSettingsProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
   }
 }
 
-String _$importSettingsHash() => r'837414fcb6326138ece43f9b62aa4a1127a91854';
+String _$importSettingsHash() => r'b93513f249c5465c665975de7e221e95e04183ec';
+
+/// A provider for importing [Settings] from a file.
+
+final class ImportSettingsFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<Map<String, dynamic>?>, String> {
+  ImportSettingsFamily._()
+    : super(
+        retry: null,
+        name: r'importSettingsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// A provider for importing [Settings] from a file.
+
+  ImportSettingsProvider call({required String dialogTitle}) =>
+      ImportSettingsProvider._(argument: dialogTitle, from: this);
+
+  @override
+  String toString() => r'importSettingsProvider';
+}
 
 /// A provider for rebuilding all providers that reads [Settings] during the
 /// build method.
@@ -579,7 +629,7 @@ final class UiUnitLengthProvider
   }
 }
 
-String _$uiUnitLengthHash() => r'65b975e775a5fc7c50818dc1d392fb02c9213d33';
+String _$uiUnitLengthHash() => r'1136e3e8b5ca4c72d0ea0cf50ccbcc981a5c7bf9';
 
 /// A provider for which distance unit the UI should show.
 

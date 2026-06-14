@@ -231,6 +231,7 @@ FutureOr<void> savePathTracking(
 FutureOr<void> exportPathTracking(
   Ref ref,
   PathTracking tracking, {
+  required String dialogTitle,
   String? overrideName,
   bool downloadIfWeb = false,
 }) async => await ref.watch(
@@ -242,6 +243,7 @@ FutureOr<void> exportPathTracking(
         DateTime.now().toIso8601StringFileName(),
     folder: path.join('guidance', 'path_tracking'),
     downloadIfWeb: downloadIfWeb,
+    dialogTitle: dialogTitle,
   ).future,
 );
 
@@ -279,13 +281,16 @@ FutureOr<void> deletePathTracking(
 /// A provider for importing a [PathTracking] from a file and applying it to
 /// the [ConfiguredPathTracking] provider.
 @riverpod
-FutureOr<PathTracking?> importPathTracking(Ref ref) async {
+FutureOr<PathTracking?> importPathTracking(
+  Ref ref, {
+  required String dialogTitle,
+}) async {
   ref.keepAlive();
   Timer(const Duration(seconds: 5), ref.invalidateSelf);
   final pickedFiles = await FilePicker.pickFiles(
     allowedExtensions: ['json'],
     type: FileType.custom,
-    dialogTitle: 'Choose path tracking file',
+    dialogTitle: dialogTitle,
   );
 
   PathTracking? pathTracking;
@@ -330,5 +335,13 @@ FutureOr<PathTracking?> importPathTracking(Ref ref) async {
 
 /// A provider for exporting all guidance files.
 @riverpod
-FutureOr<void> exportGuidances(Ref ref, {bool zip = true}) async =>
-    await ref.watch(exportAllProvider(directory: 'guidance').future);
+FutureOr<void> exportGuidances(
+  Ref ref, {
+  required String dialogTitle,
+  bool zip = true,
+}) async => await ref.watch(
+  exportAllProvider(
+    directory: 'guidance',
+    dialogTitle: dialogTitle,
+  ).future,
+);

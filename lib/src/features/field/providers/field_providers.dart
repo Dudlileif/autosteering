@@ -380,6 +380,7 @@ Future<void> saveField(
 Future<void> exportField(
   Ref ref,
   Field field, {
+  required String dialogTitle,
   String? overrideName,
   bool downloadIfWeb = true,
 }) async => await ref.watch(
@@ -388,6 +389,7 @@ Future<void> exportField(
     fileName: overrideName ?? field.name,
     folder: 'fields',
     downloadIfWeb: downloadIfWeb,
+    dialogTitle: dialogTitle,
   ).future,
 );
 
@@ -437,13 +439,13 @@ FutureOr<Field?> loadFieldFromFile(Ref ref, String path) async {
 /// A provider for importing a field from a file and applying
 /// [ActiveField] provider.
 @riverpod
-FutureOr<Field?> importField(Ref ref) async {
+FutureOr<Field?> importField(Ref ref, {required String dialogTitle}) async {
   ref.keepAlive();
   Timer(const Duration(seconds: 5), ref.invalidateSelf);
   final pickedFiles = await FilePicker.pickFiles(
     allowedExtensions: ['json'],
     type: FileType.custom,
-    dialogTitle: 'Choose field file',
+    dialogTitle: dialogTitle,
   );
 
   Field? field;
@@ -483,5 +485,13 @@ FutureOr<Field?> importField(Ref ref) async {
 
 /// A provider for exporting all field files.
 @riverpod
-FutureOr<void> exportFields(Ref ref, {bool zip = true}) async =>
-    await ref.watch(exportAllProvider(directory: 'fields').future);
+FutureOr<void> exportFields(
+  Ref ref, {
+  required String dialogTitle,
+  bool zip = true,
+}) async => await ref.watch(
+  exportAllProvider(
+    directory: 'fields',
+    dialogTitle: dialogTitle,
+  ).future,
+);

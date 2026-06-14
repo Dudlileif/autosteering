@@ -127,8 +127,12 @@ class WorkSessionMenu extends ConsumerWidget {
         )) ...[
           const _LoadWorkSessionMenu(),
           ExportAllMenuButton(
-            onPressed: () =>
-                ref.read(exportAllProvider(directory: 'work_sessions')),
+            onPressed: () => ref.read(
+              exportAllProvider(
+                directory: 'work_sessions',
+                dialogTitle: strings.selectExportFolder,
+              ),
+            ),
           ),
           if (!dadMode) const _ImportButton(),
         ],
@@ -485,7 +489,10 @@ class _ExportButton extends ConsumerWidget {
             ),
           )
           ? () => ref.watch(
-              exportWorkSessionProvider(ref.watch(activeWorkSessionProvider)!),
+              exportWorkSessionProvider(
+                ref.watch(activeWorkSessionProvider)!,
+                dialogTitle: strings.selectExportFolder,
+              ),
             )
           : null,
       child: Text(strings.exportAction, style: textStyle),
@@ -507,7 +514,9 @@ class _ImportButton extends ConsumerWidget {
         child: Icon(Icons.file_open),
       ),
       closeOnActivate: false,
-      onPressed: () => ref.read(importWorkSessionProvider),
+      onPressed: () => ref.read(
+        importWorkSessionProvider(dialogTitle: strings.selectWorkSessionFile),
+      ),
       child: Text(strings.importAction, style: textStyle),
     );
   }
@@ -1096,7 +1105,8 @@ class _ABTrackingMenu extends ConsumerWidget {
                       text += '${tracking.initialBearing.toStringAsFixed(0)}° ';
                     }
                     text += '| ${tracking.width} m |';
-                    text += ''' ${tracking.lines.length} ${strings.swaths(tracking.lines.length)}''';
+                    text +=
+                        ''' ${tracking.lines.length} ${strings.swaths(tracking.lines.length)}''';
 
                     return Text(text);
                   },

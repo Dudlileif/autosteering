@@ -193,7 +193,12 @@ final class ExportEquipmentSetupProvider
   /// Override the file name with [overrideName].
   ExportEquipmentSetupProvider._({
     required ExportEquipmentSetupFamily super.from,
-    required (EquipmentSetup, {String? overrideName, bool downloadIfWeb})
+    required (
+      EquipmentSetup, {
+      String dialogTitle,
+      String? overrideName,
+      bool downloadIfWeb,
+    })
     super.argument,
   }) : super(
          retry: null,
@@ -222,10 +227,16 @@ final class ExportEquipmentSetupProvider
   FutureOr<void> create(Ref ref) {
     final argument =
         this.argument
-            as (EquipmentSetup, {String? overrideName, bool downloadIfWeb});
+            as (
+              EquipmentSetup, {
+              String dialogTitle,
+              String? overrideName,
+              bool downloadIfWeb,
+            });
     return exportEquipmentSetup(
       ref,
       argument.$1,
+      dialogTitle: argument.dialogTitle,
       overrideName: argument.overrideName,
       downloadIfWeb: argument.downloadIfWeb,
     );
@@ -243,7 +254,7 @@ final class ExportEquipmentSetupProvider
 }
 
 String _$exportEquipmentSetupHash() =>
-    r'401caa4accd623a0db3cad6119649a4fb14ede92';
+    r'3efb8510f36ab9788e57a8382c7d1e52cb9d8a81';
 
 /// A provider for exporting [setup] to a file.
 ///
@@ -253,7 +264,12 @@ final class ExportEquipmentSetupFamily extends $Family
     with
         $FunctionalFamilyOverride<
           FutureOr<void>,
-          (EquipmentSetup, {String? overrideName, bool downloadIfWeb})
+          (
+            EquipmentSetup, {
+            String dialogTitle,
+            String? overrideName,
+            bool downloadIfWeb,
+          })
         > {
   ExportEquipmentSetupFamily._()
     : super(
@@ -270,10 +286,16 @@ final class ExportEquipmentSetupFamily extends $Family
 
   ExportEquipmentSetupProvider call(
     EquipmentSetup setup, {
+    required String dialogTitle,
     String? overrideName,
     bool downloadIfWeb = false,
   }) => ExportEquipmentSetupProvider._(
-    argument: (setup, overrideName: overrideName, downloadIfWeb: downloadIfWeb),
+    argument: (
+      setup,
+      dialogTitle: dialogTitle,
+      overrideName: overrideName,
+      downloadIfWeb: downloadIfWeb,
+    ),
     from: this,
   );
 
@@ -533,7 +555,7 @@ final class LoadEquipmentSetupFromFileFamily extends $Family
 /// directory and applying it to the [ConfiguredEquipmentSetup] provider.
 
 @ProviderFor(importEquipmentSetup)
-final importEquipmentSetupProvider = ImportEquipmentSetupProvider._();
+final importEquipmentSetupProvider = ImportEquipmentSetupFamily._();
 
 /// A provider for importing a equipment setup configuration from the user file
 /// directory and applying it to the [ConfiguredEquipmentSetup] provider.
@@ -548,19 +570,26 @@ final class ImportEquipmentSetupProvider
     with $FutureModifier<EquipmentSetup?>, $FutureProvider<EquipmentSetup?> {
   /// A provider for importing a equipment setup configuration from the user file
   /// directory and applying it to the [ConfiguredEquipmentSetup] provider.
-  ImportEquipmentSetupProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'importEquipmentSetupProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+  ImportEquipmentSetupProvider._({
+    required ImportEquipmentSetupFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'importEquipmentSetupProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$importEquipmentSetupHash();
+
+  @override
+  String toString() {
+    return r'importEquipmentSetupProvider'
+        ''
+        '($argument)';
+  }
 
   @$internal
   @override
@@ -570,9 +599,44 @@ final class ImportEquipmentSetupProvider
 
   @override
   FutureOr<EquipmentSetup?> create(Ref ref) {
-    return importEquipmentSetup(ref);
+    final argument = this.argument as String;
+    return importEquipmentSetup(ref, dialogTitle: argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ImportEquipmentSetupProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
   }
 }
 
 String _$importEquipmentSetupHash() =>
-    r'90ff69be4b648e9a00b4588baac47bf6b1039bb3';
+    r'91efa4a5203d66609c41cf98fb83a14a3ffd49b8';
+
+/// A provider for importing a equipment setup configuration from the user file
+/// directory and applying it to the [ConfiguredEquipmentSetup] provider.
+
+final class ImportEquipmentSetupFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<EquipmentSetup?>, String> {
+  ImportEquipmentSetupFamily._()
+    : super(
+        retry: null,
+        name: r'importEquipmentSetupProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// A provider for importing a equipment setup configuration from the user file
+  /// directory and applying it to the [ConfiguredEquipmentSetup] provider.
+
+  ImportEquipmentSetupProvider call({required String dialogTitle}) =>
+      ImportEquipmentSetupProvider._(argument: dialogTitle, from: this);
+
+  @override
+  String toString() => r'importEquipmentSetupProvider';
+}

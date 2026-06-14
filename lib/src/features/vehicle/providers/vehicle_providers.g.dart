@@ -253,7 +253,12 @@ final class ExportVehicleProvider
   /// Override the file name with [overrideName].
   ExportVehicleProvider._({
     required ExportVehicleFamily super.from,
-    required (Vehicle, {String? overrideName, bool downloadIfWeb})
+    required (
+      Vehicle, {
+      String dialogTitle,
+      String? overrideName,
+      bool downloadIfWeb,
+    })
     super.argument,
   }) : super(
          retry: null,
@@ -281,10 +286,17 @@ final class ExportVehicleProvider
   @override
   FutureOr<void> create(Ref ref) {
     final argument =
-        this.argument as (Vehicle, {String? overrideName, bool downloadIfWeb});
+        this.argument
+            as (
+              Vehicle, {
+              String dialogTitle,
+              String? overrideName,
+              bool downloadIfWeb,
+            });
     return exportVehicle(
       ref,
       argument.$1,
+      dialogTitle: argument.dialogTitle,
       overrideName: argument.overrideName,
       downloadIfWeb: argument.downloadIfWeb,
     );
@@ -301,7 +313,7 @@ final class ExportVehicleProvider
   }
 }
 
-String _$exportVehicleHash() => r'cd71215436b2f327671f58007d90e4ae056e3776';
+String _$exportVehicleHash() => r'4d846108255c0c0bc741f14fee0d23b3af12a594';
 
 /// A provider for saving [vehicle] to a file.
 ///
@@ -311,7 +323,12 @@ final class ExportVehicleFamily extends $Family
     with
         $FunctionalFamilyOverride<
           FutureOr<void>,
-          (Vehicle, {String? overrideName, bool downloadIfWeb})
+          (
+            Vehicle, {
+            String dialogTitle,
+            String? overrideName,
+            bool downloadIfWeb,
+          })
         > {
   ExportVehicleFamily._()
     : super(
@@ -328,11 +345,13 @@ final class ExportVehicleFamily extends $Family
 
   ExportVehicleProvider call(
     Vehicle vehicle, {
+    required String dialogTitle,
     String? overrideName,
     bool downloadIfWeb = true,
   }) => ExportVehicleProvider._(
     argument: (
       vehicle,
+      dialogTitle: dialogTitle,
       overrideName: overrideName,
       downloadIfWeb: downloadIfWeb,
     ),
@@ -690,7 +709,7 @@ abstract class _$VehicleSteeringAngleTarget extends $Notifier<double?> {
 /// to the [ConfiguredVehicle] provider.
 
 @ProviderFor(importVehicle)
-final importVehicleProvider = ImportVehicleProvider._();
+final importVehicleProvider = ImportVehicleFamily._();
 
 /// A provider for importing a vehicle configuration from a file and applying it
 /// to the [ConfiguredVehicle] provider.
@@ -701,19 +720,26 @@ final class ImportVehicleProvider
     with $FutureModifier<Vehicle?>, $FutureProvider<Vehicle?> {
   /// A provider for importing a vehicle configuration from a file and applying it
   /// to the [ConfiguredVehicle] provider.
-  ImportVehicleProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'importVehicleProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+  ImportVehicleProvider._({
+    required ImportVehicleFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'importVehicleProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$importVehicleHash();
+
+  @override
+  String toString() {
+    return r'importVehicleProvider'
+        ''
+        '($argument)';
+  }
 
   @$internal
   @override
@@ -722,11 +748,46 @@ final class ImportVehicleProvider
 
   @override
   FutureOr<Vehicle?> create(Ref ref) {
-    return importVehicle(ref);
+    final argument = this.argument as String;
+    return importVehicle(ref, dialogTitle: argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ImportVehicleProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
   }
 }
 
-String _$importVehicleHash() => r'f6d4702b0e38ba1fd6e9a490aa2cad82bd8747cf';
+String _$importVehicleHash() => r'3ac6526a44189716b031086be48a95f4a0d7a1eb';
+
+/// A provider for importing a vehicle configuration from a file and applying it
+/// to the [ConfiguredVehicle] provider.
+
+final class ImportVehicleFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<Vehicle?>, String> {
+  ImportVehicleFamily._()
+    : super(
+        retry: null,
+        name: r'importVehicleProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// A provider for importing a vehicle configuration from a file and applying it
+  /// to the [ConfiguredVehicle] provider.
+
+  ImportVehicleProvider call({required String dialogTitle}) =>
+      ImportVehicleProvider._(argument: dialogTitle, from: this);
+
+  @override
+  String toString() => r'importVehicleProvider';
+}
 
 /// A provider for whether widgets for overriding the steering should be shown.
 
@@ -921,7 +982,7 @@ final class ExportVehiclesProvider
   /// A provider for exporting all vehicle files.
   ExportVehiclesProvider._({
     required ExportVehiclesFamily super.from,
-    required bool super.argument,
+    required ({String dialogTitle, bool zip}) super.argument,
   }) : super(
          retry: null,
          name: r'exportVehiclesProvider',
@@ -937,7 +998,7 @@ final class ExportVehiclesProvider
   String toString() {
     return r'exportVehiclesProvider'
         ''
-        '($argument)';
+        '$argument';
   }
 
   @$internal
@@ -947,8 +1008,12 @@ final class ExportVehiclesProvider
 
   @override
   FutureOr<void> create(Ref ref) {
-    final argument = this.argument as bool;
-    return exportVehicles(ref, zip: argument);
+    final argument = this.argument as ({String dialogTitle, bool zip});
+    return exportVehicles(
+      ref,
+      dialogTitle: argument.dialogTitle,
+      zip: argument.zip,
+    );
   }
 
   @override
@@ -962,12 +1027,16 @@ final class ExportVehiclesProvider
   }
 }
 
-String _$exportVehiclesHash() => r'1791fa257813e56b8d158ef9b2323726810d183f';
+String _$exportVehiclesHash() => r'de70e3b97ad257f189ef5af658719e1dabae9b23';
 
 /// A provider for exporting all vehicle files.
 
 final class ExportVehiclesFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<void>, bool> {
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<void>,
+          ({String dialogTitle, bool zip})
+        > {
   ExportVehiclesFamily._()
     : super(
         retry: null,
@@ -979,8 +1048,11 @@ final class ExportVehiclesFamily extends $Family
 
   /// A provider for exporting all vehicle files.
 
-  ExportVehiclesProvider call({bool zip = true}) =>
-      ExportVehiclesProvider._(argument: zip, from: this);
+  ExportVehiclesProvider call({required String dialogTitle, bool zip = true}) =>
+      ExportVehiclesProvider._(
+        argument: (dialogTitle: dialogTitle, zip: zip),
+        from: this,
+      );
 
   @override
   String toString() => r'exportVehiclesProvider';

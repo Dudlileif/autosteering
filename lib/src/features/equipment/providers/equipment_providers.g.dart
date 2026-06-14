@@ -897,7 +897,12 @@ final class ExportEquipmentProvider
   /// Override the file name with [overrideName].
   ExportEquipmentProvider._({
     required ExportEquipmentFamily super.from,
-    required (Equipment, {String? overrideName, bool downloadIfWeb})
+    required (
+      Equipment, {
+      String dialogTitle,
+      String? overrideName,
+      bool downloadIfWeb,
+    })
     super.argument,
   }) : super(
          retry: null,
@@ -926,10 +931,16 @@ final class ExportEquipmentProvider
   FutureOr<void> create(Ref ref) {
     final argument =
         this.argument
-            as (Equipment, {String? overrideName, bool downloadIfWeb});
+            as (
+              Equipment, {
+              String dialogTitle,
+              String? overrideName,
+              bool downloadIfWeb,
+            });
     return exportEquipment(
       ref,
       argument.$1,
+      dialogTitle: argument.dialogTitle,
       overrideName: argument.overrideName,
       downloadIfWeb: argument.downloadIfWeb,
     );
@@ -946,7 +957,7 @@ final class ExportEquipmentProvider
   }
 }
 
-String _$exportEquipmentHash() => r'339c3a416629bd47b089892f76adf8c4fe1e4a3e';
+String _$exportEquipmentHash() => r'eac2945ccf82d74589ca5ff4d8daa73190028511';
 
 /// A provider for exporting [equipment] to a file.
 ///
@@ -956,7 +967,12 @@ final class ExportEquipmentFamily extends $Family
     with
         $FunctionalFamilyOverride<
           FutureOr<void>,
-          (Equipment, {String? overrideName, bool downloadIfWeb})
+          (
+            Equipment, {
+            String dialogTitle,
+            String? overrideName,
+            bool downloadIfWeb,
+          })
         > {
   ExportEquipmentFamily._()
     : super(
@@ -973,11 +989,13 @@ final class ExportEquipmentFamily extends $Family
 
   ExportEquipmentProvider call(
     Equipment equipment, {
+    required String dialogTitle,
     String? overrideName,
     bool downloadIfWeb = true,
   }) => ExportEquipmentProvider._(
     argument: (
       equipment,
+      dialogTitle: dialogTitle,
       overrideName: overrideName,
       downloadIfWeb: downloadIfWeb,
     ),
@@ -1138,7 +1156,7 @@ final class DeleteEquipmentFamily extends $Family
 /// it to the [ConfiguredEquipment] provider.
 
 @ProviderFor(importEquipment)
-final importEquipmentProvider = ImportEquipmentProvider._();
+final importEquipmentProvider = ImportEquipmentFamily._();
 
 /// A provider for importing a equipment configuration from a file and applying
 /// it to the [ConfiguredEquipment] provider.
@@ -1153,19 +1171,26 @@ final class ImportEquipmentProvider
     with $FutureModifier<Equipment?>, $FutureProvider<Equipment?> {
   /// A provider for importing a equipment configuration from a file and applying
   /// it to the [ConfiguredEquipment] provider.
-  ImportEquipmentProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'importEquipmentProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+  ImportEquipmentProvider._({
+    required ImportEquipmentFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'importEquipmentProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$importEquipmentHash();
+
+  @override
+  String toString() {
+    return r'importEquipmentProvider'
+        ''
+        '($argument)';
+  }
 
   @$internal
   @override
@@ -1174,11 +1199,46 @@ final class ImportEquipmentProvider
 
   @override
   FutureOr<Equipment?> create(Ref ref) {
-    return importEquipment(ref);
+    final argument = this.argument as String;
+    return importEquipment(ref, dialogTitle: argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ImportEquipmentProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
   }
 }
 
-String _$importEquipmentHash() => r'9d49214ca322b82d12ad1be86665f039220e9674';
+String _$importEquipmentHash() => r'abbea308f4718f0c5934f45e2ce8ac29edaecbab';
+
+/// A provider for importing a equipment configuration from a file and applying
+/// it to the [ConfiguredEquipment] provider.
+
+final class ImportEquipmentFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<Equipment?>, String> {
+  ImportEquipmentFamily._()
+    : super(
+        retry: null,
+        name: r'importEquipmentProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// A provider for importing a equipment configuration from a file and applying
+  /// it to the [ConfiguredEquipment] provider.
+
+  ImportEquipmentProvider call({required String dialogTitle}) =>
+      ImportEquipmentProvider._(argument: dialogTitle, from: this);
+
+  @override
+  String toString() => r'importEquipmentProvider';
+}
 
 /// A provider for exporting all equipment files.
 
@@ -1193,7 +1253,7 @@ final class ExportEquipmentsProvider
   /// A provider for exporting all equipment files.
   ExportEquipmentsProvider._({
     required ExportEquipmentsFamily super.from,
-    required bool super.argument,
+    required ({String dialogTitle, bool zip}) super.argument,
   }) : super(
          retry: null,
          name: r'exportEquipmentsProvider',
@@ -1209,7 +1269,7 @@ final class ExportEquipmentsProvider
   String toString() {
     return r'exportEquipmentsProvider'
         ''
-        '($argument)';
+        '$argument';
   }
 
   @$internal
@@ -1219,8 +1279,12 @@ final class ExportEquipmentsProvider
 
   @override
   FutureOr<void> create(Ref ref) {
-    final argument = this.argument as bool;
-    return exportEquipments(ref, zip: argument);
+    final argument = this.argument as ({String dialogTitle, bool zip});
+    return exportEquipments(
+      ref,
+      dialogTitle: argument.dialogTitle,
+      zip: argument.zip,
+    );
   }
 
   @override
@@ -1234,12 +1298,16 @@ final class ExportEquipmentsProvider
   }
 }
 
-String _$exportEquipmentsHash() => r'b901191f3ac54bfe593d9dadec5e5c17d4c37977';
+String _$exportEquipmentsHash() => r'2a19ab5ffa518054a3e7d2ad1e967342ad18a9f2';
 
 /// A provider for exporting all equipment files.
 
 final class ExportEquipmentsFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<void>, bool> {
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<void>,
+          ({String dialogTitle, bool zip})
+        > {
   ExportEquipmentsFamily._()
     : super(
         retry: null,
@@ -1251,8 +1319,13 @@ final class ExportEquipmentsFamily extends $Family
 
   /// A provider for exporting all equipment files.
 
-  ExportEquipmentsProvider call({bool zip = true}) =>
-      ExportEquipmentsProvider._(argument: zip, from: this);
+  ExportEquipmentsProvider call({
+    required String dialogTitle,
+    bool zip = true,
+  }) => ExportEquipmentsProvider._(
+    argument: (dialogTitle: dialogTitle, zip: zip),
+    from: this,
+  );
 
   @override
   String toString() => r'exportEquipmentsProvider';

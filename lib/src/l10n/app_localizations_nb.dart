@@ -1376,6 +1376,20 @@ class AppLocalizationsNb extends AppLocalizations {
   String get sectionWorkingWidth => 'Seksjon-arbeidsbredde';
 
   @override
+  String get selectExportFolder => 'Velg eksportmappe';
+
+  @override
+  String selectValueFile(String value) {
+    return 'Velg $value-fil';
+  }
+
+  @override
+  String get selectWorkSessionFile => 'Velg arbeidsøkt-fil';
+
+  @override
+  String get selectZipFileToImport => 'Velg Zip-fil for importering';
+
+  @override
   String get sendGnssConfig => 'Send GNSS-konfigurasjon';
 
   @override

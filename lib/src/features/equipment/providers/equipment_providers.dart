@@ -669,6 +669,7 @@ Future<void> saveEquipment(
 Future<void> exportEquipment(
   Ref ref,
   Equipment equipment, {
+  required String dialogTitle,
   String? overrideName,
   bool downloadIfWeb = true,
 }) async => ref.watch(
@@ -677,6 +678,7 @@ Future<void> exportEquipment(
     fileName: overrideName ?? equipment.name ?? equipment.uuid,
     folder: 'equipment',
     downloadIfWeb: downloadIfWeb,
+    dialogTitle: dialogTitle,
   ).future,
 );
 
@@ -710,13 +712,16 @@ Future<void> deleteEquipment(
 /// A provider for importing a equipment configuration from a file and applying
 /// it to the [ConfiguredEquipment] provider.
 @riverpod
-FutureOr<Equipment?> importEquipment(Ref ref) async {
+FutureOr<Equipment?> importEquipment(
+  Ref ref, {
+  required String dialogTitle,
+}) async {
   ref.keepAlive();
   Timer(const Duration(seconds: 5), ref.invalidateSelf);
   final pickedFiles = await FilePicker.pickFiles(
     allowedExtensions: ['json'],
     type: FileType.custom,
-    dialogTitle: 'Choose equipment file',
+    dialogTitle: dialogTitle,
   );
 
   Equipment? equipment;
@@ -760,5 +765,13 @@ FutureOr<Equipment?> importEquipment(Ref ref) async {
 
 /// A provider for exporting all equipment files.
 @riverpod
-FutureOr<void> exportEquipments(Ref ref, {bool zip = true}) async =>
-    await ref.watch(exportAllProvider(directory: 'equipments').future);
+FutureOr<void> exportEquipments(
+  Ref ref, {
+  required String dialogTitle,
+  bool zip = true,
+}) async => await ref.watch(
+  exportAllProvider(
+    directory: 'equipments',
+    dialogTitle: dialogTitle,
+  ).future,
+);

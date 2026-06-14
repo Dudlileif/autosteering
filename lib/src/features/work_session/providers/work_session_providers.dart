@@ -472,6 +472,7 @@ FutureOr<void> saveWorkSessionEquipmentLogs(
 FutureOr<void> exportWorkSession(
   Ref ref,
   WorkSession workSession, {
+  required String dialogTitle,
   String? overrideName,
   bool downloadIfWeb = false,
   bool withEquipmentLogs = true,
@@ -481,6 +482,7 @@ FutureOr<void> exportWorkSession(
     fileName:
         overrideName ?? workSession.name ?? DateTime.now().toIso8601String(),
     folder: 'work_sessions',
+    dialogTitle: dialogTitle,
   ).future,
 );
 
@@ -576,13 +578,16 @@ FutureOr<void> deleteWorkSession(
 /// A provider for importing a work session from a file and applying it
 /// to the [ActiveWorkSession] provider.
 @riverpod
-FutureOr<WorkSession?> importWorkSession(Ref ref) async {
+FutureOr<WorkSession?> importWorkSession(
+  Ref ref, {
+  required String dialogTitle,
+}) async {
   ref.keepAlive();
   Timer(const Duration(seconds: 5), ref.invalidateSelf);
   final pickedFiles = await FilePicker.pickFiles(
     allowedExtensions: ['json'],
     type: FileType.custom,
-    dialogTitle: 'Choose work session file',
+    dialogTitle: dialogTitle,
   );
 
   WorkSession? workSession;
@@ -662,5 +667,13 @@ FutureOr<WorkSession?> importWorkSession(Ref ref) async {
 
 /// A provider for exporting all work session files.
 @riverpod
-FutureOr<void> exportWorkSessions(Ref ref, {bool zip = true}) async =>
-    await ref.watch(exportAllProvider(directory: 'work_sessions').future);
+FutureOr<void> exportWorkSessions(
+  Ref ref, {
+  required String dialogTitle,
+  bool zip = true,
+}) async => await ref.watch(
+  exportAllProvider(
+    directory: 'work_sessions',
+    dialogTitle: dialogTitle,
+  ).future,
+);

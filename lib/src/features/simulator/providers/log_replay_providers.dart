@@ -91,13 +91,16 @@ FutureOr<LogReplay?> loadLogReplayFromFile(Ref ref, String path) async {
 
 /// A provider for importing a [LogReplay] from a file.
 @riverpod
-FutureOr<LogReplay?> importLogReplay(Ref ref) async {
+FutureOr<LogReplay?> importLogReplay(
+  Ref ref, {
+  required String dialogTitle,
+}) async {
   ref.keepAlive();
   Timer(const Duration(seconds: 5), ref.invalidateSelf);
   final pickedFiles = await FilePicker.pickFiles(
     allowedExtensions: ['log'],
     type: FileType.custom,
-    dialogTitle: 'Choose log replay file',
+    dialogTitle: dialogTitle,
   );
 
   LogReplay? replay;

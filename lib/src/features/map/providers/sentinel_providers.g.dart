@@ -104,7 +104,7 @@ final class AvailableSentinelLayersProvider
 }
 
 String _$availableSentinelLayersHash() =>
-    r'1d72ab1b896eeadbafba49556b0d711143f0247e';
+    r'6b2ad21f194a8e303caf59f029d1b057cd050a49';
 
 /// A provider for the available Sentinel layers.
 
