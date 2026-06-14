@@ -119,7 +119,9 @@ class ABTrackingMenu extends ConsumerWidget {
                             builder: (context) => Consumer(
                               builder: (context, ref, child) {
                                 return ConfirmationDialog(
-                                  title: 'Close active path tracking?',
+                                  title: strings.closeActiveValue(
+                                    strings.pathTracking.toLowerCase(),
+                                  ),
                                   onConfirmation: () async => ref
                                       .read(
                                         simInputProvider.notifier,
