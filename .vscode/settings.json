@@ -76,7 +76,7 @@
     "Hardware",
     "Localization"
   ],
-  "dart.flutterSdkPath": ".fvm/versions/3.44.0",
+  "dart.flutterSdkPath": ".fvm/versions/3.44.2",
   "editor.formatOnSave": true,
   "[dart]": {
     "editor.codeActionsOnSave": {
