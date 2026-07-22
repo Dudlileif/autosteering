@@ -53,7 +53,7 @@ abstract class _$VirtualLedBarEnabled extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -63,7 +63,7 @@ abstract class _$VirtualLedBarEnabled extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -113,7 +113,7 @@ abstract class _$VirtualLedBarConfiguration extends $Notifier<LedBarConfig> {
   LedBarConfig build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<LedBarConfig, LedBarConfig>;
     final element =
         ref.element
@@ -123,7 +123,7 @@ abstract class _$VirtualLedBarConfiguration extends $Notifier<LedBarConfig> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -176,7 +176,7 @@ abstract class _$VirtualLedBarTesting extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -186,7 +186,7 @@ abstract class _$VirtualLedBarTesting extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -236,7 +236,7 @@ abstract class _$VirtualLedBarTestingDistance extends $Notifier<double?> {
   double? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -246,7 +246,7 @@ abstract class _$VirtualLedBarTestingDistance extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 

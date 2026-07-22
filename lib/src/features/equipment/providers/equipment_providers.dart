@@ -822,7 +822,7 @@ FutureOr<Equipment?> importEquipment(
 
   Equipment? equipment;
   if (Device.isWeb) {
-    final data = pickedFiles?.files.first.bytes;
+    final data = await pickedFiles?.files.first.readAsBytes();
     if (data != null) {
       try {
         final json = jsonDecode(String.fromCharCodes(data));

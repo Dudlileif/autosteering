@@ -7900,9 +7900,7 @@ final class $$PartfieldsTableReferences
   $$PartfieldsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static $PartfieldsTable _parentFieldTable(_$Database db) =>
-      db.partfields.createAlias(
-        $_aliasNameGenerator(db.partfields.parentField, db.partfields.id),
-      );
+      db.partfields.createAlias('partfields__parent_field__partfields__id');
 
   $$PartfieldsTableProcessedTableManager? get parentField {
     final $_column = $_itemColumn<int>('parent_field');
@@ -7922,7 +7920,7 @@ final class $$PartfieldsTableReferences
     _$Database db,
   ) => MultiTypedResultKey.fromTable(
     db.tasks,
-    aliasName: $_aliasNameGenerator(db.partfields.id, db.tasks.partfield),
+    aliasName: 'partfields__id__tasks__partfield',
   );
 
   $$TasksTableProcessedTableManager get taskPartfield {
@@ -7944,10 +7942,7 @@ final class $$PartfieldsTableReferences
   _partfieldGuidanceGroupPartfieldTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.partfieldGuidanceGroups,
-        aliasName: $_aliasNameGenerator(
-          db.partfields.id,
-          db.partfieldGuidanceGroups.partfield,
-        ),
+        aliasName: 'partfields__id__partfield_guidance_groups__partfield',
       );
 
   $$PartfieldGuidanceGroupsTableProcessedTableManager
@@ -7969,10 +7964,7 @@ final class $$PartfieldsTableReferences
   _partfieldPolygonPartfieldTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.partfieldPolygons,
-        aliasName: $_aliasNameGenerator(
-          db.partfields.id,
-          db.partfieldPolygons.partfield,
-        ),
+        aliasName: 'partfields__id__partfield_polygons__partfield',
       );
 
   $$PartfieldPolygonsTableProcessedTableManager get partfieldPolygonPartfield {
@@ -7996,10 +7988,7 @@ final class $$PartfieldsTableReferences
   _partfieldLineStringPartfieldTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.partfieldLineStrings,
-        aliasName: $_aliasNameGenerator(
-          db.partfields.id,
-          db.partfieldLineStrings.partfield,
-        ),
+        aliasName: 'partfields__id__partfield_line_strings__partfield',
       );
 
   $$PartfieldLineStringsTableProcessedTableManager
@@ -8020,10 +8009,7 @@ final class $$PartfieldsTableReferences
   static MultiTypedResultKey<$PartfieldPointsTable, List<PartfieldPoint>>
   _partfieldPointPartfieldTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.partfieldPoints,
-    aliasName: $_aliasNameGenerator(
-      db.partfields.id,
-      db.partfieldPoints.partfield,
-    ),
+    aliasName: 'partfields__id__partfield_points__partfield',
   );
 
   $$PartfieldPointsTableProcessedTableManager get partfieldPointPartfield {
@@ -8769,8 +8755,8 @@ final class $$TasksTableReferences
     extends BaseReferences<_$Database, $TasksTable, Task> {
   $$TasksTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $PartfieldsTable _partfieldTable(_$Database db) => db.partfields
-      .createAlias($_aliasNameGenerator(db.tasks.partfield, db.partfields.id));
+  static $PartfieldsTable _partfieldTable(_$Database db) =>
+      db.partfields.createAlias('tasks__partfield__partfields__id');
 
   $$PartfieldsTableProcessedTableManager? get partfield {
     final $_column = $_itemColumn<int>('partfield');
@@ -8789,7 +8775,7 @@ final class $$TasksTableReferences
   static MultiTypedResultKey<$ConnectionsTable, List<Connection>>
   _connectionTaskTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.connections,
-    aliasName: $_aliasNameGenerator(db.tasks.id, db.connections.task),
+    aliasName: 'tasks__id__connections__task',
   );
 
   $$ConnectionsTableProcessedTableManager get connectionTask {
@@ -8810,7 +8796,7 @@ final class $$TasksTableReferences
   >
   _guidanceAllocationTaskTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.guidanceAllocations,
-    aliasName: $_aliasNameGenerator(db.tasks.id, db.guidanceAllocations.task),
+    aliasName: 'tasks__id__guidance_allocations__task',
   );
 
   $$GuidanceAllocationsTableProcessedTableManager get guidanceAllocationTask {
@@ -9354,7 +9340,7 @@ final class $$VehiclesTableReferences
   static MultiTypedResultKey<$ConnectorsTable, List<Connector>>
   _connectorVehicleTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.connectors,
-    aliasName: $_aliasNameGenerator(db.vehicles.id, db.connectors.vehicle),
+    aliasName: 'vehicles__id__connectors__vehicle',
   );
 
   $$ConnectorsTableProcessedTableManager get connectorVehicle {
@@ -9847,7 +9833,7 @@ final class $$ImplementsTableReferences
   static MultiTypedResultKey<$ConnectorsTable, List<Connector>>
   _connectorImplementTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.connectors,
-    aliasName: $_aliasNameGenerator(db.implements.id, db.connectors.implement),
+    aliasName: 'implements__id__connectors__implement',
   );
 
   $$ConnectorsTableProcessedTableManager get connectorImplement {
@@ -9865,7 +9851,7 @@ final class $$ImplementsTableReferences
   static MultiTypedResultKey<$SectionsTable, List<Section>>
   _sectionImplementTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.sections,
-    aliasName: $_aliasNameGenerator(db.implements.id, db.sections.implement),
+    aliasName: 'implements__id__sections__implement',
   );
 
   $$SectionsTableProcessedTableManager get sectionImplement {
@@ -10253,9 +10239,8 @@ final class $$ConnectorsTableReferences
     extends BaseReferences<_$Database, $ConnectorsTable, Connector> {
   $$ConnectorsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $VehiclesTable _vehicleTable(_$Database db) => db.vehicles.createAlias(
-    $_aliasNameGenerator(db.connectors.vehicle, db.vehicles.id),
-  );
+  static $VehiclesTable _vehicleTable(_$Database db) =>
+      db.vehicles.createAlias('connectors__vehicle__vehicles__id');
 
   $$VehiclesTableProcessedTableManager? get vehicle {
     final $_column = $_itemColumn<int>('vehicle');
@@ -10272,9 +10257,7 @@ final class $$ConnectorsTableReferences
   }
 
   static $ImplementsTable _implementTable(_$Database db) =>
-      db.implements.createAlias(
-        $_aliasNameGenerator(db.connectors.implement, db.implements.id),
-      );
+      db.implements.createAlias('connectors__implement__implements__id');
 
   $$ImplementsTableProcessedTableManager? get implement {
     final $_column = $_itemColumn<int>('implement');
@@ -10293,10 +10276,7 @@ final class $$ConnectorsTableReferences
   static MultiTypedResultKey<$ConnectionsTable, List<Connection>>
   _connectionParentTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.connections,
-    aliasName: $_aliasNameGenerator(
-      db.connectors.id,
-      db.connections.parentConnector,
-    ),
+    aliasName: 'connectors__id__connections__parent_connector',
   );
 
   $$ConnectionsTableProcessedTableManager get connectionParent {
@@ -10314,10 +10294,7 @@ final class $$ConnectorsTableReferences
   static MultiTypedResultKey<$ConnectionsTable, List<Connection>>
   _connectionChildTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.connections,
-    aliasName: $_aliasNameGenerator(
-      db.connectors.id,
-      db.connections.childConnector,
-    ),
+    aliasName: 'connectors__id__connections__child_connector',
   );
 
   $$ConnectionsTableProcessedTableManager get connectionChild {
@@ -10967,9 +10944,8 @@ final class $$ConnectionsTableReferences
     extends BaseReferences<_$Database, $ConnectionsTable, Connection> {
   $$ConnectionsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $TasksTable _taskTable(_$Database db) => db.tasks.createAlias(
-    $_aliasNameGenerator(db.connections.task, db.tasks.id),
-  );
+  static $TasksTable _taskTable(_$Database db) =>
+      db.tasks.createAlias('connections__task__tasks__id');
 
   $$TasksTableProcessedTableManager get task {
     final $_column = $_itemColumn<int>('task')!;
@@ -10985,10 +10961,8 @@ final class $$ConnectionsTableReferences
     );
   }
 
-  static $ConnectorsTable _parentConnectorTable(_$Database db) =>
-      db.connectors.createAlias(
-        $_aliasNameGenerator(db.connections.parentConnector, db.connectors.id),
-      );
+  static $ConnectorsTable _parentConnectorTable(_$Database db) => db.connectors
+      .createAlias('connections__parent_connector__connectors__id');
 
   $$ConnectorsTableProcessedTableManager get parentConnector {
     final $_column = $_itemColumn<int>('parent_connector')!;
@@ -11005,9 +10979,7 @@ final class $$ConnectionsTableReferences
   }
 
   static $ConnectorsTable _childConnectorTable(_$Database db) =>
-      db.connectors.createAlias(
-        $_aliasNameGenerator(db.connections.childConnector, db.connectors.id),
-      );
+      db.connectors.createAlias('connections__child_connector__connectors__id');
 
   $$ConnectorsTableProcessedTableManager get childConnector {
     final $_column = $_itemColumn<int>('child_connector')!;
@@ -11441,10 +11413,7 @@ final class $$PolygonsTableReferences
   _guidanceGroupBorderPolygonTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.guidanceGroups,
-        aliasName: $_aliasNameGenerator(
-          db.polygons.id,
-          db.guidanceGroups.borderPolygon,
-        ),
+        aliasName: 'polygons__id__guidance_groups__border_polygon',
       );
 
   $$GuidanceGroupsTableProcessedTableManager get guidanceGroupBorderPolygon {
@@ -11465,10 +11434,7 @@ final class $$PolygonsTableReferences
   _guidancePatternBorderPolygonTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.guidancePatterns,
-        aliasName: $_aliasNameGenerator(
-          db.polygons.id,
-          db.guidancePatterns.borderPolygon,
-        ),
+        aliasName: 'polygons__id__guidance_patterns__border_polygon',
       );
 
   $$GuidancePatternsTableProcessedTableManager
@@ -11489,10 +11455,7 @@ final class $$PolygonsTableReferences
   static MultiTypedResultKey<$PartfieldPolygonsTable, List<PartfieldPolygon>>
   _partfieldPolygonPolygonTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.partfieldPolygons,
-    aliasName: $_aliasNameGenerator(
-      db.polygons.id,
-      db.partfieldPolygons.polygon,
-    ),
+    aliasName: 'polygons__id__partfield_polygons__polygon',
   );
 
   $$PartfieldPolygonsTableProcessedTableManager get partfieldPolygonPolygon {
@@ -11513,10 +11476,7 @@ final class $$PolygonsTableReferences
   _polygonLineStringPolygonTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.polygonLineStrings,
-        aliasName: $_aliasNameGenerator(
-          db.polygons.id,
-          db.polygonLineStrings.polygon,
-        ),
+        aliasName: 'polygons__id__polygon_line_strings__polygon',
       );
 
   $$PolygonLineStringsTableProcessedTableManager get polygonLineStringPolygon {
@@ -12006,9 +11966,7 @@ final class $$GuidanceGroupsTableReferences
   );
 
   static $PolygonsTable _borderPolygonTable(_$Database db) =>
-      db.polygons.createAlias(
-        $_aliasNameGenerator(db.guidanceGroups.borderPolygon, db.polygons.id),
-      );
+      db.polygons.createAlias('guidance_groups__border_polygon__polygons__id');
 
   $$PolygonsTableProcessedTableManager? get borderPolygon {
     final $_column = $_itemColumn<int>('border_polygon');
@@ -12031,10 +11989,7 @@ final class $$GuidanceGroupsTableReferences
   _guidanceAllocationGuidanceGroupTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.guidanceAllocations,
-        aliasName: $_aliasNameGenerator(
-          db.guidanceGroups.id,
-          db.guidanceAllocations.guidanceGroup,
-        ),
+        aliasName: 'guidance_groups__id__guidance_allocations__guidance_group',
       );
 
   $$GuidanceAllocationsTableProcessedTableManager
@@ -12058,10 +12013,7 @@ final class $$GuidanceGroupsTableReferences
   >
   _guidanceGroupGroupTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.guidanceGroupPatterns,
-    aliasName: $_aliasNameGenerator(
-      db.guidanceGroups.id,
-      db.guidanceGroupPatterns.guidanceGroup,
-    ),
+    aliasName: 'guidance_groups__id__guidance_group_patterns__guidance_group',
   );
 
   $$GuidanceGroupPatternsTableProcessedTableManager get guidanceGroupGroup {
@@ -12083,10 +12035,8 @@ final class $$GuidanceGroupsTableReferences
   _partfieldGuidanceGroupGuidanceGroupTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.partfieldGuidanceGroups,
-        aliasName: $_aliasNameGenerator(
-          db.guidanceGroups.id,
-          db.partfieldGuidanceGroups.guidanceGroup,
-        ),
+        aliasName:
+            'guidance_groups__id__partfield_guidance_groups__guidance_group',
       );
 
   $$PartfieldGuidanceGroupsTableProcessedTableManager
@@ -12597,9 +12547,8 @@ final class $$GuidanceAllocationsTableReferences
     super.$_typedResult,
   );
 
-  static $TasksTable _taskTable(_$Database db) => db.tasks.createAlias(
-    $_aliasNameGenerator(db.guidanceAllocations.task, db.tasks.id),
-  );
+  static $TasksTable _taskTable(_$Database db) =>
+      db.tasks.createAlias('guidance_allocations__task__tasks__id');
 
   $$TasksTableProcessedTableManager get task {
     final $_column = $_itemColumn<int>('task')!;
@@ -12615,13 +12564,9 @@ final class $$GuidanceAllocationsTableReferences
     );
   }
 
-  static $GuidanceGroupsTable _guidanceGroupTable(_$Database db) =>
-      db.guidanceGroups.createAlias(
-        $_aliasNameGenerator(
-          db.guidanceAllocations.guidanceGroup,
-          db.guidanceGroups.id,
-        ),
-      );
+  static $GuidanceGroupsTable _guidanceGroupTable(_$Database db) => db
+      .guidanceGroups
+      .createAlias('guidance_allocations__guidance_group__guidance_groups__id');
 
   $$GuidanceGroupsTableProcessedTableManager get guidanceGroup {
     final $_column = $_itemColumn<int>('guidance_group')!;
@@ -13022,10 +12967,7 @@ final class $$LineStringsTableReferences
   _guidancePatternLineStringTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.guidancePatterns,
-        aliasName: $_aliasNameGenerator(
-          db.lineStrings.id,
-          db.guidancePatterns.lineString,
-        ),
+        aliasName: 'line_strings__id__guidance_patterns__line_string',
       );
 
   $$GuidancePatternsTableProcessedTableManager get guidancePatternLineString {
@@ -13046,10 +12988,7 @@ final class $$LineStringsTableReferences
   _lineStringPointLineStringTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.lineStringPoints,
-        aliasName: $_aliasNameGenerator(
-          db.lineStrings.id,
-          db.lineStringPoints.lineString,
-        ),
+        aliasName: 'line_strings__id__line_string_points__line_string',
       );
 
   $$LineStringPointsTableProcessedTableManager get lineStringPointLineString {
@@ -13073,10 +13012,7 @@ final class $$LineStringsTableReferences
   _partfieldLineStringLineStringTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.partfieldLineStrings,
-        aliasName: $_aliasNameGenerator(
-          db.lineStrings.id,
-          db.partfieldLineStrings.lineString,
-        ),
+        aliasName: 'line_strings__id__partfield_line_strings__line_string',
       );
 
   $$PartfieldLineStringsTableProcessedTableManager
@@ -13098,10 +13034,7 @@ final class $$LineStringsTableReferences
   _polygonLineStringLineStringTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.polygonLineStrings,
-        aliasName: $_aliasNameGenerator(
-          db.lineStrings.id,
-          db.polygonLineStrings.lineString,
-        ),
+        aliasName: 'line_strings__id__polygon_line_strings__line_string',
       );
 
   $$PolygonLineStringsTableProcessedTableManager
@@ -13694,10 +13627,8 @@ final class $$GuidancePatternsTableReferences
     super.$_typedResult,
   );
 
-  static $LineStringsTable _lineStringTable(_$Database db) =>
-      db.lineStrings.createAlias(
-        $_aliasNameGenerator(db.guidancePatterns.lineString, db.lineStrings.id),
-      );
+  static $LineStringsTable _lineStringTable(_$Database db) => db.lineStrings
+      .createAlias('guidance_patterns__line_string__line_strings__id');
 
   $$LineStringsTableProcessedTableManager get lineString {
     final $_column = $_itemColumn<int>('line_string')!;
@@ -13713,10 +13644,8 @@ final class $$GuidancePatternsTableReferences
     );
   }
 
-  static $PolygonsTable _borderPolygonTable(_$Database db) =>
-      db.polygons.createAlias(
-        $_aliasNameGenerator(db.guidancePatterns.borderPolygon, db.polygons.id),
-      );
+  static $PolygonsTable _borderPolygonTable(_$Database db) => db.polygons
+      .createAlias('guidance_patterns__border_polygon__polygons__id');
 
   $$PolygonsTableProcessedTableManager? get borderPolygon {
     final $_column = $_itemColumn<int>('border_polygon');
@@ -13738,10 +13667,8 @@ final class $$GuidancePatternsTableReferences
   >
   _guidanceGroupPatternTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.guidanceGroupPatterns,
-    aliasName: $_aliasNameGenerator(
-      db.guidancePatterns.id,
-      db.guidanceGroupPatterns.guidancePattern,
-    ),
+    aliasName:
+        'guidance_patterns__id__guidance_group_patterns__guidance_pattern',
   );
 
   $$GuidanceGroupPatternsTableProcessedTableManager get guidanceGroupPattern {
@@ -14406,10 +14333,7 @@ final class $$GuidanceGroupPatternsTableReferences
 
   static $GuidanceGroupsTable _guidanceGroupTable(_$Database db) =>
       db.guidanceGroups.createAlias(
-        $_aliasNameGenerator(
-          db.guidanceGroupPatterns.guidanceGroup,
-          db.guidanceGroups.id,
-        ),
+        'guidance_group_patterns__guidance_group__guidance_groups__id',
       );
 
   $$GuidanceGroupsTableProcessedTableManager get guidanceGroup {
@@ -14428,10 +14352,7 @@ final class $$GuidanceGroupPatternsTableReferences
 
   static $GuidancePatternsTable _guidancePatternTable(_$Database db) =>
       db.guidancePatterns.createAlias(
-        $_aliasNameGenerator(
-          db.guidanceGroupPatterns.guidancePattern,
-          db.guidancePatterns.id,
-        ),
+        'guidance_group_patterns__guidance_pattern__guidance_patterns__id',
       );
 
   $$GuidancePatternsTableProcessedTableManager get guidancePattern {
@@ -14783,7 +14704,7 @@ final class $$PointsTableReferences
   static MultiTypedResultKey<$LineStringPointsTable, List<LineStringPoint>>
   _lineStringPointPointTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.lineStringPoints,
-    aliasName: $_aliasNameGenerator(db.points.id, db.lineStringPoints.point),
+    aliasName: 'points__id__line_string_points__point',
   );
 
   $$LineStringPointsTableProcessedTableManager get lineStringPointPoint {
@@ -14803,7 +14724,7 @@ final class $$PointsTableReferences
   static MultiTypedResultKey<$PartfieldPointsTable, List<PartfieldPoint>>
   _partfieldPointPointTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.partfieldPoints,
-    aliasName: $_aliasNameGenerator(db.points.id, db.partfieldPoints.point),
+    aliasName: 'points__id__partfield_points__point',
   );
 
   $$PartfieldPointsTableProcessedTableManager get partfieldPointPoint {
@@ -15229,10 +15150,8 @@ final class $$LineStringPointsTableReferences
     super.$_typedResult,
   );
 
-  static $LineStringsTable _lineStringTable(_$Database db) =>
-      db.lineStrings.createAlias(
-        $_aliasNameGenerator(db.lineStringPoints.lineString, db.lineStrings.id),
-      );
+  static $LineStringsTable _lineStringTable(_$Database db) => db.lineStrings
+      .createAlias('line_string_points__line_string__line_strings__id');
 
   $$LineStringsTableProcessedTableManager get lineString {
     final $_column = $_itemColumn<int>('line_string')!;
@@ -15248,9 +15167,8 @@ final class $$LineStringPointsTableReferences
     );
   }
 
-  static $PointsTable _pointTable(_$Database db) => db.points.createAlias(
-    $_aliasNameGenerator(db.lineStringPoints.point, db.points.id),
-  );
+  static $PointsTable _pointTable(_$Database db) =>
+      db.points.createAlias('line_string_points__point__points__id');
 
   $$PointsTableProcessedTableManager get point {
     final $_column = $_itemColumn<int>('point')!;
@@ -15751,13 +15669,8 @@ final class $$PartfieldGuidanceGroupsTableReferences
     super.$_typedResult,
   );
 
-  static $PartfieldsTable _partfieldTable(_$Database db) =>
-      db.partfields.createAlias(
-        $_aliasNameGenerator(
-          db.partfieldGuidanceGroups.partfield,
-          db.partfields.id,
-        ),
-      );
+  static $PartfieldsTable _partfieldTable(_$Database db) => db.partfields
+      .createAlias('partfield_guidance_groups__partfield__partfields__id');
 
   $$PartfieldsTableProcessedTableManager get partfield {
     final $_column = $_itemColumn<int>('partfield')!;
@@ -15775,10 +15688,7 @@ final class $$PartfieldGuidanceGroupsTableReferences
 
   static $GuidanceGroupsTable _guidanceGroupTable(_$Database db) =>
       db.guidanceGroups.createAlias(
-        $_aliasNameGenerator(
-          db.partfieldGuidanceGroups.guidanceGroup,
-          db.guidanceGroups.id,
-        ),
+        'partfield_guidance_groups__guidance_group__guidance_groups__id',
       );
 
   $$GuidanceGroupsTableProcessedTableManager get guidanceGroup {
@@ -16119,10 +16029,8 @@ final class $$PartfieldPolygonsTableReferences
     super.$_typedResult,
   );
 
-  static $PartfieldsTable _partfieldTable(_$Database db) =>
-      db.partfields.createAlias(
-        $_aliasNameGenerator(db.partfieldPolygons.partfield, db.partfields.id),
-      );
+  static $PartfieldsTable _partfieldTable(_$Database db) => db.partfields
+      .createAlias('partfield_polygons__partfield__partfields__id');
 
   $$PartfieldsTableProcessedTableManager get partfield {
     final $_column = $_itemColumn<int>('partfield')!;
@@ -16138,9 +16046,8 @@ final class $$PartfieldPolygonsTableReferences
     );
   }
 
-  static $PolygonsTable _polygonTable(_$Database db) => db.polygons.createAlias(
-    $_aliasNameGenerator(db.partfieldPolygons.polygon, db.polygons.id),
-  );
+  static $PolygonsTable _polygonTable(_$Database db) =>
+      db.polygons.createAlias('partfield_polygons__polygon__polygons__id');
 
   $$PolygonsTableProcessedTableManager get polygon {
     final $_column = $_itemColumn<int>('polygon')!;
@@ -16478,13 +16385,8 @@ final class $$PartfieldLineStringsTableReferences
     super.$_typedResult,
   );
 
-  static $PartfieldsTable _partfieldTable(_$Database db) =>
-      db.partfields.createAlias(
-        $_aliasNameGenerator(
-          db.partfieldLineStrings.partfield,
-          db.partfields.id,
-        ),
-      );
+  static $PartfieldsTable _partfieldTable(_$Database db) => db.partfields
+      .createAlias('partfield_line_strings__partfield__partfields__id');
 
   $$PartfieldsTableProcessedTableManager get partfield {
     final $_column = $_itemColumn<int>('partfield')!;
@@ -16500,13 +16402,8 @@ final class $$PartfieldLineStringsTableReferences
     );
   }
 
-  static $LineStringsTable _lineStringTable(_$Database db) =>
-      db.lineStrings.createAlias(
-        $_aliasNameGenerator(
-          db.partfieldLineStrings.lineString,
-          db.lineStrings.id,
-        ),
-      );
+  static $LineStringsTable _lineStringTable(_$Database db) => db.lineStrings
+      .createAlias('partfield_line_strings__line_string__line_strings__id');
 
   $$LineStringsTableProcessedTableManager get lineString {
     final $_column = $_itemColumn<int>('line_string')!;
@@ -16840,9 +16737,7 @@ final class $$PartfieldPointsTableReferences
   );
 
   static $PartfieldsTable _partfieldTable(_$Database db) =>
-      db.partfields.createAlias(
-        $_aliasNameGenerator(db.partfieldPoints.partfield, db.partfields.id),
-      );
+      db.partfields.createAlias('partfield_points__partfield__partfields__id');
 
   $$PartfieldsTableProcessedTableManager get partfield {
     final $_column = $_itemColumn<int>('partfield')!;
@@ -16858,9 +16753,8 @@ final class $$PartfieldPointsTableReferences
     );
   }
 
-  static $PointsTable _pointTable(_$Database db) => db.points.createAlias(
-    $_aliasNameGenerator(db.partfieldPoints.point, db.points.id),
-  );
+  static $PointsTable _pointTable(_$Database db) =>
+      db.points.createAlias('partfield_points__point__points__id');
 
   $$PointsTableProcessedTableManager get point {
     final $_column = $_itemColumn<int>('point')!;
@@ -17193,9 +17087,8 @@ final class $$PolygonLineStringsTableReferences
     super.$_typedResult,
   );
 
-  static $PolygonsTable _polygonTable(_$Database db) => db.polygons.createAlias(
-    $_aliasNameGenerator(db.polygonLineStrings.polygon, db.polygons.id),
-  );
+  static $PolygonsTable _polygonTable(_$Database db) =>
+      db.polygons.createAlias('polygon_line_strings__polygon__polygons__id');
 
   $$PolygonsTableProcessedTableManager get polygon {
     final $_column = $_itemColumn<int>('polygon')!;
@@ -17211,13 +17104,8 @@ final class $$PolygonLineStringsTableReferences
     );
   }
 
-  static $LineStringsTable _lineStringTable(_$Database db) =>
-      db.lineStrings.createAlias(
-        $_aliasNameGenerator(
-          db.polygonLineStrings.lineString,
-          db.lineStrings.id,
-        ),
-      );
+  static $LineStringsTable _lineStringTable(_$Database db) => db.lineStrings
+      .createAlias('polygon_line_strings__line_string__line_strings__id');
 
   $$LineStringsTableProcessedTableManager get lineString {
     final $_column = $_itemColumn<int>('line_string')!;
@@ -17573,9 +17461,7 @@ final class $$SectionsTableReferences
   $$SectionsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static $ImplementsTable _implementTable(_$Database db) =>
-      db.implements.createAlias(
-        $_aliasNameGenerator(db.sections.implement, db.implements.id),
-      );
+      db.implements.createAlias('sections__implement__implements__id');
 
   $$ImplementsTableProcessedTableManager get implement {
     final $_column = $_itemColumn<int>('implement')!;

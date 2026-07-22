@@ -141,7 +141,7 @@ abstract class _$Settings extends $Notifier<SplayTreeMap<String, dynamic>> {
   SplayTreeMap<String, dynamic> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
@@ -159,7 +159,7 @@ abstract class _$Settings extends $Notifier<SplayTreeMap<String, dynamic>> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -207,7 +207,7 @@ abstract class _$EnableDebugMode extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -217,7 +217,7 @@ abstract class _$EnableDebugMode extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -269,7 +269,7 @@ abstract class _$EnableDadMode extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -279,7 +279,7 @@ abstract class _$EnableDadMode extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -579,7 +579,7 @@ abstract class _$UiUnitArea extends $Notifier<UnitArea> {
   UnitArea build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<UnitArea, UnitArea>;
     final element =
         ref.element
@@ -589,7 +589,7 @@ abstract class _$UiUnitArea extends $Notifier<UnitArea> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -637,7 +637,7 @@ abstract class _$UiUnitLength extends $Notifier<UnitLength> {
   UnitLength build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<UnitLength, UnitLength>;
     final element =
         ref.element
@@ -647,7 +647,7 @@ abstract class _$UiUnitLength extends $Notifier<UnitLength> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -695,7 +695,7 @@ abstract class _$UiUnitVelocity extends $Notifier<UnitVelocity> {
   UnitVelocity build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<UnitVelocity, UnitVelocity>;
     final element =
         ref.element
@@ -705,7 +705,7 @@ abstract class _$UiUnitVelocity extends $Notifier<UnitVelocity> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -752,7 +752,7 @@ abstract class _$UiLocale extends $Notifier<Locale> {
   Locale build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<Locale, Locale>;
     final element =
         ref.element
@@ -762,6 +762,6 @@ abstract class _$UiLocale extends $Notifier<Locale> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

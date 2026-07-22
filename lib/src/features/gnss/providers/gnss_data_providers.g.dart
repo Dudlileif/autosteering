@@ -55,7 +55,7 @@ abstract class _$GnssCurrentSentence
   GnssPositionCommonSentence? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<GnssPositionCommonSentence?, GnssPositionCommonSentence?>;
@@ -70,7 +70,7 @@ abstract class _$GnssCurrentSentence
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -119,7 +119,7 @@ abstract class _$GnssCurrentFrequency extends $Notifier<double?> {
   double? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -129,7 +129,7 @@ abstract class _$GnssCurrentFrequency extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -189,7 +189,7 @@ abstract class _$GnssLastUpdateTime
   ({Duration? delay, DateTime device, DateTime? receiver})? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
@@ -207,7 +207,7 @@ abstract class _$GnssLastUpdateTime
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -283,7 +283,7 @@ abstract class _$GnssPrecisionError
   build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
@@ -321,7 +321,7 @@ abstract class _$GnssPrecisionError
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -376,7 +376,7 @@ abstract class _$GnssSecondaryCurrentSentence
   GnssPositionCommonSentence? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<GnssPositionCommonSentence?, GnssPositionCommonSentence?>;
@@ -391,7 +391,7 @@ abstract class _$GnssSecondaryCurrentSentence
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 

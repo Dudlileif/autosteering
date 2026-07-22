@@ -98,7 +98,7 @@ abstract class _$HardwareSerialBaudRate extends $Notifier<int> {
   int build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<int, int>;
     final element =
         ref.element
@@ -108,7 +108,7 @@ abstract class _$HardwareSerialBaudRate extends $Notifier<int> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -156,7 +156,7 @@ abstract class _$HardwareSerial extends $Notifier<SerialPort?> {
   SerialPort? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<SerialPort?, SerialPort?>;
     final element =
         ref.element
@@ -166,7 +166,7 @@ abstract class _$HardwareSerial extends $Notifier<SerialPort?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -266,7 +266,7 @@ abstract class _$HardwareSerialAlive extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -276,6 +276,6 @@ abstract class _$HardwareSerialAlive extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

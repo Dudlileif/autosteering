@@ -57,7 +57,7 @@ abstract class _$VehicleConfiguratorIndex extends $Notifier<int> {
   int build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<int, int>;
     final element =
         ref.element
@@ -67,7 +67,7 @@ abstract class _$VehicleConfiguratorIndex extends $Notifier<int> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -115,7 +115,7 @@ abstract class _$ConfiguredVehicle extends $Notifier<Vehicle> {
   Vehicle build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<Vehicle, Vehicle>;
     final element =
         ref.element
@@ -125,7 +125,7 @@ abstract class _$ConfiguredVehicle extends $Notifier<Vehicle> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -186,7 +186,7 @@ abstract class _$ConfiguredVehicleNameTextController
   Raw<TextEditingController> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<Raw<TextEditingController>, Raw<TextEditingController>>;
@@ -201,6 +201,6 @@ abstract class _$ConfiguredVehicleNameTextController
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

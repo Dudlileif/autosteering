@@ -310,7 +310,7 @@ FutureOr<Vehicle?> importVehicle(Ref ref, {required String dialogTitle}) async {
 
   Vehicle? vehicle;
   if (Device.isWeb) {
-    final data = pickedFiles?.files.first.bytes;
+    final data = await pickedFiles?.files.first.readAsBytes();
     if (data != null) {
       try {
         final json = jsonDecode(String.fromCharCodes(data));

@@ -53,7 +53,7 @@ abstract class _$DebugEquipmentTurning extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -63,7 +63,7 @@ abstract class _$DebugEquipmentTurning extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -112,7 +112,7 @@ abstract class _$DebugEquipmentTrajectory extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -122,7 +122,7 @@ abstract class _$DebugEquipmentTrajectory extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -172,7 +172,7 @@ abstract class _$DebugEquipmentTravelledPath extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -182,7 +182,7 @@ abstract class _$DebugEquipmentTravelledPath extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -232,7 +232,7 @@ abstract class _$DebugEquipmentTravelledPathSize extends $Notifier<int> {
   int build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<int, int>;
     final element =
         ref.element
@@ -242,7 +242,7 @@ abstract class _$DebugEquipmentTravelledPathSize extends $Notifier<int> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -301,7 +301,7 @@ abstract class _$DebugEquipmentTravelledPathList
   Map<int, List<LatLng>> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<Map<int, List<LatLng>>, Map<int, List<LatLng>>>;
     final element =
@@ -312,7 +312,7 @@ abstract class _$DebugEquipmentTravelledPathList
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -361,7 +361,7 @@ abstract class _$DebugEquipmentHitches extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -371,7 +371,7 @@ abstract class _$DebugEquipmentHitches extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -420,7 +420,7 @@ abstract class _$DebugEquipmentSections extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -430,7 +430,7 @@ abstract class _$DebugEquipmentSections extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -480,7 +480,7 @@ abstract class _$DebugEquipmentTrajectorySeconds extends $Notifier<double> {
   double build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -490,7 +490,7 @@ abstract class _$DebugEquipmentTrajectorySeconds extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -542,7 +542,7 @@ abstract class _$DebugEquipmentTrajectoryMinLength extends $Notifier<double> {
   double build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -552,6 +552,6 @@ abstract class _$DebugEquipmentTrajectoryMinLength extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

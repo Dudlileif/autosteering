@@ -53,7 +53,7 @@ abstract class _$ShowPathRecordingMenu extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -63,7 +63,7 @@ abstract class _$ShowPathRecordingMenu extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -112,7 +112,7 @@ abstract class _$EnablePathRecorder extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -122,7 +122,7 @@ abstract class _$EnablePathRecorder extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -172,7 +172,7 @@ abstract class _$EnableAutomaticPathRecorder extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -182,7 +182,7 @@ abstract class _$EnableAutomaticPathRecorder extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -238,7 +238,7 @@ abstract class _$ActivePathRecordingSettings
   PathRecordingSettings build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<PathRecordingSettings, PathRecordingSettings>;
     final element =
         ref.element
@@ -248,7 +248,7 @@ abstract class _$ActivePathRecordingSettings
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -298,7 +298,7 @@ abstract class _$ActivePathRecordingTarget
   PathRecordingTarget build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<PathRecordingTarget, PathRecordingTarget>;
     final element =
         ref.element
@@ -308,7 +308,7 @@ abstract class _$ActivePathRecordingTarget
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -395,7 +395,7 @@ abstract class _$PathRecordingList extends $Notifier<List<WayPoint>> {
   List<WayPoint> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<List<WayPoint>, List<WayPoint>>;
     final element =
         ref.element
@@ -405,7 +405,7 @@ abstract class _$PathRecordingList extends $Notifier<List<WayPoint>> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -454,7 +454,7 @@ abstract class _$FinishedPathRecordingList extends $Notifier<List<WayPoint>?> {
   List<WayPoint>? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<List<WayPoint>?, List<WayPoint>?>;
     final element =
         ref.element
@@ -464,7 +464,7 @@ abstract class _$FinishedPathRecordingList extends $Notifier<List<WayPoint>?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -512,7 +512,7 @@ abstract class _$ShowFinishedPath extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -522,7 +522,7 @@ abstract class _$ShowFinishedPath extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -570,7 +570,7 @@ abstract class _$EditFinishedPath extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -580,7 +580,7 @@ abstract class _$EditFinishedPath extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -629,7 +629,7 @@ abstract class _$PathRecordingMenuUiOffset extends $Notifier<Offset> {
   Offset build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<Offset, Offset>;
     final element =
         ref.element
@@ -639,6 +639,6 @@ abstract class _$PathRecordingMenuUiOffset extends $Notifier<Offset> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

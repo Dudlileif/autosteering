@@ -52,7 +52,7 @@ abstract class _$MainVehicle extends $Notifier<Vehicle> {
   Vehicle build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<Vehicle, Vehicle>;
     final element =
         ref.element
@@ -62,7 +62,7 @@ abstract class _$MainVehicle extends $Notifier<Vehicle> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -111,7 +111,7 @@ abstract class _$ActiveAutosteeringState extends $Notifier<AutosteeringState> {
   AutosteeringState build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AutosteeringState, AutosteeringState>;
     final element =
         ref.element
@@ -121,7 +121,7 @@ abstract class _$ActiveAutosteeringState extends $Notifier<AutosteeringState> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -691,7 +691,7 @@ abstract class _$VehicleSteeringAngleTarget extends $Notifier<double?> {
   double? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -701,7 +701,7 @@ abstract class _$VehicleSteeringAngleTarget extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -834,7 +834,7 @@ abstract class _$ShowOverrideSteering extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -844,7 +844,7 @@ abstract class _$ShowOverrideSteering extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -896,7 +896,7 @@ abstract class _$OverrideSteering extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -906,7 +906,7 @@ abstract class _$OverrideSteering extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -955,7 +955,7 @@ abstract class _$OverrideSteeringAngle extends $Notifier<double> {
   double build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -965,7 +965,7 @@ abstract class _$OverrideSteeringAngle extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 

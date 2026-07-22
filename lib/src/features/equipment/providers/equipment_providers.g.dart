@@ -58,7 +58,7 @@ abstract class _$EquipmentRecordPositionFraction extends $Notifier<double?> {
   double? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -68,7 +68,7 @@ abstract class _$EquipmentRecordPositionFraction extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -116,7 +116,7 @@ abstract class _$LoadedEquipment extends $Notifier<Equipment?> {
   Equipment? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<Equipment?, Equipment?>;
     final element =
         ref.element
@@ -126,7 +126,7 @@ abstract class _$LoadedEquipment extends $Notifier<Equipment?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -174,7 +174,7 @@ abstract class _$AllEquipments extends $Notifier<Map<int, Equipment>> {
   Map<int, Equipment> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<Map<int, Equipment>, Map<int, Equipment>>;
     final element =
         ref.element
@@ -184,7 +184,7 @@ abstract class _$AllEquipments extends $Notifier<Map<int, Equipment>> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -233,7 +233,7 @@ abstract class _$EquipmentWorkedArea extends $Notifier<Map<int, double>> {
   Map<int, double> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<Map<int, double>, Map<int, double>>;
     final element =
         ref.element
@@ -243,7 +243,7 @@ abstract class _$EquipmentWorkedArea extends $Notifier<Map<int, double>> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -350,7 +350,7 @@ abstract class _$EquipmentPaths
   List<Map<int, List<SectionEdgePositions>?>> build(int id);
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
@@ -368,7 +368,7 @@ abstract class _$EquipmentPaths
               Object?,
               Object?
             >;
-    element.handleCreate(ref, () => build(_$args));
+    return element.handleCreate(ref, () => build(_$args));
   }
 }
 
@@ -522,7 +522,7 @@ abstract class _$EquipmentMapPaths
   build(int id, {bool forMiniMap = false});
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
@@ -560,7 +560,7 @@ abstract class _$EquipmentMapPaths
               Object?,
               Object?
             >;
-    element.handleCreate(
+    return element.handleCreate(
       ref,
       () => build(_$args.$1, forMiniMap: _$args.forMiniMap),
     );
@@ -668,7 +668,7 @@ abstract class _$EquipmentLogRecords
   List<EquipmentLogRecord>? build(int id);
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<List<EquipmentLogRecord>?, List<EquipmentLogRecord>?>;
     final element =
@@ -679,7 +679,7 @@ abstract class _$EquipmentLogRecords
               Object?,
               Object?
             >;
-    element.handleCreate(ref, () => build(_$args));
+    return element.handleCreate(ref, () => build(_$args));
   }
 }
 

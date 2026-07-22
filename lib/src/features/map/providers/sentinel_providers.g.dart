@@ -53,7 +53,7 @@ abstract class _$CopernicusInstanceId extends $Notifier<String?> {
   String? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<String?, String?>;
     final element =
         ref.element
@@ -63,7 +63,7 @@ abstract class _$CopernicusInstanceId extends $Notifier<String?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -113,7 +113,7 @@ abstract class _$AvailableSentinelLayers
   List<SentinelLayer> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<List<SentinelLayer>, List<SentinelLayer>>;
     final element =
         ref.element
@@ -123,7 +123,7 @@ abstract class _$AvailableSentinelLayers
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -177,7 +177,7 @@ abstract class _$SentinelMaxCloudCoveragePercent extends $Notifier<double> {
   double build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -187,7 +187,7 @@ abstract class _$SentinelMaxCloudCoveragePercent extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -236,7 +236,7 @@ abstract class _$EnabledSentinelLayers extends $Notifier<Set<SentinelLayer>> {
   Set<SentinelLayer> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<Set<SentinelLayer>, Set<SentinelLayer>>;
     final element =
         ref.element
@@ -246,7 +246,7 @@ abstract class _$EnabledSentinelLayers extends $Notifier<Set<SentinelLayer>> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -302,7 +302,7 @@ abstract class _$SentinelLayerOpacities
   Map<SentinelLayerType, double> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
@@ -320,6 +320,6 @@ abstract class _$SentinelLayerOpacities
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

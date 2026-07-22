@@ -51,7 +51,7 @@ abstract class _$ShowField extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -61,7 +61,7 @@ abstract class _$ShowField extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -108,7 +108,7 @@ abstract class _$ActiveField extends $Notifier<Field?> {
   Field? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<Field?, Field?>;
     final element =
         ref.element
@@ -118,7 +118,7 @@ abstract class _$ActiveField extends $Notifier<Field?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -167,7 +167,7 @@ abstract class _$ShowFieldBorderPoints extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -177,7 +177,7 @@ abstract class _$ShowFieldBorderPoints extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -226,7 +226,7 @@ abstract class _$ShowFieldBoundingBox extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -236,7 +236,7 @@ abstract class _$ShowFieldBoundingBox extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -289,7 +289,7 @@ abstract class _$FieldExteriorBufferJoin extends $Notifier<BufferJoin> {
   BufferJoin build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<BufferJoin, BufferJoin>;
     final element =
         ref.element
@@ -299,7 +299,7 @@ abstract class _$FieldExteriorBufferJoin extends $Notifier<BufferJoin> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -352,7 +352,7 @@ abstract class _$FieldInteriorBufferJoin extends $Notifier<BufferJoin> {
   BufferJoin build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<BufferJoin, BufferJoin>;
     final element =
         ref.element
@@ -362,7 +362,7 @@ abstract class _$FieldInteriorBufferJoin extends $Notifier<BufferJoin> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -411,7 +411,7 @@ abstract class _$FieldBufferEnabled extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -421,7 +421,7 @@ abstract class _$FieldBufferEnabled extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -476,7 +476,7 @@ abstract class _$ActiveFieldBufferDistanceType
   FieldBufferDistanceType build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<FieldBufferDistanceType, FieldBufferDistanceType>;
     final element =
@@ -487,7 +487,7 @@ abstract class _$ActiveFieldBufferDistanceType
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -541,7 +541,7 @@ abstract class _$FieldExteriorBufferDistance extends $Notifier<double> {
   double build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -551,7 +551,7 @@ abstract class _$FieldExteriorBufferDistance extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -605,7 +605,7 @@ abstract class _$FieldInteriorBufferDistance extends $Notifier<double> {
   double build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -615,7 +615,7 @@ abstract class _$FieldInteriorBufferDistance extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -663,7 +663,7 @@ abstract class _$ShowBufferedField extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -673,7 +673,7 @@ abstract class _$ShowBufferedField extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -761,7 +761,7 @@ abstract class _$ShowBufferedFieldBoundingBox extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -771,7 +771,7 @@ abstract class _$ShowBufferedFieldBoundingBox extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -820,7 +820,7 @@ abstract class _$FieldBufferGetRawPoints extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -830,7 +830,7 @@ abstract class _$FieldBufferGetRawPoints extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -878,7 +878,7 @@ abstract class _$FieldExteriorRing extends $Notifier<List<Geographic>?> {
   List<Geographic>? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<List<Geographic>?, List<Geographic>?>;
     final element =
         ref.element
@@ -888,7 +888,7 @@ abstract class _$FieldExteriorRing extends $Notifier<List<Geographic>?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -937,7 +937,7 @@ abstract class _$FieldInteriorRings extends $Notifier<List<List<Geographic>>?> {
   List<List<Geographic>>? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<List<List<Geographic>>?, List<List<Geographic>>?>;
     final element =
@@ -948,7 +948,7 @@ abstract class _$FieldInteriorRings extends $Notifier<List<List<Geographic>>?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 

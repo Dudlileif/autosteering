@@ -54,7 +54,7 @@ abstract class _$ShowAutosteeringParameterConfig extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -64,7 +64,7 @@ abstract class _$ShowAutosteeringParameterConfig extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -115,7 +115,7 @@ abstract class _$AutosteeringConfiguratorUiOffset extends $Notifier<Offset> {
   Offset build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<Offset, Offset>;
     final element =
         ref.element
@@ -125,6 +125,6 @@ abstract class _$AutosteeringConfiguratorUiOffset extends $Notifier<Offset> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

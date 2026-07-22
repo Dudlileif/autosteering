@@ -53,7 +53,7 @@ abstract class _$CurrentABTrackingType extends $Notifier<ABTrackingType> {
   ABTrackingType build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<ABTrackingType, ABTrackingType>;
     final element =
         ref.element
@@ -63,7 +63,7 @@ abstract class _$CurrentABTrackingType extends $Notifier<ABTrackingType> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -111,7 +111,7 @@ abstract class _$ShowABTracking extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -121,7 +121,7 @@ abstract class _$ShowABTracking extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -169,7 +169,7 @@ abstract class _$DebugABTracking extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -179,7 +179,7 @@ abstract class _$DebugABTracking extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -227,7 +227,7 @@ abstract class _$ABDebugStepSize extends $Notifier<double> {
   double build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -237,7 +237,7 @@ abstract class _$ABDebugStepSize extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -290,7 +290,7 @@ abstract class _$ABDebugNumPointsAhead extends $Notifier<int> {
   int build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<int, int>;
     final element =
         ref.element
@@ -300,7 +300,7 @@ abstract class _$ABDebugNumPointsAhead extends $Notifier<int> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -353,7 +353,7 @@ abstract class _$ABDebugNumPointsBehind extends $Notifier<int> {
   int build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<int, int>;
     final element =
         ref.element
@@ -363,7 +363,7 @@ abstract class _$ABDebugNumPointsBehind extends $Notifier<int> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -410,7 +410,7 @@ abstract class _$ABWidth extends $Notifier<double> {
   double build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -420,7 +420,7 @@ abstract class _$ABWidth extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -468,7 +468,7 @@ abstract class _$ABSidewaysOffset extends $Notifier<double> {
   double build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -478,7 +478,7 @@ abstract class _$ABSidewaysOffset extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -526,7 +526,7 @@ abstract class _$ABTurningRadius extends $Notifier<double> {
   double build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -536,7 +536,7 @@ abstract class _$ABTurningRadius extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -585,7 +585,7 @@ abstract class _$ABTurnOffsetMinSkips extends $Notifier<int> {
   int build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<int, int>;
     final element =
         ref.element
@@ -595,7 +595,7 @@ abstract class _$ABTurnOffsetMinSkips extends $Notifier<int> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -644,7 +644,7 @@ abstract class _$ABTrackingLimitMode extends $Notifier<ABLimitMode> {
   ABLimitMode build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<ABLimitMode, ABLimitMode>;
     final element =
         ref.element
@@ -654,7 +654,7 @@ abstract class _$ABTrackingLimitMode extends $Notifier<ABLimitMode> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -703,7 +703,7 @@ abstract class _$ABOffsetOppositeTurn extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -713,7 +713,7 @@ abstract class _$ABOffsetOppositeTurn extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -762,7 +762,7 @@ abstract class _$ABSnapToClosestLine extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -772,7 +772,7 @@ abstract class _$ABSnapToClosestLine extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -821,7 +821,7 @@ abstract class _$ConfiguredABTracking extends $Notifier<ABTracking?> {
   ABTracking? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<ABTracking?, ABTracking?>;
     final element =
         ref.element
@@ -831,7 +831,7 @@ abstract class _$ConfiguredABTracking extends $Notifier<ABTracking?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -872,7 +872,7 @@ abstract class _$ConfiguredMenuABTracking extends $AsyncNotifier<ABTracking?> {
   FutureOr<ABTracking?> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<ABTracking?>, ABTracking?>;
     final element =
         ref.element
@@ -882,7 +882,7 @@ abstract class _$ConfiguredMenuABTracking extends $AsyncNotifier<ABTracking?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -930,7 +930,7 @@ abstract class _$DisplayABTracking extends $Notifier<ABTracking?> {
   ABTracking? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<ABTracking?, ABTracking?>;
     final element =
         ref.element
@@ -940,7 +940,7 @@ abstract class _$DisplayABTracking extends $Notifier<ABTracking?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -987,7 +987,7 @@ abstract class _$ABPointA extends $Notifier<WayPoint?> {
   WayPoint? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<WayPoint?, WayPoint?>;
     final element =
         ref.element
@@ -997,7 +997,7 @@ abstract class _$ABPointA extends $Notifier<WayPoint?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -1044,7 +1044,7 @@ abstract class _$ABPointB extends $Notifier<WayPoint?> {
   WayPoint? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<WayPoint?, WayPoint?>;
     final element =
         ref.element
@@ -1054,7 +1054,7 @@ abstract class _$ABPointB extends $Notifier<WayPoint?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -1101,7 +1101,7 @@ abstract class _$ShowABPointA extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -1111,7 +1111,7 @@ abstract class _$ShowABPointA extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -1158,7 +1158,7 @@ abstract class _$ShowABPointB extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -1168,7 +1168,7 @@ abstract class _$ShowABPointB extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -1318,7 +1318,7 @@ abstract class _$ABTrackingShowAllLines extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -1328,7 +1328,7 @@ abstract class _$ABTrackingShowAllLines extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 

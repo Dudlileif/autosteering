@@ -53,7 +53,7 @@ abstract class _$ShowDraggableGraph extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -63,7 +63,7 @@ abstract class _$ShowDraggableGraph extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -112,7 +112,7 @@ abstract class _$GraphRetainTimeSeconds extends $Notifier<double> {
   double build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -122,7 +122,7 @@ abstract class _$GraphRetainTimeSeconds extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -175,7 +175,7 @@ abstract class _$GraphActiveParameters extends $Notifier<Set<GraphParameter>> {
   Set<GraphParameter> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<Set<GraphParameter>, Set<GraphParameter>>;
     final element =
         ref.element
@@ -185,7 +185,7 @@ abstract class _$GraphActiveParameters extends $Notifier<Set<GraphParameter>> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -300,7 +300,7 @@ abstract class _$GraphValues
   Map<GraphData, List<({double normalized, num raw})?>> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
@@ -318,7 +318,7 @@ abstract class _$GraphValues
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -367,7 +367,7 @@ abstract class _$DraggableGraphUiOffset extends $Notifier<Offset> {
   Offset build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<Offset, Offset>;
     final element =
         ref.element
@@ -377,6 +377,6 @@ abstract class _$DraggableGraphUiOffset extends $Notifier<Offset> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

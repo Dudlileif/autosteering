@@ -52,7 +52,7 @@ abstract class _$ABCurvePoints extends $Notifier<List<guidance.WayPoint>?> {
   List<guidance.WayPoint>? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<List<guidance.WayPoint>?, List<guidance.WayPoint>?>;
     final element =
@@ -63,7 +63,7 @@ abstract class _$ABCurvePoints extends $Notifier<List<guidance.WayPoint>?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -103,7 +103,7 @@ abstract class _$ABCurve extends $AsyncNotifier<guidance.ABCurve?> {
   FutureOr<guidance.ABCurve?> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<AsyncValue<guidance.ABCurve?>, guidance.ABCurve?>;
     final element =
@@ -114,6 +114,6 @@ abstract class _$ABCurve extends $AsyncNotifier<guidance.ABCurve?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

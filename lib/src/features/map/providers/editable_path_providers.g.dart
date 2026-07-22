@@ -53,7 +53,7 @@ abstract class _$ActiveEditablePathType extends $Notifier<EditablePathType?> {
   EditablePathType? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<EditablePathType?, EditablePathType?>;
     final element =
         ref.element
@@ -63,7 +63,7 @@ abstract class _$ActiveEditablePathType extends $Notifier<EditablePathType?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -112,7 +112,7 @@ abstract class _$EditablePathPoints extends $Notifier<List<Geographic>?> {
   List<Geographic>? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<List<Geographic>?, List<Geographic>?>;
     final element =
         ref.element
@@ -122,7 +122,7 @@ abstract class _$EditablePathPoints extends $Notifier<List<Geographic>?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 

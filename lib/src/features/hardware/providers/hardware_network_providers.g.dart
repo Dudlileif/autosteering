@@ -54,7 +54,7 @@ abstract class _$SteeringHardwareNetworkAlive extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -64,7 +64,7 @@ abstract class _$SteeringHardwareNetworkAlive extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -120,7 +120,7 @@ abstract class _$RemoteControlHardwareNetworkAlive extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -130,7 +130,7 @@ abstract class _$RemoteControlHardwareNetworkAlive extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -178,7 +178,7 @@ abstract class _$NetworkInterfaces extends $Notifier<List<NetworkInterface>> {
   List<NetworkInterface> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<List<NetworkInterface>, List<NetworkInterface>>;
     final element =
@@ -189,7 +189,7 @@ abstract class _$NetworkInterfaces extends $Notifier<List<NetworkInterface>> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -238,7 +238,7 @@ abstract class _$DeviceIPAddressWlan extends $Notifier<String?> {
   String? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<String?, String?>;
     final element =
         ref.element
@@ -248,7 +248,7 @@ abstract class _$DeviceIPAddressWlan extends $Notifier<String?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -296,7 +296,7 @@ abstract class _$DeviceIPAddressAP extends $Notifier<String?> {
   String? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<String?, String?>;
     final element =
         ref.element
@@ -306,7 +306,7 @@ abstract class _$DeviceIPAddressAP extends $Notifier<String?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -355,7 +355,7 @@ abstract class _$DeviceIPAddressEthernet extends $Notifier<String?> {
   String? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<String?, String?>;
     final element =
         ref.element
@@ -365,7 +365,7 @@ abstract class _$DeviceIPAddressEthernet extends $Notifier<String?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -418,7 +418,7 @@ abstract class _$SteeringHardwareAddress extends $Notifier<String?> {
   String? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<String?, String?>;
     final element =
         ref.element
@@ -428,7 +428,7 @@ abstract class _$SteeringHardwareAddress extends $Notifier<String?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -482,7 +482,7 @@ abstract class _$RemoteControlHardwareAddress extends $Notifier<String?> {
   String? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<String?, String?>;
     final element =
         ref.element
@@ -492,7 +492,7 @@ abstract class _$RemoteControlHardwareAddress extends $Notifier<String?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -541,7 +541,7 @@ abstract class _$HardwareUDPReceivePort extends $Notifier<int> {
   int build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<int, int>;
     final element =
         ref.element
@@ -551,7 +551,7 @@ abstract class _$HardwareUDPReceivePort extends $Notifier<int> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -604,7 +604,7 @@ abstract class _$HardwareUDPSendPort extends $Notifier<int> {
   int build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<int, int>;
     final element =
         ref.element
@@ -614,7 +614,7 @@ abstract class _$HardwareUDPSendPort extends $Notifier<int> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -721,7 +721,7 @@ abstract class _$TcpServer extends $AsyncNotifier<Socket?> {
   FutureOr<Socket?> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<Socket?>, Socket?>;
     final element =
         ref.element
@@ -731,7 +731,7 @@ abstract class _$TcpServer extends $AsyncNotifier<Socket?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -831,7 +831,7 @@ abstract class _$NetworkAvailable extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -841,6 +841,6 @@ abstract class _$NetworkAvailable extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

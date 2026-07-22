@@ -20,9 +20,9 @@ mixin _$Connector {
  double get longitudinalOffsetFromRef;/// The lateral offset from the reference point of the [Hitchable].
  double get lateralOffsetFromRef;/// Which type of connector this is, i.e. fixed or drawbar/trailed.
  ConnectorType get type;/// Which relation this connector will have with another connector.
- ConnectorRelation get relation;/// The Id of the parent [Vehicle].
- int? get vehicleId;/// The Id of the parent [Equipment].
- int? get implementId;/// The local database ID of this.
+ ConnectorRelation get relation;/// The id of the parent [Vehicle].
+ int? get vehicleId;/// The id of the parent [Equipment].
+ int? get implementId;/// The local database id of this.
  int? get id;/// The vertical offset from the reference point of the [Hitchable].
  double get verticalOffsetFromRef;/// The angle of this relative to the normal forward direction.
  double get angle;@DateTimeSerializer() DateTime? get createdAt;@DateTimeSerializer() DateTime? get lastUpdatedAt;
@@ -241,11 +241,11 @@ class _Connector extends Connector {
 @override final  ConnectorType type;
 /// Which relation this connector will have with another connector.
 @override final  ConnectorRelation relation;
-/// The Id of the parent [Vehicle].
+/// The id of the parent [Vehicle].
 @override final  int? vehicleId;
-/// The Id of the parent [Equipment].
+/// The id of the parent [Equipment].
 @override final  int? implementId;
-/// The local database ID of this.
+/// The local database id of this.
 @override final  int? id;
 /// The vertical offset from the reference point of the [Hitchable].
 @override@JsonKey() final  double verticalOffsetFromRef;

@@ -51,7 +51,7 @@ abstract class _$MapReady extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -61,7 +61,7 @@ abstract class _$MapReady extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -113,7 +113,7 @@ abstract class _$MainMapController extends $Notifier<MapController> {
   MapController build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<MapController, MapController>;
     final element =
         ref.element
@@ -123,7 +123,7 @@ abstract class _$MainMapController extends $Notifier<MapController> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -171,7 +171,7 @@ abstract class _$HomePosition extends $Notifier<LatLng> {
   LatLng build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<LatLng, LatLng>;
     final element =
         ref.element
@@ -181,7 +181,7 @@ abstract class _$HomePosition extends $Notifier<LatLng> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -230,7 +230,7 @@ abstract class _$CenterMapOnVehicle extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -240,7 +240,7 @@ abstract class _$CenterMapOnVehicle extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -297,7 +297,7 @@ abstract class _$ZoomTimerController extends $Notifier<Timer?> {
   Timer? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<Timer?, Timer?>;
     final element =
         ref.element
@@ -307,7 +307,7 @@ abstract class _$ZoomTimerController extends $Notifier<Timer?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -406,7 +406,7 @@ abstract class _$MapOffset2D extends $Notifier<MapCenterOffset> {
   MapCenterOffset build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<MapCenterOffset, MapCenterOffset>;
     final element =
         ref.element
@@ -416,7 +416,7 @@ abstract class _$MapOffset2D extends $Notifier<MapCenterOffset> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -468,7 +468,7 @@ abstract class _$MapOffset3D extends $Notifier<MapCenterOffset> {
   MapCenterOffset build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<MapCenterOffset, MapCenterOffset>;
     final element =
         ref.element
@@ -478,7 +478,7 @@ abstract class _$MapOffset3D extends $Notifier<MapCenterOffset> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -576,7 +576,7 @@ abstract class _$AlwaysPointNorth extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -586,7 +586,7 @@ abstract class _$AlwaysPointNorth extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -639,7 +639,7 @@ abstract class _$MapUse3DPerspective extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -649,7 +649,7 @@ abstract class _$MapUse3DPerspective extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -702,7 +702,7 @@ abstract class _$Map3DPerspectiveAngle extends $Notifier<double> {
   double build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -712,7 +712,7 @@ abstract class _$Map3DPerspectiveAngle extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -759,7 +759,7 @@ abstract class _$MapZoom extends $Notifier<double> {
   double build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -769,7 +769,7 @@ abstract class _$MapZoom extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -950,7 +950,7 @@ abstract class _$MapAllowDownload extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -960,7 +960,7 @@ abstract class _$MapAllowDownload extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -1008,7 +1008,7 @@ abstract class _$MapGridSize extends $Notifier<double?> {
   double? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -1018,7 +1018,7 @@ abstract class _$MapGridSize extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -1067,7 +1067,7 @@ abstract class _$ShowGridSizeIndicator extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -1077,7 +1077,7 @@ abstract class _$ShowGridSizeIndicator extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 

@@ -44,7 +44,7 @@ abstract class _$ABLine extends $AsyncNotifier<guidance.ABLine?> {
   FutureOr<guidance.ABLine?> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<AsyncValue<guidance.ABLine?>, guidance.ABLine?>;
     final element =
@@ -55,7 +55,7 @@ abstract class _$ABLine extends $AsyncNotifier<guidance.ABLine?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -103,7 +103,7 @@ abstract class _$APlusLineBearing extends $Notifier<double?> {
   double? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -113,7 +113,7 @@ abstract class _$APlusLineBearing extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -153,7 +153,7 @@ abstract class _$APlusLine extends $AsyncNotifier<guidance.APlusLine?> {
   FutureOr<guidance.APlusLine?> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<AsyncValue<guidance.APlusLine?>, guidance.APlusLine?>;
     final element =
@@ -164,6 +164,6 @@ abstract class _$APlusLine extends $AsyncNotifier<guidance.APlusLine?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

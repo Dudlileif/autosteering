@@ -53,7 +53,7 @@ abstract class _$ActiveGamepadConfig extends $Notifier<GamepadConfig> {
   GamepadConfig build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<GamepadConfig, GamepadConfig>;
     final element =
         ref.element
@@ -63,7 +63,7 @@ abstract class _$ActiveGamepadConfig extends $Notifier<GamepadConfig> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 

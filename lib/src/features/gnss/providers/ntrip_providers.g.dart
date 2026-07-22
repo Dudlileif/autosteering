@@ -51,7 +51,7 @@ abstract class _$NtripEnabled extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -61,7 +61,7 @@ abstract class _$NtripEnabled extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -109,7 +109,7 @@ abstract class _$NtripProfiles extends $Notifier<List<gnss.NtripProfile>> {
   List<gnss.NtripProfile> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<List<gnss.NtripProfile>, List<gnss.NtripProfile>>;
     final element =
@@ -120,7 +120,7 @@ abstract class _$NtripProfiles extends $Notifier<List<gnss.NtripProfile>> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -169,7 +169,7 @@ abstract class _$ActiveNtripProfile extends $Notifier<gnss.NtripProfile?> {
   gnss.NtripProfile? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<gnss.NtripProfile?, gnss.NtripProfile?>;
     final element =
         ref.element
@@ -179,7 +179,7 @@ abstract class _$ActiveNtripProfile extends $Notifier<gnss.NtripProfile?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -228,7 +228,7 @@ abstract class _$NtripDataUsageSession extends $Notifier<int?> {
   int? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<int?, int?>;
     final element =
         ref.element
@@ -238,7 +238,7 @@ abstract class _$NtripDataUsageSession extends $Notifier<int?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -297,7 +297,7 @@ abstract class _$NtripAlive extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -307,7 +307,7 @@ abstract class _$NtripAlive extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -359,7 +359,7 @@ abstract class _$NtripClient extends $AsyncNotifier<gnss.NtripClient?> {
   FutureOr<gnss.NtripClient?> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<AsyncValue<gnss.NtripClient?>, gnss.NtripClient?>;
     final element =
@@ -370,7 +370,7 @@ abstract class _$NtripClient extends $AsyncNotifier<gnss.NtripClient?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -646,7 +646,7 @@ abstract class _$NtripDataUsageByMonth extends $Notifier<Map<String, int>> {
   Map<String, int> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<Map<String, int>, Map<String, int>>;
     final element =
         ref.element
@@ -656,7 +656,7 @@ abstract class _$NtripDataUsageByMonth extends $Notifier<Map<String, int>> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -708,7 +708,7 @@ abstract class _$SendNtripOverUDP extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -718,7 +718,7 @@ abstract class _$SendNtripOverUDP extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -766,7 +766,7 @@ abstract class _$SendNtripOverTCP extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -776,6 +776,6 @@ abstract class _$SendNtripOverTCP extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

@@ -53,7 +53,7 @@ abstract class _$PathInterpolationDistance extends $Notifier<double> {
   double build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -63,7 +63,7 @@ abstract class _$PathInterpolationDistance extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -112,7 +112,7 @@ abstract class _$PathTrackingPoints extends $Notifier<List<WayPoint>?> {
   List<WayPoint>? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<List<WayPoint>?, List<WayPoint>?>;
     final element =
         ref.element
@@ -122,7 +122,7 @@ abstract class _$PathTrackingPoints extends $Notifier<List<WayPoint>?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -175,7 +175,7 @@ abstract class _$ConfiguredPathTracking extends $Notifier<PathTracking?> {
   PathTracking? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<PathTracking?, PathTracking?>;
     final element =
         ref.element
@@ -185,7 +185,7 @@ abstract class _$ConfiguredPathTracking extends $Notifier<PathTracking?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -237,7 +237,7 @@ abstract class _$PathTrackingLoop extends $Notifier<PathTrackingLoopMode> {
   PathTrackingLoopMode build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<PathTrackingLoopMode, PathTrackingLoopMode>;
     final element =
         ref.element
@@ -247,7 +247,7 @@ abstract class _$PathTrackingLoop extends $Notifier<PathTrackingLoopMode> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -300,7 +300,7 @@ abstract class _$DisplayPathTracking extends $Notifier<PathTracking?> {
   PathTracking? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<PathTracking?, PathTracking?>;
     final element =
         ref.element
@@ -310,7 +310,7 @@ abstract class _$DisplayPathTracking extends $Notifier<PathTracking?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -410,7 +410,7 @@ abstract class _$ShowPathTracking extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -420,7 +420,7 @@ abstract class _$ShowPathTracking extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -468,7 +468,7 @@ abstract class _$DebugPathTracking extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -478,7 +478,7 @@ abstract class _$DebugPathTracking extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 

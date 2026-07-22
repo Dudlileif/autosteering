@@ -56,7 +56,7 @@ abstract class _$AudioQueue extends $Notifier<Set<AudioAsset>> {
   Set<AudioAsset> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<Set<AudioAsset>, Set<AudioAsset>>;
     final element =
         ref.element
@@ -66,7 +66,7 @@ abstract class _$AudioQueue extends $Notifier<Set<AudioAsset>> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -114,7 +114,7 @@ abstract class _$AudioVolume extends $Notifier<Map<AudioAsset, double>> {
   Map<AudioAsset, double> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<Map<AudioAsset, double>, Map<AudioAsset, double>>;
     final element =
@@ -125,6 +125,6 @@ abstract class _$AudioVolume extends $Notifier<Map<AudioAsset, double>> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

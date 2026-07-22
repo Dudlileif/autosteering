@@ -52,7 +52,7 @@ abstract class _$ActiveWorkSession extends $Notifier<WorkSession?> {
   WorkSession? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<WorkSession?, WorkSession?>;
     final element =
         ref.element
@@ -62,7 +62,7 @@ abstract class _$ActiveWorkSession extends $Notifier<WorkSession?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -565,7 +565,7 @@ final class SavedWorkSessionsProvider
   }
 }
 
-String _$savedWorkSessionsHash() => r'62dbc81e09cb307a276bbb29feefa3c59375e32c';
+String _$savedWorkSessionsHash() => r'4b136017b3323798fbcc964f26e1be787a04f70e';
 
 /// A provider for deleting [workSession] from the user file system.
 ///

@@ -53,7 +53,7 @@ abstract class _$ConfiguredEquipmentSetup extends $Notifier<EquipmentSetup?> {
   EquipmentSetup? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<EquipmentSetup?, EquipmentSetup?>;
     final element =
         ref.element
@@ -63,7 +63,7 @@ abstract class _$ConfiguredEquipmentSetup extends $Notifier<EquipmentSetup?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 

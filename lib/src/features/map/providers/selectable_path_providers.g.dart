@@ -53,7 +53,7 @@ abstract class _$EnableSelectablePath extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -63,7 +63,7 @@ abstract class _$EnableSelectablePath extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -112,7 +112,7 @@ abstract class _$SelectablePathIndexStart extends $Notifier<int?> {
   int? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<int?, int?>;
     final element =
         ref.element
@@ -122,7 +122,7 @@ abstract class _$SelectablePathIndexStart extends $Notifier<int?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -171,7 +171,7 @@ abstract class _$SelectablePathIndexEnd extends $Notifier<int?> {
   int? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<int?, int?>;
     final element =
         ref.element
@@ -181,7 +181,7 @@ abstract class _$SelectablePathIndexEnd extends $Notifier<int?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -230,7 +230,7 @@ abstract class _$SelectablePathPoints extends $Notifier<Iterable<Geographic>?> {
   Iterable<Geographic>? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<Iterable<Geographic>?, Iterable<Geographic>?>;
     final element =
         ref.element
@@ -240,7 +240,7 @@ abstract class _$SelectablePathPoints extends $Notifier<Iterable<Geographic>?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -295,7 +295,7 @@ abstract class _$SelectablePathIndexSegments
   Iterable<Iterable<int>>? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<Iterable<Iterable<int>>?, Iterable<Iterable<int>>?>;
     final element =
@@ -306,7 +306,7 @@ abstract class _$SelectablePathIndexSegments
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 

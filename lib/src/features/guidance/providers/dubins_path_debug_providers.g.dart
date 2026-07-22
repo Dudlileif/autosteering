@@ -53,7 +53,7 @@ abstract class _$EnableDubinsPathDebug extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -63,7 +63,7 @@ abstract class _$EnableDubinsPathDebug extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -113,7 +113,7 @@ abstract class _$ShowDubinsPathDebugCircles extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -123,7 +123,7 @@ abstract class _$ShowDubinsPathDebugCircles extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -172,7 +172,7 @@ abstract class _$DubinsPathDebugStartPoint extends $Notifier<WayPoint?> {
   WayPoint? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<WayPoint?, WayPoint?>;
     final element =
         ref.element
@@ -182,7 +182,7 @@ abstract class _$DubinsPathDebugStartPoint extends $Notifier<WayPoint?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -231,7 +231,7 @@ abstract class _$DubinsPathDebugEndPoint extends $Notifier<WayPoint?> {
   WayPoint? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<WayPoint?, WayPoint?>;
     final element =
         ref.element
@@ -241,7 +241,7 @@ abstract class _$DubinsPathDebugEndPoint extends $Notifier<WayPoint?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -290,7 +290,7 @@ abstract class _$DubinsPathDebugPathType extends $Notifier<DubinsPathType?> {
   DubinsPathType? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<DubinsPathType?, DubinsPathType?>;
     final element =
         ref.element
@@ -300,7 +300,7 @@ abstract class _$DubinsPathDebugPathType extends $Notifier<DubinsPathType?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -395,7 +395,7 @@ abstract class _$DubinsPathDebugStepSize extends $Notifier<double> {
   double build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double, double>;
     final element =
         ref.element
@@ -405,6 +405,6 @@ abstract class _$DubinsPathDebugStepSize extends $Notifier<double> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

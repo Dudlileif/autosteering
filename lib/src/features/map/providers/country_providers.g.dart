@@ -64,7 +64,7 @@ abstract class _$CurrentCountry extends $Notifier<Country?> {
   Country? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<Country?, Country?>;
     final element =
         ref.element
@@ -74,7 +74,7 @@ abstract class _$CurrentCountry extends $Notifier<Country?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -127,7 +127,7 @@ abstract class _$AvailableCountryLayers extends $Notifier<List<TileLayerData>> {
   List<TileLayerData> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<List<TileLayerData>, List<TileLayerData>>;
     final element =
         ref.element
@@ -137,7 +137,7 @@ abstract class _$AvailableCountryLayers extends $Notifier<List<TileLayerData>> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -186,7 +186,7 @@ abstract class _$EnabledCountryLayers extends $Notifier<Set<TileLayerData>> {
   Set<TileLayerData> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<Set<TileLayerData>, Set<TileLayerData>>;
     final element =
         ref.element
@@ -196,7 +196,7 @@ abstract class _$EnabledCountryLayers extends $Notifier<Set<TileLayerData>> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -305,7 +305,7 @@ abstract class _$CountryLayerOpacities extends $Notifier<Map<String, double>> {
   Map<String, double> build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<Map<String, double>, Map<String, double>>;
     final element =
         ref.element
@@ -315,6 +315,6 @@ abstract class _$CountryLayerOpacities extends $Notifier<Map<String, double>> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

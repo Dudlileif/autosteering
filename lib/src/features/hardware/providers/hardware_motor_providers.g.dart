@@ -53,7 +53,7 @@ abstract class _$SteeringMotorWasTarget extends $Notifier<int?> {
   int? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<int?, int?>;
     final element =
         ref.element
@@ -63,7 +63,7 @@ abstract class _$SteeringMotorWasTarget extends $Notifier<int?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -112,7 +112,7 @@ abstract class _$SteeringMotorActualRPM extends $Notifier<double?> {
   double? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -122,7 +122,7 @@ abstract class _$SteeringMotorActualRPM extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -171,7 +171,7 @@ abstract class _$SteeringMotorStatus extends $Notifier<MotorStatus?> {
   MotorStatus? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<MotorStatus?, MotorStatus?>;
     final element =
         ref.element
@@ -181,7 +181,7 @@ abstract class _$SteeringMotorStatus extends $Notifier<MotorStatus?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -230,7 +230,7 @@ abstract class _$SteeringMotorCurrentScale extends $Notifier<int?> {
   int? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<int?, int?>;
     final element =
         ref.element
@@ -240,7 +240,7 @@ abstract class _$SteeringMotorCurrentScale extends $Notifier<int?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -289,7 +289,7 @@ abstract class _$SteeringMotorStallguard extends $Notifier<int?> {
   int? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<int?, int?>;
     final element =
         ref.element
@@ -299,7 +299,7 @@ abstract class _$SteeringMotorStallguard extends $Notifier<int?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -349,7 +349,7 @@ abstract class _$SteeringMotorEnableCalibration extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -359,7 +359,7 @@ abstract class _$SteeringMotorEnableCalibration extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -408,7 +408,7 @@ abstract class _$SteeringMotorRotation extends $Notifier<double?> {
   double? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -418,7 +418,7 @@ abstract class _$SteeringMotorRotation extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -472,7 +472,7 @@ abstract class _$SteeringMotorTargetRotation extends $Notifier<double?> {
   double? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -482,7 +482,7 @@ abstract class _$SteeringMotorTargetRotation extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -543,7 +543,7 @@ abstract class _$SteeringMotorStepsPerWasIncrementMinToCenter
   double? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -553,7 +553,7 @@ abstract class _$SteeringMotorStepsPerWasIncrementMinToCenter
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -614,7 +614,7 @@ abstract class _$SteeringMotorStepsPerWasIncrementCenterToMax
   double? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -624,7 +624,7 @@ abstract class _$SteeringMotorStepsPerWasIncrementCenterToMax
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -850,7 +850,7 @@ abstract class _$SteeringHardwareConfiguratorUiOffset
   Offset build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<Offset, Offset>;
     final element =
         ref.element
@@ -860,6 +860,6 @@ abstract class _$SteeringHardwareConfiguratorUiOffset
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

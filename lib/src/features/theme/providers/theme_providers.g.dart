@@ -52,7 +52,7 @@ abstract class _$ActiveThemeMode extends $Notifier<ThemeMode> {
   ThemeMode build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<ThemeMode, ThemeMode>;
     final element =
         ref.element
@@ -62,7 +62,7 @@ abstract class _$ActiveThemeMode extends $Notifier<ThemeMode> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -110,7 +110,7 @@ abstract class _$Manufacturer extends $Notifier<ManufacturerColors> {
   ManufacturerColors build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<ManufacturerColors, ManufacturerColors>;
     final element =
         ref.element
@@ -120,7 +120,7 @@ abstract class _$Manufacturer extends $Notifier<ManufacturerColors> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -174,7 +174,7 @@ abstract class _$ColorSchemeInheritFromVehicle extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -184,7 +184,7 @@ abstract class _$ColorSchemeInheritFromVehicle extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 

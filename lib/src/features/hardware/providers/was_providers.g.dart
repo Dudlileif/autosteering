@@ -53,7 +53,7 @@ abstract class _$WasCurrentFrequency extends $Notifier<double?> {
   double? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -63,7 +63,7 @@ abstract class _$WasCurrentFrequency extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -111,7 +111,7 @@ abstract class _$WasCurrentReading extends $Notifier<WasReading?> {
   WasReading? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<WasReading?, WasReading?>;
     final element =
         ref.element
@@ -121,7 +121,7 @@ abstract class _$WasCurrentReading extends $Notifier<WasReading?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -171,7 +171,7 @@ abstract class _$ShowSteeringHardwareConfig extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -181,6 +181,6 @@ abstract class _$ShowSteeringHardwareConfig extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

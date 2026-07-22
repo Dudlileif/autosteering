@@ -53,7 +53,7 @@ abstract class _$ImuCurrentFrequency extends $Notifier<double?> {
   double? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<double?, double?>;
     final element =
         ref.element
@@ -63,7 +63,7 @@ abstract class _$ImuCurrentFrequency extends $Notifier<double?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -112,7 +112,7 @@ abstract class _$CurrentAttitudeReading extends $Notifier<AttitudeReading?> {
   AttitudeReading? build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AttitudeReading?, AttitudeReading?>;
     final element =
         ref.element
@@ -122,7 +122,7 @@ abstract class _$CurrentAttitudeReading extends $Notifier<AttitudeReading?> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -170,7 +170,7 @@ abstract class _$ShowIMUConfig extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -180,7 +180,7 @@ abstract class _$ShowIMUConfig extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -229,7 +229,7 @@ abstract class _$ImuConfiguratorUiOffset extends $Notifier<Offset> {
   Offset build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<Offset, Offset>;
     final element =
         ref.element
@@ -239,6 +239,6 @@ abstract class _$ImuConfiguratorUiOffset extends $Notifier<Offset> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

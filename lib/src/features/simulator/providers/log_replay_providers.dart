@@ -105,7 +105,7 @@ FutureOr<LogReplay?> importLogReplay(
 
   LogReplay? replay;
   if (Device.isWeb) {
-    final data = pickedFiles?.files.first.bytes;
+    final data = await pickedFiles?.files.first.readAsBytes();
     if (data != null) {
       try {
         replay = LogReplay(
