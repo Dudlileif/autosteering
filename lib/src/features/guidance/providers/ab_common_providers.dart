@@ -19,11 +19,14 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/database/database.dart';
 import 'package:autosteering/src/features/equipment/providers/equipment_providers.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
+import 'package:collection/collection.dart';
+import 'package:drift/drift.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as path;
@@ -122,7 +125,9 @@ class ABSidewaysOffset extends _$ABSidewaysOffset {
 class ABTurningRadius extends _$ABTurningRadius {
   @override
   double build() => ref.read(
-    mainVehicleProvider.select((value) => 1.25 * value.minTurningRadius),
+    mainVehicleProvider.select(
+      (value) => 1.25 * value.geometry.minTurningRadius,
+    ),
   );
 
   /// Updates [state] to [value].
@@ -423,7 +428,171 @@ FutureOr<List<ABTracking>> savedABTrackings(Ref ref) async => await ref
         folder: path.join('guidance', 'ab_tracking'),
       ).future,
     )
-    .then((data) => data.cast());
+    .then((data) async {
+      final abTrackings = data.cast<ABTracking>();
+
+      await ref.watch(
+        importMissingABTrackingsToDatabaseProvider(abTrackings).future,
+      );
+
+      return abTrackings;
+    });
+
+/// A provider for importing missing AB trackings to the database.
+@riverpod
+Future<List<int>> importMissingABTrackingsToDatabase(
+  Ref ref,
+  List<ABTracking> trackings,
+) async {
+  final database = ref.watch(databaseProvider);
+
+  final guidanceLinks = await database.managers.links
+      .filter((link) => link.tableRef.equals('guidance_patterns'))
+      .get();
+
+  final trackingsToAdd = <ABTracking>[];
+  for (final tracking in trackings) {
+    if (!guidanceLinks.map((link) => link.linkValue).contains(tracking.uuid)) {
+      trackingsToAdd.add(tracking);
+    }
+  }
+  final patternIds = <int>[];
+  for (final tracking in trackingsToAdd) {
+    final createdLineString = await database.managers.lineStrings
+        .createReturning(
+          (o) => o(
+            type: .guidancePattern,
+            width: Value((tracking.width * 100).round()),
+            length: Value((tracking.length * 100).round()),
+          ),
+        );
+
+    final maxPointId =
+        await database.managers.points
+            .orderBy((p) => p.id.desc())
+            .limit(1)
+            .map((p) => p.id)
+            .getSingleOrNull() ??
+        0;
+    await database.managers.points.bulkCreate(
+      (o) => tracking.baseLine.mapIndexed(
+        (index, wayPoint) => o(
+          type: switch (index) {
+            0 => .guidanceReferenceA,
+            final index when index == tracking.baseLine.length - 1 =>
+              .guidanceReferenceB,
+            _ => .guidancePoint,
+          },
+          latitude: wayPoint.position.lat,
+          longitude: wayPoint.position.lon,
+          elevation: Value.absentIfNull(
+            wayPoint.position.is3D ? wayPoint.position.elev : null,
+          ),
+        ),
+      ),
+    );
+    final pointIds = await database.managers.points
+        .filter((p) => p.id.isBiggerThan(maxPointId))
+        .map((p) => p.id)
+        .get();
+    await database.managers.lineStringPoints.bulkCreate(
+      (o) => pointIds.map(
+        (id) => o(lineString: createdLineString.id, point: id),
+      ),
+    );
+
+    int? borderPolygonId;
+    if (tracking.boundary?.exterior?.toGeographicPositions
+        case final boundary?) {
+      borderPolygonId = await database.managers.polygons.create(
+        (o) => o(type: .partfieldBoundary),
+      );
+
+      final createdLineString = await database.managers.lineStrings
+          .createReturning(
+            (o) => o(
+              type: .polygonExterior,
+            ),
+          );
+      await database.managers.polygonLineStrings.create(
+        (o) => o(
+          polygon: borderPolygonId!,
+          lineString: createdLineString.id,
+        ),
+      );
+
+      final maxPointId =
+          await database.managers.points
+              .orderBy((p) => p.id.desc())
+              .limit(1)
+              .map((p) => p.id)
+              .getSingleOrNull() ??
+          0;
+      await database.managers.points.bulkCreate(
+        (o) => boundary.map(
+          (position) => o(
+            type: .other,
+            latitude: position.lat,
+            longitude: position.lon,
+            elevation: Value.absentIfNull(
+              position.is3D ? position.elev : null,
+            ),
+          ),
+        ),
+      );
+      final pointIds = await database.managers.points
+          .filter((p) => p.id.isBiggerThan(maxPointId))
+          .map((p) => p.id)
+          .get();
+      await database.managers.lineStringPoints.bulkCreate(
+        (o) => pointIds.map(
+          (id) => o(lineString: createdLineString.id, point: id),
+        ),
+      );
+    }
+    final patternId = await database.managers.guidancePatterns.create(
+      (o) => o(
+        lineString: createdLineString.id,
+        type: switch (tracking) {
+          APlusLine() => .aPlus,
+          ABCurve() => .curve,
+          ABLine() => .ab,
+        },
+        name: Value.absentIfNull(tracking.name),
+        borderPolygon: Value.absentIfNull(borderPolygonId),
+        heading: Value.absentIfNull(
+          tracking.baseLine.firstOrNull?.bearing,
+        ),
+        numberOfSwathsLeft: Value.absentIfNull(
+          switch (tracking.offsetsInsideBoundary?.min) {
+            final value? when value < 0 => -value,
+            _ => null,
+          },
+        ),
+        numberOfSwathsRight: Value.absentIfNull(
+          switch (tracking.offsetsInsideBoundary?.max) {
+            final value? when value > 0 => value,
+            _ => null,
+          },
+        ),
+        extension: const Value(.fromBoth),
+      ),
+    );
+    final link = await database.managers.links.createReturning(
+      (o) => o(
+        tableRef: 'guidance_patterns',
+        refId: patternId,
+        linkValue: Value(tracking.uuid),
+        name: Value.absentIfNull(tracking.name),
+      ),
+    );
+
+    guidanceLinks.add(link);
+    tracking.id = patternId;
+    patternIds.add(patternId);
+  }
+  return patternIds;
+}
 
 /// A provider for deleting [tracking] from the user file systemm.
 ///

@@ -26,53 +26,33 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// The steering axle is based on Ackermann geometry.
   AxleSteeredVehicle({
     required super.type,
-    required this.wheelBase,
-    required super.minTurningRadius,
-    required super.trackWidth,
-    required super.steeringAngleMax,
-    this.solidAxleToFrontHitchDistance,
-    this.solidAxleToRearHitchDistance,
-    this.solidAxleToRearDrawbarDistance,
-    this.ackermannSteeringRatio = 1,
-    this.ackermannPercentage = 100,
-    this.steeringAxleWheelDiameter = 1.1,
-    this.solidAxleWheelDiameter = 1.8,
-    this.steeringAxleWheelWidth = 0.48,
-    this.solidAxleWheelWidth = 0.6,
-    this.solidAxleToFrontDistance = 3,
-    super.numWheels,
-    super.wheelSpacing,
-    super.pathTrackingMode,
+    required AxleSteeredVehicleGeometry geometry,
     super.imu,
     super.was,
     super.gnssAntennaConfig,
-    super.thresholdVelocities,
+    super.thresholds,
     super.steeringHardwareConfig,
-    super.purePursuitParameters,
-    super.stanleyParameters,
+    super.pathTrackingParameters,
     super.antennaPosition,
     super.velocity,
     super.bearing,
     super.pitch,
     super.roll,
     super.steeringAngleInput,
-    super.length = 4,
-    super.width = 2.5,
     super.nudgeDistance,
     super.wheelsRolledDistance,
-    super.hitchFrontFixedChild,
-    super.hitchRearFixedChild,
-    super.hitchRearDrawbarChild,
+    super.connectors,
+    super.childConnections,
     super.name,
     super.uuid,
-    super.lastUsed,
+    super.id,
+    super.lastUsedAt,
+    super.createdAt,
+    super.lastUpdatedAt,
     super.manufacturerColors,
     super.manualSimulationMode,
-  }) : steeringAngleMaxRaw = steeringAngleMax;
-
-  /// The distance between the axles.
-  @override
-  double wheelBase;
+  }) : steeringAngleMaxRaw = geometry.steeringAngleMax,
+       super(geometry: geometry);
 
   /// The distance from the antenna [position] to the solid axle,
   /// this means the rear axle on front wheel steered vehicles, and
@@ -87,57 +67,21 @@ sealed class AxleSteeredVehicle extends Vehicle {
   double steeringAngleMaxRaw;
 
   @override
-  set steeringAngleMax(double value) => steeringAngleMaxRaw = value;
+  AxleSteeredVehicleGeometry get geometry =>
+      super.geometry as AxleSteeredVehicleGeometry;
+
+  @override
+  double get wheelBase => geometry.wheelBase;
 
   /// The Ackermann max steering angle of a theoretical central wheel.
   @override
   double get steeringAngleMax => WheelAngleToAckermann(
     wheelAngle: steeringAngleMaxRaw,
-    wheelBase: wheelBase,
-    trackWidth: trackWidth,
-    steeringRatio: ackermannSteeringRatio,
-    ackermannPercentage: ackermannPercentage,
+    wheelBase: geometry.wheelBase,
+    trackWidth: geometry.trackWidth,
+    steeringRatio: geometry.ackermannSteeringRatio,
+    ackermannPercentage: geometry.ackermannPercentage,
   ).ackermannAngle.toDegrees();
-
-  /// The distance to the front hitch point from the solid axle.
-  double? solidAxleToFrontHitchDistance;
-
-  /// The distance to the rear hitch point from the solid axle.
-  double? solidAxleToRearHitchDistance;
-
-  /// The distance to the rear drawbar hitch point from the solid axle.
-  double? solidAxleToRearDrawbarDistance;
-
-  /// A modifier ratio for the Ackermann central angle. Defaults to 1.
-  ///
-  /// A higher value will cause a sharper turn, and a lower value a looser
-  /// turn.
-  ///
-  /// ```ackermannAngle = steeringAngleInput / ackermannSteeringRatio```
-  double ackermannSteeringRatio;
-
-  /// A modifier to adjust the outside wheel angle by
-  /// ```outsideAngle = innerAngle -
-  ///   ackermannPercentage*(innerAngle-ackermannAngle)```
-  double ackermannPercentage;
-
-  /// The diameter of the steering axle wheels.
-  double steeringAxleWheelDiameter;
-
-  /// The diameter of the solid axle wheels
-  double solidAxleWheelDiameter;
-
-  /// The width of the steering axle wheels.
-  double steeringAxleWheelWidth;
-
-  /// The width of the solid axle wheels.
-  double solidAxleWheelWidth;
-
-  /// The distance from the [solidAxlePosition] to the frontmost part of the
-  /// vehicle, typically the bonnet or the frame.
-  ///
-  /// Used to draw the vehicle in correct proportions.
-  double solidAxleToFrontDistance;
 
   /// The position of the center of the solid axle.
   Geographic get solidAxlePosition => position.rhumb.destinationPoint(
@@ -150,39 +94,12 @@ sealed class AxleSteeredVehicle extends Vehicle {
 
   @override
   Geographic get topLeftPosition => solidAxlePosition.rhumb
-      .destinationPoint(distance: solidAxleToFrontDistance, bearing: bearing)
+      .destinationPoint(
+        distance: geometry.solidAxleToFrontDistance,
+        bearing: bearing,
+      )
       .rhumb
-      .destinationPoint(distance: width / 2, bearing: bearing - 90);
-
-  @override
-  Geographic? get hitchFrontFixedPoint =>
-      switch (solidAxleToFrontHitchDistance != null) {
-        true => solidAxlePosition.rhumb.destinationPoint(
-          distance: solidAxleToFrontHitchDistance!,
-          bearing: bearing,
-        ),
-        false => null,
-      };
-
-  @override
-  Geographic? get hitchRearFixedPoint =>
-      switch (solidAxleToRearHitchDistance != null) {
-        true => solidAxlePosition.rhumb.destinationPoint(
-          distance: solidAxleToRearHitchDistance!,
-          bearing: bearing + 180,
-        ),
-        false => null,
-      };
-
-  @override
-  Geographic? get hitchRearDrawbarPoint =>
-      switch (solidAxleToRearDrawbarDistance != null) {
-        true => solidAxlePosition.rhumb.destinationPoint(
-          distance: solidAxleToRearDrawbarDistance!,
-          bearing: bearing + 180,
-        ),
-        false => null,
-      };
+      .destinationPoint(distance: geometry.width / 2, bearing: bearing - 90);
 
   /// Where the look ahead distance calculation should start.
   @override
@@ -249,20 +166,20 @@ sealed class AxleSteeredVehicle extends Vehicle {
 
     steeringAngleInput = WheelAngleToAckermann(
       wheelAngle: innerWheelAngle,
-      wheelBase: wheelBase,
-      trackWidth: trackWidth,
-      steeringRatio: ackermannSteeringRatio,
-      ackermannPercentage: ackermannPercentage,
+      wheelBase: geometry.wheelBase,
+      trackWidth: geometry.trackWidth,
+      steeringRatio: geometry.ackermannSteeringRatio,
+      ackermannPercentage: geometry.ackermannPercentage,
     ).ackermannAngle.toDegrees();
   }
 
   /// The Ackermann steering geometry of the vehicle.
   AckermannSteering get ackermannSteering => AckermannSteering(
     steeringAngle: steeringAngle,
-    wheelBase: wheelBase,
-    trackWidth: trackWidth,
-    steeringRatio: ackermannSteeringRatio,
-    ackermannPercentage: ackermannPercentage,
+    wheelBase: geometry.wheelBase,
+    trackWidth: geometry.trackWidth,
+    steeringRatio: geometry.ackermannSteeringRatio,
+    ackermannPercentage: geometry.ackermannPercentage,
   );
 
   /// The angle of the left steering wheel when using Ackermann steering.
@@ -275,10 +192,10 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// mounted to. I.e. the angle to the right for a front left steering wheel.
   double get maxOppositeSteeringAngle => WheelAngleToAckermann(
     wheelAngle: steeringAngleMaxRaw,
-    wheelBase: wheelBase,
-    trackWidth: trackWidth,
-    steeringRatio: ackermannSteeringRatio,
-    ackermannPercentage: ackermannPercentage,
+    wheelBase: geometry.wheelBase,
+    trackWidth: geometry.trackWidth,
+    steeringRatio: geometry.ackermannSteeringRatio,
+    ackermannPercentage: geometry.ackermannPercentage,
   ).oppositeAngle;
 
   /// The turning radius corresponding to the current [steeringAngle].
@@ -292,10 +209,10 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// [steeringAngleMaxRaw].
   double get minTurningRadiusTheoretic => WheelAngleToAckermann(
     wheelAngle: steeringAngleMaxRaw,
-    wheelBase: wheelBase,
-    trackWidth: trackWidth,
-    ackermannPercentage: ackermannPercentage,
-    steeringRatio: ackermannSteeringRatio,
+    wheelBase: geometry.wheelBase,
+    trackWidth: geometry.trackWidth,
+    ackermannPercentage: geometry.ackermannPercentage,
+    steeringRatio: geometry.ackermannSteeringRatio,
   ).turningRadius;
 
   /// The center point of which the [currentTurningRadius] revolves around.
@@ -319,10 +236,10 @@ sealed class AxleSteeredVehicle extends Vehicle {
 
     return AckermannSteeringFromTurningRadius(
       turningRadius: turningRadius,
-      wheelBase: wheelBase,
-      trackWidth: trackWidth,
-      ackermannPercentage: ackermannPercentage,
-      steeringRatio: ackermannSteeringRatio,
+      wheelBase: geometry.wheelBase,
+      trackWidth: geometry.trackWidth,
+      ackermannPercentage: geometry.ackermannPercentage,
+      steeringRatio: geometry.ackermannSteeringRatio,
     ).steeringAngle;
   }
 
@@ -381,9 +298,9 @@ sealed class AxleSteeredVehicle extends Vehicle {
   ) {
     final currentTurningRadius = AckermannSteering(
       steeringAngle: steeringAngle,
-      wheelBase: wheelBase,
-      trackWidth: trackWidth,
-      steeringRatio: ackermannSteeringRatio,
+      wheelBase: geometry.wheelBase,
+      trackWidth: geometry.trackWidth,
+      steeringRatio: geometry.ackermannSteeringRatio,
     ).turningRadius;
 
     final turningRadiusCenter = this.solidAxlePosition.rhumb.destinationPoint(
@@ -433,9 +350,9 @@ sealed class AxleSteeredVehicle extends Vehicle {
   ) {
     final currentTurningRadius = AckermannSteering(
       steeringAngle: steeringAngle,
-      wheelBase: wheelBase,
-      trackWidth: trackWidth,
-      steeringRatio: ackermannSteeringRatio,
+      wheelBase: geometry.wheelBase,
+      trackWidth: geometry.trackWidth,
+      steeringRatio: geometry.ackermannSteeringRatio,
     ).turningRadius;
 
     final turningRadiusCenter = this.solidAxlePosition.rhumb.destinationPoint(
@@ -476,7 +393,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
     }.wrap360();
 
     final stanleyAxlePosition = solidAxlePosition.rhumb.destinationPoint(
-      distance: wheelBase,
+      distance: geometry.wheelBase,
       bearing: switch (isReversing) {
         false => projectedBearing,
         true => projectedBearing + 180,
@@ -490,12 +407,12 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// [left] is set to false.
   List<Geographic> wheelPoints({bool left = true, bool steering = true}) {
     final wheelDiameter = switch (steering) {
-      true => steeringAxleWheelDiameter,
-      false => solidAxleWheelDiameter,
+      true => geometry.steeringAxleWheelDiameter,
+      false => geometry.solidAxleWheelDiameter,
     };
     final wheelWidth = switch (steering) {
-      true => steeringAxleWheelWidth,
-      false => solidAxleWheelWidth,
+      true => geometry.steeringAxleWheelWidth,
+      false => geometry.solidAxleWheelWidth,
     };
 
     final sign = left ? 1 : -1;
@@ -525,7 +442,7 @@ sealed class AxleSteeredVehicle extends Vehicle {
           true => steeringAxlePosition,
           false => solidAxlePosition,
         }.rhumb.destinationPoint(
-          distance: trackWidth / 2 - wheelWidth / 2,
+          distance: geometry.trackWidth / 2 - wheelWidth / 2,
           bearing: axleToCenterAngle,
         );
 
@@ -656,15 +573,15 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// The max extent/bounds points of the vehicle. The [bearing] is followed.
   List<Geographic> get points {
     final frontRight = topLeftPosition.rhumb.destinationPoint(
-      distance: width,
+      distance: geometry.width,
       bearing: bearing + 90,
     );
     final rearRight = frontRight.rhumb.destinationPoint(
-      distance: length,
+      distance: geometry.length,
       bearing: bearing + 180,
     );
     final rearLeft = topLeftPosition.rhumb.destinationPoint(
-      distance: length,
+      distance: geometry.length,
       bearing: bearing + 180,
     );
 
@@ -684,48 +601,29 @@ sealed class AxleSteeredVehicle extends Vehicle {
   /// parameters/variables altered.
   @override
   AxleSteeredVehicle copyWith({
+    VehicleGeometry? geometry,
     Geographic? antennaPosition,
-    double? minTurningRadius,
-    double? steeringAngleMax,
-    double? trackWidth,
-    double? wheelBase,
-    double? ackermannPercentage,
-    double? ackermannSteeringRatio,
-    double? steeringAxleWheelDiameter,
-    double? solidAxleWheelDiameter,
-    double? steeringAxleWheelWidth,
-    double? solidAxleWheelWidth,
-    double? solidAxleToFrontHitchDistance,
-    double? solidAxleToRearHitchDistance,
-    double? solidAxleToRearDrawbarDistance,
-    int? numWheels,
-    double? wheelSpacing,
     Imu? imu,
     Was? was,
     GnssAntennaConfig? gnssAntennaConfig,
-    ThresholdVelocities? thresholdVelocities,
+    VehicleThresholds? thresholds,
     SteeringHardwareConfig? steeringHardwareConfig,
-    PathTrackingMode? pathTrackingMode,
-    PurePursuitParameters? purePursuitParameters,
-    StanleyParameters? stanleyParameters,
+    PathTrackingParameters? pathTrackingParameters,
     double? velocity,
     double? bearing,
     double? pitch,
     double? roll,
     double? steeringAngleInput,
-    double? length,
-    double? width,
     double? nudgeDistance,
     double? wheelsRolledDistance,
-    Hitchable? hitchParent,
-    Hitchable? hitchFrontFixedChild,
-    Hitchable? hitchRearFixedChild,
-    Hitchable? hitchRearDrawbarChild,
+    List<Connector>? connectors,
+    List<Connection>? childConnections,
     String? name,
     String? uuid,
-    DateTime? lastUsed,
+    DateTime? lastUsedAt,
     ManufacturerColors? manufacturerColors,
     bool? manualSimulationMode,
+    int? id,
   });
 
   @override
@@ -734,21 +632,21 @@ sealed class AxleSteeredVehicle extends Vehicle {
 
     map['dimensions'] = Map<String, dynamic>.from(map['dimensions'] as Map)
       ..addAll({
-        'wheel_base': wheelBase,
+        'wheel_base': geometry.wheelBase,
         'wheels': {
-          'steering_axle_wheel_diameter': steeringAxleWheelDiameter,
-          'solid_axle_wheel_diameter': solidAxleWheelDiameter,
-          'steering_axle_wheel_width': steeringAxleWheelWidth,
-          'solid_axle_wheel_width': solidAxleWheelWidth,
-          'num_wheels': numWheels,
-          'wheel_spacing': wheelSpacing,
+          'steering_axle_wheel_diameter': geometry.steeringAxleWheelDiameter,
+          'solid_axle_wheel_diameter': geometry.solidAxleWheelDiameter,
+          'steering_axle_wheel_width': geometry.steeringAxleWheelWidth,
+          'solid_axle_wheel_width': geometry.solidAxleWheelWidth,
+          'num_wheels': geometry.numWheels,
+          'wheel_spacing': geometry.wheelSpacing,
         },
       });
 
     map['steering'] = Map<String, dynamic>.from(map['steering'] as Map)
       ..addAll({
-        'ackermann_steering_ratio': ackermannSteeringRatio,
-        'ackermann_percentage': ackermannPercentage,
+        'ackermann_steering_ratio': geometry.ackermannSteeringRatio,
+        'ackermann_percentage': geometry.ackermannPercentage,
       })
       ..update(
         'steering_angle_max',
@@ -757,9 +655,12 @@ sealed class AxleSteeredVehicle extends Vehicle {
       );
 
     map['hitches'] = {
-      'solid_axle_to_front_hitch_distance': solidAxleToFrontHitchDistance,
-      'solid_axle_to_rear_hitch_distance': solidAxleToRearHitchDistance,
-      'solid_axle_to_rear_drawbar_distance': solidAxleToRearDrawbarDistance,
+      'solid_axle_to_front_hitch_distance':
+          geometry.solidAxleToFrontHitchDistance,
+      'solid_axle_to_rear_hitch_distance':
+          geometry.solidAxleToRearHitchDistance,
+      'solid_axle_to_rear_drawbar_distance':
+          geometry.solidAxleToRearDrawbarDistance,
     };
 
     return map;

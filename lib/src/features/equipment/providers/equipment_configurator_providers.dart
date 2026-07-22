@@ -16,7 +16,6 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/equipment/equipment.dart';
-import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -43,9 +42,7 @@ class EquipmentConfiguratorIndex extends _$EquipmentConfiguratorIndex {
 @Riverpod(keepAlive: true)
 class ConfiguredEquipment extends _$ConfiguredEquipment {
   @override
-  Equipment build() =>
-      ref.watch(loadedEquipmentProvider) ??
-      Equipment(hitchType: HitchType.fixed);
+  Equipment build() => ref.watch(loadedEquipmentProvider) ?? Equipment();
 
   /// Update the [state] to [equipment].
   void update(Equipment equipment) => Future(() => state = equipment);

@@ -62,7 +62,7 @@ class EquipmentSectionButtons extends ConsumerWidget {
                       true => _SectionButton(
                         section: equipment.sections.first,
                         onTap: () => ref.read(simInputProvider.notifier).send((
-                          uuid: equipment.uuid,
+                          id: equipment.id,
                           activeSections: (equipment..toggleSection(0))
                               .sectionActivationStatus,
                         )),
@@ -90,7 +90,7 @@ class EquipmentSectionButtons extends ConsumerWidget {
                                   splashColor: Colors.red,
                                   onTap: () =>
                                       ref.read(simInputProvider.notifier).send((
-                                        uuid: equipment.uuid,
+                                        id: equipment.id,
                                         activeSections:
                                             (equipment..deactivateAll())
                                                 .sectionActivationStatus,
@@ -137,7 +137,7 @@ class EquipmentSectionButtons extends ConsumerWidget {
                                   splashColor: Colors.green,
                                   onTap: () =>
                                       ref.read(simInputProvider.notifier).send((
-                                        uuid: equipment.uuid,
+                                        id: equipment.id,
                                         activeSections:
                                             (equipment..activateAll())
                                                 .sectionActivationStatus,
@@ -202,7 +202,7 @@ class _SectionButtons extends ConsumerWidget {
             (section) => _SectionButton(
               section: section,
               onTap: () => ref.read(simInputProvider.notifier).send((
-                uuid: equipment.uuid,
+                id: equipment.id,
                 activeSections: (equipment..toggleSection(section.index))
                     .sectionActivationStatus,
               )),

@@ -74,9 +74,10 @@
     "Dad mode",
     "Remote control",
     "Hardware",
-    "Localization"
+    "Localization",
+    "Database"
   ],
-  "dart.flutterSdkPath": ".fvm/versions/3.44.2",
+  "dart.flutterSdkPath": ".fvm/versions/3.44.7",
   "editor.formatOnSave": true,
   "[dart]": {
     "editor.codeActionsOnSave": {

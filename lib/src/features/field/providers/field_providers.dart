@@ -19,10 +19,12 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/database/database.dart' hide Point;
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:collection/collection.dart';
+import 'package:drift/drift.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -400,7 +402,151 @@ FutureOr<List<Field>> savedFields(Ref ref) async => await ref
     .watch(
       savedFilesProvider(fromJson: Field.fromJson, folder: 'fields').future,
     )
-    .then((data) => data.cast());
+    .then((data) async {
+      final fields = data.cast<Field>();
+
+      final database = ref.watch(databaseProvider);
+      final fieldsToAddToDatabase = <Field>[];
+      final fieldLinks = await database.managers.links
+          .filter((link) => link.tableRef.equals('partfields'))
+          .get();
+      for (final field in fields) {
+        if (!fieldLinks.map((field) => field.linkValue).contains(field.uuid)) {
+          fieldsToAddToDatabase.add(field);
+        }
+      }
+      for (final field in fieldsToAddToDatabase) {
+        final createdField = await database.managers.partfields.createReturning(
+          (o) => o(
+            id: Value.absentIfNull(field.id),
+            parentField: Value.absentIfNull(field.parentFieldId),
+            name: Value(field.name),
+            area: field.areaWithoutHoles,
+            createdAt: Value.absentIfNull(field.createdAt),
+            lastUpdatedAt: Value.absentIfNull(field.lastUpdatedAt),
+            lastUsedAt: Value.absentIfNull(field.lastUsed),
+          ),
+        );
+        final link = await database.managers.links.createReturning(
+          (o) => o(
+            tableRef: 'partfields',
+            refId: createdField.id,
+            linkValue: Value.absentIfNull(field.uuid),
+            name: Value(field.name),
+          ),
+        );
+        for (final feature in field.geometry.features) {
+          if (feature.geometry case final Polygon polygon) {
+            final createdPolygon = await database.managers.polygons
+                .createReturning(
+                  (o) => o(
+                    type: .partfieldBoundary,
+                  ),
+                );
+            await database.managers.partfieldPolygons.create(
+              (o) => o(partfield: createdField.id, polygon: createdPolygon.id),
+            );
+            if (polygon.exterior case final PositionSeries exterior) {
+              final lineString = await database.managers.lineStrings
+                  .createReturning(
+                    (o) => o(
+                      type: .polygonExterior,
+                    ),
+                  );
+
+              await database.managers.polygonLineStrings.create(
+                (o) => o(
+                  polygon: createdPolygon.id,
+                  lineString: lineString.id,
+                ),
+              );
+              final maxPointId =
+                  await database.managers.points
+                      .orderBy((p) => p.id.desc())
+                      .limit(1)
+                      .map((p) => p.id)
+                      .getSingleOrNull() ??
+                  0;
+              await database.managers.points.bulkCreate(
+                (o) => exterior.toGeographicPositions.map(
+                  (position) => o(
+                    type: .other,
+                    latitude: position.lat,
+                    longitude: position.lon,
+                    elevation: Value.absentIfNull(
+                      position.is3D ? position.elev : null,
+                    ),
+                  ),
+                ),
+              );
+              final pointIds = await database.managers.points
+                  .filter((p) => p.id.isBiggerThan(maxPointId))
+                  .map((p) => p.id)
+                  .get();
+              await database.managers.lineStringPoints.bulkCreate(
+                (o) => pointIds.map(
+                  (id) => o(lineString: lineString.id, point: id),
+                ),
+              );
+            }
+            for (final interior in polygon.interior) {
+              final lineString = await database.managers.lineStrings
+                  .createReturning(
+                    (o) => o(
+                      type: .polygonInterior,
+                    ),
+                  );
+              await database.managers.polygonLineStrings.create(
+                (o) => o(
+                  polygon: createdPolygon.id,
+                  lineString: lineString.id,
+                ),
+              );
+              final maxPointId =
+                  await database.managers.points
+                      .orderBy((p) => p.id.desc())
+                      .limit(1)
+                      .map((p) => p.id)
+                      .getSingleOrNull() ??
+                  0;
+              await database.managers.points.bulkCreate(
+                (o) => interior.toGeographicPositions.map(
+                  (position) => o(
+                    type: .other,
+                    latitude: position.lat,
+                    longitude: position.lon,
+                    elevation: Value.absentIfNull(
+                      position.is3D ? position.elev : null,
+                    ),
+                  ),
+                ),
+              );
+              final pointIds = await database.managers.points
+                  .filter((p) => p.id.isBiggerThan(maxPointId))
+                  .map((p) => p.id)
+                  .get();
+              await database.managers.lineStringPoints.bulkCreate(
+                (o) => pointIds.map(
+                  (id) => o(lineString: lineString.id, point: id),
+                ),
+              );
+            }
+          }
+        }
+
+        fieldLinks.add(link);
+      }
+
+      return fields
+          .map(
+            (field) => field.copyWith(
+              id: fieldLinks
+                  .firstWhereOrNull((link) => link.linkValue == field.uuid)
+                  ?.refId,
+            ),
+          )
+          .toList();
+    });
 
 /// A provider for deleting [field] from the user file system.
 ///

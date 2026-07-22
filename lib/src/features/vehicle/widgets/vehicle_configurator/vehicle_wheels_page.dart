@@ -58,16 +58,25 @@ class VehicleWheelsPage extends ConsumerWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
-                (value) => (value as AxleSteeredVehicle).steeringAxleWheelWidth
+                (value) => (value as AxleSteeredVehicle)
+                    .geometry
+                    .steeringAxleWheelWidth
                     .toString(),
               ),
             ),
             onChanged: (value) {
-              final width = double.tryParse(value.replaceAll(',', '.'));
-
-              ref
-                  .read(configuredVehicleProvider.notifier)
-                  .update(vehicle.copyWith(steeringAxleWheelWidth: width));
+              if (double.tryParse(value.replaceAll(',', '.'))
+                  case final width?) {
+                ref
+                    .read(configuredVehicleProvider.notifier)
+                    .update(
+                      vehicle.copyWith(
+                        geometry: vehicle.geometry.copyWith(
+                          steeringAxleWheelWidth: width,
+                        ),
+                      ),
+                    );
+              }
             },
           ),
           TextFormField(
@@ -88,16 +97,25 @@ class VehicleWheelsPage extends ConsumerWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
-                (value) => (value as AxleSteeredVehicle).solidAxleWheelWidth
+                (value) => (value as AxleSteeredVehicle)
+                    .geometry
+                    .solidAxleWheelWidth
                     .toString(),
               ),
             ),
             onChanged: (value) {
-              final width = double.tryParse(value.replaceAll(',', '.'));
-
-              ref
-                  .read(configuredVehicleProvider.notifier)
-                  .update(vehicle.copyWith(solidAxleWheelWidth: width));
+              if (double.tryParse(value.replaceAll(',', '.'))
+                  case final width?) {
+                ref
+                    .read(configuredVehicleProvider.notifier)
+                    .update(
+                      vehicle.copyWith(
+                        geometry: vehicle.geometry.copyWith(
+                          solidAxleWheelWidth: width,
+                        ),
+                      ),
+                    );
+              }
             },
           ),
           TextFormField(
@@ -118,18 +136,24 @@ class VehicleWheelsPage extends ConsumerWidget {
             initialValue: ref.read(
               configuredVehicleProvider.select(
                 (value) => (value as AxleSteeredVehicle)
+                    .geometry
                     .steeringAxleWheelDiameter
                     .toString(),
               ),
             ),
             onChanged: (value) {
-              final diameter = double.tryParse(value.replaceAll(',', '.'));
-
-              ref
-                  .read(configuredVehicleProvider.notifier)
-                  .update(
-                    vehicle.copyWith(steeringAxleWheelDiameter: diameter),
-                  );
+              if (double.tryParse(value.replaceAll(',', '.'))
+                  case final diameter?) {
+                ref
+                    .read(configuredVehicleProvider.notifier)
+                    .update(
+                      vehicle.copyWith(
+                        geometry: vehicle.geometry.copyWith(
+                          steeringAxleWheelDiameter: diameter,
+                        ),
+                      ),
+                    );
+              }
             },
           ),
           TextFormField(
@@ -149,16 +173,25 @@ class VehicleWheelsPage extends ConsumerWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
-                (value) => (value as AxleSteeredVehicle).solidAxleWheelDiameter
+                (value) => (value as AxleSteeredVehicle)
+                    .geometry
+                    .solidAxleWheelDiameter
                     .toString(),
               ),
             ),
             onChanged: (value) {
-              final diameter = double.tryParse(value.replaceAll(',', '.'));
-
-              ref
-                  .read(configuredVehicleProvider.notifier)
-                  .update(vehicle.copyWith(solidAxleWheelDiameter: diameter));
+              if (double.tryParse(value.replaceAll(',', '.'))
+                  case final diameter?) {
+                ref
+                    .read(configuredVehicleProvider.notifier)
+                    .update(
+                      vehicle.copyWith(
+                        geometry: vehicle.geometry.copyWith(
+                          solidAxleWheelDiameter: diameter,
+                        ),
+                      ),
+                    );
+              }
             },
           ),
         ],
@@ -175,15 +208,21 @@ class VehicleWheelsPage extends ConsumerWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
-                (value) => (value as ArticulatedTractor).wheelWidth.toString(),
+                (value) => (value as ArticulatedTractor).geometry.wheelWidth
+                    .toString(),
               ),
             ),
             onChanged: (value) {
-              final width = double.tryParse(value.replaceAll(',', '.'));
-
-              ref
-                  .read(configuredVehicleProvider.notifier)
-                  .update(vehicle.copyWith(wheelWidth: width));
+              if (double.tryParse(value.replaceAll(',', '.'))
+                  case final width?) {
+                ref
+                    .read(configuredVehicleProvider.notifier)
+                    .update(
+                      vehicle.copyWith(
+                        geometry: vehicle.geometry.copyWith(wheelWidth: width),
+                      ),
+                    );
+              }
             },
           ),
           TextFormField(
@@ -197,16 +236,23 @@ class VehicleWheelsPage extends ConsumerWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
-                (value) =>
-                    (value as ArticulatedTractor).wheelDiameter.toString(),
+                (value) => (value as ArticulatedTractor).geometry.wheelDiameter
+                    .toString(),
               ),
             ),
             onChanged: (value) {
-              final diameter = double.tryParse(value.replaceAll(',', '.'));
-
-              ref
-                  .read(configuredVehicleProvider.notifier)
-                  .update(vehicle.copyWith(wheelDiameter: diameter));
+              if (double.tryParse(value.replaceAll(',', '.'))
+                  case final diameter?) {
+                ref
+                    .read(configuredVehicleProvider.notifier)
+                    .update(
+                      vehicle.copyWith(
+                        geometry: vehicle.geometry.copyWith(
+                          wheelDiameter: diameter,
+                        ),
+                      ),
+                    );
+              }
             },
           ),
         ],
@@ -222,7 +268,7 @@ class VehicleWheelsPage extends ConsumerWidget {
               visualDensity: VisualDensity.compact,
             ),
             showSelectedIcon: false,
-            selected: {vehicle.numWheels},
+            selected: {vehicle.geometry.numWheels},
             segments: List.generate(
               3,
               (index) => ButtonSegment(
@@ -232,11 +278,17 @@ class VehicleWheelsPage extends ConsumerWidget {
             ).toList(),
             onSelectionChanged: (values) => ref
                 .read(configuredVehicleProvider.notifier)
-                .update(vehicle.copyWith(numWheels: values.first)),
+                .update(
+                  vehicle.copyWith(
+                    geometry: vehicle.geometry.copyWith(
+                      numWheels: values.first,
+                    ),
+                  ),
+                ),
           ),
         ],
       ),
-      if (vehicle.numWheels > 1)
+      if (vehicle.geometry.numWheels > 1)
         TextFormField(
           decoration: InputDecoration(
             icon: const RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
@@ -246,15 +298,22 @@ class VehicleWheelsPage extends ConsumerWidget {
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           initialValue: ref.read(
             configuredVehicleProvider.select(
-              (value) => value.wheelSpacing.toString(),
+              (value) => value.geometry.wheelSpacing.toString(),
             ),
           ),
           onChanged: (value) {
-            final width = double.tryParse(value.replaceAll(',', '.'));
-
-            ref
-                .read(configuredVehicleProvider.notifier)
-                .update(vehicle.copyWith(wheelSpacing: width));
+            if (double.tryParse(value.replaceAll(',', '.'))
+                case final wheelSpacing?) {
+              ref
+                  .read(configuredVehicleProvider.notifier)
+                  .update(
+                    vehicle.copyWith(
+                      geometry: vehicle.geometry.copyWith(
+                        wheelSpacing: wheelSpacing.abs(),
+                      ),
+                    ),
+                  );
+            }
           },
         ),
     ];

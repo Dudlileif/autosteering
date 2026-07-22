@@ -44,7 +44,7 @@ final class ActiveWorkSessionProvider
   }
 }
 
-String _$activeWorkSessionHash() => r'f43b32f1f70d118a9f596d7164262e51a52fa38a';
+String _$activeWorkSessionHash() => r'd253c9e095a899b2dbb849b536fca44ef35dd2d2';
 
 /// A provider for holding the active [WorkSession].
 
@@ -220,7 +220,7 @@ final class SaveWorkSessionProvider
   }
 }
 
-String _$saveWorkSessionHash() => r'5b466db5026ecaee42032fba30dec6f3477aa65f';
+String _$saveWorkSessionHash() => r'0dfbd1126b05379fe274748d558c8d2ae4ac26bc';
 
 /// A provider for saving [workSession] to a file in the user file directory.
 ///
@@ -266,7 +266,7 @@ final class SaveWorkSessionFamily extends $Family
 /// their respective files.
 ///
 /// Set the [overwrite] parameter to false to preserve already existing files.
-/// [singleUuid] can be used to specify a single equipment's logs that should
+/// [singleId] can be used to specify a single equipment's logs that should
 /// be saved.
 
 @ProviderFor(saveWorkSessionEquipmentLogs)
@@ -277,7 +277,7 @@ final saveWorkSessionEquipmentLogsProvider =
 /// their respective files.
 ///
 /// Set the [overwrite] parameter to false to preserve already existing files.
-/// [singleUuid] can be used to specify a single equipment's logs that should
+/// [singleId] can be used to specify a single equipment's logs that should
 /// be saved.
 
 final class SaveWorkSessionEquipmentLogsProvider
@@ -287,11 +287,11 @@ final class SaveWorkSessionEquipmentLogsProvider
   /// their respective files.
   ///
   /// Set the [overwrite] parameter to false to preserve already existing files.
-  /// [singleUuid] can be used to specify a single equipment's logs that should
+  /// [singleId] can be used to specify a single equipment's logs that should
   /// be saved.
   SaveWorkSessionEquipmentLogsProvider._({
     required SaveWorkSessionEquipmentLogsFamily super.from,
-    required (WorkSession, {bool overwrite, String? singleUuid}) super.argument,
+    required (WorkSession, {bool overwrite, int? singleId}) super.argument,
   }) : super(
          retry: null,
          name: r'saveWorkSessionEquipmentLogsProvider',
@@ -318,12 +318,12 @@ final class SaveWorkSessionEquipmentLogsProvider
   @override
   FutureOr<void> create(Ref ref) {
     final argument =
-        this.argument as (WorkSession, {bool overwrite, String? singleUuid});
+        this.argument as (WorkSession, {bool overwrite, int? singleId});
     return saveWorkSessionEquipmentLogs(
       ref,
       argument.$1,
       overwrite: argument.overwrite,
-      singleUuid: argument.singleUuid,
+      singleId: argument.singleId,
     );
   }
 
@@ -340,20 +340,20 @@ final class SaveWorkSessionEquipmentLogsProvider
 }
 
 String _$saveWorkSessionEquipmentLogsHash() =>
-    r'79f0cc298fb6f43c3a3ded1d99639ee88fb78f6f';
+    r'9f271c88537c182e3e35edd34c16589cbf8f56b1';
 
 /// A provider for saving the [workSession]s [WorkSession.equipmentLogs] to
 /// their respective files.
 ///
 /// Set the [overwrite] parameter to false to preserve already existing files.
-/// [singleUuid] can be used to specify a single equipment's logs that should
+/// [singleId] can be used to specify a single equipment's logs that should
 /// be saved.
 
 final class SaveWorkSessionEquipmentLogsFamily extends $Family
     with
         $FunctionalFamilyOverride<
           FutureOr<void>,
-          (WorkSession, {bool overwrite, String? singleUuid})
+          (WorkSession, {bool overwrite, int? singleId})
         > {
   SaveWorkSessionEquipmentLogsFamily._()
     : super(
@@ -368,15 +368,15 @@ final class SaveWorkSessionEquipmentLogsFamily extends $Family
   /// their respective files.
   ///
   /// Set the [overwrite] parameter to false to preserve already existing files.
-  /// [singleUuid] can be used to specify a single equipment's logs that should
+  /// [singleId] can be used to specify a single equipment's logs that should
   /// be saved.
 
   SaveWorkSessionEquipmentLogsProvider call(
     WorkSession workSession, {
     bool overwrite = true,
-    String? singleUuid,
+    int? singleId,
   }) => SaveWorkSessionEquipmentLogsProvider._(
-    argument: (workSession, overwrite: overwrite, singleUuid: singleUuid),
+    argument: (workSession, overwrite: overwrite, singleId: singleId),
     from: this,
   );
 
@@ -565,7 +565,7 @@ final class SavedWorkSessionsProvider
   }
 }
 
-String _$savedWorkSessionsHash() => r'd7d697d33348282646e7be9a6fdc9a52079b4384';
+String _$savedWorkSessionsHash() => r'62dbc81e09cb307a276bbb29feefa3c59375e32c';
 
 /// A provider for deleting [workSession] from the user file system.
 ///
@@ -731,7 +731,7 @@ final class ImportWorkSessionProvider
   }
 }
 
-String _$importWorkSessionHash() => r'557584b4cc19f682b8c049326c0490a6c099e508';
+String _$importWorkSessionHash() => r'ce32f1b8879e7bfca1963d1256ed42039f319d07';
 
 /// A provider for importing a work session from a file and applying it
 /// to the [ActiveWorkSession] provider.

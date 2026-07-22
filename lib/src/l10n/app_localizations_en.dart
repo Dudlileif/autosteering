@@ -51,6 +51,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addButton => 'Add button';
 
   @override
+  String get addConnector => 'Add connector';
+
+  @override
   String get addInteriorBoundary => 'Add interior boundary';
 
   @override
@@ -266,6 +269,47 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get confirm => 'Confirm';
+
+  @override
+  String connectorRelation(String type) {
+    String _temp0 = intl.Intl.selectLogic(
+      type,
+      {
+        'other': 'Relation',
+        'child': 'Child',
+        'parent': 'Parent',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String connectors(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      many: 'Connectors',
+      few: 'Connectors',
+      two: 'Connectors',
+      one: 'Connector',
+      zero: 'Connectors',
+      other: 'Connectors',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String connectorType(String type) {
+    String _temp0 = intl.Intl.selectLogic(
+      type,
+      {
+        'other': 'Connector',
+        'fixed': 'Fixed',
+        'drawbar': 'Drawbar',
+      },
+    );
+    return '$_temp0';
+  }
 
   @override
   String coolStepMinRpm(String option, num rpm) {
@@ -658,9 +702,8 @@ class AppLocalizationsEn extends AppLocalizations {
       option,
       {
         'other': 'Hitch',
-        'frontFixed': 'Front fixed',
-        'rearFixed': 'Rear fixed',
-        'rearDrawbar': 'Rear drawbar',
+        'fixed': 'Fixed',
+        'drawbar': 'Drawbar',
       },
     );
     return '$_temp0';
@@ -679,19 +722,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hitchToRearDrawbarDistance => 'Hitch to rear drawbar distance';
-
-  @override
-  String hitchType(String type) {
-    String _temp0 = intl.Intl.selectLogic(
-      type,
-      {
-        'other': 'Hitch',
-        'fixed': 'Fixed',
-        'drawbar': 'Drawbar',
-      },
-    );
-    return '$_temp0';
-  }
 
   @override
   String hitches(int count) {

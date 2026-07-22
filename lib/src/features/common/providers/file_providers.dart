@@ -296,7 +296,9 @@ FutureOr<List<dynamic>> savedFiles(
   // Remake the list if there are any file changes in the folder.
   dir.watch().listen((event) {
     if (rebuildOnFileModification || event.type != FileSystemEvent.modify) {
-      ref.invalidateSelf();
+      if (ref.mounted) {
+        ref.invalidateSelf();
+      }
     }
   });
 
@@ -360,7 +362,9 @@ FutureOr<List<dynamic>> savedFilesInSubDirectories(
   // Remake the list if there are any file changes in the folder.
   dir.watch().listen((event) {
     if (rebuildOnFileModification || event.type != FileSystemEvent.modify) {
-      ref.invalidateSelf();
+      if (ref.mounted) {
+        ref.invalidateSelf();
+      }
     }
   });
 

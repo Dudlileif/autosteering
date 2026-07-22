@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/database/database.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
@@ -49,7 +50,9 @@ bool startupLoading(Ref ref) {
 
     if (ref.watch(fileDirectoryProvider) is AsyncData) {
       if (ref.watch(settingsFileProvider) is AsyncData) {
-        ref.watch(loggingProvider);
+        ref
+          ..watch(loggingProvider)
+          ..watch(databaseProvider);
 
         return [
           ref.watch(savedVehiclesProvider) is! AsyncData,

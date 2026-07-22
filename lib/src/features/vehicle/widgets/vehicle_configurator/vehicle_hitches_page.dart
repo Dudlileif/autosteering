@@ -52,18 +52,24 @@ class VehicleHitchesPage extends ConsumerWidget {
             initialValue: ref.read(
               configuredVehicleProvider.select(
                 (value) => (value as AxleSteeredVehicle)
+                    .geometry
                     .solidAxleToFrontHitchDistance
                     ?.toString(),
               ),
             ),
             onChanged: (value) {
-              final distance = double.tryParse(value.replaceAll(',', '.'));
-
-              ref
-                  .read(configuredVehicleProvider.notifier)
-                  .update(
-                    vehicle..solidAxleToFrontHitchDistance = distance?.abs(),
-                  );
+              if (double.tryParse(value.replaceAll(',', '.'))
+                  case final distance?) {
+                ref
+                    .read(configuredVehicleProvider.notifier)
+                    .update(
+                      vehicle.copyWith(
+                        geometry: vehicle.geometry.copyWith(
+                          solidAxleToFrontHitchDistance: distance.abs(),
+                        ),
+                      ),
+                    );
+              }
             },
           ),
           TextFormField(
@@ -79,18 +85,24 @@ class VehicleHitchesPage extends ConsumerWidget {
             initialValue: ref.read(
               configuredVehicleProvider.select(
                 (value) => (value as AxleSteeredVehicle)
+                    .geometry
                     .solidAxleToRearHitchDistance
                     ?.toString(),
               ),
             ),
             onChanged: (value) {
-              final distance = double.tryParse(value.replaceAll(',', '.'));
-
-              ref
-                  .read(configuredVehicleProvider.notifier)
-                  .update(
-                    vehicle..solidAxleToRearHitchDistance = distance?.abs(),
-                  );
+              if (double.tryParse(value.replaceAll(',', '.'))
+                  case final distance?) {
+                ref
+                    .read(configuredVehicleProvider.notifier)
+                    .update(
+                      vehicle.copyWith(
+                        geometry: vehicle.geometry.copyWith(
+                          solidAxleToRearHitchDistance: distance.abs(),
+                        ),
+                      ),
+                    );
+              }
             },
           ),
           TextFormField(
@@ -106,18 +118,24 @@ class VehicleHitchesPage extends ConsumerWidget {
             initialValue: ref.read(
               configuredVehicleProvider.select(
                 (value) => (value as AxleSteeredVehicle)
+                    .geometry
                     .solidAxleToRearDrawbarDistance
                     ?.toString(),
               ),
             ),
             onChanged: (value) {
-              final distance = double.tryParse(value.replaceAll(',', '.'));
-
-              ref
-                  .read(configuredVehicleProvider.notifier)
-                  .update(
-                    vehicle..solidAxleToRearDrawbarDistance = distance?.abs(),
-                  );
+              if (double.tryParse(value.replaceAll(',', '.'))
+                  case final distance?) {
+                ref
+                    .read(configuredVehicleProvider.notifier)
+                    .update(
+                      vehicle.copyWith(
+                        geometry: vehicle.geometry.copyWith(
+                          solidAxleToRearDrawbarDistance: distance.abs(),
+                        ),
+                      ),
+                    );
+              }
             },
           ),
         ],
@@ -132,16 +150,24 @@ class VehicleHitchesPage extends ConsumerWidget {
             initialValue: ref.read(
               configuredVehicleProvider.select(
                 (value) => (value as ArticulatedTractor)
+                    .geometry
                     .frontAxleToHitchDistance
                     ?.toString(),
               ),
             ),
             onChanged: (value) {
-              final distance = double.tryParse(value.replaceAll(',', '.'));
-
-              ref
-                  .read(configuredVehicleProvider.notifier)
-                  .update(vehicle..frontAxleToHitchDistance = distance?.abs());
+              if (double.tryParse(value.replaceAll(',', '.'))
+                  case final distance?) {
+                ref
+                    .read(configuredVehicleProvider.notifier)
+                    .update(
+                      vehicle.copyWith(
+                        geometry: vehicle.geometry.copyWith(
+                          frontAxleToHitchDistance: distance.abs(),
+                        ),
+                      ),
+                    );
+              }
             },
           ),
           TextFormField(
@@ -153,16 +179,25 @@ class VehicleHitchesPage extends ConsumerWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
-                (value) => (value as ArticulatedTractor).rearAxleToHitchDistance
-                    ?.toString(),
+                (value) => (value as ArticulatedTractor)
+                    .geometry
+                    .rearAxleToHitchDistance
+                    .toString(),
               ),
             ),
             onChanged: (value) {
-              final distance = double.tryParse(value.replaceAll(',', '.'));
-
-              ref
-                  .read(configuredVehicleProvider.notifier)
-                  .update(vehicle..rearAxleToHitchDistance = distance?.abs());
+              if (double.tryParse(value.replaceAll(',', '.'))
+                  case final distance?) {
+                ref
+                    .read(configuredVehicleProvider.notifier)
+                    .update(
+                      vehicle.copyWith(
+                        geometry: vehicle.geometry.copyWith(
+                          rearAxleToHitchDistance: distance.abs(),
+                        ),
+                      ),
+                    );
+              }
             },
           ),
           TextFormField(
@@ -175,16 +210,24 @@ class VehicleHitchesPage extends ConsumerWidget {
             initialValue: ref.read(
               configuredVehicleProvider.select(
                 (value) => (value as ArticulatedTractor)
+                    .geometry
                     .rearAxleToDrawbarDistance
-                    ?.toString(),
+                    .toString(),
               ),
             ),
             onChanged: (value) {
-              final distance = double.tryParse(value.replaceAll(',', '.'));
-
-              ref
-                  .read(configuredVehicleProvider.notifier)
-                  .update(vehicle..rearAxleToDrawbarDistance = distance?.abs());
+              if (double.tryParse(value.replaceAll(',', '.'))
+                  case final distance?) {
+                ref
+                    .read(configuredVehicleProvider.notifier)
+                    .update(
+                      vehicle.copyWith(
+                        geometry: vehicle.geometry.copyWith(
+                          rearAxleToDrawbarDistance: distance.abs(),
+                        ),
+                      ),
+                    );
+              }
             },
           ),
         ],

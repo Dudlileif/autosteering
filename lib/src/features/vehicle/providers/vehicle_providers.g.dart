@@ -44,7 +44,7 @@ final class MainVehicleProvider
   }
 }
 
-String _$mainVehicleHash() => r'0ebe1fa9a4a91073984d25b186bdb3913bbf2e8c';
+String _$mainVehicleHash() => r'f4b8df15392be920dd0b41ea4a18dda9b15b3fe2';
 
 /// The main provider for the vehicle state.
 
@@ -192,7 +192,7 @@ final class SaveVehicleProvider
   }
 }
 
-String _$saveVehicleHash() => r'bed0b0eaa85f2ca4441391fd8b7af974a3e36523';
+String _$saveVehicleHash() => r'7f266e71e3e40a7d5798944f87cc0021baff3646';
 
 /// A provider for saving [vehicle] to a file in the user file directory.
 ///
@@ -313,7 +313,7 @@ final class ExportVehicleProvider
   }
 }
 
-String _$exportVehicleHash() => r'4d846108255c0c0bc741f14fee0d23b3af12a594';
+String _$exportVehicleHash() => r'c5a3a3f50ad5466e4258b0c33e15fc7cb5eb2a62';
 
 /// A provider for saving [vehicle] to a file.
 ///
@@ -407,7 +407,7 @@ final class SavedVehiclesProvider
   }
 }
 
-String _$savedVehiclesHash() => r'3aaba3bb1dcc7019f369f7dc7c79b772728e572f';
+String _$savedVehiclesHash() => r'2dd4fac06ac062020b3741aa23eedbae819d0ead';
 
 /// A provider for deleting [vehicle] from the user file system.
 ///
@@ -469,7 +469,7 @@ final class DeleteVehicleProvider
   }
 }
 
-String _$deleteVehicleHash() => r'52cc524e4e9958192919a6883fd8e4eb61f628ad';
+String _$deleteVehicleHash() => r'50d2a7f2c9c2dfff4c7338d19922bb8b1452c8c8';
 
 /// A provider for deleting [vehicle] from the user file system.
 ///
@@ -643,7 +643,7 @@ final class LastUsedVehicleProvider
   }
 }
 
-String _$lastUsedVehicleHash() => r'286f2c8f04bb4d0b06c044bd219d21348cd4e3ca';
+String _$lastUsedVehicleHash() => r'd57f896ad558224302a10e419e004a87a151f999';
 
 /// A provider for the target steering angle when using guidance.
 
@@ -763,7 +763,7 @@ final class ImportVehicleProvider
   }
 }
 
-String _$importVehicleHash() => r'3ac6526a44189716b031086be48a95f4a0d7a1eb';
+String _$importVehicleHash() => r'df88498814a96427013f27fb1b2a345fa94ded98';
 
 /// A provider for importing a vehicle configuration from a file and applying it
 /// to the [ConfiguredVehicle] provider.

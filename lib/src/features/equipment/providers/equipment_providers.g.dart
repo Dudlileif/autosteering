@@ -137,7 +137,7 @@ final allEquipmentsProvider = AllEquipmentsProvider._();
 
 /// A provider that holds all of the equipments.
 final class AllEquipmentsProvider
-    extends $NotifierProvider<AllEquipments, Map<String, Equipment>> {
+    extends $NotifierProvider<AllEquipments, Map<int, Equipment>> {
   /// A provider that holds all of the equipments.
   AllEquipmentsProvider._()
     : super(
@@ -158,30 +158,29 @@ final class AllEquipmentsProvider
   AllEquipments create() => AllEquipments();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(Map<String, Equipment> value) {
+  Override overrideWithValue(Map<int, Equipment> value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<Map<String, Equipment>>(value),
+      providerOverride: $SyncValueProvider<Map<int, Equipment>>(value),
     );
   }
 }
 
-String _$allEquipmentsHash() => r'ed6e2354d60f1b17f19d0cea1df6909f78cbcecc';
+String _$allEquipmentsHash() => r'9495e8427fadc2a57c9dabd3e39d2861fc19ae17';
 
 /// A provider that holds all of the equipments.
 
-abstract class _$AllEquipments extends $Notifier<Map<String, Equipment>> {
-  Map<String, Equipment> build();
+abstract class _$AllEquipments extends $Notifier<Map<int, Equipment>> {
+  Map<int, Equipment> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref =
-        this.ref as $Ref<Map<String, Equipment>, Map<String, Equipment>>;
+    final ref = this.ref as $Ref<Map<int, Equipment>, Map<int, Equipment>>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<Map<String, Equipment>, Map<String, Equipment>>,
-              Map<String, Equipment>,
+              AnyNotifier<Map<int, Equipment>, Map<int, Equipment>>,
+              Map<int, Equipment>,
               Object?,
               Object?
             >;
@@ -196,7 +195,7 @@ final equipmentWorkedAreaProvider = EquipmentWorkedAreaProvider._();
 
 /// A provider for keeping the worked area for each equipment.
 final class EquipmentWorkedAreaProvider
-    extends $NotifierProvider<EquipmentWorkedArea, Map<String, double>> {
+    extends $NotifierProvider<EquipmentWorkedArea, Map<int, double>> {
   /// A provider for keeping the worked area for each equipment.
   EquipmentWorkedAreaProvider._()
     : super(
@@ -217,30 +216,30 @@ final class EquipmentWorkedAreaProvider
   EquipmentWorkedArea create() => EquipmentWorkedArea();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(Map<String, double> value) {
+  Override overrideWithValue(Map<int, double> value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<Map<String, double>>(value),
+      providerOverride: $SyncValueProvider<Map<int, double>>(value),
     );
   }
 }
 
 String _$equipmentWorkedAreaHash() =>
-    r'64fa5bf5976884164bb0c37ed91afc0be24c9ebe';
+    r'8a622d58876d6f1910ddcaffb72e6d608f700587';
 
 /// A provider for keeping the worked area for each equipment.
 
-abstract class _$EquipmentWorkedArea extends $Notifier<Map<String, double>> {
-  Map<String, double> build();
+abstract class _$EquipmentWorkedArea extends $Notifier<Map<int, double>> {
+  Map<int, double> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<Map<String, double>, Map<String, double>>;
+    final ref = this.ref as $Ref<Map<int, double>, Map<int, double>>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<Map<String, double>, Map<String, double>>,
-              Map<String, double>,
+              AnyNotifier<Map<int, double>, Map<int, double>>,
+              Map<int, double>,
               Object?,
               Object?
             >;
@@ -248,22 +247,22 @@ abstract class _$EquipmentWorkedArea extends $Notifier<Map<String, double>> {
   }
 }
 
-/// A provider for tracking the worked paths for the given equipment [uuid].
+/// A provider for tracking the worked paths for the given equipment [id].
 
 @ProviderFor(EquipmentPaths)
 final equipmentPathsProvider = EquipmentPathsFamily._();
 
-/// A provider for tracking the worked paths for the given equipment [uuid].
+/// A provider for tracking the worked paths for the given equipment [id].
 final class EquipmentPathsProvider
     extends
         $NotifierProvider<
           EquipmentPaths,
           List<Map<int, List<SectionEdgePositions>?>>
         > {
-  /// A provider for tracking the worked paths for the given equipment [uuid].
+  /// A provider for tracking the worked paths for the given equipment [id].
   EquipmentPathsProvider._({
     required EquipmentPathsFamily super.from,
-    required String super.argument,
+    required int super.argument,
   }) : super(
          retry: null,
          name: r'equipmentPathsProvider',
@@ -310,9 +309,9 @@ final class EquipmentPathsProvider
   }
 }
 
-String _$equipmentPathsHash() => r'90ead51c13db46747569a5a1a09860a41943a8ff';
+String _$equipmentPathsHash() => r'd5713d15ee4125a761b4765d20114b1fe032da66';
 
-/// A provider for tracking the worked paths for the given equipment [uuid].
+/// A provider for tracking the worked paths for the given equipment [id].
 
 final class EquipmentPathsFamily extends $Family
     with
@@ -321,7 +320,7 @@ final class EquipmentPathsFamily extends $Family
           List<Map<int, List<SectionEdgePositions>?>>,
           List<Map<int, List<SectionEdgePositions>?>>,
           List<Map<int, List<SectionEdgePositions>?>>,
-          String
+          int
         > {
   EquipmentPathsFamily._()
     : super(
@@ -332,23 +331,23 @@ final class EquipmentPathsFamily extends $Family
         isAutoDispose: false,
       );
 
-  /// A provider for tracking the worked paths for the given equipment [uuid].
+  /// A provider for tracking the worked paths for the given equipment [id].
 
-  EquipmentPathsProvider call(String uuid) =>
-      EquipmentPathsProvider._(argument: uuid, from: this);
+  EquipmentPathsProvider call(int id) =>
+      EquipmentPathsProvider._(argument: id, from: this);
 
   @override
   String toString() => r'equipmentPathsProvider';
 }
 
-/// A provider for tracking the worked paths for the given equipment [uuid].
+/// A provider for tracking the worked paths for the given equipment [id].
 
 abstract class _$EquipmentPaths
     extends $Notifier<List<Map<int, List<SectionEdgePositions>?>>> {
-  late final _$args = ref.$arg as String;
-  String get uuid => _$args;
+  late final _$args = ref.$arg as int;
+  int get id => _$args;
 
-  List<Map<int, List<SectionEdgePositions>?>> build(String uuid);
+  List<Map<int, List<SectionEdgePositions>?>> build(int id);
   @$mustCallSuper
   @override
   void runBuild() {
@@ -374,13 +373,13 @@ abstract class _$EquipmentPaths
 }
 
 /// A provider for the map screen points for the worked paths for the given
-/// equipment [uuid].
+/// [Equipment.uuid].
 
 @ProviderFor(EquipmentMapPaths)
 final equipmentMapPathsProvider = EquipmentMapPathsFamily._();
 
 /// A provider for the map screen points for the worked paths for the given
-/// equipment [uuid].
+/// [Equipment.uuid].
 final class EquipmentMapPathsProvider
     extends
         $NotifierProvider<
@@ -392,10 +391,10 @@ final class EquipmentMapPathsProvider
           })
         > {
   /// A provider for the map screen points for the worked paths for the given
-  /// equipment [uuid].
+  /// [Equipment.uuid].
   EquipmentMapPathsProvider._({
     required EquipmentMapPathsFamily super.from,
-    required (String, {bool forMiniMap}) super.argument,
+    required (int, {bool forMiniMap}) super.argument,
   }) : super(
          retry: null,
          name: r'equipmentMapPathsProvider',
@@ -451,10 +450,10 @@ final class EquipmentMapPathsProvider
   }
 }
 
-String _$equipmentMapPathsHash() => r'21427b8e289ab8ec9cb47cbccd82c4c863dbad24';
+String _$equipmentMapPathsHash() => r'22b3039e8c658577f9b66df358c4627ba70676b6';
 
 /// A provider for the map screen points for the worked paths for the given
-/// equipment [uuid].
+/// [Equipment.uuid].
 
 final class EquipmentMapPathsFamily extends $Family
     with
@@ -475,7 +474,7 @@ final class EquipmentMapPathsFamily extends $Family
             Map<int, SectionEdgePositions?>? prevActivePosition,
             Map<int, Float32List> sections,
           }),
-          (String, {bool forMiniMap})
+          (int, {bool forMiniMap})
         > {
   EquipmentMapPathsFamily._()
     : super(
@@ -487,11 +486,11 @@ final class EquipmentMapPathsFamily extends $Family
       );
 
   /// A provider for the map screen points for the worked paths for the given
-  /// equipment [uuid].
+  /// [Equipment.uuid].
 
-  EquipmentMapPathsProvider call(String uuid, {bool forMiniMap = false}) =>
+  EquipmentMapPathsProvider call(int id, {bool forMiniMap = false}) =>
       EquipmentMapPathsProvider._(
-        argument: (uuid, forMiniMap: forMiniMap),
+        argument: (id, forMiniMap: forMiniMap),
         from: this,
       );
 
@@ -500,7 +499,7 @@ final class EquipmentMapPathsFamily extends $Family
 }
 
 /// A provider for the map screen points for the worked paths for the given
-/// equipment [uuid].
+/// [Equipment.uuid].
 
 abstract class _$EquipmentMapPaths
     extends
@@ -511,8 +510,8 @@ abstract class _$EquipmentMapPaths
             Map<int, Float32List> sections,
           })
         > {
-  late final _$args = ref.$arg as (String, {bool forMiniMap});
-  String get uuid => _$args.$1;
+  late final _$args = ref.$arg as (int, {bool forMiniMap});
+  int get id => _$args.$1;
   bool get forMiniMap => _$args.forMiniMap;
 
   ({
@@ -520,7 +519,7 @@ abstract class _$EquipmentMapPaths
     Map<int, SectionEdgePositions?>? prevActivePosition,
     Map<int, Float32List> sections,
   })
-  build(String uuid, {bool forMiniMap = false});
+  build(int id, {bool forMiniMap = false});
   @$mustCallSuper
   @override
   void runBuild() {
@@ -569,20 +568,20 @@ abstract class _$EquipmentMapPaths
 }
 
 /// A provider for holding [EquipmentLogRecord] for the [Equipment] with the
-/// given UUID.
+/// given id.
 
 @ProviderFor(EquipmentLogRecords)
 final equipmentLogRecordsProvider = EquipmentLogRecordsFamily._();
 
 /// A provider for holding [EquipmentLogRecord] for the [Equipment] with the
-/// given UUID.
+/// given id.
 final class EquipmentLogRecordsProvider
     extends $NotifierProvider<EquipmentLogRecords, List<EquipmentLogRecord>?> {
   /// A provider for holding [EquipmentLogRecord] for the [Equipment] with the
-  /// given UUID.
+  /// given id.
   EquipmentLogRecordsProvider._({
     required EquipmentLogRecordsFamily super.from,
-    required String super.argument,
+    required int super.argument,
   }) : super(
          retry: null,
          name: r'equipmentLogRecordsProvider',
@@ -625,10 +624,10 @@ final class EquipmentLogRecordsProvider
 }
 
 String _$equipmentLogRecordsHash() =>
-    r'954a54514a9d2823524998e293fcdcd2d8b91ac6';
+    r'd3a0d5efd9375bb772347dbf0582343970b09b6b';
 
 /// A provider for holding [EquipmentLogRecord] for the [Equipment] with the
-/// given UUID.
+/// given id.
 
 final class EquipmentLogRecordsFamily extends $Family
     with
@@ -637,7 +636,7 @@ final class EquipmentLogRecordsFamily extends $Family
           List<EquipmentLogRecord>?,
           List<EquipmentLogRecord>?,
           List<EquipmentLogRecord>?,
-          String
+          int
         > {
   EquipmentLogRecordsFamily._()
     : super(
@@ -649,24 +648,24 @@ final class EquipmentLogRecordsFamily extends $Family
       );
 
   /// A provider for holding [EquipmentLogRecord] for the [Equipment] with the
-  /// given UUID.
+  /// given id.
 
-  EquipmentLogRecordsProvider call(String uuid) =>
-      EquipmentLogRecordsProvider._(argument: uuid, from: this);
+  EquipmentLogRecordsProvider call(int id) =>
+      EquipmentLogRecordsProvider._(argument: id, from: this);
 
   @override
   String toString() => r'equipmentLogRecordsProvider';
 }
 
 /// A provider for holding [EquipmentLogRecord] for the [Equipment] with the
-/// given UUID.
+/// given id.
 
 abstract class _$EquipmentLogRecords
     extends $Notifier<List<EquipmentLogRecord>?> {
-  late final _$args = ref.$arg as String;
-  String get uuid => _$args;
+  late final _$args = ref.$arg as int;
+  int get id => _$args;
 
-  List<EquipmentLogRecord>? build(String uuid);
+  List<EquipmentLogRecord>? build(int id);
   @$mustCallSuper
   @override
   void runBuild() {
@@ -836,7 +835,7 @@ final class SaveEquipmentProvider
   }
 }
 
-String _$saveEquipmentHash() => r'd9224364098dbad4ab20bc9a5b3696e3a070c848';
+String _$saveEquipmentHash() => r'fb3ace3b464775329ba09cac30bf895097a2c639';
 
 /// A provider for saving [equipment] to a file in the user file directory.
 ///
@@ -957,7 +956,7 @@ final class ExportEquipmentProvider
   }
 }
 
-String _$exportEquipmentHash() => r'eac2945ccf82d74589ca5ff4d8daa73190028511';
+String _$exportEquipmentHash() => r'08e15b52b8ce3e50b37a3cd5e70d118ac4e2158b';
 
 /// A provider for exporting [equipment] to a file.
 ///
@@ -1051,7 +1050,7 @@ final class SavedEquipmentsProvider
   }
 }
 
-String _$savedEquipmentsHash() => r'039b1985239b14fc15ba46f72abf90002a8f5d2b';
+String _$savedEquipmentsHash() => r'4e17b9ddd42c14e3065250ab9db079194f62302f';
 
 /// A provider for deleting [equipment] from the user file system.
 ///
@@ -1117,7 +1116,7 @@ final class DeleteEquipmentProvider
   }
 }
 
-String _$deleteEquipmentHash() => r'cf2a25bbb6711e813fa5420a1b77140771dc9489';
+String _$deleteEquipmentHash() => r'69e4d4ea028c34229a32cd131388cd9432e3e99e';
 
 /// A provider for deleting [equipment] from the user file system.
 ///
@@ -1214,7 +1213,7 @@ final class ImportEquipmentProvider
   }
 }
 
-String _$importEquipmentHash() => r'abbea308f4718f0c5934f45e2ce8ac29edaecbab';
+String _$importEquipmentHash() => r'ec1b325e5b97f87135b06846527c4c3a904eacd8';
 
 /// A provider for importing a equipment configuration from a file and applying
 /// it to the [ConfiguredEquipment] provider.

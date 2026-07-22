@@ -207,7 +207,7 @@ class ABTrackingLayer extends ConsumerWidget {
                     color: Colors.blue,
                   ),
                 if (autoSteerEnabled &&
-                    vehicle.pathTrackingMode ==
+                    vehicle.pathTrackingParameters.mode ==
                         PathTrackingMode.purePursuit) ...[
                   CircleMarker(
                     point: vehicle.lookAheadStartPosition.latLng,

@@ -20,13 +20,11 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:autosteering/src/features/common/common.dart';
-import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
-import 'package:autosteering/src/features/vehicle/models/threshold_velocities.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as map;
@@ -45,47 +43,40 @@ sealed class Vehicle extends Hitchable {
   /// and methods.
   Vehicle({
     required this.type,
-    required this.minTurningRadius,
-    required this.steeringAngleMax,
-    required this.trackWidth,
-    this.manufacturerColors = ManufacturerColors.masseyFerguson,
+    required this.geometry,
+    super.connectors,
+    super.childConnections,
+    ManufacturerColors? manufacturerColors,
     this.steeringAngleInput = 0,
-    this.length = 4,
-    this.width = 2.5,
-    int? numWheels,
-    double? wheelSpacing,
     this.wheelsRolledDistance = 0,
     this.antennaPosition = const Geographic(lon: 0, lat: 0),
-    this.pathTrackingMode = PathTrackingMode.purePursuit,
-    this.thresholdVelocities = const ThresholdVelocities(),
-    super.hitchFrontFixedChild,
-    super.hitchRearFixedChild,
-    super.hitchRearDrawbarChild,
+    this.thresholds = const VehicleThresholds(),
     super.name,
+    super.id,
     super.uuid,
     Imu? imu,
     Was? was,
     GnssAntennaConfig? gnssAntennaConfig,
     SteeringHardwareConfig? steeringHardwareConfig,
-    PurePursuitParameters? purePursuitParameters,
-    StanleyParameters? stanleyParameters,
-    super.lastUsed,
+    PathTrackingParameters? pathTrackingParameters,
+    super.lastUsedAt,
+    super.createdAt,
+    super.lastUpdatedAt,
     this._bearing = 0,
     this._pitch = 0,
     this._roll = 0,
     this._velocity = 0,
     this.nudgeDistance = 0,
     this.manualSimulationMode = false,
-  }) : numWheels = numWheels ?? 1,
-       wheelSpacing = wheelSpacing ?? 0.05,
-       gnssAntennaConfig = gnssAntennaConfig ?? const GnssAntennaConfig(),
+  }) : gnssAntennaConfig = gnssAntennaConfig ?? const GnssAntennaConfig(),
+       manufacturerColors =
+           manufacturerColors ?? ManufacturerColors.masseyFerguson,
        imu = imu ?? Imu(),
        was = was ?? Was(),
        steeringHardwareConfig =
            steeringHardwareConfig ?? const SteeringHardwareConfig(),
-       stanleyParameters = stanleyParameters ?? const StanleyParameters(),
-       purePursuitParameters =
-           purePursuitParameters ?? const PurePursuitParameters();
+       pathTrackingParameters =
+           pathTrackingParameters ?? const PathTrackingParameters();
 
   /// Creates the appropriate [Vehicle] subclass from the [json] object.
   ///
@@ -104,35 +95,35 @@ sealed class Vehicle extends Hitchable {
       VehicleType.articulatedTractor => ArticulatedTractor.fromJson(json),
     };
 
-    final children = json['children'] != null
-        ? Map<String, Map<String, dynamic>?>.from(json['children'] as Map)
-        : null;
+    // final children = json['children'] != null
+    //     ? Map<String, Map<String, dynamic>?>.from(json['children'] as Map)
+    //     : null;
+    //
+    // final hitchFrontFixedChild = children?['front_fixed'] != null
+    //     ? Equipment.fromJson(
+    //         Map<String, dynamic>.from(children!['front_fixed']!),
+    //       )
+    //     : null;
+    // final hitchRearFixedChild = children?['rear_fixed'] != null
+    //     ? Equipment.fromJson(
+    //         Map<String, dynamic>.from(children!['rear_fixed']!),
+    //       )
+    //     : null;
+    // final hitchRearDrawbarChild = children?['rear_drawbar'] != null
+    //     ? Equipment.fromJson(
+    //         Map<String, dynamic>.from(children!['rear_drawbar']!),
+    //       )
+    //     : null;
 
-    final hitchFrontFixedChild = children?['front_fixed'] != null
-        ? Equipment.fromJson(
-            Map<String, dynamic>.from(children!['front_fixed']!),
-          )
-        : null;
-    final hitchRearFixedChild = children?['rear_fixed'] != null
-        ? Equipment.fromJson(
-            Map<String, dynamic>.from(children!['rear_fixed']!),
-          )
-        : null;
-    final hitchRearDrawbarChild = children?['rear_drawbar'] != null
-        ? Equipment.fromJson(
-            Map<String, dynamic>.from(children!['rear_drawbar']!),
-          )
-        : null;
-
-    if (hitchFrontFixedChild != null) {
-      vehicle.attachChild(hitchFrontFixedChild, Hitch.frontFixed);
-    }
-    if (hitchRearFixedChild != null) {
-      vehicle.attachChild(hitchRearFixedChild);
-    }
-    if (hitchRearDrawbarChild != null) {
-      vehicle.attachChild(hitchRearDrawbarChild, Hitch.rearDrawbar);
-    }
+    // if (hitchFrontFixedChild != null) {
+    //   vehicle.attachChild(hitchFrontFixedChild, Hitch.frontFixed);
+    // }
+    // if (hitchRearFixedChild != null) {
+    //   vehicle.attachChild(hitchRearFixedChild);
+    // }
+    // if (hitchRearDrawbarChild != null) {
+    //   vehicle.attachChild(hitchRearDrawbarChild, Hitch.rearDrawbar);
+    // }
 
     final steering = Map<String, dynamic>.from(json['steering'] as Map);
 
@@ -164,11 +155,11 @@ sealed class Vehicle extends Hitchable {
           )
         : const SteeringHardwareConfig();
 
-    final thresholdVelocities = steering.containsKey('thresold_velocities')
-        ? ThresholdVelocities.fromJson(
+    final thresholds = steering.containsKey('thresold_velocities')
+        ? VehicleThresholds.fromJson(
             Map<String, dynamic>.from(steering['thresold_velocities'] as Map),
           )
-        : const ThresholdVelocities();
+        : const VehicleThresholds();
 
     final purePursuitParameters =
         steering.containsKey('pure_pursuit_parameters')
@@ -185,22 +176,207 @@ sealed class Vehicle extends Hitchable {
           )
         : null;
 
+    final pathTrackingMode = steering.containsKey('path_tracking_mode')
+        ? PathTrackingMode.fromJson(
+            steering['path_tracking_mode'] as String,
+          )
+        : PathTrackingMode.purePursuit;
+
     final manufacturerColors = json.containsKey('manufacturer_colors')
         ? ManufacturerColors.fromJson(
             Map<String, dynamic>.from(json['manufacturer_colors'] as Map),
           )
         : null;
 
+    final connectors = <Connector>[];
+    if ((json['hitches'] as Map?)?['solid_axle_to_front_hitch_distance']
+        case final double solidAxleToFrontHitch) {
+      connectors.add(
+        Connector(
+          longitudinalOffsetFromRef: solidAxleToFrontHitch,
+          lateralOffsetFromRef: 0,
+          relation: .parent,
+          type: .fixed,
+        ),
+      );
+    }
+    if ((json['hitches'] as Map?)?['solid_axle_to_rear_hitch_distance']
+        case final double solidAxleToRearHitch) {
+      connectors.add(
+        Connector(
+          longitudinalOffsetFromRef: -solidAxleToRearHitch,
+          lateralOffsetFromRef: 0,
+          angle: 180,
+          relation: .parent,
+          type: .fixed,
+        ),
+      );
+    }
+    if ((json['hitches'] as Map?)?['solid_axle_to_rear_towbar_distance']
+        case final double solidAxleToRearDrawbar) {
+      connectors.add(
+        Connector(
+          longitudinalOffsetFromRef: -solidAxleToRearDrawbar,
+          lateralOffsetFromRef: 0,
+          angle: 180,
+          relation: .parent,
+          type: .drawbar,
+        ),
+      );
+    }
+    if ((json['hitches'] as Map?)?['front_axle_to_front_hitch_distance']
+        case final double frontAxleToFrontHitch) {
+      connectors.add(
+        Connector(
+          longitudinalOffsetFromRef: frontAxleToFrontHitch,
+          lateralOffsetFromRef: 0,
+          relation: .parent,
+          type: .fixed,
+        ),
+      );
+    }
+    if ((json['hitches'] as Map?)?['rear_axle_to_hitch_distance']
+        case final double rearAxleToHitch) {
+      connectors.add(
+        Connector(
+          longitudinalOffsetFromRef: -rearAxleToHitch,
+          lateralOffsetFromRef: 0,
+          angle: 180,
+          relation: .parent,
+          type: .fixed,
+        ),
+      );
+    }
+    if ((json['hitches'] as Map?)?['rear_axle_to_towbar_distance']
+        case final double rearAxleToDrawbar) {
+      connectors.add(
+        Connector(
+          longitudinalOffsetFromRef: -rearAxleToDrawbar,
+          lateralOffsetFromRef: 0,
+          angle: 180,
+          relation: .parent,
+          type: .drawbar,
+        ),
+      );
+    }
+
     return vehicle.copyWith(
       imu: imu,
       was: was,
+      connectors: connectors,
       gnssAntennaConfig: gnssAntennaConfig,
       steeringHardwareConfig: steeringHardwareConfig,
-      thresholdVelocities: thresholdVelocities,
-      purePursuitParameters: purePursuitParameters,
-      stanleyParameters: stanleyParameters,
+      thresholds: thresholds,
+      pathTrackingParameters: switch ((
+        purePursuitParameters,
+        stanleyParameters,
+      )) {
+        (final purePursuit?, final stanley?) => PathTrackingParameters(
+          purePursuit: purePursuit,
+          stanley: stanley,
+          mode: pathTrackingMode,
+        ),
+        (final purePursuit?, _) => PathTrackingParameters(
+          purePursuit: purePursuit,
+          mode: pathTrackingMode,
+        ),
+        (_, final stanley?) => PathTrackingParameters(
+          stanley: stanley,
+          mode: pathTrackingMode,
+        ),
+        _ => PathTrackingParameters(mode: pathTrackingMode),
+      },
       manufacturerColors: manufacturerColors,
     );
+  }
+
+  /// Constructor for use with the local database.
+  factory Vehicle.fromDatabase({
+    required int id,
+    required VehicleType type,
+    required VehicleGeometry geometry,
+    String? name,
+    GnssAntennaConfig? gnssAntennaConfig,
+    ImuConfig? imuConfig,
+    SteeringHardwareConfig? steeringHardwareConfig,
+    WasConfig? wasConfig,
+    PathTrackingParameters? pathTrackingParameters,
+    ManufacturerColors? colorScheme,
+    DateTime? lastUsedAt,
+    DateTime? createdAt,
+    DateTime? lastUpdatedAt,
+  }) {
+    return switch (type) {
+      .tractor => Tractor(
+        id: id,
+        name: name,
+        geometry: geometry as AxleSteeredVehicleGeometry,
+        gnssAntennaConfig: gnssAntennaConfig,
+        imu: switch (imuConfig) {
+          final imuConfig? => Imu(config: imuConfig),
+          _ => null,
+        },
+        was: switch (wasConfig) {
+          final wasConfig? => Was(config: wasConfig),
+          _ => null,
+        },
+        steeringHardwareConfig: switch (steeringHardwareConfig) {
+          final steeringHardwareConfig? => steeringHardwareConfig,
+          _ => null,
+        },
+        pathTrackingParameters: pathTrackingParameters,
+        manufacturerColors: colorScheme,
+        lastUsedAt: lastUsedAt,
+        createdAt: createdAt,
+        lastUpdatedAt: lastUpdatedAt,
+      ),
+      .articulatedTractor => ArticulatedTractor(
+        id: id,
+        name: name,
+        geometry: geometry as ArticulatedVehicleGeometry,
+        gnssAntennaConfig: gnssAntennaConfig,
+        imu: switch (imuConfig) {
+          final imuConfig? => Imu(config: imuConfig),
+          _ => null,
+        },
+        was: switch (wasConfig) {
+          final wasConfig? => Was(config: wasConfig),
+          _ => null,
+        },
+        steeringHardwareConfig: switch (steeringHardwareConfig) {
+          final steeringHardwareConfig? => steeringHardwareConfig,
+          _ => null,
+        },
+        pathTrackingParameters: pathTrackingParameters,
+        manufacturerColors: colorScheme,
+        lastUsedAt: lastUsedAt,
+        createdAt: createdAt,
+        lastUpdatedAt: lastUpdatedAt,
+      ),
+      .harvester => Harvester(
+        id: id,
+        name: name,
+        geometry: geometry as AxleSteeredVehicleGeometry,
+        gnssAntennaConfig: gnssAntennaConfig,
+        imu: switch (imuConfig) {
+          final imuConfig? => Imu(config: imuConfig),
+          _ => null,
+        },
+        was: switch (wasConfig) {
+          final wasConfig? => Was(config: wasConfig),
+          _ => null,
+        },
+        steeringHardwareConfig: switch (steeringHardwareConfig) {
+          final steeringHardwareConfig? => steeringHardwareConfig,
+          _ => null,
+        },
+        pathTrackingParameters: pathTrackingParameters,
+        manufacturerColors: colorScheme,
+        lastUsedAt: lastUsedAt,
+        createdAt: createdAt,
+        lastUpdatedAt: lastUpdatedAt,
+      ),
+    };
   }
 
   /// Which type of vehicle this is.
@@ -215,20 +391,17 @@ sealed class Vehicle extends Hitchable {
   /// antennas are in use.
   GnssAntennaConfig gnssAntennaConfig;
 
-  /// The distance between the centers of the wheels on the solid axle.
-  double trackWidth;
+  /// The geometry paramters of this.
+  VehicleGeometry geometry;
 
-  /// The number of wheels, i.e. twin/triples etc...
-  int numWheels;
+  /// The path tracking parameters for Pure pursuit and Stanley modes.
+  PathTrackingParameters pathTrackingParameters;
 
-  /// The distance between the twin/triple etc. wheels.
-  double wheelSpacing;
-
-  /// The best/minimum turning radius, in meters.
-  double minTurningRadius;
+  /// The distance between the front and rear axle.
+  double get wheelBase;
 
   /// The maximum angle that the steering wheels/pivot can turn, in degrees.
-  double steeringAngleMax;
+  double get steeringAngleMax;
 
   /// This is the Ackermann input angle or the angle of the articulation for an
   /// articulated tractor.
@@ -243,19 +416,8 @@ sealed class Vehicle extends Hitchable {
   /// The configuration for the steering wheel motor of the vehicle.
   SteeringHardwareConfig steeringHardwareConfig;
 
-  /// Parameters for the [lookAheadDistance] when using a pure pursuit/look
-  /// ahead steering mode.
-  PurePursuitParameters purePursuitParameters;
-
-  /// The Stanley gain coefficients for controlling the steering of this vehicle
-  /// when using a Stanley path tracking steering mode.
-  StanleyParameters stanleyParameters;
-
-  /// Which steering mode the path tracking should use.
-  PathTrackingMode pathTrackingMode;
-
   /// The threshold velocities for using autosteering with this vehicle.
-  ThresholdVelocities thresholdVelocities;
+  VehicleThresholds thresholds;
 
   /// The sideways distance to nudge the vehicle from the path tracking line.
   /// Positive means to the right in the driving direction.
@@ -263,12 +425,6 @@ sealed class Vehicle extends Hitchable {
 
   /// The velocity of the vehicle as set from the outside.
   double _velocity;
-
-  /// The length of the vehicle excluding wheels, in meters.
-  double length;
-
-  /// The width of the vehicle excluding wheels, in meters.
-  double width;
 
   /// The manually set pitch of the vehicle as degrees of inclination around
   /// the x-axis (across) the vehicle in the forward direction.
@@ -472,15 +628,12 @@ sealed class Vehicle extends Hitchable {
   void setSteeringAngleByWasReading() {
     if (was.config.useWas) {
       steeringAngleInput = clampDouble(
-        wasReadingNormalizedInRange * steeringAngleMax,
-        -steeringAngleMax,
-        steeringAngleMax,
+        wasReadingNormalizedInRange * geometry.steeringAngleMax,
+        -geometry.steeringAngleMax,
+        geometry.steeringAngleMax,
       );
     }
   }
-
-  /// The distance between the wheel axles.
-  double get wheelBase;
 
   /// Returns the WAS reading target for the given steering [angle].
   int wasTargetFromSteeringAngle(double angle) {
@@ -490,7 +643,7 @@ sealed class Vehicle extends Hitchable {
                 ((steeringHardwareConfig.wasMax -
                             steeringHardwareConfig.wasCenter) *
                         angle.abs() /
-                        steeringAngleMax)
+                        geometry.steeringAngleMax)
                     .round())
             .clamp(
               steeringHardwareConfig.wasCenter,
@@ -501,7 +654,7 @@ sealed class Vehicle extends Hitchable {
                 ((steeringHardwareConfig.wasCenter -
                             steeringHardwareConfig.wasMin) *
                         angle.abs() /
-                        steeringAngleMax)
+                        geometry.steeringAngleMax)
                     .round())
             .clamp(
               steeringHardwareConfig.wasMin,
@@ -514,7 +667,7 @@ sealed class Vehicle extends Hitchable {
                 ((steeringHardwareConfig.wasCenter -
                             steeringHardwareConfig.wasMin) *
                         angle.abs() /
-                        steeringAngleMax)
+                        geometry.steeringAngleMax)
                     .round())
             .clamp(
               steeringHardwareConfig.wasMin,
@@ -525,7 +678,7 @@ sealed class Vehicle extends Hitchable {
                 ((steeringHardwareConfig.wasMax -
                             steeringHardwareConfig.wasCenter) *
                         angle.abs() /
-                        steeringAngleMax)
+                        geometry.steeringAngleMax)
                     .round())
             .clamp(
               steeringHardwareConfig.wasCenter,
@@ -540,10 +693,10 @@ sealed class Vehicle extends Hitchable {
 
   /// The effective look ahead distance for the vehicle.
   ///
-  /// The distance is altered according to [purePursuitParameters].
+  /// The distance is altered according to [pathTrackingParameters].purePursuit.
   double get lookAheadDistance => clampDouble(
-    velocity.abs() * purePursuitParameters.lookAheadSeconds,
-    purePursuitParameters.lookAheadMinDistance,
+    velocity.abs() * pathTrackingParameters.purePursuit.lookAheadSeconds,
+    pathTrackingParameters.purePursuit.lookAheadMinDistance,
     double.infinity,
   );
 
@@ -566,8 +719,9 @@ sealed class Vehicle extends Hitchable {
   /// calculating Stanley path tracking values.
   Geographic get stanleyAxlePosition;
 
-  /// Finds the point position corresponding to the [pathTrackingMode].
-  Geographic get pathTrackingPoint => switch (pathTrackingMode) {
+  /// Finds the point position corresponding to the
+  /// [pathTrackingParameters].mode.
+  Geographic get pathTrackingPoint => switch (pathTrackingParameters.mode) {
     PathTrackingMode.purePursuit => lookAheadStartPosition,
     PathTrackingMode.stanley => stanleyAxlePosition,
   };
@@ -674,9 +828,11 @@ sealed class Vehicle extends Hitchable {
     double integralSize = 1000,
   }) {
     final normalizedTarget =
-        (steeringAngleTarget + steeringAngleMax) / (2 * steeringAngleMax);
+        (steeringAngleTarget + geometry.steeringAngleMax) /
+        (2 * geometry.steeringAngleMax);
     final normalizedInput =
-        (steeringAngleInput + steeringAngleMax) / (2 * steeringAngleMax);
+        (steeringAngleInput + geometry.steeringAngleMax) /
+        (2 * geometry.steeringAngleMax);
 
     return pidController.nextValue(
       normalizedTarget - normalizedInput,
@@ -752,38 +908,29 @@ sealed class Vehicle extends Hitchable {
   /// parameters/variables altered.
   @override
   Vehicle copyWith({
+    VehicleGeometry? geometry,
     Geographic? antennaPosition,
-    double? minTurningRadius,
-    double? steeringAngleMax,
-    double? trackWidth,
-    int? numWheels,
-    double? wheelSpacing,
     GnssAntennaConfig? gnssAntennaConfig,
     Was? was,
     Imu? imu,
-    ThresholdVelocities? thresholdVelocities,
+    VehicleThresholds? thresholds,
     SteeringHardwareConfig? steeringHardwareConfig,
-    PathTrackingMode? pathTrackingMode,
-    PurePursuitParameters? purePursuitParameters,
-    StanleyParameters? stanleyParameters,
+    PathTrackingParameters? pathTrackingParameters,
     double? velocity,
     double? bearing,
     double? pitch,
     double? roll,
     double? steeringAngleInput,
-    double? length,
-    double? width,
     double? nudgeDistance,
     double? wheelsRolledDistance,
-    Hitchable? hitchParent,
-    Hitchable? hitchFrontFixedChild,
-    Hitchable? hitchRearFixedChild,
-    Hitchable? hitchRearDrawbarChild,
     String? name,
     String? uuid,
-    DateTime? lastUsed,
+    DateTime? lastUsedAt,
     ManufacturerColors? manufacturerColors,
     bool? manualSimulationMode,
+    List<Connector>? connectors,
+    List<Connection>? childConnections,
+    int? id,
   });
 
   /// Converts the object to a json compatible structure.
@@ -793,27 +940,27 @@ sealed class Vehicle extends Hitchable {
     map['info'] = {
       'name': name,
       'uuid': uuid,
-      'last_used': lastUsed.toIso8601String(),
+      'last_used': lastUsedAt.toIso8601String(),
     };
     map['gnss_antenna_config'] = gnssAntennaConfig;
 
     map['dimensions'] = {
-      'length': length,
-      'width': width,
-      'track_width': trackWidth,
+      'length': geometry.length,
+      'width': geometry.width,
+      'track_width': geometry.trackWidth,
     };
 
     map['imu_config'] = imu.config;
 
     map['steering'] = {
-      'min_turning_radius': minTurningRadius,
-      'path_tracking_mode': pathTrackingMode,
-      'steering_angle_max': steeringAngleMax,
-      'threshold_velocities': thresholdVelocities.toJson(),
+      'min_turning_radius': geometry.minTurningRadius,
+      'path_tracking_mode': pathTrackingParameters.mode,
+      'steering_angle_max': geometry.steeringAngleMax,
+      'threshold_velocities': thresholds.toJson(),
       'hardware_config': steeringHardwareConfig,
       'was_config': was.config,
-      'pure_pursuit_parameters': purePursuitParameters,
-      'stanley_parameters': stanleyParameters,
+      'pure_pursuit_parameters': pathTrackingParameters.purePursuit,
+      'stanley_parameters': pathTrackingParameters.stanley,
     };
 
     map['manufacturer_colors'] = manufacturerColors;

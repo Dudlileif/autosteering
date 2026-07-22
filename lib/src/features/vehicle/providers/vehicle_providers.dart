@@ -20,9 +20,12 @@ import 'dart:convert';
 
 import 'package:autosteering/src/features/audio/audio.dart';
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/database/database.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:collection/collection.dart';
+import 'package:drift/drift.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -37,7 +40,7 @@ class MainVehicle extends _$MainVehicle {
   Vehicle build() {
     final vehicle = ref.read(lastUsedVehicleProvider).requireValue
       ..position = ref.read(homePositionProvider).geoPosition
-      ..lastUsed = DateTime.now();
+      ..lastUsedAt = DateTime.now();
 
     ref.read(saveVehicleProvider(vehicle));
 
@@ -46,7 +49,7 @@ class MainVehicle extends _$MainVehicle {
 
   /// Update the [state] to [vehicle].
   void update(Vehicle vehicle) =>
-      Future(() => state = vehicle..lastUsed = DateTime.now());
+      Future(() => state = vehicle..lastUsedAt = DateTime.now());
 
   /// Update the [state] with only the position, velocity, bearing and
   /// steering input angle from [vehicle].
@@ -56,7 +59,7 @@ class MainVehicle extends _$MainVehicle {
       bearing: vehicle.bearing,
       steeringAngleInput: vehicle.steeringAngleInput,
       antennaPosition: vehicle.position,
-    )..lastUsed = DateTime.now();
+    )..lastUsedAt = DateTime.now();
   });
 
   /// Update the [state] to a new [vehicle] configuration, but keep the
@@ -65,7 +68,7 @@ class MainVehicle extends _$MainVehicle {
     () => state = vehicle.copyWith(
       antennaPosition: state.position,
       bearing: state.bearing,
-    )..lastUsed = DateTime.now(),
+    )..lastUsedAt = DateTime.now(),
   );
 
   /// Reset the [state] to the initial value by recreating the [state].
@@ -105,7 +108,8 @@ FutureOr<void> saveVehicle(
 }) async => ref.watch(
   saveJsonToFileDirectoryProvider(
     object: vehicle,
-    fileName: overrideName ?? vehicle.name ?? vehicle.uuid,
+    fileName:
+        overrideName ?? vehicle.name ?? vehicle.uuid ?? 'vehicle_${vehicle.id}',
     folder: 'vehicles',
     downloadIfWeb: downloadIfWeb,
   ).future,
@@ -124,7 +128,8 @@ FutureOr<void> exportVehicle(
 }) async => ref.watch(
   exportJsonToFileDirectoryProvider(
     object: vehicle,
-    fileName: overrideName ?? vehicle.name ?? vehicle.uuid,
+    fileName:
+        overrideName ?? vehicle.name ?? vehicle.uuid ?? 'vehicle_${vehicle.id}',
     folder: 'vehicles',
     downloadIfWeb: downloadIfWeb,
     dialogTitle: dialogTitle,
@@ -138,7 +143,90 @@ FutureOr<List<Vehicle>> savedVehicles(Ref ref) async => await ref
     .watch(
       savedFilesProvider(fromJson: Vehicle.fromJson, folder: 'vehicles').future,
     )
-    .then((data) => data.cast());
+    .then((data) async {
+      final vehicles = data.cast<Vehicle>();
+
+      final database = ref.watch(databaseProvider);
+      final vehiclesToAddToDatabase = <Vehicle>[];
+      final vehicleLinks = await database.managers.links
+          .filter((link) => link.tableRef.equals('vehicles'))
+          .get();
+      for (final vehicle in vehicles) {
+        if (!vehicleLinks
+            .map((link) => link.linkValue)
+            .contains(vehicle.uuid)) {
+          vehiclesToAddToDatabase.add(vehicle);
+        }
+      }
+      for (final vehicle in vehiclesToAddToDatabase) {
+        final createdVehicle = await database.managers.vehicles.createReturning(
+          (o) => o(
+            id: Value.absentIfNull(vehicle.id),
+            type: vehicle.type,
+            name: Value.absentIfNull(vehicle.name),
+            geometry: vehicle.geometry,
+            gnssAntennaConfig: Value.absentIfNull(
+              vehicle.gnssAntennaConfig,
+            ),
+            colorScheme: Value.absentIfNull(vehicle.manufacturerColors),
+            imuConfig: Value.absentIfNull(vehicle.imu.config),
+            wasConfig: Value.absentIfNull(vehicle.was.config),
+            steeringHardwareConfig: Value.absentIfNull(
+              vehicle.steeringHardwareConfig,
+            ),
+            pathTrackingParameters: Value.absentIfNull(
+              vehicle.pathTrackingParameters,
+            ),
+            thresholds: Value.absentIfNull(vehicle.thresholds),
+            createdAt: Value.absentIfNull(vehicle.createdAt),
+            lastUpdatedAt: Value.absentIfNull(vehicle.lastUpdatedAt),
+            lastUsedAt: Value.absentIfNull(vehicle.lastUsedAt),
+          ),
+        );
+        await database.managers.connectors.bulkCreate(
+          (o) => vehicle.connectors.map(
+            (connector) => o(
+              id: Value.absentIfNull(connector.id),
+              vehicle: Value(createdVehicle.id),
+              longitudinalOffsetFromRef: connector.longitudinalOffsetFromRef,
+              lateralOffsetFromRef: connector.lateralOffsetFromRef,
+              verticalOffsetFromRef: Value(
+                connector.verticalOffsetFromRef,
+              ),
+              relation: connector.relation,
+              type: connector.type,
+              angle: connector.angle,
+            ),
+          ),
+        );
+        final link = await database.managers.links.createReturning(
+          (o) => o(
+            tableRef: 'vehicles',
+            refId: createdVehicle.id!,
+            linkValue: Value.absentIfNull(vehicle.uuid),
+            name: Value.absentIfNull(vehicle.name),
+          ),
+        );
+        vehicleLinks.add(link);
+      }
+      return Future.wait(
+        vehicles.map(
+          (vehicle) async {
+            final id = vehicleLinks
+                .firstWhereOrNull(
+                  (link) => link.linkValue == vehicle.uuid,
+                )
+                ?.refId;
+            return vehicle.copyWith(
+              id: id,
+              connectors: await database.managers.connectors
+                  .filter((connector) => connector.vehicle.id.equals(id))
+                  .get(),
+            );
+          },
+        ).toList(),
+      );
+    });
 
 /// A provider for deleting [vehicle] from the user file system.
 ///
@@ -150,7 +238,8 @@ FutureOr<void> deleteVehicle(
   String? overrideName,
 }) async => ref.watch(
   deleteJsonFromFileDirectoryProvider(
-    fileName: overrideName ?? vehicle.name ?? vehicle.uuid,
+    fileName:
+        overrideName ?? vehicle.name ?? vehicle.uuid ?? 'vehicle_${vehicle.id}',
     folder: 'vehicles',
   ).future,
 );
@@ -182,7 +271,8 @@ FutureOr<Vehicle?> loadVehicleFromFile(Ref ref, String path) async {
 AsyncValue<Vehicle> lastUsedVehicle(Ref ref) =>
     ref.watch(savedVehiclesProvider).whenData((data) {
       if (data.isNotEmpty) {
-        final sorted = data..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
+        final sorted = data
+          ..sort((a, b) => b.lastUsedAt.compareTo(a.lastUsedAt));
 
         final vehicle = sorted.first;
         Logger.instance.i(
@@ -254,7 +344,7 @@ FutureOr<Vehicle?> importVehicle(Ref ref, {required String dialogTitle}) async {
     vehicle
       ..position = position
       ..bearing = bearing
-      ..lastUsed = DateTime.now();
+      ..lastUsedAt = DateTime.now();
 
     ref.read(configuredVehicleProvider.notifier).update(vehicle);
     ref.invalidate(configuredVehicleNameTextControllerProvider);

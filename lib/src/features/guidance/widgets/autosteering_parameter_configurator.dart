@@ -111,7 +111,7 @@ class _PurePursuitConfigurator extends ConsumerWidget {
       final vehicle = ref.watch(mainVehicleProvider);
       ref.read(saveVehicleProvider(vehicle));
       Logger.instance.i(
-        '''Updated vehicle pure pursuit parameters: ${vehicle.purePursuitParameters}''',
+        '''Updated vehicle pure pursuit parameters: ${vehicle.pathTrackingParameters.purePursuit}''',
       );
     });
   }
@@ -128,7 +128,10 @@ class _PurePursuitConfigurator extends ConsumerWidget {
           builder: (context, ref, child) {
             final lookAhead = ref.watch(
               mainVehicleProvider.select(
-                (vehicle) => vehicle.purePursuitParameters.lookAheadMinDistance,
+                (vehicle) => vehicle
+                    .pathTrackingParameters
+                    .purePursuit
+                    .lookAheadMinDistance,
               ),
             );
             return Column(
@@ -146,7 +149,9 @@ class _PurePursuitConfigurator extends ConsumerWidget {
                           ref
                               .watch(
                                 mainVehicleProvider.select(
-                                  (vehicle) => vehicle.purePursuitParameters,
+                                  (vehicle) => vehicle
+                                      .pathTrackingParameters
+                                      .purePursuit,
                                 ),
                               )
                               .copyWith(lookAheadMinDistance: value),
@@ -159,9 +164,10 @@ class _PurePursuitConfigurator extends ConsumerWidget {
                         .read(configuredVehicleProvider.notifier)
                         .update(
                           configuredVehicle.copyWith(
-                            purePursuitParameters: configuredVehicle
-                                .purePursuitParameters
-                                .copyWith(lookAheadMinDistance: value),
+                            pathTrackingParameters: configuredVehicle
+                                .pathTrackingParameters
+                                .copyWith
+                                .purePursuit(lookAheadMinDistance: value),
                           ),
                         );
                   },
@@ -176,7 +182,8 @@ class _PurePursuitConfigurator extends ConsumerWidget {
           builder: (context, ref, child) {
             final lookAheadTime = ref.watch(
               mainVehicleProvider.select(
-                (vehicle) => vehicle.purePursuitParameters.lookAheadSeconds,
+                (vehicle) =>
+                    vehicle.pathTrackingParameters.purePursuit.lookAheadSeconds,
               ),
             );
             return Column(
@@ -194,7 +201,9 @@ class _PurePursuitConfigurator extends ConsumerWidget {
                           ref
                               .watch(
                                 mainVehicleProvider.select(
-                                  (vehicle) => vehicle.purePursuitParameters,
+                                  (vehicle) => vehicle
+                                      .pathTrackingParameters
+                                      .purePursuit,
                                 ),
                               )
                               .copyWith(lookAheadSeconds: value),
@@ -207,9 +216,10 @@ class _PurePursuitConfigurator extends ConsumerWidget {
                         .read(configuredVehicleProvider.notifier)
                         .update(
                           configuredVehicle.copyWith(
-                            purePursuitParameters: configuredVehicle
-                                .purePursuitParameters
-                                .copyWith(lookAheadSeconds: value),
+                            pathTrackingParameters: configuredVehicle
+                                .pathTrackingParameters
+                                .copyWith
+                                .purePursuit(lookAheadSeconds: value),
                           ),
                         );
                   },
@@ -234,7 +244,7 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
       final vehicle = ref.watch(mainVehicleProvider);
       ref.read(saveVehicleProvider(vehicle));
       Logger.instance.i(
-        '''Updated vehicle Stanley parameters: ${vehicle.stanleyParameters}''',
+        '''Updated vehicle Stanley parameters: ${vehicle.pathTrackingParameters.stanley}''',
       );
     });
   }
@@ -251,7 +261,8 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
           builder: (context, ref, child) {
             final crossGain = ref.watch(
               mainVehicleProvider.select(
-                (vehicle) => vehicle.stanleyParameters.crossDistanceGain,
+                (vehicle) =>
+                    vehicle.pathTrackingParameters.stanley.crossDistanceGain,
               ),
             );
             return Column(
@@ -271,7 +282,8 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
                           ref
                               .watch(
                                 mainVehicleProvider.select(
-                                  (vehicle) => vehicle.stanleyParameters,
+                                  (vehicle) =>
+                                      vehicle.pathTrackingParameters.stanley,
                                 ),
                               )
                               .copyWith(crossDistanceGain: value),
@@ -284,9 +296,10 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
                         .read(configuredVehicleProvider.notifier)
                         .update(
                           configuredVehicle.copyWith(
-                            stanleyParameters: configuredVehicle
-                                .stanleyParameters
-                                .copyWith(crossDistanceGain: value),
+                            pathTrackingParameters: configuredVehicle
+                                .pathTrackingParameters
+                                .copyWith
+                                .stanley(crossDistanceGain: value),
                           ),
                         );
                   },
@@ -301,7 +314,8 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
           builder: (context, ref, child) {
             final softeningGain = ref.watch(
               mainVehicleProvider.select(
-                (vehicle) => vehicle.stanleyParameters.softeningGain,
+                (vehicle) =>
+                    vehicle.pathTrackingParameters.stanley.softeningGain,
               ),
             );
             return Column(
@@ -319,7 +333,8 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
                           ref
                               .watch(
                                 mainVehicleProvider.select(
-                                  (vehicle) => vehicle.stanleyParameters,
+                                  (vehicle) =>
+                                      vehicle.pathTrackingParameters.stanley,
                                 ),
                               )
                               .copyWith(softeningGain: value),
@@ -332,9 +347,10 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
                         .read(configuredVehicleProvider.notifier)
                         .update(
                           configuredVehicle.copyWith(
-                            stanleyParameters: configuredVehicle
-                                .stanleyParameters
-                                .copyWith(softeningGain: value),
+                            pathTrackingParameters: configuredVehicle
+                                .pathTrackingParameters
+                                .copyWith
+                                .stanley(softeningGain: value),
                           ),
                         );
                   },
@@ -349,7 +365,8 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
           builder: (context, ref, child) {
             final velocityGain = ref.watch(
               mainVehicleProvider.select(
-                (vehicle) => vehicle.stanleyParameters.velocityGain,
+                (vehicle) =>
+                    vehicle.pathTrackingParameters.stanley.velocityGain,
               ),
             );
             return Column(
@@ -367,7 +384,8 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
                           ref
                               .watch(
                                 mainVehicleProvider.select(
-                                  (vehicle) => vehicle.stanleyParameters,
+                                  (vehicle) =>
+                                      vehicle.pathTrackingParameters.stanley,
                                 ),
                               )
                               .copyWith(velocityGain: value),
@@ -380,9 +398,10 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
                         .read(configuredVehicleProvider.notifier)
                         .update(
                           configuredVehicle.copyWith(
-                            stanleyParameters: configuredVehicle
-                                .stanleyParameters
-                                .copyWith(velocityGain: value),
+                            pathTrackingParameters: configuredVehicle
+                                .pathTrackingParameters
+                                .copyWith
+                                .stanley(velocityGain: value),
                           ),
                         );
                   },

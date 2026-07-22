@@ -21,12 +21,14 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/database/database.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:collection/collection.dart';
+import 'package:drift/drift.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geobase/geobase.dart';
@@ -62,23 +64,23 @@ class LoadedEquipment extends _$LoadedEquipment {
 @Riverpod(keepAlive: true)
 class AllEquipments extends _$AllEquipments {
   @override
-  Map<String, Equipment> build() {
+  Map<int, Equipment> build() {
     listenSelf((previous, next) {
-      final toRemove = <String>[];
+      final toRemove = <int>[];
       for (final equipment in next.values) {
-        if (equipment.hitchParent == null) {
-          toRemove.add(equipment.uuid);
+        if (equipment.parentConnection == null) {
+          toRemove.add(equipment.id!);
         }
-        if (ref.exists(equipmentPathsProvider(equipment.uuid))) {
+        if (ref.exists(equipmentPathsProvider(equipment.id!))) {
           ref
-              .read(equipmentPathsProvider(equipment.uuid).notifier)
+              .read(equipmentPathsProvider(equipment.id!).notifier)
               .update(equipment);
         }
       }
       if (toRemove.isNotEmpty) {
-        for (final uuid in toRemove) {
-          state.remove(uuid);
-          ref.invalidate(equipmentPathsProvider(uuid));
+        for (final id in toRemove) {
+          state.remove(id);
+          ref.invalidate(equipmentPathsProvider(id));
         }
         state = Map.of(state);
       }
@@ -91,7 +93,7 @@ class AllEquipments extends _$AllEquipments {
   void update(Hitchable equipment) => Future(
     () => state = Map.of(state)
       ..update(
-        equipment.uuid,
+        equipment.id!,
         (value) => equipment as Equipment,
         ifAbsent: () => equipment as Equipment,
       ),
@@ -106,10 +108,10 @@ class AllEquipments extends _$AllEquipments {
   /// Clear all the painted areas for all the equipments.
   void clearPaintedArea() => Future(() {
     for (final equipment in state.values) {
-      ref.read(equipmentPathsProvider(equipment.uuid).notifier).clear();
+      ref.read(equipmentPathsProvider(equipment.id!).notifier).clear();
       ref
           .read(activeWorkSessionProvider.notifier)
-          .deleteLogRecordsFile(equipment.uuid);
+          .deleteLogRecordsFile(equipment.id!);
     }
     ref.read(equipmentWorkedAreaProvider.notifier).clear();
     ref.read(activeWorkSessionProvider.notifier).updateStartTime(null);
@@ -121,27 +123,27 @@ class AllEquipments extends _$AllEquipments {
 @Riverpod(keepAlive: true)
 class EquipmentWorkedArea extends _$EquipmentWorkedArea {
   @override
-  Map<String, double> build() {
+  Map<int, double> build() {
     return {};
   }
 
-  /// Increments the value of the [state] with key [uuid] by [increment].
-  void increment(String uuid, double increment) => Future(
+  /// Increments the value of the [state] with key [id] by [increment].
+  void increment(int id, double increment) => Future(
     () => state = state
       ..update(
-        uuid,
+        id,
         (prev) => prev + increment,
         ifAbsent: () => increment,
       ),
   );
 
-  /// Updates the value of the [state] with key [uuid] to [value].
-  void updateValue(String uuid, double value) => Future(
-    () => state = state..update(uuid, (prev) => value, ifAbsent: () => value),
+  /// Updates the value of the [state] with key [id] to [value].
+  void updateValue(int id, double value) => Future(
+    () => state = state..update(id, (prev) => value, ifAbsent: () => value),
   );
 
   /// Sets the [state] to [value].
-  void set(Map<String, double> value) => Future(() => state = value);
+  void set(Map<int, double> value) => Future(() => state = value);
 
   /// Clears the [state].
   void clear() => Future(() => state = {});
@@ -150,12 +152,12 @@ class EquipmentWorkedArea extends _$EquipmentWorkedArea {
   /// different to the previous state.
   @override
   bool updateShouldNotify(
-    Map<String, double> previous,
-    Map<String, double> next,
+    Map<int, double> previous,
+    Map<int, double> next,
   ) => true;
 }
 
-/// A provider for tracking the worked paths for the given equipment [uuid].
+/// A provider for tracking the worked paths for the given equipment [id].
 @Riverpod(keepAlive: true)
 class EquipmentPaths extends _$EquipmentPaths {
   Map<int, bool> _prevSectionActivationStatus = {};
@@ -164,7 +166,7 @@ class EquipmentPaths extends _$EquipmentPaths {
   double _coveredArea = 0;
 
   @override
-  List<Map<int, List<SectionEdgePositions>?>> build(String uuid) => [];
+  List<Map<int, List<SectionEdgePositions>?>> build(int id) => [];
 
   /// Updates the travelled path of the [equipment].
   void update(Equipment equipment) => Future(() {
@@ -201,7 +203,7 @@ class EquipmentPaths extends _$EquipmentPaths {
         if (sectionLines.isNotEmpty) {
           state = state..add(sectionLines);
           ref
-              .read(equipmentLogRecordsProvider(uuid).notifier)
+              .read(equipmentLogRecordsProvider(id).notifier)
               .add(equipment.logRecord);
         }
         _prevSectionActivationStatus = equipment.sectionActivationStatus;
@@ -226,7 +228,7 @@ class EquipmentPaths extends _$EquipmentPaths {
                 return null;
               });
             ref
-                .read(equipmentLogRecordsProvider(uuid).notifier)
+                .read(equipmentLogRecordsProvider(id).notifier)
                 .add(equipment.logRecord);
           }
         }
@@ -247,7 +249,7 @@ class EquipmentPaths extends _$EquipmentPaths {
         });
         ref
             .read(equipmentWorkedAreaProvider.notifier)
-            .updateValue(uuid, _coveredArea);
+            .updateValue(id, _coveredArea);
       }
       _lastActivePositions = positions;
     }
@@ -282,7 +284,7 @@ class EquipmentPaths extends _$EquipmentPaths {
             return null;
           });
         ref
-            .read(equipmentLogRecordsProvider(uuid).notifier)
+            .read(equipmentLogRecordsProvider(id).notifier)
             .add(equipment.logRecord);
       }
     }
@@ -327,8 +329,8 @@ class EquipmentPaths extends _$EquipmentPaths {
   void clear() => Future(() {
     _coveredArea = 0;
     ref
-      ..read(equipmentWorkedAreaProvider.notifier).updateValue(uuid, 0)
-      ..invalidate(equipmentLogRecordsProvider(uuid));
+      ..read(equipmentWorkedAreaProvider.notifier).updateValue(id, 0)
+      ..invalidate(equipmentLogRecordsProvider(id));
     return state = [];
   });
 
@@ -355,7 +357,7 @@ class EquipmentPaths extends _$EquipmentPaths {
 
     ref
         .read(equipmentWorkedAreaProvider.notifier)
-        .updateValue(uuid, _coveredArea);
+        .updateValue(id, _coveredArea);
     return state = List.from(value);
   });
 
@@ -381,7 +383,7 @@ class EquipmentPaths extends _$EquipmentPaths {
 
     ref
         .read(equipmentWorkedAreaProvider.notifier)
-        .updateValue(uuid, _coveredArea);
+        .updateValue(id, _coveredArea);
     return state = state..addAll(value);
   });
 
@@ -390,7 +392,6 @@ class EquipmentPaths extends _$EquipmentPaths {
   void updateFromLogRecords({
     required List<EquipmentLogRecord> records,
     required Equipment equipment,
-    Hitch? overrideHitch,
     bool set = true,
   }) {
     final workedPaths = <Map<int, List<SectionEdgePositions>?>>[];
@@ -402,7 +403,6 @@ class EquipmentPaths extends _$EquipmentPaths {
         forceIndices: prevStatus
             .where((section) => !record.activeSections.contains(section))
             .toList(),
-        overrideHitch: overrideHitch,
         overrideTime: record.time,
         forceOwnPositionAndBearing: true,
       );
@@ -431,7 +431,6 @@ class EquipmentPaths extends _$EquipmentPaths {
                         equipment.sectionEdgePositions(
                           section,
                           fraction: equipment.recordingPositionFraction,
-                          overrideHitch: overrideHitch,
                           overrideTime: record.time,
                           forceOwnPositionAndBearing: true,
                         )!,
@@ -481,7 +480,7 @@ class EquipmentPaths extends _$EquipmentPaths {
 // and recalculating all the paths when they change.
 
 /// A provider for the map screen points for the worked paths for the given
-/// equipment [uuid].
+/// [Equipment.uuid].
 @riverpod
 class EquipmentMapPaths extends _$EquipmentMapPaths {
   late Offset _origin;
@@ -492,7 +491,7 @@ class EquipmentMapPaths extends _$EquipmentMapPaths {
     Offset origin,
     Map<int, SectionEdgePositions?>? prevActivePosition,
   })
-  build(String uuid, {bool forMiniMap = false}) {
+  build(int id, {bool forMiniMap = false}) {
     // Force rebuild when zoom level changes.
     ref.listen(
       switch (forMiniMap) {
@@ -501,7 +500,7 @@ class EquipmentMapPaths extends _$EquipmentMapPaths {
       },
       (_, event) => ref.invalidateSelf(),
     );
-    final workedLines = ref.watch(equipmentPathsProvider(uuid));
+    final workedLines = ref.watch(equipmentPathsProvider(id));
     final camera = ref.watch(switch (forMiniMap) {
       false => mainMapControllerProvider.select((selector) => selector.camera),
       true => miniMapControllerProvider.select((selector) => selector.camera),
@@ -600,11 +599,11 @@ class EquipmentMapPaths extends _$EquipmentMapPaths {
 }
 
 /// A provider for holding [EquipmentLogRecord] for the [Equipment] with the
-/// given UUID.
+/// given id.
 @Riverpod(keepAlive: true)
 class EquipmentLogRecords extends _$EquipmentLogRecords {
   @override
-  List<EquipmentLogRecord>? build(String uuid) => null;
+  List<EquipmentLogRecord>? build(int id) => null;
 
   /// Add [record] to [state].
   void add(EquipmentLogRecord record) => Future(() {
@@ -615,7 +614,7 @@ class EquipmentLogRecords extends _$EquipmentLogRecords {
     }
     ref
         .read(activeWorkSessionProvider.notifier)
-        .addEquipmentLogRecord(uuid, record);
+        .addEquipmentLogRecord(id, record);
   });
 
   @override
@@ -656,7 +655,11 @@ Future<void> saveEquipment(
 }) async => ref.watch(
   saveJsonToFileDirectoryProvider(
     object: equipment,
-    fileName: overrideName ?? equipment.name ?? equipment.uuid,
+    fileName:
+        overrideName ??
+        equipment.name ??
+        equipment.uuid ??
+        'equipment_${equipment.id}',
     folder: 'equipment',
     downloadIfWeb: downloadIfWeb,
   ).future,
@@ -675,7 +678,11 @@ Future<void> exportEquipment(
 }) async => ref.watch(
   exportJsonToFileDirectoryProvider(
     object: equipment,
-    fileName: overrideName ?? equipment.name ?? equipment.uuid,
+    fileName:
+        overrideName ??
+        equipment.name ??
+        equipment.uuid ??
+        'equipment_${equipment.id}',
     folder: 'equipment',
     downloadIfWeb: downloadIfWeb,
     dialogTitle: dialogTitle,
@@ -692,7 +699,92 @@ FutureOr<List<Equipment>> savedEquipments(Ref ref) async => await ref
         folder: 'equipment',
       ).future,
     )
-    .then((data) => data.cast());
+    .then((data) async {
+      final implements = data.cast<Equipment>();
+
+      final database = ref.watch(databaseProvider);
+      final implementsToAddToDatabase = <Equipment>[];
+
+      final implementLinks = await database.managers.links
+          .filter((f) => f.tableRef.equals('implements'))
+          .get();
+      for (final implement in implements) {
+        if (!implementLinks
+            .map((link) => link.linkValue)
+            .contains(implement.uuid)) {
+          implementsToAddToDatabase.add(implement);
+        }
+      }
+      for (final implement in implementsToAddToDatabase) {
+        final createdImplement = await database.managers.implements
+            .createReturning(
+              (o) => o(
+                id: Value.absentIfNull(implement.id),
+                name: Value.absentIfNull(implement.name),
+                createdAt: Value.absentIfNull(implement.createdAt),
+                lastUpdatedAt: Value.absentIfNull(implement.lastUpdatedAt),
+                lastUsedAt: Value.absentIfNull(implement.lastUsedAt),
+              ),
+            );
+        await database.managers.sections.bulkCreate(
+          (o) => implement.sections.map(
+            (section) => o(
+              id: Value.absentIfNull(section.id),
+              implement: createdImplement.id,
+              longitudinalOffset: 0,
+              lateralOffset: section.lateralOffset,
+              width: section.width,
+              workingWidth: section.workingWidth,
+              length: section.length,
+              color: Value.absentIfNull(section.color),
+              workedPathColor: Value.absentIfNull(
+                section.workedPathColor,
+              ),
+            ),
+          ),
+        );
+        await database.managers.connectors.bulkCreate(
+          (o) => implement.connectors.map(
+            (connector) => o(
+              implement: Value(createdImplement.id),
+              longitudinalOffsetFromRef: connector.longitudinalOffsetFromRef,
+              lateralOffsetFromRef: connector.lateralOffsetFromRef,
+              verticalOffsetFromRef: Value(
+                connector.verticalOffsetFromRef,
+              ),
+              relation: connector.relation,
+              type: connector.type,
+              angle: connector.angle,
+            ),
+          ),
+        );
+        final link = await database.managers.links.createReturning(
+          (o) => o(
+            tableRef: 'implements',
+            refId: createdImplement.id,
+            linkValue: Value.absentIfNull(implement.uuid),
+            name: Value.absentIfNull(implement.name),
+          ),
+        );
+        implementLinks.add(link);
+      }
+
+      return Future.wait(
+        implements.map(
+          (implement) async {
+            final id = implementLinks
+                .firstWhereOrNull((link) => link.linkValue == implement.uuid)
+                ?.refId;
+            return implement.copyWith(
+              id: id,
+              connectors: await database.managers.connectors
+                  .filter((connector) => connector.implement.id.equals(id))
+                  .get(),
+            );
+          },
+        ).toList(),
+      );
+    });
 
 /// A provider for deleting [equipment] from the user file system.
 ///
@@ -704,7 +796,11 @@ Future<void> deleteEquipment(
   String? overrideName,
 }) async => ref.watch(
   deleteJsonFromFileDirectoryProvider(
-    fileName: overrideName ?? equipment.name ?? equipment.uuid,
+    fileName:
+        overrideName ??
+        equipment.name ??
+        equipment.uuid ??
+        'equipment_${equipment.id}',
     folder: 'equipment',
   ).future,
 );
@@ -755,7 +851,7 @@ FutureOr<Equipment?> importEquipment(
     Logger.instance.i(
       'Imported equipment: ${equipment.name ?? equipment.uuid}.',
     );
-    equipment.lastUsed = DateTime.now();
+    equipment.lastUsedAt = DateTime.now();
     ref.read(loadedEquipmentProvider.notifier).update(equipment);
     await ref.watch(saveEquipmentProvider(equipment).future);
   }

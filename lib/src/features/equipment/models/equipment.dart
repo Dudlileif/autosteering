@@ -23,10 +23,6 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
-import 'package:autosteering/src/features/vehicle/models/models.dart';
-import 'package:autosteering/src/features/vehicle/models/vehicle.dart';
-import 'package:autosteering/src/features/vehicle/vehicle.dart';
-import 'package:collection/collection.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as map;
@@ -36,37 +32,18 @@ import 'package:geobase/geobase.dart';
 class Equipment extends Hitchable {
   /// A class for equipment used for working on the fields.
   ///
-  /// The required [hitchType] specifies how this equipment connects to a
-  /// parent.
-  ///
-  /// The [workingAreaLength] refers to the length of the working area, and the
-  /// [drawbarLength] how long the drawbar(s) is/are. The working area starts
-  /// after the drawbar.
-  ///
-  /// To add child hitches to the equipment, set the distance from the hitch
-  /// point to the corresponding [hitchToChildFrontFixedHitchLength],
-  /// [hitchToChildRearFixedHitchLength], [hitchToChildRearDrawbarHitchLength]
-  /// depending on which hitch(es) you wan't to add.
-  ///
   /// The [bearing] and [_position] parameters generally doesn't need to be
   /// set, as the equipment usually doesn't spawn/show initially without a
   /// parent to inherit position and bearing from.
   Equipment({
-    required this.hitchType,
-    super.hitchParent,
-    super.hitchFrontFixedChild,
-    super.hitchRearFixedChild,
-    super.hitchRearDrawbarChild,
+    super.connectors = const [],
+    super.childConnections,
+    this.parentConnection,
     super.name,
+    super.id,
     super.uuid,
-    super.lastUsed,
-    this.workingAreaLength = 2,
-    this.drawbarLength = 1,
-    this.sidewaysOffset = 0,
+    super.lastUsedAt,
     this.recordingPositionFraction = 1,
-    this.hitchToChildFrontFixedHitchLength,
-    this.hitchToChildRearFixedHitchLength,
-    this.hitchToChildRearDrawbarHitchLength,
     this.hitchToDecorationStartLength,
     this.decorationSidewaysOffset,
     this.decorationLength,
@@ -74,103 +51,109 @@ class Equipment extends Hitchable {
     List<Section>? sections,
     double bearing = 0,
     this._position = const Geographic(lat: 0, lon: 0),
+    super.createdAt,
+    super.lastUpdatedAt,
   }) : sections = sections ?? [],
-       _bearing = hitchParent?.bearing ?? bearing;
+       _bearing = parentConnection?.childBearing ?? bearing;
 
   /// Creates an [Equipment] from the [json] object.
   factory Equipment.fromJson(Map<String, dynamic> json) {
     final info = Map<String, dynamic>.from(json['info'] as Map);
     final dimensions = Map<String, dynamic>.from(json['dimensions'] as Map);
-    final hitches = Map<String, dynamic>.from(json['hitches'] as Map);
-
     final decoration = dimensions['decoration'] != null
         ? Map<String, dynamic>.from(dimensions['decoration'] as Map)
         : null;
 
-    final sections = json['sections'] != null
-        ? (json['sections'] as List)
-              .map(
-                (section) => Section.fromJson(
-                  Map<String, dynamic>.from(section as Map),
-                ),
-              )
-              .toList()
-        : null;
+    final sections = switch (json['sections']) {
+      final List<dynamic> sections =>
+        List<Map<String, dynamic>>.from(sections)
+            .fold<
+              ({
+                List<Map<String, dynamic>> sections,
+                double precedingWidth,
+              })
+            >(
+              (
+                sections: [],
+                precedingWidth:
+                    (-(dimensions['width'] as double) / 2) +
+                    (dimensions['sideways_offset'] as double),
+              ),
+              (acc, section) => (
+                sections: [
+                  ...acc.sections,
+                  {
+                    ...section,
+                    'section_count': sections.length,
+                    'preceding_width': acc.precedingWidth,
+                    'length': dimensions['working_area_length'] as double?,
+                    'longitudinal_offset':
+                        dimensions['drawbar_length'] as double? ?? 1,
+                  },
+                ],
+                precedingWidth:
+                    acc.precedingWidth + (section['width'] as double),
+              ),
+            )
+            .sections
+            .map(Section.fromJson)
+            .toList(),
+      _ => null,
+    };
 
     final equipment = Equipment(
-      hitchType: HitchType.values.firstWhere(
-        (element) => element.name == info['hitch_type'] as String,
-        orElse: () => .drawbar,
-      ),
       name: info['name'] as String?,
       uuid: info['uuid'] as String,
-      drawbarLength: dimensions['drawbar_length'] as double,
-      sidewaysOffset: dimensions['sideways_offset'] as double,
-      workingAreaLength: dimensions['working_area_length'] as double,
+      connectors: [
+        Connector(
+          longitudinalOffsetFromRef: 0.5,
+          lateralOffsetFromRef: 0,
+          type: .values.firstWhere(
+            (value) => value.name == (info['type'] ?? info['hitch_type']),
+            orElse: () => .fixed,
+          ),
+          relation: .child,
+        ),
+      ],
       recordingPositionFraction:
           (dimensions['recording_position_fraction'] as double?) ?? 1,
       sections: sections,
-      hitchToChildFrontFixedHitchLength:
-          hitches['hitch_to_child_front_fixed_hitch_length'] as double?,
-      hitchToChildRearFixedHitchLength:
-          hitches['hitch_to_child_rear_fixed_hitch_length'] as double?,
-      hitchToChildRearDrawbarHitchLength:
-          hitches['hitch_to_child_rear_drawbar_hitch_length'] as double?,
       hitchToDecorationStartLength:
           decoration?['hitch_to_decoration_start_length'] as double?,
       decorationLength: decoration?['decoration_length'] as double?,
       decorationWidth: decoration?['decoration_width'] as double?,
       decorationSidewaysOffset:
           decoration?['decoration_sideways_offset'] as double?,
-      lastUsed: DateTime.tryParse(info['last_used'] as String),
+      lastUsedAt: DateTime.tryParse(info['last_used'] as String),
     );
-
-    final children = json['children'] != null
-        ? Map<String, Map<String, dynamic>?>.from(json['children'] as Map)
-        : null;
-
-    final hitchFrontFixedChild = children?['front_fixed'] != null
-        ? Equipment.fromJson(
-            Map<String, dynamic>.from(children!['front_fixed']!),
-          )
-        : null;
-    final hitchRearFixedChild = children?['rear_fixed'] != null
-        ? Equipment.fromJson(
-            Map<String, dynamic>.from(children!['rear_fixed']!),
-          )
-        : null;
-    final hitchRearDrawbarChild = children?['rear_drawbar'] != null
-        ? Equipment.fromJson(
-            Map<String, dynamic>.from(children!['rear_drawbar']!),
-          )
-        : null;
-
-    if (hitchFrontFixedChild != null) {
-      equipment.attachChild(hitchFrontFixedChild, Hitch.frontFixed);
-    }
-    if (hitchRearFixedChild != null) {
-      equipment.attachChild(hitchRearFixedChild);
-    }
-    if (hitchRearDrawbarChild != null) {
-      equipment.attachChild(hitchRearDrawbarChild, Hitch.rearDrawbar);
-    }
 
     return equipment;
   }
 
-  /// Which type of hitch point this equipment has.
-  HitchType hitchType;
+  /// Constructor for use with the local database.
+  factory Equipment.fromDatabase({
+    required int id,
+    required String uuid,
+    String? name,
+    DateTime? createdAt,
+    DateTime? lastUsedAt,
+    DateTime? lastUpdatedAt,
+  }) {
+    return Equipment(
+      id: id,
+      uuid: uuid,
+      name: name,
+      createdAt: createdAt,
+      lastUpdatedAt: lastUpdatedAt,
+      lastUsedAt: lastUsedAt,
+    );
+  }
+
+  /// The connection to a parent [Hitchable].
+  Connection? parentConnection;
 
   /// The working sections of this equipment
   List<Section> sections;
-
-  /// The length of the working area of the equipment. This length starts
-  /// at the [drawbarEnd] and ends at the end of the equipment.
-  double workingAreaLength;
-
-  /// The length from the front hitch point to the start of the main equipment
-  /// working area/sections.
-  double drawbarLength;
 
   /// How much the working area is offset to the side from the hitch
   /// [position].
@@ -192,18 +175,6 @@ class Equipment extends Hitchable {
   ///  0    ---------
   /// ```
   double recordingPositionFraction = 1;
-
-  /// The length from the hitch point to the child fixed hitch at the front,
-  /// if there is one.
-  double? hitchToChildFrontFixedHitchLength;
-
-  /// The length from the primary hitch point to the child fixed hitch at the
-  /// rear, if there is one.
-  double? hitchToChildRearFixedHitchLength;
-
-  /// The length from the primary hitch point to the child rear drawbar hitch at
-  /// the rear, if there is one.
-  double? hitchToChildRearDrawbarHitchLength;
 
   /// The distance from the hitch [position] to the start of the decoration
   /// polygon.
@@ -227,9 +198,9 @@ class Equipment extends Hitchable {
   /// The bearing of the equipment, used to specifically set the [bearing].
   double _bearing = 0;
 
-  /// The previous position of the [workingCenter], only used in
+  /// The previous position of the [position], only used in
   /// [updateDrawbar].
-  late Geographic _prevWorkingCenter = workingCenter;
+  late Geographic _prevPosition = position;
 
   /// The previous [bearing] of this, only used in [updateDrawbar].
   double _prevBearing = 0;
@@ -244,20 +215,21 @@ class Equipment extends Hitchable {
   Geographic? _turningRadiusCenter;
 
   @override
-  double? get currentTurningRadius {
-    if (hitchType == HitchType.fixed && hitchParent != null) {
-      return turningRadiusCenter?.rhumb.distanceTo(workingCenter);
-    }
-    return _turningRadius;
-  }
+  double? get currentTurningRadius => switch (parentConnection) {
+    Connection(childConnector: Connector(type: .fixed)) =>
+      turningRadiusCenter?.rhumb.distanceTo(position),
+    _ => _turningRadius,
+  };
 
   @override
-  Geographic? get turningRadiusCenter {
-    if (hitchType == HitchType.fixed && hitchParent != null) {
-      return hitchParent!.turningRadiusCenter;
-    }
-    return _turningRadiusCenter;
-  }
+  Geographic? get turningRadiusCenter => switch (parentConnection) {
+    Connection(
+      childConnector: Connector(type: .fixed),
+      parent: Hitchable(:final turningRadiusCenter),
+    ) =>
+      turningRadiusCenter,
+    _ => _turningRadiusCenter,
+  };
 
   /// The angular velocity of the equipment, if it is turning.
   /// Unit is degrees/s.
@@ -269,7 +241,7 @@ class Equipment extends Hitchable {
     final isTurningLeft =
         signedBearingDifference(
           bearing,
-          turningRadiusCenter!.rhumb.initialBearingTo(workingCenter),
+          turningRadiusCenter!.rhumb.initialBearingTo(position),
         ) <
         0;
     if (isTurningLeft) {
@@ -283,7 +255,7 @@ class Equipment extends Hitchable {
   ///
   /// All geometry calculations for this equipment is based on this point.
   @override
-  Geographic get position => parentHitchPoint ?? _position;
+  Geographic get position => parentConnection?.childRefPosition ?? _position;
 
   /// Manually update the position of the equipment to [value].
   @override
@@ -292,12 +264,10 @@ class Equipment extends Hitchable {
   /// The velocity of the equipment, will use the parent's velocity if the
   /// connection is fixed, otherwise the explicitly set [_velocity].
   @override
-  double get velocity {
-    if (hitchParent != null && parentHitch != Hitch.rearDrawbar) {
-      return hitchParent!.velocity;
-    }
-    return _velocity;
-  }
+  double get velocity => switch (parentConnection) {
+    Connection(parent: Hitchable(:final velocity)) => velocity,
+    _ => _velocity,
+  };
 
   /// Manually update the velocity of the equipment to [value].
   @override
@@ -306,18 +276,10 @@ class Equipment extends Hitchable {
   /// The bearing/bearing of the equipment, will use the parent's bearing if
   /// connection is fixed, otherwise the explicitly set [_bearing].
   @override
-  double get bearing {
-    if (hitchParent != null && parentHitch != Hitch.rearDrawbar) {
-      return switch (hitchParent! is ArticulatedTractor) {
-        true =>
-          parentHitch == Hitch.frontFixed
-              ? (hitchParent! as ArticulatedTractor).frontAxleAngle
-              : (hitchParent! as ArticulatedTractor).rearAxleAngle + 180,
-        false => hitchParent!.bearing,
-      };
-    }
-    return _bearing;
-  }
+  double get bearing => switch (parentConnection) {
+    Connection(:final childBearing) => childBearing,
+    _ => _bearing,
+  };
 
   /// Manually update the bearing of the equipment to [value].
   @override
@@ -435,51 +397,8 @@ class Equipment extends Hitchable {
   }
 
   /// The hitch connection position where this equipment is attached to the
-  /// [hitchParent], if it's connected.
-  Geographic? get parentHitchPoint => switch (parentHitch != null) {
-    true => switch (parentHitch!) {
-      Hitch.frontFixed => hitchParent!.hitchFrontFixedPoint,
-      Hitch.rearFixed => hitchParent!.hitchRearFixedPoint,
-      Hitch.rearDrawbar => hitchParent!.hitchRearDrawbarPoint,
-    },
-    false => null,
-  };
-
-  /// The position of the front fixed child hitch on this equipment, if there is
-  /// one.
-  @override
-  Geographic? get hitchFrontFixedPoint =>
-      switch (hitchToChildFrontFixedHitchLength != null) {
-        true => position.rhumb.destinationPoint(
-          distance: hitchToChildFrontFixedHitchLength!,
-          bearing: bearing,
-        ),
-        false => null,
-      };
-
-  /// The position of the rear fixed child hitch on this equipment, if there is
-  /// one.
-  @override
-  Geographic? get hitchRearFixedPoint =>
-      switch (hitchToChildRearFixedHitchLength != null) {
-        true => position.rhumb.destinationPoint(
-          distance: hitchToChildRearFixedHitchLength!,
-          bearing: bearing + 180,
-        ),
-        false => null,
-      };
-
-  /// The position of the rear drawbar child hitch on this equipment, if there
-  /// is one.
-  @override
-  Geographic? get hitchRearDrawbarPoint =>
-      switch (hitchToChildRearDrawbarHitchLength != null) {
-        true => position.rhumb.destinationPoint(
-          distance: hitchToChildRearDrawbarHitchLength!,
-          bearing: bearing + 180,
-        ),
-        false => null,
-      };
+  /// [parentConnection], if it's connected.
+  Geographic? get parentConnectorPoint => parentConnection?.connectionPoint;
 
   /// Update the [bearing] and [velocity] of the equipment when connected to
   /// parent with a drawbar.
@@ -488,19 +407,27 @@ class Equipment extends Hitchable {
   /// work without a steering angle on the main vehicle (i.e. WAS is required
   /// on physical vehicle).
   void updateDrawbar(double period) {
-    if (hitchParent != null && parentHitch == Hitch.rearDrawbar) {
+    if (parentConnection case Connection(
+      childConnector: Connector(
+        type: .drawbar,
+        :final longitudinalOffsetFromRef,
+      ),
+      :final parent,
+      :final connectionPoint,
+      :final parentConnector,
+    )) {
       var hitchAngle = _prevHitchAngle;
       final prevBearing = bearing;
 
       // Only change bearing if we're moving.
-      if (hitchParent!.velocity.abs() > 0) {
-        final movedDistance = _prevWorkingCenter.rhumb.distanceTo(
-          workingCenter,
+      if (parent.velocity.abs() > 0) {
+        final movedDistance = _prevPosition.rhumb.distanceTo(
+          position,
         );
 
         final bearingChange = signedBearingDifference(
           _prevBearing,
-          drawbarEnd().rhumb.initialBearingTo(position),
+          position.rhumb.initialBearingTo(connectionPoint),
         );
 
         var turningRadius = bearingChange.abs() > 0
@@ -522,82 +449,67 @@ class Equipment extends Hitchable {
         _turningRadius = turningRadius?.abs();
 
         _turningRadiusCenter = turningRadius != null
-            ? workingCenter.rhumb.destinationPoint(
+            ? position.rhumb.destinationPoint(
                 distance: turningRadius,
                 bearing: bearing + 90,
               )
             : null;
 
-        final hitchToParentTurningCircleBase = switch (hitchParent) {
-          AxleSteeredVehicle(solidAxleToRearDrawbarDistance: final distance) =>
-            distance,
-          ArticulatedTractor(rearAxleToDrawbarDistance: final distance) =>
-            distance,
-          Equipment(
-            hitchToChildRearDrawbarHitchLength: final distance,
-            drawbarLength: final length,
-          ) =>
-            distance! - length,
-          _ => null,
-        };
+        final hitchToParentTurningCircleBase =
+            parentConnector.longitudinalOffsetFromRef;
 
-        if (hitchToParentTurningCircleBase != null) {
-          // https://www.landtechnik-online.eu/landtechnik/article/view/2010-65-3-178-181/2010-65-3-178-181-en-pdf
-          final a =
-              hitchParent!.velocity /
-              (drawbarLength + hitchToParentTurningCircleBase);
+        // https://www.landtechnik-online.eu/landtechnik/article/view/2010-65-3-178-181/2010-65-3-178-181-en-pdf
+        final a =
+            parent.velocity /
+            (longitudinalOffsetFromRef + hitchToParentTurningCircleBase);
 
-          final y1 = hitchParent!.currentTurningRadius != null
-              ? atan(
-                  hitchToParentTurningCircleBase /
-                      hitchParent!.currentTurningRadius!,
-                )
-              : 0.0;
+        final y1 = parent.currentTurningRadius != null
+            ? atan(
+                hitchToParentTurningCircleBase / parent.currentTurningRadius!,
+              )
+            : 0.0;
 
-          var y2 = hitchParent!.currentTurningRadius != null
-              ? clampDouble(
-                  asin(
-                    drawbarLength /
-                        sqrt(
-                          pow(hitchToParentTurningCircleBase, 2) +
-                              pow(hitchParent!.currentTurningRadius!, 2),
-                        ),
-                  ),
-                  -1,
-                  1,
-                )
-              : 0.0;
-          if (y2.isNaN) {
-            y2 = 0;
-          }
-
-          var targetStaticAngle = (y1 + y2).toDegrees();
-          if (hitchParent!.turningRadiusCenter != null &&
-              signedBearingDifference(
-                    hitchParent!.position.rhumb.initialBearingTo(
-                      (hitchParent!).turningRadiusCenter!,
-                    ),
-                    hitchParent!.bearing,
-                  ) <
-                  0) {
-            targetStaticAngle *= -1;
-          }
-          hitchAngle = clampDouble(
-            _prevHitchAngle +
-                (targetStaticAngle - _prevHitchAngle) * a * period,
-            -90,
-            90,
-          );
-
-          bearing =
-              (position.rhumb.initialBearingTo(hitchParent!.position) +
-                      hitchAngle)
-                  .wrap360();
+        var y2 = parent.currentTurningRadius != null
+            ? clampDouble(
+                asin(
+                  longitudinalOffsetFromRef /
+                      sqrt(
+                        pow(hitchToParentTurningCircleBase, 2) +
+                            pow(parent.currentTurningRadius!, 2),
+                      ),
+                ),
+                -1,
+                1,
+              )
+            : 0.0;
+        if (y2.isNaN) {
+          y2 = 0;
         }
+
+        var targetStaticAngle = (y1 + y2).toDegrees();
+        if (parent.turningRadiusCenter != null &&
+            signedBearingDifference(
+                  parent.position.rhumb.initialBearingTo(
+                    parent.turningRadiusCenter!,
+                  ),
+                  parent.bearing,
+                ) <
+                0) {
+          targetStaticAngle *= -1;
+        }
+        hitchAngle = clampDouble(
+          _prevHitchAngle + (targetStaticAngle - _prevHitchAngle) * a * period,
+          -90,
+          90,
+        );
+
+        bearing =
+            (position.rhumb.initialBearingTo(parent.position) + hitchAngle)
+                .wrap360();
       }
-      _velocity = hitchParent!.velocity * cos(hitchAngle.abs().toRadians());
+      _velocity = parent.velocity * cos(hitchAngle.abs().toRadians());
       _prevHitchAngle = hitchAngle;
-      _prevWorkingCenter = workingCenter;
+      _prevPosition = position;
       _prevBearing = prevBearing;
     }
   }
@@ -610,84 +522,33 @@ class Equipment extends Hitchable {
     super.updateChildren(period);
   }
 
-  /// The working area center of this equipment.
-  Geographic get workingCenter => position.rhumb
-      .destinationPoint(
-        distance:
-            drawbarLength + (1 - recordingPositionFraction) * workingAreaLength,
-        bearing: switch (parentHitch) {
-          Hitch.frontFixed => bearing,
-          Hitch.rearFixed => bearing + 180,
-          Hitch.rearDrawbar => bearing + 180,
-          null => bearing,
-        },
-      )
-      .rhumb
-      .destinationPoint(distance: sidewaysOffset, bearing: bearing + 90);
+  /// The corner points for the given section [index].
+  List<Geographic> sectionPoints(int index) {
+    final section = sections[index];
 
-  /// The position of the end of the drawbar, i.e. furthest away from the
-  /// parent, where the working area starts.
-  Geographic drawbarEnd({
-    Hitch? overrideHitch,
-    bool forceOwnPositionAndBearing = false,
-  }) {
-    final calculationBearing = forceOwnPositionAndBearing ? _bearing : bearing;
-    final calculationPosition = forceOwnPositionAndBearing
-        ? _position
-        : position;
-
-    return switch (overrideHitch ?? parentHitch) {
-      Hitch.frontFixed => calculationPosition.rhumb.destinationPoint(
-        distance: drawbarLength,
-        bearing: calculationBearing,
-      ),
-      Hitch.rearFixed => calculationPosition.rhumb.destinationPoint(
-        distance: drawbarLength,
-        bearing: calculationBearing + 180,
-      ),
-      Hitch.rearDrawbar => calculationPosition.rhumb.destinationPoint(
-        distance: drawbarLength,
-        bearing: calculationBearing + 180,
-      ),
-      null => calculationPosition.rhumb.destinationPoint(
-        distance: drawbarLength,
-        bearing: calculationBearing,
-      ),
-    };
-  }
-
-  /// The corner points for the given [section].
-  List<Geographic> sectionPoints(int section) {
-    // The starting point of this equipment, i.e. the center-front point
-    // of the working area.
-    final equipmentStart = switch (parentHitch) {
-      Hitch.frontFixed => drawbarEnd().rhumb.destinationPoint(
-        distance: workingAreaLength,
-        bearing: bearing,
-      ),
-      _ => drawbarEnd(),
-    }.rhumb.destinationPoint(distance: sidewaysOffset, bearing: bearing + 90);
-
-    // The width of the preceding sections.
-    final widthBefore = sections.getRange(0, section).map((e) => e.width).sum;
-
-    final sectionFrontLeft = equipmentStart.rhumb.destinationPoint(
-      distance: width / 2 - widthBefore,
-      bearing: bearing - 90,
-    );
+    final sectionFrontLeft = position.rhumb
+        .destinationPoint(
+          distance: section.longitudinalOffset,
+          bearing: bearing,
+        )
+        .rhumb
+        .destinationPoint(
+          distance: section.lateralOffset - section.width / 2,
+          bearing: bearing + 90,
+        );
 
     final sectionRearLeft = sectionFrontLeft.rhumb.destinationPoint(
-      distance: workingAreaLength,
+      distance: section.length,
       bearing: bearing + 180,
     );
 
     final sectionRearRight = sectionRearLeft.rhumb.destinationPoint(
-      distance: sections[section].width,
+      distance: section.width,
       bearing: bearing + 90,
     );
 
     final sectionFrontRight = sectionRearRight.rhumb.destinationPoint(
-      distance: workingAreaLength,
+      distance: section.length,
       bearing: bearing,
     );
 
@@ -714,7 +575,6 @@ class Equipment extends Hitchable {
   List<Geographic>? sectionCornerPoints(
     int index, {
     bool force = false,
-    Hitch? overrideHitch,
     bool forceOwnPositionAndBearing = false,
   }) {
     if (sections[index].workingWidth == 0 && !force) {
@@ -723,41 +583,21 @@ class Equipment extends Hitchable {
 
     final calculationBearing = forceOwnPositionAndBearing ? _bearing : bearing;
 
-    // The starting point of this equipment, i.e. the center-front point
-    // of the working area.
-    final equipmentStart =
-        switch (overrideHitch ?? parentHitch) {
-          Hitch.frontFixed =>
-            drawbarEnd(
-              overrideHitch: overrideHitch,
-              forceOwnPositionAndBearing: forceOwnPositionAndBearing,
-            ).rhumb.destinationPoint(
-              distance: workingAreaLength,
-              bearing: calculationBearing,
-            ),
-          _ => drawbarEnd(
-            overrideHitch: overrideHitch,
-            forceOwnPositionAndBearing: forceOwnPositionAndBearing,
-          ),
-        }.rhumb.destinationPoint(
-          distance: sidewaysOffset,
+    final section = sections[index];
+
+    final sectionFrontLeft = position.rhumb
+        .destinationPoint(
+          distance: section.longitudinalOffset,
+          bearing: calculationBearing,
+        )
+        .rhumb
+        .destinationPoint(
+          distance: section.lateralOffset - section.workingWidth / 2,
           bearing: calculationBearing + 90,
         );
 
-    final section = sections[index];
-
-    // The width of the preceding sections.
-    final widthBefore =
-        sections.getRange(0, index).map((e) => e.width).sum +
-        (section.width - section.workingWidth) / 2;
-
-    final sectionFrontLeft = equipmentStart.rhumb.destinationPoint(
-      distance: width / 2 - widthBefore,
-      bearing: calculationBearing - 90,
-    );
-
     final sectionRearLeft = sectionFrontLeft.rhumb.destinationPoint(
-      distance: workingAreaLength,
+      distance: section.length,
       bearing: calculationBearing + 180,
     );
 
@@ -767,7 +607,7 @@ class Equipment extends Hitchable {
     );
 
     final sectionFrontRight = sectionRearRight.rhumb.destinationPoint(
-      distance: workingAreaLength,
+      distance: section.length,
       bearing: calculationBearing,
     );
 
@@ -787,14 +627,12 @@ class Equipment extends Hitchable {
     int index, {
     double? fraction,
     bool force = false,
-    Hitch? overrideHitch,
     DateTime? overrideTime,
     bool forceOwnPositionAndBearing = false,
   }) {
     final points = sectionCornerPoints(
       index,
       force: force,
-      overrideHitch: overrideHitch,
       forceOwnPositionAndBearing: forceOwnPositionAndBearing,
     );
     if (points != null) {
@@ -807,7 +645,7 @@ class Equipment extends Hitchable {
           points[3],
           fraction: fraction ?? recordingPositionFraction,
         ),
-        time: overrideTime ?? lastUsed,
+        time: overrideTime ?? lastUsedAt,
       );
     }
     return null;
@@ -818,7 +656,6 @@ class Equipment extends Hitchable {
   Map<int, SectionEdgePositions> activeEdgePositions({
     double? fraction,
     List<int> forceIndices = const [],
-    Hitch? overrideHitch,
     DateTime? overrideTime,
     bool forceOwnPositionAndBearing = false,
   }) {
@@ -830,7 +667,6 @@ class Equipment extends Hitchable {
         map[element.index] = sectionEdgePositions(
           element.index,
           fraction: fraction,
-          overrideHitch: overrideHitch,
           overrideTime: overrideTime,
           forceOwnPositionAndBearing: forceOwnPositionAndBearing,
         )!;
@@ -839,14 +675,15 @@ class Equipment extends Hitchable {
     return map;
   }
 
-  /// The center point of the given [section].
-  Geographic sectionCenter(int section, {Hitch? overrideHitch}) {
-    final points = sectionPoints(section);
+  /// The center point of the given [sectionIndex].
+  Geographic sectionCenter(int sectionIndex) {
+    final points = sectionPoints(sectionIndex);
     return points[0].rhumb
         .midPointTo(points[3])
         .rhumb
         .destinationPoint(
-          distance: (1 - recordingPositionFraction) * workingAreaLength,
+          distance:
+              (1 - recordingPositionFraction) * sections[sectionIndex].length,
           bearing: (bearing - 180).wrap360(),
         );
   }
@@ -931,7 +768,7 @@ class Equipment extends Hitchable {
         color: Colors.grey.shade800,
         borderColor: Colors.black,
         points: [
-          drawbarEnd().rhumb
+          position.rhumb
               .destinationPoint(distance: 0.1, bearing: bearing)
               .rhumb
               .destinationPoint(distance: 0.05, bearing: bearing - 90)
@@ -940,7 +777,7 @@ class Equipment extends Hitchable {
               .destinationPoint(distance: 0.1, bearing: bearing)
               .latLng,
           sectionEdgePositions(0, fraction: 1, force: true)!.left.latLng,
-          drawbarEnd().rhumb
+          position.rhumb
               .destinationPoint(distance: 0.05, bearing: bearing - 90)
               .latLng,
         ],
@@ -950,7 +787,7 @@ class Equipment extends Hitchable {
         color: Colors.grey.shade800,
         borderColor: Colors.black,
         points: [
-          drawbarEnd().rhumb
+          position.rhumb
               .destinationPoint(distance: 0.1, bearing: bearing)
               .rhumb
               .destinationPoint(distance: 0.05, bearing: bearing + 90)
@@ -965,76 +802,89 @@ class Equipment extends Hitchable {
             fraction: 1,
             force: true,
           )!.right.latLng,
-          drawbarEnd().rhumb
+          position.rhumb
               .destinationPoint(distance: 0.05, bearing: bearing + 90)
               .latLng,
         ],
       ),
     ],
-    ...switch (hitchType) {
-      HitchType.drawbar => [
-        map.Polygon(
-          borderStrokeWidth: 3,
-          color: Colors.grey.shade800,
-          borderColor: Colors.black,
-          points: [
-            position.rhumb
-                .destinationPoint(distance: 0.05, bearing: bearing - 90)
-                .latLng,
-            drawbarEnd().rhumb
-                .destinationPoint(distance: 0.05, bearing: bearing - 90)
-                .latLng,
-            drawbarEnd().rhumb
-                .destinationPoint(distance: 0.05, bearing: bearing + 90)
-                .latLng,
-            position.rhumb
-                .destinationPoint(distance: 0.05, bearing: bearing + 90)
-                .latLng,
-          ],
+    ...?switch (parentConnection) {
+      Connection(
+        childConnector: Connector(
+          type: .drawbar,
         ),
-      ],
-      HitchType.fixed => [
-        // Left hitch bar
-        map.Polygon(
-          borderStrokeWidth: 3,
-          color: Colors.grey.shade800,
-          borderColor: Colors.black,
-          points: [
-            position.rhumb
-                .destinationPoint(distance: 0.35, bearing: bearing - 90)
-                .latLng,
-            drawbarEnd().rhumb
-                .destinationPoint(distance: 0.35, bearing: bearing - 90)
-                .latLng,
-            drawbarEnd().rhumb
-                .destinationPoint(distance: 0.3, bearing: bearing - 90)
-                .latLng,
-            position.rhumb
-                .destinationPoint(distance: 0.3, bearing: bearing - 90)
-                .latLng,
-          ],
+        :final connectionPoint,
+      ) =>
+        [
+          map.Polygon(
+            borderStrokeWidth: 3,
+            color: Colors.grey.shade800,
+            borderColor: Colors.black,
+            points: [
+              position.rhumb
+                  .destinationPoint(distance: 0.05, bearing: bearing - 90)
+                  .latLng,
+              connectionPoint.rhumb
+                  .destinationPoint(distance: 0.05, bearing: bearing - 90)
+                  .latLng,
+              connectionPoint.rhumb
+                  .destinationPoint(distance: 0.05, bearing: bearing + 90)
+                  .latLng,
+              position.rhumb
+                  .destinationPoint(distance: 0.05, bearing: bearing + 90)
+                  .latLng,
+            ],
+          ),
+        ],
+      Connection(
+        childConnector: Connector(
+          type: .fixed,
         ),
-        // Right hitch bar
-        map.Polygon(
-          borderStrokeWidth: 3,
-          color: Colors.grey.shade800,
-          borderColor: Colors.black,
-          points: [
-            position.rhumb
-                .destinationPoint(distance: 0.35, bearing: bearing + 90)
-                .latLng,
-            drawbarEnd().rhumb
-                .destinationPoint(distance: 0.35, bearing: bearing + 90)
-                .latLng,
-            drawbarEnd().rhumb
-                .destinationPoint(distance: 0.3, bearing: bearing + 90)
-                .latLng,
-            position.rhumb
-                .destinationPoint(distance: 0.3, bearing: bearing + 90)
-                .latLng,
-          ],
-        ),
-      ],
+        :final connectionPoint,
+      ) =>
+        [
+          // Left hitch bar
+          map.Polygon(
+            borderStrokeWidth: 3,
+            color: Colors.grey.shade800,
+            borderColor: Colors.black,
+            points: [
+              position.rhumb
+                  .destinationPoint(distance: 0.35, bearing: bearing - 90)
+                  .latLng,
+              connectionPoint.rhumb
+                  .destinationPoint(distance: 0.35, bearing: bearing - 90)
+                  .latLng,
+              connectionPoint.rhumb
+                  .destinationPoint(distance: 0.3, bearing: bearing - 90)
+                  .latLng,
+              position.rhumb
+                  .destinationPoint(distance: 0.3, bearing: bearing - 90)
+                  .latLng,
+            ],
+          ),
+          // Right hitch bar
+          map.Polygon(
+            borderStrokeWidth: 3,
+            color: Colors.grey.shade800,
+            borderColor: Colors.black,
+            points: [
+              position.rhumb
+                  .destinationPoint(distance: 0.35, bearing: bearing + 90)
+                  .latLng,
+              connectionPoint.rhumb
+                  .destinationPoint(distance: 0.35, bearing: bearing + 90)
+                  .latLng,
+              connectionPoint.rhumb
+                  .destinationPoint(distance: 0.3, bearing: bearing + 90)
+                  .latLng,
+              position.rhumb
+                  .destinationPoint(distance: 0.3, bearing: bearing + 90)
+                  .latLng,
+            ],
+          ),
+        ],
+      _ => null,
     },
   ];
 
@@ -1101,9 +951,9 @@ class Equipment extends Hitchable {
     ];
   }
 
-  /// The projected trajectory of the [workingCenter] for the moving equipment.
+  /// The projected trajectory of the [position] for the moving equipment.
   LineString trajectory({double? seconds, double? minLength}) =>
-      trajectoryFrom(workingCenter, seconds: seconds, minLength: minLength);
+      trajectoryFrom(position, seconds: seconds, minLength: minLength);
 
   /// Finds the trajectory form an arbitrary [start] point.
   /// Looks 10 seconds ahead in time
@@ -1119,14 +969,14 @@ class Equipment extends Hitchable {
       final isTurningLeft =
           signedBearingDifference(
             bearing,
-            turningRadiusCenter!.rhumb.initialBearingTo(workingCenter),
+            turningRadiusCenter!.rhumb.initialBearingTo(position),
           ) <
           0;
 
       var arcDegrees = clampDouble(time * angularVelocity!.abs(), 0, 360);
 
       if (minLength != null) {
-        final centerTurningRadius = workingCenter.rhumb.distanceTo(
+        final centerTurningRadius = position.rhumb.distanceTo(
           turningRadiusCenter!,
         );
         if (arcDegrees.toRadians() * centerTurningRadius < minLength) {
@@ -1226,57 +1076,42 @@ class Equipment extends Hitchable {
   Equipment copyWith({
     String? name,
     String? uuid,
-    HitchType? hitchType,
-    Hitchable? hitchParent,
-    Hitchable? hitchFrontFixedChild,
-    Hitchable? hitchRearFixedChild,
-    Hitchable? hitchRearDrawbarChild,
+    List<Connector>? connectors,
+    List<Connection>? childConnections,
+    Connection? parentConnection,
     List<Section>? sections,
-    double? workingAreaLength,
-    double? drawbarLength,
-    double? sidewaysOffset,
     double? recordingPositionFraction,
     double? bearing,
     Geographic? position,
-    double? hitchToChildFrontFixedHitchLength,
-    double? hitchToChildRearFixedHitchLength,
-    double? hitchToChildRearDrawbarHitchLength,
     double? hitchToDecorationStartLength,
     double? decorationSidewaysOffset,
     double? decorationLength,
     double? decorationWidth,
-    DateTime? lastUsed,
+    DateTime? lastUsedAt,
+    bool clearParentConnection = false,
+    int? id,
   }) => Equipment(
     name: name ?? this.name,
     uuid: uuid ?? this.uuid,
-    hitchType: hitchType ?? this.hitchType,
-    hitchParent: hitchParent ?? this.hitchParent,
-    hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
-    hitchRearDrawbarChild: hitchRearDrawbarChild ?? this.hitchRearDrawbarChild,
+    id: id ?? this.id,
+    connectors: connectors ?? this.connectors,
+    childConnections: childConnections ?? this.childConnections,
+    parentConnection: switch (clearParentConnection) {
+      true => null,
+      _ => parentConnection ?? this.parentConnection,
+    },
     sections: sections ?? this.sections,
-    workingAreaLength: workingAreaLength ?? this.workingAreaLength,
-    drawbarLength: drawbarLength ?? this.drawbarLength,
-    sidewaysOffset: sidewaysOffset ?? this.sidewaysOffset,
     recordingPositionFraction:
         recordingPositionFraction ?? this.recordingPositionFraction,
     position: position ?? this.position,
     bearing: bearing ?? this.bearing,
-    hitchToChildFrontFixedHitchLength:
-        hitchToChildFrontFixedHitchLength ??
-        this.hitchToChildFrontFixedHitchLength,
-    hitchToChildRearFixedHitchLength:
-        hitchToChildRearFixedHitchLength ??
-        this.hitchToChildRearFixedHitchLength,
-    hitchToChildRearDrawbarHitchLength:
-        hitchToChildRearDrawbarHitchLength ??
-        this.hitchToChildRearDrawbarHitchLength,
     hitchToDecorationStartLength:
         hitchToDecorationStartLength ?? this.hitchToDecorationStartLength,
     decorationLength: decorationLength ?? this.decorationLength,
     decorationWidth: decorationWidth ?? this.decorationWidth,
     decorationSidewaysOffset:
         decorationSidewaysOffset ?? this.decorationSidewaysOffset,
-    lastUsed: lastUsed ?? this.lastUsed,
+    lastUsedAt: lastUsedAt ?? this.lastUsedAt,
   );
 
   /// Converts the object to a json compatible structure.
@@ -1287,8 +1122,8 @@ class Equipment extends Hitchable {
     map['info'] = {
       'name': name,
       'uuid': uuid,
-      'last_used': lastUsed.toIso8601String(),
-      'hitch_type': hitchType.name,
+      'hitch_type': childConnectors.first.type.name,
+      'last_used': lastUsedAt.toIso8601String(),
     };
 
     Map<String, double?>? decoration;
@@ -1305,24 +1140,13 @@ class Equipment extends Hitchable {
     }
 
     map['dimensions'] = {
-      'drawbar_length': drawbarLength,
       'sideways_offset': sidewaysOffset,
       'width': width,
-      'working_area_length': workingAreaLength,
       'recording_position_fraction': recordingPositionFraction,
       'decoration': decoration,
     };
 
     map['sections'] = sections;
-
-    map['hitches'] = {
-      'hitch_to_child_front_fixed_hitch_length':
-          hitchToChildFrontFixedHitchLength,
-      'hitch_to_child_rear_fixed_hitch_length':
-          hitchToChildRearFixedHitchLength,
-      'hitch_to_child_rear_drawbar_hitch_length':
-          hitchToChildRearDrawbarHitchLength,
-    };
 
     return map;
   }

@@ -41,6 +41,7 @@ class ABLine extends ABTracking {
     super.correctedBaseLine,
     super.name,
     super.uuid,
+    super.id,
   }) : assert(
          baseLine.length == 2,
          'Base line should only have a start and an end point',
@@ -130,6 +131,7 @@ class ABLine extends ABTracking {
       correctedBaseLine: correctedBaseLine,
       baseLineSidewaysOffset: json['base_line_sideways_offset'] as double?,
       name: json['name'] as String?,
+      uuid: json['uuid'] as String?,
     );
   }
 }

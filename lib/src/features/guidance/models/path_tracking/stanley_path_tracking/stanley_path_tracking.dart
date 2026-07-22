@@ -46,13 +46,14 @@ final class StanleyPathTracking extends PathTracking {
     super.loopMode,
     super.name,
     super.uuid,
+    super.id,
   });
 
   @override
   double nextSteeringAngle(Vehicle vehicle) {
     tryChangeWayPoint(vehicle);
 
-    final parameters = vehicle.stanleyParameters;
+    final parameters = vehicle.pathTrackingParameters.stanley;
 
     final headingError = signedBearingDifference(
       vehicle.bearing,

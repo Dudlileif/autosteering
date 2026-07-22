@@ -164,6 +164,12 @@ abstract class AppLocalizations {
   /// **'Add button'**
   String get addButton;
 
+  /// No description provided for @addConnector.
+  ///
+  /// In en, this message translates to:
+  /// **'Add connector'**
+  String get addConnector;
+
   /// No description provided for @addInteriorBoundary.
   ///
   /// In en, this message translates to:
@@ -553,6 +559,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Confirm'**
   String get confirm;
+
+  /// No description provided for @connectorRelation.
+  ///
+  /// In en, this message translates to:
+  /// **'{type, select, other{Relation} child{Child} parent{Parent}}'**
+  String connectorRelation(String type);
+
+  /// No description provided for @connectors.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, other{Connectors} zero{Connectors} one{Connector} two{Connectors} few{Connectors} many{Connectors}}'**
+  String connectors(int count);
+
+  /// No description provided for @connectorType.
+  ///
+  /// In en, this message translates to:
+  /// **'{type, select, other{Connector} fixed{Fixed} drawbar{Drawbar}}'**
+  String connectorType(String type);
 
   /// No description provided for @coolStepMinRpm.
   ///
@@ -1115,7 +1139,7 @@ abstract class AppLocalizations {
   /// No description provided for @hitchOption.
   ///
   /// In en, this message translates to:
-  /// **'{option, select, other{Hitch} frontFixed{Front fixed} rearFixed{Rear fixed} rearDrawbar{Rear drawbar}}'**
+  /// **'{option, select, other{Hitch} fixed{Fixed} drawbar{Drawbar}}'**
   String hitchOption(String option);
 
   /// No description provided for @hitchToDecorationStart.
@@ -1141,12 +1165,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hitch to rear drawbar distance'**
   String get hitchToRearDrawbarDistance;
-
-  /// No description provided for @hitchType.
-  ///
-  /// In en, this message translates to:
-  /// **'{type, select, other{Hitch} fixed{Fixed} drawbar{Drawbar}}'**
-  String hitchType(String type);
 
   /// hitches
   ///

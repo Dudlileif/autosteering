@@ -78,11 +78,11 @@ class DebugEquipmentTravelledPathSize
 class DebugEquipmentTravelledPathList
     extends _$DebugEquipmentTravelledPathList {
   @override
-  Map<String, List<LatLng>> build() {
+  Map<int, List<LatLng>> build() {
     if (ref.watch(debugEquipmentTravelledPathProvider)) {
       ref.listen(allEquipmentsProvider, (prev, next) {
         for (final equipment in next.values) {
-          add(equipment.uuid, equipment.workingCenter.latLng);
+          add(equipment.id!, equipment.position.latLng);
         }
       });
     }
@@ -91,14 +91,14 @@ class DebugEquipmentTravelledPathList
   }
 
   /// Add the [point] to the travelled path.
-  void add(String uuid, LatLng point) => Future(() {
-    if (state[uuid] != null) {
-      while (state[uuid]!.length >
+  void add(int id, LatLng point) => Future(() {
+    if (state[id] != null) {
+      while (state[id]!.length >
           ref.watch(debugEquipmentTravelledPathSizeProvider)) {
-        state[uuid] = state[uuid]!..removeLast();
+        state[id] = state[id]!..removeLast();
       }
     }
-    state[uuid] = [point, ...state[uuid] ?? []];
+    state[id] = [point, ...state[id] ?? []];
   });
 }
 

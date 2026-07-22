@@ -31,7 +31,8 @@ class EquipmentDrawerLayer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final equipments = ref.watch(
       allEquipmentsProvider.select(
-        (value) => value.values.where((element) => element.hitchParent != null),
+        (value) =>
+            value.values.where((element) => element.parentConnection != null),
       ),
     );
 
@@ -54,7 +55,7 @@ class EquipmentDebugLayer extends ConsumerWidget {
     final debugTurning = ref.watch(debugEquipmentTurningProvider);
     final debugTrajectory = ref.watch(debugEquipmentTrajectoryProvider);
     final debugTravelledPath = ref.watch(debugEquipmentTravelledPathProvider);
-    final debugHitches = ref.watch(debugEquipmentHitchesProvider);
+    final debugConnectors = ref.watch(debugEquipmentHitchesProvider);
     final debugSections = ref.watch(debugEquipmentSectionsProvider);
     final trajectorySeconds = ref.watch(
       debugEquipmentTrajectorySecondsProvider,
@@ -65,7 +66,8 @@ class EquipmentDebugLayer extends ConsumerWidget {
 
     final equipments = ref.watch(
       allEquipmentsProvider.select(
-        (value) => value.values.where((element) => element.hitchParent != null),
+        (value) =>
+            value.values.where((element) => element.parentConnection != null),
       ),
     );
     final darkTheme = Theme.of(context).brightness == Brightness.dark;
@@ -79,7 +81,7 @@ class EquipmentDebugLayer extends ConsumerWidget {
                   (equipment) => Polyline(
                     points: ref.watch(
                       debugEquipmentTravelledPathListProvider.select(
-                        (value) => value[equipment.uuid] ?? [],
+                        (value) => value[equipment.id] ?? [],
                       ),
                     ),
                   ),
@@ -141,7 +143,7 @@ class EquipmentDebugLayer extends ConsumerWidget {
               ],
             ],
           ),
-        if (debugTurning || debugHitches || debugSections)
+        if (debugTurning || debugConnectors || debugSections)
           CircleLayer(
             circles: [
               if (debugTurning)
@@ -161,7 +163,7 @@ class EquipmentDebugLayer extends ConsumerWidget {
                         useRadiusInMeter: true,
                       ),
                     ),
-              if (debugHitches) ...[
+              if (debugConnectors) ...[
                 ...equipments.map(
                   (equipment) => CircleMarker(
                     point: equipment.position.latLng,
@@ -170,9 +172,9 @@ class EquipmentDebugLayer extends ConsumerWidget {
                   ),
                 ),
                 for (final equipment in equipments.map(
-                  (equipment) => equipment.hitchPoints.mapIndexed(
-                    (index, hitch) => CircleMarker(
-                      point: hitch.latLng,
+                  (equipment) => equipment.connectorPoints.mapIndexed(
+                    (index, connector) => CircleMarker(
+                      point: connector.latLng,
                       radius: 5,
                       color: [Colors.red, Colors.green, Colors.blue][index],
                     ),
@@ -183,7 +185,7 @@ class EquipmentDebugLayer extends ConsumerWidget {
               if (debugTurning)
                 ...equipments.map(
                   (equipment) => CircleMarker(
-                    point: equipment.workingCenter.latLng,
+                    point: equipment.position.latLng,
                     radius: 5,
                     color: Colors.yellow,
                   ),

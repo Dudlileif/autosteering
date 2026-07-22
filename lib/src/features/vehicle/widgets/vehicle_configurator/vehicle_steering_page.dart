@@ -60,15 +60,21 @@ class VehicleSteeringPage extends ConsumerWidget {
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
           configuredVehicleProvider.select(
-            (value) => value.minTurningRadius.toString(),
+            (value) => value.geometry.minTurningRadius.toString(),
           ),
         ),
         onFieldSubmitted: (value) {
-          final radius = double.tryParse(value.replaceAll(',', '.'));
-
-          ref
-              .read(configuredVehicleProvider.notifier)
-              .update(vehicle.copyWith(minTurningRadius: radius?.abs()));
+          if (double.tryParse(value.replaceAll(',', '.')) case final radius?) {
+            ref
+                .read(configuredVehicleProvider.notifier)
+                .update(
+                  vehicle.copyWith(
+                    geometry: vehicle.geometry.copyWith(
+                      minTurningRadius: radius.abs(),
+                    ),
+                  ),
+                );
+          }
         },
       ),
       TextFormField(
@@ -87,13 +93,18 @@ class VehicleSteeringPage extends ConsumerWidget {
           ),
         ),
         onFieldSubmitted: (value) {
-          final steeringAngleMax = double.tryParse(value.replaceAll(',', '.'));
-
-          ref
-              .read(configuredVehicleProvider.notifier)
-              .update(
-                vehicle.copyWith(steeringAngleMax: steeringAngleMax?.abs()),
-              );
+          if (double.tryParse(value.replaceAll(',', '.'))
+              case final steeringAngleMax?) {
+            ref
+                .read(configuredVehicleProvider.notifier)
+                .update(
+                  vehicle.copyWith(
+                    geometry: vehicle.geometry.copyWith(
+                      steeringAngleMax: steeringAngleMax.abs(),
+                    ),
+                  ),
+                );
+          }
         },
       ),
       if (vehicle is AxleSteeredVehicle)
@@ -108,9 +119,9 @@ class VehicleSteeringPage extends ConsumerWidget {
                 final ackermann = WheelAngleToAckermann(
                   wheelAngle: vehicle.steeringAngleMaxRaw,
                   wheelBase: vehicle.wheelBase,
-                  trackWidth: vehicle.trackWidth,
-                  steeringRatio: vehicle.ackermannSteeringRatio,
-                  ackermannPercentage: vehicle.ackermannPercentage,
+                  trackWidth: vehicle.geometry.trackWidth,
+                  steeringRatio: vehicle.geometry.ackermannSteeringRatio,
+                  ackermannPercentage: vehicle.geometry.ackermannPercentage,
                 );
                 return Wrap(
                   spacing: 8,
@@ -129,20 +140,27 @@ class VehicleSteeringPage extends ConsumerWidget {
           ),
           initialValue: ref.read(
             configuredVehicleProvider.select(
-              (value) => (value as AxleSteeredVehicle).ackermannPercentage
+              (value) => (value as AxleSteeredVehicle)
+                  .geometry
+                  .ackermannPercentage
                   .round()
                   .toString(),
             ),
           ),
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           onFieldSubmitted: (value) {
-            final percentage = double.tryParse(value.replaceAll(',', '.'));
-
-            ref
-                .read(configuredVehicleProvider.notifier)
-                .update(
-                  vehicle.copyWith(ackermannPercentage: percentage?.abs()),
-                );
+            if (double.tryParse(value.replaceAll(',', '.'))
+                case final percentage?) {
+              ref
+                  .read(configuredVehicleProvider.notifier)
+                  .update(
+                    vehicle.copyWith(
+                      geometry: vehicle.geometry.copyWith(
+                        ackermannPercentage: percentage.abs(),
+                      ),
+                    ),
+                  );
+            }
           },
         ),
     ];

@@ -19,6 +19,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/database/database.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
@@ -26,6 +27,7 @@ import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
 import 'package:collection/collection.dart';
+import 'package:drift/drift.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as path;
@@ -43,25 +45,27 @@ class ActiveWorkSession extends _$ActiveWorkSession {
   WorkSession? build() => null;
 
   /// Updates [state] to [value].
-  void update(WorkSession? value) => Future(() {
+  Future<void> update(WorkSession? value) async {
     _firstPathUpdate = null;
     state = value;
     if (state != null) {
       for (final equipment
           in state!.equipmentSetup!.allAttached.cast<Equipment>()) {
-        if (state!.equipmentLogs[equipment.uuid] == null ||
-            state!.equipmentLogs[equipment.uuid]!.isEmpty) {
-          if (ref.read(
-            equipmentLogRecordsProvider(
-              equipment.uuid,
-            ).select((value) => value != null && value.isNotEmpty),
-          )) {
-            unawaited(
-              setEquipmentLogRecords(
-                equipment.uuid,
-                ref.read(equipmentLogRecordsProvider(equipment.uuid)) ?? [],
-              ),
-            );
+        if (equipment.id != null) {
+          if (state!.equipmentLogs[equipment.id] == null ||
+              state!.equipmentLogs[equipment.id]!.isEmpty) {
+            if (ref.read(
+              equipmentLogRecordsProvider(
+                equipment.id!,
+              ).select((value) => value != null && value.isNotEmpty),
+            )) {
+              unawaited(
+                setEquipmentLogRecords(
+                  equipment.id!,
+                  ref.read(equipmentLogRecordsProvider(equipment.id!)) ?? [],
+                ),
+              );
+            }
           }
         }
       }
@@ -88,8 +92,9 @@ class ActiveWorkSession extends _$ActiveWorkSession {
       }
 
       ref.read(saveWorkSessionProvider(state!));
+      await loadEquipmentLogRecords();
     }
-  });
+  }
 
   /// Updates the [WorkSession.name] of the [state].
   void updateName(String? name) => Future(() {
@@ -206,12 +211,12 @@ class ActiveWorkSession extends _$ActiveWorkSession {
   });
 
   /// Add the [record] to the log record file for the equipment with
-  /// [Equipment.uuid] equal to [equipmentUuid].
-  void addEquipmentLogRecord(String equipmentUuid, EquipmentLogRecord record) =>
+  /// [Equipment.id] equal to [equipmentId].
+  void addEquipmentLogRecord(int equipmentId, EquipmentLogRecord record) =>
       Future(() {
         if (state != null) {
           if (!(state!.equipmentSetup?.allAttached.any(
-                (e) => e.uuid == equipmentUuid,
+                (e) => e.id == equipmentId,
               ) ??
               false)) {
             state = state!
@@ -230,28 +235,30 @@ class ActiveWorkSession extends _$ActiveWorkSession {
           }
 
           var skipIfLastAlsoHadNoActiveSections = false;
-          if (state!.equipmentLogs.containsKey(equipmentUuid)) {
+          if (state!.equipmentLogs.containsKey(equipmentId)) {
             if (record.activeSections.isEmpty &&
                 (state!
-                        .equipmentLogs[equipmentUuid]!
+                        .equipmentLogs[equipmentId]!
                         .lastOrNull
                         ?.activeSections
                         .isEmpty ??
                     false)) {
               skipIfLastAlsoHadNoActiveSections = true;
             } else {
-              state!.equipmentLogs[equipmentUuid]!.add(record);
+              state!.equipmentLogs[equipmentId]!.add(record);
             }
           } else {
-            state!.equipmentLogs[equipmentUuid] = [record];
+            state!.equipmentLogs[equipmentId] = [record];
           }
-          if (Device.isNative && !skipIfLastAlsoHadNoActiveSections) {
+          if (Device.isNative &&
+              !skipIfLastAlsoHadNoActiveSections &&
+              state?.id != null) {
             final fileName = path.join(
               ref.read(fileDirectoryProvider).requireValue.path,
-              'work_sessions',
-              state!.name ?? state!.uuid,
-              'equipment_logs',
-              '$equipmentUuid.log',
+              'tasks',
+              '${state!.id!}',
+              'implement_logs',
+              '$equipmentId.log',
             );
 
             final file = File(fileName);
@@ -266,17 +273,17 @@ class ActiveWorkSession extends _$ActiveWorkSession {
         }
       });
 
-  /// Sets the [WorkSession.equipmentLogs] for the [equipmentUuid] to [records].
+  /// Sets the [WorkSession.equipmentLogs] for the [equipmentId] to [records].
   ///
   /// The corresponding log file will be created.
   Future<void> setEquipmentLogRecords(
-    String equipmentUuid,
+    int equipmentId,
     List<EquipmentLogRecord> records,
   ) async => Future(() async {
     if (state != null) {
       state = state!
         ..equipmentLogs.update(
-          equipmentUuid,
+          equipmentId,
           (_) => records,
           ifAbsent: () => records,
         );
@@ -284,12 +291,158 @@ class ActiveWorkSession extends _$ActiveWorkSession {
         await ref.read(
           saveWorkSessionEquipmentLogsProvider(
             state!,
-            singleUuid: equipmentUuid,
+            singleId: equipmentId,
           ).future,
         );
       }
     }
   });
+
+  /// Loads the equipment logs records from stored files.
+  Future<void> loadEquipmentLogRecords() async {
+    // TODO(dudlileif): add database version
+    final database = ref.watch(databaseProvider);
+    final equipmentLinks = await database.managers.links
+        .filter((link) => link.tableRef.equals('implements'))
+        .get();
+    if (state case final workSession? when Device.isNative) {
+      for (final equipment
+          in workSession.equipmentSetup!.allAttached.cast<Equipment>()) {
+        final equipmentId = equipmentLinks
+            .firstWhereOrNull(
+              (link) => link.linkValue == equipment.uuid,
+            )
+            ?.refId;
+        if (equipmentId != null) {
+          // TODO(dudlileif): remove this block once all have been converted
+          {
+            final fileNameUuid = path.join(
+              ref.read(fileDirectoryProvider).requireValue.path,
+              'work_sessions',
+              workSession.name ?? workSession.uuid,
+              'equipment_logs',
+              '${equipment.uuid}.log',
+            );
+            final fileUuid = File(fileNameUuid);
+
+            if (fileUuid.existsSync()) {
+              Logger.instance.i(
+                'Loading equipment logs from file: $fileNameUuid.',
+              );
+              final records = const LineSplitter()
+                  .convert(await fileUuid.readAsString())
+                  .map(
+                    (line) => EquipmentLogRecord.fromJson(
+                      Map<String, dynamic>.from(jsonDecode(line) as Map),
+                    ),
+                  )
+                  .toList();
+              if (records.isNotEmpty) {
+                workSession.equipmentLogsUuids.update(
+                  equipment.uuid!,
+                  (oldRecords) => oldRecords.isEmpty
+                      ? [...records]
+                      : [
+                          ...oldRecords,
+                          ...records.where(
+                            (record) =>
+                                oldRecords.last.time.isBefore(record.time),
+                          ),
+                        ],
+                  ifAbsent: () => records,
+                );
+                workSession.equipmentLogs.update(
+                  equipmentId,
+                  (oldRecords) => oldRecords.isEmpty
+                      ? [...records]
+                      : [
+                          ...oldRecords,
+                          ...records.where(
+                            (record) =>
+                                oldRecords.last.time.isBefore(record.time),
+                          ),
+                        ],
+                  ifAbsent: () => records,
+                );
+              }
+
+              Logger.instance.i(
+                '''Loaded ${records.length} log records from: $fileNameUuid.''',
+              );
+
+              ref
+                  .read(equipmentPathsProvider(equipmentId).notifier)
+                  .updateFromLogRecords(
+                    records: records,
+                    equipment: equipment,
+                  );
+            }
+          }
+          final fileName = path.join(
+            ref.read(fileDirectoryProvider).requireValue.path,
+            'tasks',
+            '${workSession.id}',
+            'implement_logs',
+            '$equipmentId.log',
+          );
+          final file = File(fileName);
+
+          if (file.existsSync()) {
+            Logger.instance.i(
+              'Loading equipment logs from file: $fileName.',
+            );
+            final records = const LineSplitter()
+                .convert(await file.readAsString())
+                .map(
+                  (line) => EquipmentLogRecord.fromJson(
+                    Map<String, dynamic>.from(jsonDecode(line) as Map),
+                  ),
+                )
+                .toList();
+            if (records.isNotEmpty) {
+              workSession.equipmentLogs.update(
+                equipment.id!,
+                (oldRecords) => oldRecords.isEmpty
+                    ? [...records]
+                    : [
+                        ...oldRecords,
+                        ...records.where(
+                          (record) =>
+                              oldRecords.last.time.isBefore(record.time),
+                        ),
+                      ],
+                ifAbsent: () => records,
+              );
+            }
+
+            Logger.instance.i(
+              '''Loaded ${records.length} log records from: $fileName.''',
+            );
+
+            ref
+                .read(equipmentPathsProvider(equipment.id!).notifier)
+                .updateFromLogRecords(
+                  records: records,
+                  equipment: equipment,
+                );
+          } else {
+            if (workSession.equipmentLogs.containsKey(equipment.id)) {
+              file
+                ..createSync(recursive: true)
+                ..writeAsStringSync(
+                  [
+                    workSession.equipmentLogs[equipment.id]!
+                        .map((e) => jsonEncode(e.toJson()))
+                        .join(Platform.lineTerminator),
+                    Platform.lineTerminator,
+                  ].join(),
+                );
+            }
+          }
+        }
+      }
+    }
+  }
 
   /// Add an [EquipmentLogRecord] with all sections deactivated to all the
   /// [EquipmentLogRecord]s files.
@@ -300,27 +453,27 @@ class ActiveWorkSession extends _$ActiveWorkSession {
             in state!.equipmentSetup!.allAttached.cast<Equipment>()) {
           final equipment = ref.read(
             allEquipmentsProvider.select(
-              (value) => value[equipmentReference.uuid],
+              (value) => value[equipmentReference.id],
             ),
           );
-          if (equipment != null) {
+          if (equipment != null && state?.id != null) {
             final record = equipment.logRecord.copyWith(activeSections: []);
-            if (state!.equipmentLogs.containsKey(equipment.uuid)) {
-              if (state!.equipmentLogs[equipment.uuid]!.isNotEmpty) {
+            if (state!.equipmentLogs.containsKey(equipment.id)) {
+              if (state!.equipmentLogs[equipment.id]!.isNotEmpty) {
                 if (state!
-                    .equipmentLogs[equipment.uuid]!
+                    .equipmentLogs[equipment.id]!
                     .last
                     .activeSections
                     .isNotEmpty) {
-                  state!.equipmentLogs[equipment.uuid]!.add(record);
+                  state!.equipmentLogs[equipment.id]!.add(record);
 
                   if (Device.isNative) {
                     final fileName = path.join(
                       ref.read(fileDirectoryProvider).requireValue.path,
-                      'work_sessions',
-                      state!.name ?? state!.uuid,
-                      'equipment_logs',
-                      '${equipment.uuid}.log',
+                      'tasks',
+                      '${state?.id!}',
+                      'implement_logs',
+                      '${equipment.id}.log',
                     );
 
                     final file = File(fileName);
@@ -341,19 +494,19 @@ class ActiveWorkSession extends _$ActiveWorkSession {
   });
 
   /// Delete the [EquipmentLogRecord]s file for the equipment with
-  /// [Equipment.uuid] equal to [equipmentUuid].
-  void deleteLogRecordsFile(String equipmentUuid) => Future(() {
+  /// [Equipment.id] equal to [equipmentId].
+  void deleteLogRecordsFile(int equipmentId) => Future(() {
     if (state != null) {
-      if (state!.equipmentLogs.containsKey(equipmentUuid)) {
-        state!.equipmentLogs.remove(equipmentUuid);
+      if (state!.equipmentLogs.containsKey(equipmentId)) {
+        state!.equipmentLogs.remove(equipmentId);
       }
-      if (Device.isNative) {
+      if (Device.isNative && state?.id != null) {
         final fileName = path.join(
           ref.read(fileDirectoryProvider).requireValue.path,
-          'work_sessions',
-          state!.name ?? state!.uuid,
-          'equipment_logs',
-          '$equipmentUuid.log',
+          'tasks',
+          '${state!.id!}',
+          'implement_logs',
+          '$equipmentId.log',
         );
 
         final file = File(fileName);
@@ -402,7 +555,11 @@ FutureOr<void> saveWorkSession(
   await ref.watch(
     saveJsonToFileDirectoryProvider(
       object: workSession.toJson(),
-      fileName: overrideName ?? workSession.name ?? workSession.uuid,
+      fileName:
+          overrideName ??
+          workSession.name ??
+          workSession.uuid ??
+          'work_sesssion_${workSession.id}',
       folder: 'work_sessions',
       subFolder: overrideName ?? workSession.name ?? workSession.uuid,
       downloadIfWeb: downloadIfWeb,
@@ -414,36 +571,36 @@ FutureOr<void> saveWorkSession(
 /// their respective files.
 ///
 /// Set the [overwrite] parameter to false to preserve already existing files.
-/// [singleUuid] can be used to specify a single equipment's logs that should
+/// [singleId] can be used to specify a single equipment's logs that should
 /// be saved.
 @Riverpod(keepAlive: true)
 FutureOr<void> saveWorkSessionEquipmentLogs(
   Ref ref,
   WorkSession workSession, {
   bool overwrite = true,
-  String? singleUuid,
+  int? singleId,
 }) async {
   if (Device.isNative && workSession.equipmentLogs.isNotEmpty) {
     for (final equipment
         in workSession.equipmentSetup!.allAttached
             .where(
-              (element) => singleUuid == null || singleUuid == element.uuid,
+              (element) => singleId == null || singleId == element.id,
             )
             .cast<Equipment>()) {
-      final records = workSession.equipmentLogs[equipment.uuid];
-      if (records != null) {
+      final records = workSession.equipmentLogs[equipment.id];
+      if (records != null && workSession.id != null) {
         if (Device.isNative) {
           final fileName = path.join(
             ref.read(fileDirectoryProvider).requireValue.path,
-            'work_sessions',
-            workSession.name ?? workSession.uuid,
-            'equipment_logs',
-            '${equipment.uuid}.log',
+            'tasks',
+            '${workSession.id!}',
+            'implement_logs',
+            '${equipment.id}.log',
           );
 
           final file = File(fileName);
 
-          if (workSession.equipmentLogs.containsKey(equipment.uuid)) {
+          if (workSession.equipmentLogs.containsKey(equipment.id)) {
             if (overwrite || !file.existsSync()) {
               await file.create(recursive: true);
               await file.writeAsString(
@@ -455,7 +612,7 @@ FutureOr<void> saveWorkSessionEquipmentLogs(
                 ].join(),
               );
               Logger.instance.i(
-                '''Wrote equipment logs for ${equipment.name ?? equipment.uuid} to: $fileName''',
+                '''Wrote equipment logs for ${equipment.name ?? equipment.id} to: $fileName''',
               );
             }
           }
@@ -497,30 +654,44 @@ FutureOr<List<WorkSession>> savedWorkSessions(Ref ref) async => await ref
       ).future,
     )
     .then((data) async {
+      final database = ref.watch(databaseProvider);
+
       final sessions = data.cast<WorkSession>();
+      final taskLinks = await database.managers.links
+          .filter((link) => link.tableRef.equals('tasks'))
+          .get();
       if (sessions.isNotEmpty) {
         if (sessions.any((element) => element.field != null)) {
           final savedFields = await ref.read(
             savedFieldsProvider.selectAsync(
-              (data) => data.map((e) => (uuid: e.uuid, name: e.name)),
+              (data) => data.map((e) => (id: e.id, name: e.name)),
             ),
           );
+          final fieldLinks = await database.managers.links
+              .filter((link) => link.tableRef.equals('partfields'))
+              .get();
           final fieldsToAdd = <Field>[];
           for (final session in sessions.where(
             (element) => element.field != null,
           )) {
-            if (savedFields.none(
-                  (field) => field.uuid == session.field!.uuid,
+            if (fieldLinks.none(
+                  (link) => link.linkValue == session.field!.uuid,
+                ) &&
+                savedFields.none(
+                  (field) => field.id == session.field!.id,
                 ) &&
                 fieldsToAdd.none(
-                  (field) => field.uuid == session.field!.uuid,
+                  (field) => field.id == session.field!.id,
                 )) {
               fieldsToAdd.add(session.field!);
             }
             for (final field in savedFields) {
-              if (field.uuid == session.field!.uuid &&
+              if (field.id == session.field!.id &&
                   field.name != session.field!.name) {
-                session.field = session.field!.copyWith(name: field.name);
+                session.field = session.field!.copyWith(
+                  name: field.name,
+                  id: field.id,
+                );
               }
             }
           }
@@ -529,8 +700,26 @@ FutureOr<List<WorkSession>> savedWorkSessions(Ref ref) async => await ref
               await ref.read(saveFieldProvider(field).future);
             }
           }
+          final updatedLinks = await database.managers.links
+              .filter((link) => link.tableRef.equals('partfields'))
+              .get();
+          for (final session in sessions.where(
+            (element) => element.field != null,
+          )) {
+            for (final link in updatedLinks) {
+              if (link.linkValue == session.field!.uuid) {
+                session.field = session.field!.copyWith(
+                  id: link.refId,
+                );
+                break;
+              }
+            }
+          }
         }
         if (sessions.any((element) => element.equipmentSetup != null)) {
+          final equipmentLinks = await database.managers.links
+              .filter((link) => link.tableRef.equals('implements'))
+              .get();
           final savedSetups = await ref.read(
             savedEquipmentSetupsProvider.selectAsync(
               (data) => data.map((e) => (name: e.name)),
@@ -554,9 +743,200 @@ FutureOr<List<WorkSession>> savedWorkSessions(Ref ref) async => await ref
               await ref.read(saveEquipmentSetupProvider(setup).future);
             }
           }
+          for (final session in sessions.where(
+            (element) => element.equipmentSetup != null,
+          )) {
+            session.equipmentSetup?.allAttached.cast<Equipment>().forEach(
+              (equipment) => session.equipmentSetup?.updateChild(
+                equipment.copyWith(
+                  id: equipmentLinks
+                      .firstWhereOrNull(
+                        (link) => link.linkValue == equipment.uuid,
+                      )
+                      ?.refId,
+                ),
+              ),
+            );
+          }
+        }
+        for (final session in sessions) {
+          if (!taskLinks.any((link) => link.linkValue == session.uuid)) {
+            final fieldId = await database.managers.links
+                .filter((link) => link.tableRef.equals('partfields'))
+                .filter((link) => link.linkValue.equals(session.field?.uuid))
+                .map((link) => link.refId)
+                .getSingleOrNull();
+
+            final task = await database.managers.tasks.createReturning(
+              (o) => o(
+                name: session.name!,
+                note: Value.absentIfNull(session.note),
+                workStartedAt: Value.absentIfNull(session.start),
+                workEndedAt: Value.absentIfNull(session.end),
+                partfield: Value.absentIfNull(fieldId),
+              ),
+            );
+
+            final link = await database.managers.links.createReturning(
+              (o) => o(
+                tableRef: 'tasks',
+                refId: task.id,
+                linkValue: Value(session.uuid!),
+                name: Value.absentIfNull(session.name),
+              ),
+            );
+            taskLinks.add(link);
+            if (session.abTracking.isNotEmpty ||
+                session.pathTracking.isNotEmpty) {
+              final guidanceGroupId = await database.managers.guidanceGroups
+                  .create((o) => o());
+              await database.managers.guidanceAllocations.create(
+                (o) => o(task: task.id, guidanceGroup: guidanceGroupId),
+              );
+              final existing = await database.managers.links
+                  .filter((link) => link.tableRef.equals('guidance_patterns'))
+                  .filter(
+                    (link) => link.linkValue.isIn([
+                      ...session.abTracking.map((t) => t.uuid),
+                      ...session.pathTracking.map((t) => t.uuid),
+                    ]),
+                  )
+                  .map((link) => link.refId)
+                  .get();
+              final abTrackings = await ref.watch(
+                importMissingABTrackingsToDatabaseProvider(
+                  session.abTracking,
+                ).future,
+              );
+              final pathTrackings = await ref.watch(
+                importMissingPathTrackingsToDatabaseProvider(
+                  session.pathTracking,
+                ).future,
+              );
+              await database.managers.guidanceGroupPatterns.bulkCreate(
+                (o) => [...existing, ...abTrackings, ...pathTrackings].map(
+                  (id) => o(
+                    guidanceGroup: guidanceGroupId,
+                    guidancePattern: id,
+                  ),
+                ),
+              );
+            }
+            session.id = task.id;
+
+            if (Device.isNative) {
+              for (final equipment
+                  in session.equipmentSetup!.allAttached.cast<Equipment>()) {
+                final equipmentLinks = await database.managers.links
+                    .filter((link) => link.tableRef.equals('implements'))
+                    .get();
+                final equipmentId = equipmentLinks
+                    .firstWhereOrNull(
+                      (link) => link.linkValue == equipment.uuid,
+                    )
+                    ?.refId;
+                if (equipmentId != null) {
+                  // TODO(dudlileif): remove this block once all have been converted
+                  {
+                    final fileNameUuid = path.join(
+                      ref.read(fileDirectoryProvider).requireValue.path,
+                      'work_sessions',
+                      session.name ?? session.uuid,
+                      'equipment_logs',
+                      '${equipment.uuid}.log',
+                    );
+                    final fileUuid = File(fileNameUuid);
+
+                    if (fileUuid.existsSync()) {
+                      Logger.instance.i(
+                        'Loading equipment logs from file: $fileNameUuid.',
+                      );
+                      final records = const LineSplitter()
+                          .convert(await fileUuid.readAsString())
+                          .map(
+                            (line) => EquipmentLogRecord.fromJson(
+                              Map<String, dynamic>.from(
+                                jsonDecode(line) as Map,
+                              ),
+                            ),
+                          )
+                          .toList();
+                      if (records.isNotEmpty) {
+                        session.equipmentLogsUuids.update(
+                          equipment.uuid!,
+                          (oldRecords) => oldRecords.isEmpty
+                              ? [...records]
+                              : [
+                                  ...oldRecords,
+                                  ...records.where(
+                                    (record) => oldRecords.last.time.isBefore(
+                                      record.time,
+                                    ),
+                                  ),
+                                ],
+                          ifAbsent: () => records,
+                        );
+                        session.equipmentLogs.update(
+                          equipmentId,
+                          (oldRecords) => oldRecords.isEmpty
+                              ? [...records]
+                              : [
+                                  ...oldRecords,
+                                  ...records.where(
+                                    (record) => oldRecords.last.time.isBefore(
+                                      record.time,
+                                    ),
+                                  ),
+                                ],
+                          ifAbsent: () => records,
+                        );
+                      }
+
+                      Logger.instance.i(
+                        '''Loaded ${records.length} log records from: $fileNameUuid.''',
+                      );
+
+                      final fileName = path.join(
+                        ref.read(fileDirectoryProvider).requireValue.path,
+                        'tasks',
+                        '${session.id}',
+                        'implement_logs',
+                        '$equipmentId.log',
+                      );
+                      final file = File(fileName);
+
+                      if (session.equipmentLogs.containsKey(equipment.id)) {
+                        file
+                          ..createSync(recursive: true)
+                          ..writeAsStringSync(
+                            [
+                              session.equipmentLogs[equipment.id]!
+                                  .map((e) => jsonEncode(e.toJson()))
+                                  .join(Platform.lineTerminator),
+                              Platform.lineTerminator,
+                            ].join(),
+                          );
+                        Logger.instance.i(
+                          '''Wrote ${records.length} log records to: $fileName.''',
+                        );
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
-      return sessions;
+      return sessions
+          .map(
+            (session) => session.copyWith(
+              id: taskLinks
+                  .firstWhereOrNull((link) => link.linkValue == session.uuid)
+                  ?.refId,
+            ),
+          )
+          .toList();
     });
 
 /// A provider for deleting [workSession] from the user file system.
@@ -621,8 +1001,8 @@ FutureOr<WorkSession?> importWorkSession(
   }
   if (workSession != null) {
     Logger.instance.i('Imported work session: ${workSession.name}.');
+    await ref.read(activeWorkSessionProvider.notifier).update(workSession);
     ref
-      ..read(activeWorkSessionProvider.notifier).update(workSession)
       ..read(activeFieldProvider.notifier).update(workSession.field)
       ..read(
         configuredEquipmentSetupProvider.notifier,
@@ -630,8 +1010,8 @@ FutureOr<WorkSession?> importWorkSession(
     if (workSession.equipmentSetup != null) {
       ref.read(simInputProvider.notifier).send((
         equipmentSetup: workSession.equipmentSetup,
-        parentUuid: ref.watch(
-          mainVehicleProvider.select((value) => value.uuid),
+        parentId: ref.watch(
+          mainVehicleProvider.select((value) => value.id),
         ),
       ));
     }
@@ -639,17 +1019,13 @@ FutureOr<WorkSession?> importWorkSession(
     if (workSession.equipmentLogs.isNotEmpty) {
       for (final equipment
           in workSession.equipmentSetup!.allAttached.cast<Equipment>()) {
-        final overrideHitch = workSession.equipmentSetup?.findHitchOfChild(
-          equipment,
-        );
-        final records = workSession.equipmentLogs[equipment.uuid];
+        final records = workSession.equipmentLogs[equipment.id];
         if (records != null) {
           ref
-              .read(equipmentPathsProvider(equipment.uuid).notifier)
+              .read(equipmentPathsProvider(equipment.id!).notifier)
               .updateFromLogRecords(
                 records: records,
                 equipment: equipment,
-                overrideHitch: overrideHitch,
               );
         }
       }

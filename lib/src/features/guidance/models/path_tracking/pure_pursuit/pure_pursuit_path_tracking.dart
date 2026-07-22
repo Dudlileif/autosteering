@@ -45,6 +45,7 @@ final class PurePursuitPathTracking extends PathTracking {
     super.loopMode,
     super.name,
     super.uuid,
+    super.id,
   });
 
   /// Finds the points that we use to get the secant line that intersects

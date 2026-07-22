@@ -597,7 +597,7 @@ final class SavedFilesProvider
   }
 }
 
-String _$savedFilesHash() => r'eb4e3905c75aa69754a359c45c84729d2aea5fb3';
+String _$savedFilesHash() => r'9f86618bd56ad92267b1f6ca6ad315aea2792fe9';
 
 /// A provider for reading and holding all the saved objects of
 /// the given type in the in the user file directory.
@@ -725,7 +725,7 @@ final class SavedFilesInSubDirectoriesProvider
 }
 
 String _$savedFilesInSubDirectoriesHash() =>
-    r'6ce1afc7c614269b7005cceaa77df573e95ff8fa';
+    r'd6bffcec86c3169a68bc939bda35aecb03cbc07c';
 
 /// A provider for reading and holding all the saved objects of
 /// the given type in the in the user file directory.

@@ -17,14 +17,14 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'threshold_velocities.freezed.dart';
-part 'threshold_velocities.g.dart';
+part 'vehicle_thresholds.freezed.dart';
+part 'vehicle_thresholds.g.dart';
 
-/// A configuration for autosteering velocity thresholds of a vehicle.
-@freezed
-sealed class ThresholdVelocities with _$ThresholdVelocities {
-  /// A configuration for autosteering velocity thresholds of a vehicle.
-  const factory ThresholdVelocities({
+/// A configuration for autosteering thresholds of a vehicle.
+@Freezed(fromJson: true, toJson: true)
+sealed class VehicleThresholds with _$VehicleThresholds {
+  /// A configuration for autosteering thresholds of a vehicle.
+  const factory VehicleThresholds({
     /// Minimum velocity with autosteering enabled in m/s.
     @Default(0.05) double minVelocity,
 
@@ -36,9 +36,9 @@ sealed class ThresholdVelocities with _$ThresholdVelocities {
 
     /// Angular velocity in deg/s.
     @Default(30) double maxAngularVelocity,
-  }) = _ThresholdVelocities;
+  }) = _VehicleThresholds;
 
-  /// Creates a [ThresholdVelocities] from the [json] object.
-  factory ThresholdVelocities.fromJson(Map<String, Object?> json) =>
-      _$ThresholdVelocitiesFromJson(json);
+  /// Creates a [VehicleThresholds] from the [json] object.
+  factory VehicleThresholds.fromJson(Map<String, Object?> json) =>
+      _$VehicleThresholdsFromJson(json);
 }

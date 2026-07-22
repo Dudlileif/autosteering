@@ -45,14 +45,20 @@ class VehicleDimensionsPage extends ConsumerWidget {
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
-          configuredVehicleProvider.select((value) => value.width.toString()),
+          configuredVehicleProvider.select(
+            (value) => value.geometry.width.toString(),
+          ),
         ),
         onChanged: (value) {
-          final width = double.tryParse(value.replaceAll(',', '.'));
-
-          ref
-              .read(configuredVehicleProvider.notifier)
-              .update(vehicle.copyWith(width: width?.abs()));
+          if (double.tryParse(value.replaceAll(',', '.')) case final width?) {
+            ref
+                .read(configuredVehicleProvider.notifier)
+                .update(
+                  vehicle.copyWith(
+                    geometry: vehicle.geometry.copyWith(width: width.abs()),
+                  ),
+                );
+          }
         },
       ),
       TextFormField(
@@ -63,14 +69,20 @@ class VehicleDimensionsPage extends ConsumerWidget {
         ),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
-          configuredVehicleProvider.select((value) => value.length.toString()),
+          configuredVehicleProvider.select(
+            (value) => value.geometry.length.toString(),
+          ),
         ),
         onChanged: (value) {
-          final length = double.tryParse(value.replaceAll(',', '.'));
-
-          ref
-              .read(configuredVehicleProvider.notifier)
-              .update(vehicle.copyWith(length: length?.abs()));
+          if (double.tryParse(value.replaceAll(',', '.')) case final length?) {
+            ref
+                .read(configuredVehicleProvider.notifier)
+                .update(
+                  vehicle.copyWith(
+                    geometry: vehicle.geometry.copyWith(length: length.abs()),
+                  ),
+                );
+          }
         },
       ),
       TextFormField(
@@ -86,15 +98,22 @@ class VehicleDimensionsPage extends ConsumerWidget {
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
           configuredVehicleProvider.select(
-            (value) => value.trackWidth.toString(),
+            (value) => value.geometry.trackWidth.toString(),
           ),
         ),
         onChanged: (value) {
-          final width = double.tryParse(value.replaceAll(',', '.'));
-
-          ref
-              .read(configuredVehicleProvider.notifier)
-              .update(vehicle.copyWith(trackWidth: width?.abs()));
+          if (double.tryParse(value.replaceAll(',', '.'))
+              case final trackWidth?) {
+            ref
+                .read(configuredVehicleProvider.notifier)
+                .update(
+                  vehicle.copyWith(
+                    geometry: vehicle.geometry.copyWith(
+                      trackWidth: trackWidth.abs(),
+                    ),
+                  ),
+                );
+          }
         },
       ),
       if (vehicle is AxleSteeredVehicle)
@@ -111,11 +130,20 @@ class VehicleDimensionsPage extends ConsumerWidget {
             ),
           ),
           onChanged: (value) {
-            final distance = double.tryParse(value.replaceAll(',', '.'));
-
-            ref
-                .read(configuredVehicleProvider.notifier)
-                .update(vehicle.copyWith(wheelBase: distance?.abs()));
+            if (double.tryParse(value.replaceAll(',', '.'))
+                case final distance?) {
+              {
+                ref
+                    .read(configuredVehicleProvider.notifier)
+                    .update(
+                      vehicle.copyWith(
+                        geometry: vehicle.geometry.copyWith(
+                          wheelBase: distance.abs(),
+                        ),
+                      ),
+                    );
+              }
+            }
           },
         )
       else if (vehicle is ArticulatedTractor) ...[
@@ -130,16 +158,25 @@ class VehicleDimensionsPage extends ConsumerWidget {
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           initialValue: ref.read(
             configuredVehicleProvider.select(
-              (value) =>
-                  (value as ArticulatedTractor).pivotToFrontAxle.toString(),
+              (value) => (value as ArticulatedTractor).geometry.pivotToFrontAxle
+                  .toString(),
             ),
           ),
           onChanged: (value) {
-            final distance = double.tryParse(value.replaceAll(',', '.'));
-
-            ref
-                .read(configuredVehicleProvider.notifier)
-                .update(vehicle.copyWith(pivotToFrontAxle: distance?.abs()));
+            if (double.tryParse(value.replaceAll(',', '.'))
+                case final pivotToFrontAxle?) {
+              {
+                ref
+                    .read(configuredVehicleProvider.notifier)
+                    .update(
+                      vehicle.copyWith(
+                        geometry: vehicle.geometry.copyWith(
+                          pivotToFrontAxle: pivotToFrontAxle.abs(),
+                        ),
+                      ),
+                    );
+              }
+            }
           },
         ),
         TextFormField(
@@ -153,16 +190,23 @@ class VehicleDimensionsPage extends ConsumerWidget {
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           initialValue: ref.read(
             configuredVehicleProvider.select(
-              (value) =>
-                  (value as ArticulatedTractor).pivotToRearAxle.toString(),
+              (value) => (value as ArticulatedTractor).geometry.pivotToRearAxle
+                  .toString(),
             ),
           ),
           onChanged: (value) {
-            final distance = double.tryParse(value.replaceAll(',', '.'));
-
-            ref
-                .read(configuredVehicleProvider.notifier)
-                .update(vehicle.copyWith(pivotToRearAxle: distance?.abs()));
+            if (double.tryParse(value.replaceAll(',', '.'))
+                case final pivotToRearAxle?) {
+              ref
+                  .read(configuredVehicleProvider.notifier)
+                  .update(
+                    vehicle.copyWith(
+                      geometry: vehicle.geometry.copyWith(
+                        pivotToRearAxle: pivotToRearAxle.abs(),
+                      ),
+                    ),
+                  );
+            }
           },
         ),
       ],

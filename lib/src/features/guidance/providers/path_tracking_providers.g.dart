@@ -166,7 +166,7 @@ final class ConfiguredPathTrackingProvider
 }
 
 String _$configuredPathTrackingHash() =>
-    r'67fef335827c9ce6545ee764535ce808c929dd6d';
+    r'b45714e7c868709db0ad89c4474cf9e5b1368483';
 
 /// A provider for creating and holding a [PathTracking] model for the
 /// previously recorded waypoints.
@@ -860,7 +860,98 @@ final class SavedPathTrackingsProvider
 }
 
 String _$savedPathTrackingsHash() =>
-    r'af0113ed05ba71176298ddc62b963c93bb7c40d7';
+    r'39a7028c8b657c8432eb1a16352d1861a5f94b3e';
+
+/// A provider for importing missing path trackings to the database.
+
+@ProviderFor(importMissingPathTrackingsToDatabase)
+final importMissingPathTrackingsToDatabaseProvider =
+    ImportMissingPathTrackingsToDatabaseFamily._();
+
+/// A provider for importing missing path trackings to the database.
+
+final class ImportMissingPathTrackingsToDatabaseProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<int>>,
+          List<int>,
+          FutureOr<List<int>>
+        >
+    with $FutureModifier<List<int>>, $FutureProvider<List<int>> {
+  /// A provider for importing missing path trackings to the database.
+  ImportMissingPathTrackingsToDatabaseProvider._({
+    required ImportMissingPathTrackingsToDatabaseFamily super.from,
+    required List<PathTracking> super.argument,
+  }) : super(
+         retry: null,
+         name: r'importMissingPathTrackingsToDatabaseProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() =>
+      _$importMissingPathTrackingsToDatabaseHash();
+
+  @override
+  String toString() {
+    return r'importMissingPathTrackingsToDatabaseProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<int>> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<int>> create(Ref ref) {
+    final argument = this.argument as List<PathTracking>;
+    return importMissingPathTrackingsToDatabase(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ImportMissingPathTrackingsToDatabaseProvider &&
+        other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$importMissingPathTrackingsToDatabaseHash() =>
+    r'15ff275789cb1be07c01cf7add71160ffedcd84c';
+
+/// A provider for importing missing path trackings to the database.
+
+final class ImportMissingPathTrackingsToDatabaseFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<int>>, List<PathTracking>> {
+  ImportMissingPathTrackingsToDatabaseFamily._()
+    : super(
+        retry: null,
+        name: r'importMissingPathTrackingsToDatabaseProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// A provider for importing missing path trackings to the database.
+
+  ImportMissingPathTrackingsToDatabaseProvider call(
+    List<PathTracking> trackings,
+  ) => ImportMissingPathTrackingsToDatabaseProvider._(
+    argument: trackings,
+    from: this,
+  );
+
+  @override
+  String toString() => r'importMissingPathTrackingsToDatabaseProvider';
+}
 
 /// A provider for deleting [tracking] from the user file systemm.
 ///

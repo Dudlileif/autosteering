@@ -24,6 +24,7 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:geobase/geobase.dart';
 import 'package:uuid/uuid.dart';
 
+export 'path_tracking_parameters.dart';
 export 'pure_pursuit/pure_pursuit_parameters.dart';
 export 'stanley_path_tracking/stanley_parameters.dart';
 
@@ -36,8 +37,7 @@ enum PathTrackingMode {
   purePursuit,
 
   /// Use Stanley path tracking to control the steering.
-  stanley
-  ;
+  stanley;
 
   /// Converts the enumerator value to a json compatible string.
   String toJson() => name;
@@ -57,8 +57,7 @@ enum PathTrackingLoopMode {
   straight,
 
   /// Loop to the start point by using a Dubins path from the end point.
-  dubins
-  ;
+  dubins;
 
   /// Converts the enumerator value to a json compatible string.
   String toJson() => name;
@@ -88,6 +87,7 @@ sealed class PathTracking {
     this.loopMode = PathTrackingLoopMode.none,
     this.name,
     String? uuid,
+    this.id,
   }) : uuid = uuid ?? const Uuid().v4() {
     interPolateWayPoints();
   }
@@ -118,7 +118,11 @@ sealed class PathTracking {
     };
   }
 
+  /// The local database ID of this.
+  int? id;
+
   /// The unique identifier for this.
+  @Deprecated('To be removed')
   final String uuid;
 
   /// Name or description of this.

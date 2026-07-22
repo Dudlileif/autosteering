@@ -17,11 +17,10 @@
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
+import 'package:autosteering/src/features/equipment/widgets/equipment_configurator/equipment_connectors_page.dart';
 import 'package:autosteering/src/features/equipment/widgets/equipment_configurator/equipment_decoration_page.dart';
-import 'package:autosteering/src/features/equipment/widgets/equipment_configurator/equipment_dimensions_page.dart';
-import 'package:autosteering/src/features/equipment/widgets/equipment_configurator/equipment_hitches_page.dart';
+import 'package:autosteering/src/features/equipment/widgets/equipment_configurator/equipment_name_page.dart';
 import 'package:autosteering/src/features/equipment/widgets/equipment_configurator/equipment_sections_page.dart';
-import 'package:autosteering/src/features/equipment/widgets/equipment_configurator/equipment_type_selector_page.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
@@ -55,11 +54,10 @@ class _EquipmentConfiguratorState extends ConsumerState<EquipmentConfigurator>
         : 0,
   );
   static const pages = <Widget>[
-    EquipmentTypeSelectorPage(),
-    EquipmentDimensionsPage(),
+    EquipmentNamePage(),
     EquipmentSectionsPage(),
+    EquipmentConnectorsPage(),
     EquipmentDecorationPage(),
-    Padding(padding: EdgeInsets.only(top: 16), child: EquipmentHitchesPage()),
   ];
 
   @override
@@ -324,7 +322,7 @@ class _ApplyConfigurationToAttachedEquipmentButton extends ConsumerWidget {
           ? () async {
               await Future<void>(() async {
                 final equipment = ref.watch(configuredEquipmentProvider)
-                  ..lastUsed = DateTime.now();
+                  ..lastUsedAt = DateTime.now();
 
                 ref.read(simInputProvider.notifier).send((
                   updatedEquipment: equipment,

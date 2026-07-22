@@ -32,9 +32,17 @@ class Field {
     required this.polygon,
     required this.boundingBox,
     DateTime? lastUsed,
+    DateTime? createdAt,
+    DateTime? lastUpdatedAt,
     String? uuid,
+    this.id,
+    this.parentFieldId,
+    FeatureCollection? geometry,
   }) : lastUsed = lastUsed ?? DateTime.now(),
-       uuid = uuid ?? const Uuid().v4();
+       createdAt = createdAt ?? DateTime.now(),
+       lastUpdatedAt = lastUpdatedAt ?? DateTime.now(),
+       uuid = uuid ?? const Uuid().v4(),
+       geometry = geometry ?? FeatureCollection([Feature(geometry: polygon)]);
 
   /// Creates a [Field] from a json map object.
   ///
@@ -66,11 +74,51 @@ class Field {
     );
   }
 
-  /// The name of the field.
-  final String name;
+  /// Constructor for use with the local database.
+  factory Field.fromDatabase({
+    required String? name,
+    required FeatureCollection? geometry,
+    int? id,
+    int? parentFieldId,
+    DateTime? lastUsedAt,
+    DateTime? createdAt,
+    DateTime? lastUpdatedAt,
+  }) {
+    final polygon =
+        geometry?.features
+                .firstWhereOrNull((feature) => feature.geometry is Polygon)
+                ?.geometry
+            as Polygon? ??
+        Polygon.build(const []);
+
+    return Field(
+      id: id,
+      parentFieldId: parentFieldId,
+      name: name!,
+      geometry: geometry,
+      polygon: polygon,
+      boundingBox: switch (geometry?.getBounds()) {
+        final box? => GeoBox.fromBox(box),
+        _ => null,
+      },
+      lastUsed: lastUsedAt,
+      lastUpdatedAt: lastUpdatedAt,
+      createdAt: createdAt,
+    );
+  }
+
+  /// Local database id.
+  final int? id;
+
+  /// Unique identifier for parent field.
+  final int? parentFieldId;
 
   /// The unique identifier for this.
-  final String uuid;
+  @Deprecated('To be removed')
+  String? uuid;
+
+  /// The name of the field.
+  final String name;
 
   /// The polygon that contains the exterior boundary and interior boundaries
   /// if there are any.
@@ -84,6 +132,15 @@ class Field {
 
   /// The last time this field was used.
   DateTime lastUsed;
+
+  /// The creation time of this field.
+  DateTime createdAt;
+
+  /// The last time this field was updated.
+  DateTime lastUpdatedAt;
+
+  /// The geometry feature collection of this field.
+  FeatureCollection geometry;
 
   /// A map-ready polygon for the field
   map.Polygon get mapPolygon => map.Polygon(
@@ -214,12 +271,14 @@ class Field {
     GeoBox? boundingBox,
     DateTime? lastUsed,
     String? uuid,
+    int? id,
   }) => Field(
     name: name ?? this.name,
     polygon: polygon ?? this.polygon,
     boundingBox: boundingBox ?? this.boundingBox,
     lastUsed: lastUsed ?? this.lastUsed,
     uuid: uuid ?? this.uuid,
+    id: id ?? this.id,
   );
 
   /// Convert the model to a json compatible map.
@@ -240,8 +299,7 @@ enum FieldBufferDistanceType {
   distance(Icons.straighten, 'Distance in m'),
 
   /// A multiple of widths of the current equipment.
-  equipmentWidths(Icons.handyman, 'Multiple of equipment widths')
-  ;
+  equipmentWidths(Icons.handyman, 'Multiple of equipment widths');
 
   const FieldBufferDistanceType(this.icon, this.tooltip);
 

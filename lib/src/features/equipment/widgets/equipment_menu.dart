@@ -255,7 +255,7 @@ class _LoadEquipmentMenu extends ConsumerWidget {
         .watch(savedEquipmentsProvider)
         .maybeWhen(
           data: (data) =>
-              data.sorted((a, b) => b.lastUsed.compareTo(a.lastUsed)),
+              data.sorted((a, b) => b.lastUsedAt.compareTo(a.lastUsedAt)),
           orElse: () => <Equipment>[],
           skipLoadingOnRefresh: false,
         );
@@ -279,7 +279,7 @@ class _LoadEquipmentMenu extends ConsumerWidget {
               constraints: const BoxConstraints(minWidth: 300),
               child: ListTile(
                 onTap: () {
-                  equipment.lastUsed = DateTime.now();
+                  equipment.lastUsedAt = DateTime.now();
 
                   ref
                     ..read(
@@ -288,11 +288,11 @@ class _LoadEquipmentMenu extends ConsumerWidget {
                     ..read(saveEquipmentProvider(equipment));
                 },
                 title: Text(
-                  equipment.name ?? equipment.uuid,
+                  equipment.name ?? strings.noName,
                   style: textStyle,
                 ),
                 subtitle: Text(
-                  '''${strings.hitchType(equipment.hitchType.name)} | ${numberFormatter.format(equipment.width)} m${equipment.sections.length > 1 ? ' | ${equipment.sections.length} ${strings.sections(equipment.sections.length)}' : ''}''',
+                  '''${equipment.childConnectors.map((c) => strings.connectorType(c.type.name)).join(', ')} | ${numberFormatter.format(equipment.width)} m${equipment.sections.length > 1 ? ' | ${equipment.sections.length} ${strings.sections(equipment.sections.length)}' : ''}''',
                 ),
                 trailing: Device.isNative
                     ? IconButton(
@@ -306,7 +306,7 @@ class _LoadEquipmentMenu extends ConsumerWidget {
                                     ref,
                                     child,
                                   ) => DeleteDialog(
-                                    name: equipment.name ?? equipment.uuid,
+                                    name: equipment.name ?? strings.noName,
                                     onDelete: () async => await ref.watch(
                                       deleteEquipmentProvider(
                                         equipment,
@@ -533,11 +533,11 @@ class _AttachEquipmentMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hasHitches = ref.watch(
-      mainVehicleProvider.select((value) => value.hitchPoints.isNotEmpty),
+    final hasConnectors = ref.watch(
+      mainVehicleProvider.select((value) => value.parentConnectors.isNotEmpty),
     );
 
-    if (!hasHitches) {
+    if (!hasConnectors) {
       return const SizedBox.shrink();
     }
     final strings = AppLocalizations.of(context);
@@ -579,82 +579,47 @@ class _RecursiveAttachEquipmentMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final strings = AppLocalizations.of(context);
     final text = [
-      if (parent.parentHitch != null)
-        strings.hitchOption(parent.parentHitch!.name),
-      (parent.name ?? parent.uuid),
+      if (parent case Equipment(
+        parentConnection: Connection(parentConnector: Connector(:final type)),
+      ))
+        strings.hitchOption(type.name),
+      (parent.name ?? strings.noName),
     ].join('\n');
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
-    if (parent.hitchPoints.isEmpty) {
+    if (parent.connectors.isEmpty) {
       return MenuItemButton(child: Text(text, style: textStyle));
     }
 
     return MenuButtonWithChildren(
       text: text,
       menuChildren: [
-        if (parent.hitchFrontFixedChild != null &&
-            child.hitchType == HitchType.fixed)
-          _RecursiveAttachEquipmentMenu(
-            parent: parent.hitchFrontFixedChild!,
-            child: child,
-          )
-        else if (parent.hitchFrontFixedPoint != null)
-          MenuItemButton(
-            onPressed: child.hitchType == HitchType.fixed
+        ...parent.availableParentConnectors.map(
+          (connector) => MenuItemButton(
+            onPressed: child.childConnectors.isNotEmpty
                 ? () => ref.read(simInputProvider.notifier).send((
-                    parentUuid: parent.uuid,
+                    parentId: parent.id,
                     child: child,
-                    position: Hitch.frontFixed,
+                    parentConnector: connector,
+                    childConnector: child.childConnectors.firstWhere(
+                      (c) => c.type == connector.type,
+                    ),
+                    parentIsVehicle: parent is Vehicle,
                   ))
                 : null,
             closeOnActivate: false,
             child: Text(
-              strings.hitchOption(Hitch.frontFixed.name),
+              strings.hitchOption(connector.type.name),
               style: textStyle,
             ),
           ),
-        if (parent.hitchRearFixedChild != null)
-          _RecursiveAttachEquipmentMenu(
-            parent: parent.hitchRearFixedChild!,
+        ),
+        ...parent.childConnections.map(
+          (childConnection) => _RecursiveAttachEquipmentMenu(
+            parent: childConnection.child,
             child: child,
-          )
-        else if (parent.hitchRearFixedPoint != null &&
-            child.hitchType == HitchType.fixed)
-          MenuItemButton(
-            onPressed: child.hitchType == HitchType.fixed
-                ? () => ref.read(simInputProvider.notifier).send((
-                    parentUuid: parent.uuid,
-                    child: child,
-                    position: Hitch.rearFixed,
-                  ))
-                : null,
-            closeOnActivate: false,
-            child: Text(
-              strings.hitchOption(Hitch.rearFixed.name),
-              style: textStyle,
-            ),
           ),
-        if (parent.hitchRearDrawbarChild != null)
-          _RecursiveAttachEquipmentMenu(
-            parent: parent.hitchRearDrawbarChild!,
-            child: child,
-          )
-        else if (parent.hitchRearDrawbarPoint != null &&
-            child.hitchType == HitchType.drawbar)
-          MenuItemButton(
-            onPressed: child.hitchType == HitchType.drawbar
-                ? () => ref.read(simInputProvider.notifier).send((
-                    parentUuid: parent.uuid,
-                    child: child,
-                    position: Hitch.rearDrawbar,
-                  ))
-                : null,
-            closeOnActivate: false,
-            child: Text(
-              strings.hitchOption(Hitch.rearDrawbar.name),
-              style: textStyle,
-            ),
-          ),
+        ),
       ],
     );
   }
@@ -669,13 +634,13 @@ class _AttachEquipmentSetupMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hasHitches = ref.watch(
-      mainVehicleProvider.select((value) => value.hitchPoints.isNotEmpty),
+    final hasConnctors = ref.watch(
+      mainVehicleProvider.select((value) => value.connectors.isNotEmpty),
     );
 
     final setup = ref.watch(configuredEquipmentSetupProvider);
 
-    if (!hasHitches || setup == null) {
+    if (!hasConnctors || setup == null) {
       return const SizedBox.shrink();
     }
     final strings = AppLocalizations.of(context);
@@ -712,24 +677,27 @@ class _RecursiveAttachEquipmentSetupMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final strings = AppLocalizations.of(context);
     final text = [
-      if (parent.parentHitch != null)
-        strings.hitchOption(parent.parentHitch!.name),
-      (parent.name ?? parent.uuid),
+      if (parent case Equipment(
+        parentConnection: Connection(parentConnector: Connector(:final type)),
+      ))
+        strings.hitchOption(type.name),
+      (parent.name ?? strings.noName),
     ].join('\n');
 
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
-    if (parent.hitchPoints.isEmpty) {
+    if (parent.parentConnectors.isEmpty) {
       return MenuItemButton(child: Text(text, style: textStyle));
     }
 
-    if (parent.hitchPoints.isNotEmpty && parent.hitchChildren.isEmpty) {
+    if (parent.connectors.isNotEmpty && parent.hitchChildren.isEmpty) {
       return MenuItemButton(
         closeOnActivate: false,
         onPressed: () {
           ref.read(simInputProvider.notifier).send((
             equipmentSetup: setup,
-            parentUuid: parent.uuid,
+            parentId: parent.id,
+            parentIsVehicle: parent is Vehicle,
           ));
         },
         child: Text(text, style: textStyle),
@@ -738,23 +706,14 @@ class _RecursiveAttachEquipmentSetupMenu extends ConsumerWidget {
 
     return MenuButtonWithChildren(
       text: text,
-      menuChildren: [
-        if (parent.hitchFrontFixedChild != null)
-          _RecursiveAttachEquipmentSetupMenu(
-            parent: parent.hitchFrontFixedChild!,
-            setup: setup,
-          ),
-        if (parent.hitchRearFixedChild != null)
-          _RecursiveAttachEquipmentSetupMenu(
-            parent: parent.hitchRearFixedChild!,
-            setup: setup,
-          ),
-        if (parent.hitchRearDrawbarChild != null)
-          _RecursiveAttachEquipmentSetupMenu(
-            parent: parent.hitchRearDrawbarChild!,
-            setup: setup,
-          ),
-      ],
+      menuChildren: parent.childConnections
+          .map(
+            (connector) => _RecursiveAttachEquipmentSetupMenu(
+              parent: connector.child,
+              setup: setup,
+            ),
+          )
+          .toList(),
     );
   }
 }
@@ -783,9 +742,10 @@ class _DetachMenu extends ConsumerWidget {
         MenuItemButton(
           closeOnActivate: false,
           onPressed: () => ref.read(simInputProvider.notifier).send((
-            detachAllFromUuid: ref.read(
-              mainVehicleProvider.select((value) => value.uuid),
+            detachAllFromId: ref.read(
+              mainVehicleProvider.select((value) => value.id),
             ),
+            parentIsVehicle: true,
           )),
           child: Text(
             strings.detachAll,
@@ -812,9 +772,11 @@ class _RecursiveDetachMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final strings = AppLocalizations.of(context);
     final text = [
-      if (parent.parentHitch != null)
-        strings.hitchOption(parent.parentHitch!.name),
-      (parent.name ?? parent.uuid),
+      if (parent case Equipment(
+        parentConnection: Connection(parentConnector: Connector(:final type)),
+      ))
+        strings.hitchOption(type.name),
+      (parent.name ?? strings.noName),
     ].join('\n');
 
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
@@ -824,7 +786,7 @@ class _RecursiveDetachMenu extends ConsumerWidget {
         closeOnActivate: false,
         child: Text(text, style: textStyle),
         onPressed: () => ref.read(simInputProvider.notifier).send((
-          detachUuid: parent.uuid,
+          detachId: parent.id,
         )),
       );
     }

@@ -54,7 +54,8 @@ class _EquipmentWorkedPathsLayerState
 
     final equipments = ref.watch(
       allEquipmentsProvider.select(
-        (value) => value.values.where((element) => element.hitchParent != null),
+        (value) =>
+            value.values.where((element) => element.parentConnection != null),
       ),
     );
 
@@ -65,7 +66,7 @@ class _EquipmentWorkedPathsLayerState
       final activationStatus = equipment.sectionActivationStatus;
       final (:sections, :origin, :prevActivePosition) = ref.watch(
         equipmentMapPathsProvider(
-          equipment.uuid,
+          equipment.id!,
           forMiniMap: widget.forMiniMap,
         ),
       );
@@ -83,7 +84,6 @@ class _EquipmentWorkedPathsLayerState
               offset: camera.pixelOrigin - origin,
             ),
             size: size,
-            isComplex: true,
           ),
         );
         final activeSections = Map<int, Float32List>.fromEntries(

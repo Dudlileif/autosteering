@@ -21,45 +21,29 @@ part of '../vehicle.dart';
 final class Harvester extends AxleSteeredVehicle {
   /// A harvester with rear wheel steering and a solid front axle.
   Harvester({
-    required super.wheelBase,
-    required super.minTurningRadius,
-    required super.steeringAngleMax,
-    required super.trackWidth,
+    required super.geometry,
     super.antennaPosition,
-    super.solidAxleToFrontHitchDistance = 2,
-    super.solidAxleToRearHitchDistance,
-    super.solidAxleToRearDrawbarDistance = 6,
-    super.ackermannSteeringRatio,
-    super.ackermannPercentage,
-    super.steeringAxleWheelDiameter,
-    super.solidAxleWheelDiameter,
-    super.steeringAxleWheelWidth,
-    super.solidAxleWheelWidth,
-    super.numWheels,
-    super.wheelSpacing,
     super.imu,
     super.was,
     super.gnssAntennaConfig,
-    super.thresholdVelocities,
+    super.thresholds,
     super.steeringHardwareConfig,
-    super.pathTrackingMode,
-    super.purePursuitParameters,
-    super.stanleyParameters,
+    super.pathTrackingParameters,
     super.velocity,
     super.bearing,
     super.pitch,
     super.roll,
     super.steeringAngleInput,
-    super.length = 4,
-    super.width = 2.5,
     super.nudgeDistance,
     super.wheelsRolledDistance,
-    super.hitchFrontFixedChild,
-    super.hitchRearFixedChild,
-    super.hitchRearDrawbarChild,
+    super.connectors,
+    super.childConnections,
     super.name,
+    super.id,
     super.uuid,
-    super.lastUsed,
+    super.lastUsedAt,
+    super.createdAt,
+    super.lastUpdatedAt,
     super.manufacturerColors,
     super.manualSimulationMode,
   }) : super(type: VehicleType.harvester);
@@ -79,38 +63,36 @@ final class Harvester extends AxleSteeredVehicle {
     return Harvester(
       name: info['name'] as String?,
       uuid: info['uuid'] as String?,
-      lastUsed: DateTime.tryParse(info['last_used'] as String),
-      width: dimensions['width'] as double,
-      length: dimensions['length'] as double,
-      wheelBase: dimensions['wheel_base'] as double,
-      trackWidth: dimensions['track_width'] as double,
-      minTurningRadius: steering['min_turning_radius'] as double,
-      steeringAngleMax: steering['steering_angle_max'] as double,
-      ackermannSteeringRatio: steering['ackermann_steering_ratio'] as double,
-      ackermannPercentage: steering['ackermann_percentage'] as double? ?? 100,
-      steeringAxleWheelDiameter:
-          wheels['steering_axle_wheel_diameter'] as double,
-      solidAxleWheelDiameter: wheels['solid_axle_wheel_diameter'] as double,
-      steeringAxleWheelWidth: wheels['steering_axle_wheel_width'] as double,
-      solidAxleWheelWidth: wheels['solid_axle_wheel_width'] as double,
-      numWheels: wheels['num_wheels'] as int?,
-      wheelSpacing: wheels['wheel_spacing'] as double?,
-      pathTrackingMode: PathTrackingMode.values.firstWhere(
-        (element) => element.name == steering['path_tracking_mode'] as String,
+      lastUsedAt: DateTime.tryParse(info['last_used'] as String),
+      geometry: AxleSteeredVehicleGeometry(
+        length: dimensions['length'] as double,
+        width: dimensions['width'] as double,
+        minTurningRadius: steering['min_turning_radius'] as double,
+        steeringAngleMax: steering['steering_angle_max'] as double,
+        trackWidth: dimensions['track_width'] as double,
+        wheelSpacing: wheels['wheel_spacing'] as double? ?? 0.05,
+        numWheels: wheels['num_wheels'] as int? ?? 1,
+        wheelBase: dimensions['wheel_base'] as double,
+        steeringAxleWheelDiameter:
+            wheels['steering_axle_wheel_diameter'] as double,
+        solidAxleWheelDiameter: wheels['solid_axle_wheel_diameter'] as double,
+        steeringAxleWheelWidth: wheels['steering_axle_wheel_width'] as double,
+        solidAxleWheelWidth: wheels['solid_axle_wheel_width'] as double,
+        solidAxleToFrontHitchDistance:
+            hitches['solid_axle_to_front_hitch_distance'] as double?,
+        solidAxleToRearHitchDistance:
+            hitches['solid_axle_to_rear_hitch_distance'] as double?,
+        solidAxleToRearDrawbarDistance:
+            hitches['solid_axle_to_rear_drawbar_distance'] as double?,
+        solidAxleToFrontDistance: 1,
       ),
-      solidAxleToFrontHitchDistance:
-          hitches['solid_axle_to_front_hitch_distance'] as double?,
-      solidAxleToRearHitchDistance:
-          hitches['solid_axle_to_rear_hitch_distance'] as double?,
-      solidAxleToRearDrawbarDistance:
-          hitches['solid_axle_to_rear_drawbar_distance'] as double?,
     );
   }
 
   /// The position of the center of the rear axle.
   @override
   Geographic get steeringAxlePosition => position.rhumb.destinationPoint(
-    distance: wheelBase - antennaToSolidAxleDistance,
+    distance: geometry.wheelBase - antennaToSolidAxleDistance,
     bearing: (bearing + 180).wrap360(),
   );
 
@@ -124,7 +106,7 @@ final class Harvester extends AxleSteeredVehicle {
       switch (isReversing) {
         true => steeringAxlePosition,
         false => solidAxlePosition.rhumb.destinationPoint(
-          distance: wheelBase,
+          distance: geometry.wheelBase,
           bearing: bearing,
         ),
       }.rhumb.destinationPoint(
@@ -146,99 +128,58 @@ final class Harvester extends AxleSteeredVehicle {
   /// parameters/variables altered.
   @override
   Harvester copyWith({
+    VehicleGeometry? geometry,
     Geographic? antennaPosition,
-    double? minTurningRadius,
-    double? steeringAngleMax,
-    double? trackWidth,
-    double? wheelBase,
-    double? solidAxleToFrontHitchDistance,
-    double? solidAxleToRearDrawbarDistance,
-    double? solidAxleToRearHitchDistance,
-    double? ackermannSteeringRatio,
-    double? ackermannPercentage,
-    double? steeringAxleWheelDiameter,
-    double? solidAxleWheelDiameter,
-    double? steeringAxleWheelWidth,
-    double? solidAxleWheelWidth,
-    int? numWheels,
-    double? wheelSpacing,
     Imu? imu,
     Was? was,
     GnssAntennaConfig? gnssAntennaConfig,
-    ThresholdVelocities? thresholdVelocities,
+    VehicleThresholds? thresholds,
     SteeringHardwareConfig? steeringHardwareConfig,
-    PathTrackingMode? pathTrackingMode,
-    PurePursuitParameters? purePursuitParameters,
-    StanleyParameters? stanleyParameters,
+    PathTrackingParameters? pathTrackingParameters,
     double? velocity,
     double? bearing,
     double? pitch,
     double? roll,
     double? steeringAngleInput,
-    double? length,
-    double? width,
     double? nudgeDistance,
     double? wheelsRolledDistance,
-    Hitchable? hitchParent,
-    Hitchable? hitchFrontFixedChild,
-    Hitchable? hitchRearFixedChild,
-    Hitchable? hitchRearDrawbarChild,
     String? name,
     String? uuid,
-    DateTime? lastUsed,
+    DateTime? lastUsedAt,
     ManufacturerColors? manufacturerColors,
     bool? manualSimulationMode,
+    List<Connector>? connectors,
+    List<Connection>? childConnections,
+    int? id,
   }) => Harvester(
+    id: id ?? this.id,
+    geometry: switch (geometry) {
+      final AxleSteeredVehicleGeometry geometry => geometry,
+      _ => this.geometry,
+    },
     antennaPosition: antennaPosition ?? this.antennaPosition,
-    minTurningRadius: minTurningRadius ?? this.minTurningRadius,
-    steeringAngleMax: steeringAngleMax ?? steeringAngleMaxRaw,
-    trackWidth: trackWidth ?? this.trackWidth,
-    wheelBase: wheelBase ?? this.wheelBase,
-    solidAxleToFrontHitchDistance:
-        solidAxleToFrontHitchDistance ?? this.solidAxleToFrontHitchDistance,
-    solidAxleToRearHitchDistance:
-        solidAxleToRearHitchDistance ?? this.solidAxleToRearHitchDistance,
-    solidAxleToRearDrawbarDistance:
-        solidAxleToRearDrawbarDistance ?? this.solidAxleToRearDrawbarDistance,
-    ackermannSteeringRatio:
-        ackermannSteeringRatio ?? this.ackermannSteeringRatio,
-    ackermannPercentage: ackermannPercentage ?? this.ackermannPercentage,
-    steeringAxleWheelDiameter:
-        steeringAxleWheelDiameter ?? this.steeringAxleWheelDiameter,
-    solidAxleWheelDiameter:
-        solidAxleWheelDiameter ?? this.solidAxleWheelDiameter,
-    steeringAxleWheelWidth:
-        steeringAxleWheelWidth ?? this.steeringAxleWheelWidth,
-    solidAxleWheelWidth: solidAxleWheelWidth ?? this.solidAxleWheelWidth,
-    numWheels: numWheels ?? this.numWheels,
-    wheelSpacing: wheelSpacing ?? this.wheelSpacing,
     imu: imu ?? this.imu,
     was: was ?? this.was,
     gnssAntennaConfig: gnssAntennaConfig ?? this.gnssAntennaConfig,
-    thresholdVelocities: thresholdVelocities ?? this.thresholdVelocities,
+    thresholds: thresholds ?? this.thresholds,
     steeringHardwareConfig:
         steeringHardwareConfig ?? this.steeringHardwareConfig,
-    pathTrackingMode: pathTrackingMode ?? this.pathTrackingMode,
-    purePursuitParameters: purePursuitParameters ?? this.purePursuitParameters,
-    stanleyParameters: stanleyParameters ?? this.stanleyParameters,
+    pathTrackingParameters:
+        pathTrackingParameters ?? this.pathTrackingParameters,
     velocity: velocity ?? this.velocity,
     bearing: bearing ?? _bearing,
     pitch: pitch ?? _pitch,
     roll: roll ?? _roll,
     steeringAngleInput: steeringAngleInput ?? this.steeringAngleInput,
-    length: length ?? this.length,
-    width: width ?? this.width,
     nudgeDistance: nudgeDistance ?? this.nudgeDistance,
-
     wheelsRolledDistance: wheelsRolledDistance ?? this.wheelsRolledDistance,
-    hitchFrontFixedChild: hitchFrontFixedChild ?? this.hitchFrontFixedChild,
-    hitchRearFixedChild: hitchRearFixedChild ?? this.hitchRearFixedChild,
-    hitchRearDrawbarChild: hitchRearDrawbarChild ?? this.hitchRearDrawbarChild,
     name: name ?? this.name,
     uuid: uuid ?? this.uuid,
-    lastUsed: lastUsed ?? this.lastUsed,
+    lastUsedAt: lastUsedAt ?? this.lastUsedAt,
     manufacturerColors: manufacturerColors ?? this.manufacturerColors,
     manualSimulationMode: manualSimulationMode ?? this.manualSimulationMode,
+    connectors: connectors ?? this.connectors,
+    childConnections: childConnections ?? this.childConnections,
   )..wheelsRolledDistance = wheelsRolledDistance ?? 0;
 
   @override

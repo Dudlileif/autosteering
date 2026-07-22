@@ -518,7 +518,7 @@ final class ABTurningRadiusProvider
   }
 }
 
-String _$aBTurningRadiusHash() => r'615d6433b0ca314298f69339c19208d00ceb5df9';
+String _$aBTurningRadiusHash() => r'41188dbc44d55c9fa8adacbb8b44767f29359417';
 
 /// A provider for the turning radius of an AB-line.
 
@@ -1706,7 +1706,97 @@ final class SavedABTrackingsProvider
   }
 }
 
-String _$savedABTrackingsHash() => r'1e113dca6f21424d1e0c9c56621eb72de77c6121';
+String _$savedABTrackingsHash() => r'4812856173afd9854ec8fc4defbf0020d74f6c79';
+
+/// A provider for importing missing AB trackings to the database.
+
+@ProviderFor(importMissingABTrackingsToDatabase)
+final importMissingABTrackingsToDatabaseProvider =
+    ImportMissingABTrackingsToDatabaseFamily._();
+
+/// A provider for importing missing AB trackings to the database.
+
+final class ImportMissingABTrackingsToDatabaseProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<int>>,
+          List<int>,
+          FutureOr<List<int>>
+        >
+    with $FutureModifier<List<int>>, $FutureProvider<List<int>> {
+  /// A provider for importing missing AB trackings to the database.
+  ImportMissingABTrackingsToDatabaseProvider._({
+    required ImportMissingABTrackingsToDatabaseFamily super.from,
+    required List<ABTracking> super.argument,
+  }) : super(
+         retry: null,
+         name: r'importMissingABTrackingsToDatabaseProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() =>
+      _$importMissingABTrackingsToDatabaseHash();
+
+  @override
+  String toString() {
+    return r'importMissingABTrackingsToDatabaseProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<int>> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<int>> create(Ref ref) {
+    final argument = this.argument as List<ABTracking>;
+    return importMissingABTrackingsToDatabase(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ImportMissingABTrackingsToDatabaseProvider &&
+        other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$importMissingABTrackingsToDatabaseHash() =>
+    r'74bf79968f6e68c221f2dac80c22f7f2d285eceb';
+
+/// A provider for importing missing AB trackings to the database.
+
+final class ImportMissingABTrackingsToDatabaseFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<int>>, List<ABTracking>> {
+  ImportMissingABTrackingsToDatabaseFamily._()
+    : super(
+        retry: null,
+        name: r'importMissingABTrackingsToDatabaseProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// A provider for importing missing AB trackings to the database.
+
+  ImportMissingABTrackingsToDatabaseProvider call(List<ABTracking> trackings) =>
+      ImportMissingABTrackingsToDatabaseProvider._(
+        argument: trackings,
+        from: this,
+      );
+
+  @override
+  String toString() => r'importMissingABTrackingsToDatabaseProvider';
+}
 
 /// A provider for deleting [tracking] from the user file systemm.
 ///

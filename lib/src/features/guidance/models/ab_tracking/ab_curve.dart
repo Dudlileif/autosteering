@@ -38,6 +38,7 @@ class ABCurve extends ABTracking {
     super.correctedBaseLine,
     super.name,
     super.uuid,
+    super.id,
   }) : assert(
          baseLine.length >= 2,
          'Base curve has to have at least two points',
@@ -127,6 +128,7 @@ class ABCurve extends ABTracking {
       correctedBaseLine: correctedBaseLine,
       baseLineSidewaysOffset: json['base_line_sideways_offset'] as double?,
       name: json['name'] as String?,
+      uuid: json['uuid'] as String?,
     );
   }
 }

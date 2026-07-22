@@ -15,28 +15,23 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'dart:math';
-
 import 'package:autosteering/src/features/equipment/equipment.dart';
-import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiver/strings.dart';
 
 /// A page for configuring the equipment type and set a name for the equipment.
-class EquipmentTypeSelectorPage extends ConsumerStatefulWidget {
+class EquipmentNamePage extends ConsumerStatefulWidget {
   /// A page for configuring the equipment type and set a name for the
   /// equipment.
-  const EquipmentTypeSelectorPage({super.key});
+  const EquipmentNamePage({super.key});
 
   @override
-  ConsumerState<EquipmentTypeSelectorPage> createState() =>
-      _EquipmentTypeSelectorPageState();
+  ConsumerState<EquipmentNamePage> createState() => _EquipmentNamePageState();
 }
 
-class _EquipmentTypeSelectorPageState
-    extends ConsumerState<EquipmentTypeSelectorPage> {
+class _EquipmentNamePageState extends ConsumerState<EquipmentNamePage> {
   late final nameController = TextEditingController(
     text: ref.watch(configuredEquipmentProvider.select((value) => value.name)),
   );
@@ -55,10 +50,6 @@ class _EquipmentTypeSelectorPageState
     return SingleChildScrollView(
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: _EquipmentTypeSelector(clearName: nameController.clear),
-          ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: SizedBox(
@@ -104,93 +95,6 @@ class _EquipmentTypeSelectorPageState
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.error,
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// The actual selector part of the page.
-class _EquipmentTypeSelector extends ConsumerWidget {
-  /// The actual selector part of the page.
-  const _EquipmentTypeSelector({this.clearName});
-
-  final void Function()? clearName;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final strings = AppLocalizations.of(context);
-    final theme = Theme.of(context);
-
-    final equipment = ref.watch(configuredEquipmentProvider);
-
-    return LayoutBuilder(
-      builder: (context, constraints) => SegmentedButton<HitchType>(
-        showSelectedIcon: false,
-        style: theme.segmentedButtonTheme.style?.copyWith(
-          shape: const WidgetStatePropertyAll(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(16)),
-            ),
-          ),
-          padding: const WidgetStatePropertyAll(EdgeInsets.all(8)),
-          iconSize: WidgetStatePropertyAll(
-            min(100, constraints.biggest.shortestSide / 4),
-          ),
-          iconColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.selected)) {
-              return theme.primaryColor;
-            }
-            return null;
-          }),
-          textStyle: WidgetStatePropertyAll(
-            theme.textTheme.bodyLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        onSelectionChanged: (values) {
-          ref
-              .read(configuredEquipmentProvider.notifier)
-              .update(Equipment(hitchType: values.first));
-          clearName?.call();
-        },
-        selected: {equipment.hitchType},
-        segments: [
-          ButtonSegment(
-            value: HitchType.fixed,
-            label: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  strings.hitchType(HitchType.fixed.name),
-                  textAlign: TextAlign.center,
-                ),
-                // TODO(dudlileif): Make three point hitch drawing
-                const Icon(Icons.workspaces),
-              ],
-            ),
-          ),
-          ButtonSegment(
-            value: HitchType.drawbar,
-            label: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  strings.hitchType(HitchType.drawbar.name),
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: theme.brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black,
-                  ),
-                ),
-                // TODO(dudlileif): Make drawbar drawing
-                const Icon(Icons.commit),
-              ],
             ),
           ),
         ],

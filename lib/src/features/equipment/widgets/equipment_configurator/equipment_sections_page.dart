@@ -74,7 +74,11 @@ class EquipmentSectionsPage extends ConsumerWidget {
                             equipment.copyWith(
                               sections: List.generate(
                                 sections,
-                                (index) => Section(index: index),
+                                (index) => Section(
+                                  index: index,
+                                  longitudinalOffset: 0,
+                                  lateralOffset: 0,
+                                ),
                               ),
                             ),
                           );

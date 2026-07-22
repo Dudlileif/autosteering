@@ -56,7 +56,7 @@ class GuidanceMenu extends ConsumerWidget {
               builder: (context, ref, child) {
                 final trackingMode = ref.watch(
                   mainVehicleProvider.select(
-                    (vehicle) => vehicle.pathTrackingMode,
+                    (vehicle) => vehicle.pathTrackingParameters.mode,
                   ),
                 );
                 return SegmentedButton<PathTrackingMode>(
@@ -67,7 +67,7 @@ class GuidanceMenu extends ConsumerWidget {
                   onSelectionChanged: (values) {
                     final oldValue = ref.read(
                       mainVehicleProvider.select(
-                        (value) => value.pathTrackingMode,
+                        (value) => value.pathTrackingParameters.mode,
                       ),
                     );
 
@@ -79,7 +79,7 @@ class GuidanceMenu extends ConsumerWidget {
                       final vehicle = ref.read(mainVehicleProvider);
                       ref.read(saveVehicleProvider(vehicle));
                       Logger.instance.i(
-                        '''Updated vehicle path tracking mode: $oldValue -> ${vehicle.pathTrackingMode}''',
+                        '''Updated vehicle path tracking mode: $oldValue -> ${vehicle.pathTrackingParameters.mode}''',
                       );
                     });
                   },

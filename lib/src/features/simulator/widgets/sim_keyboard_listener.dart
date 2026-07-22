@@ -94,7 +94,7 @@ class SimKeyboardListener extends ConsumerWidget {
             );
             for (final equipment in equipments) {
               ref.read(simInputProvider.notifier).send((
-                uuid: equipment.uuid,
+                id: equipment.id,
                 activeSections:
                     (equipment..toggleAll(deactivateAllIfAnyActive: true))
                         .sectionActivationStatus,

@@ -351,7 +351,7 @@ final class SavedEquipmentSetupsProvider
 }
 
 String _$savedEquipmentSetupsHash() =>
-    r'0d6e509cbec5d1f6b1e1bcfdc68053bb39a0fd5e';
+    r'd9c0111ed11269067245f8cb34f9aefdefc9fafd';
 
 /// A provider for deleting [setup] form the user file system.
 ///

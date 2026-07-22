@@ -42,151 +42,161 @@ class VehicleDrawerLayer extends ConsumerWidget {
               innerPosition: vehicle.steeringAxlePosition.rhumb
                   .destinationPoint(
                     distance:
-                        vehicle.trackWidth / 2 -
-                        vehicle.steeringAxleWheelWidth / 2,
+                        vehicle.geometry.trackWidth / 2 -
+                        vehicle.geometry.steeringAxleWheelWidth / 2,
                     bearing: vehicle.bearing - 90,
                   ),
               vehicleBearing: vehicle.bearing,
               steeringAngle: vehicle.leftSteeringWheelAngle,
-              width: vehicle.steeringAxleWheelWidth,
-              diameter: vehicle.steeringAxleWheelDiameter,
+              width: vehicle.geometry.steeringAxleWheelWidth,
+              diameter: vehicle.geometry.steeringAxleWheelDiameter,
               rotation:
                   vehicle.wheelsRolledDistance /
-                  (vehicle.steeringAxleWheelDiameter * pi) %
+                  (vehicle.geometry.steeringAxleWheelDiameter * pi) %
                   1,
               centerMapOnVehicle: centerMapOnVehicle,
-              numWheels: vehicle.numWheels,
-              wheelSpacing: vehicle.wheelSpacing,
+              numWheels: vehicle.geometry.numWheels,
+              wheelSpacing: vehicle.geometry.wheelSpacing,
             ),
             WheelPainter(
               innerPosition: vehicle.steeringAxlePosition.rhumb
                   .destinationPoint(
                     distance:
-                        vehicle.trackWidth / 2 -
-                        vehicle.steeringAxleWheelWidth / 2,
+                        vehicle.geometry.trackWidth / 2 -
+                        vehicle.geometry.steeringAxleWheelWidth / 2,
                     bearing: vehicle.bearing + 90,
                   ),
               vehicleBearing: vehicle.bearing,
               steeringAngle: vehicle.rightSteeringWheelAngle,
-              width: vehicle.steeringAxleWheelWidth,
-              diameter: vehicle.steeringAxleWheelDiameter,
+              width: vehicle.geometry.steeringAxleWheelWidth,
+              diameter: vehicle.geometry.steeringAxleWheelDiameter,
               rotation:
                   vehicle.wheelsRolledDistance /
-                  (vehicle.steeringAxleWheelDiameter * pi) %
+                  (vehicle.geometry.steeringAxleWheelDiameter * pi) %
                   1,
               isRightWheel: true,
               centerMapOnVehicle: centerMapOnVehicle,
-              numWheels: vehicle.numWheels,
-              wheelSpacing: vehicle.wheelSpacing,
+              numWheels: vehicle.geometry.numWheels,
+              wheelSpacing: vehicle.geometry.wheelSpacing,
             ),
           ],
           WheelPainter(
             innerPosition: vehicle.solidAxlePosition.rhumb.destinationPoint(
               distance:
-                  vehicle.trackWidth / 2 - vehicle.solidAxleWheelWidth / 2,
+                  vehicle.geometry.trackWidth / 2 -
+                  vehicle.geometry.solidAxleWheelWidth / 2,
               bearing: vehicle.bearing - 90,
             ),
             vehicleBearing: vehicle.bearing,
-            width: vehicle.solidAxleWheelWidth,
+            width: vehicle.geometry.solidAxleWheelWidth,
             rotation:
                 vehicle.wheelsRolledDistance /
-                (vehicle.solidAxleWheelDiameter * pi) %
+                (vehicle.geometry.solidAxleWheelDiameter * pi) %
                 1,
-            diameter: vehicle.solidAxleWheelDiameter,
+            diameter: vehicle.geometry.solidAxleWheelDiameter,
             centerMapOnVehicle: centerMapOnVehicle,
-            numWheels: vehicle.numWheels,
-            wheelSpacing: vehicle.wheelSpacing,
+            numWheels: vehicle.geometry.numWheels,
+            wheelSpacing: vehicle.geometry.wheelSpacing,
           ),
           WheelPainter(
             innerPosition: vehicle.solidAxlePosition.rhumb.destinationPoint(
               distance:
-                  vehicle.trackWidth / 2 - vehicle.solidAxleWheelWidth / 2,
+                  vehicle.geometry.trackWidth / 2 -
+                  vehicle.geometry.solidAxleWheelWidth / 2,
               bearing: vehicle.bearing + 90,
             ),
             vehicleBearing: vehicle.bearing,
-            width: vehicle.solidAxleWheelWidth,
-            diameter: vehicle.solidAxleWheelDiameter,
+            width: vehicle.geometry.solidAxleWheelWidth,
+            diameter: vehicle.geometry.solidAxleWheelDiameter,
             rotation:
                 vehicle.wheelsRolledDistance /
-                (vehicle.solidAxleWheelDiameter * pi) %
+                (vehicle.geometry.solidAxleWheelDiameter * pi) %
                 1,
             isRightWheel: true,
             centerMapOnVehicle: centerMapOnVehicle,
-            numWheels: vehicle.numWheels,
-            wheelSpacing: vehicle.wheelSpacing,
+            numWheels: vehicle.geometry.numWheels,
+            wheelSpacing: vehicle.geometry.wheelSpacing,
           ),
         ] else if (vehicle is ArticulatedTractor)
           Stack(
             children: [
               WheelPainter(
                 innerPosition: vehicle.frontAxlePosition.rhumb.destinationPoint(
-                  distance: vehicle.trackWidth / 2 - vehicle.wheelWidth / 2,
+                  distance:
+                      vehicle.geometry.trackWidth / 2 -
+                      vehicle.geometry.wheelWidth / 2,
                   bearing: vehicle.frontAxleAngle - 90,
                 ),
                 vehicleBearing: vehicle.frontAxleAngle,
-                width: vehicle.wheelWidth,
-                diameter: vehicle.wheelDiameter,
+                width: vehicle.geometry.wheelWidth,
+                diameter: vehicle.geometry.wheelDiameter,
                 rotation:
                     vehicle.wheelsRolledDistance /
-                    (vehicle.wheelDiameter * pi) %
+                    (vehicle.geometry.wheelDiameter * pi) %
                     1,
                 centerMapOnVehicle: centerMapOnVehicle,
                 vehicleIsArticulated: true,
-                numWheels: vehicle.numWheels,
-                wheelSpacing: vehicle.wheelSpacing,
+                numWheels: vehicle.geometry.numWheels,
+                wheelSpacing: vehicle.geometry.wheelSpacing,
               ),
               WheelPainter(
                 innerPosition: vehicle.frontAxlePosition.rhumb.destinationPoint(
-                  distance: vehicle.trackWidth / 2 - vehicle.wheelWidth / 2,
+                  distance:
+                      vehicle.geometry.trackWidth / 2 -
+                      vehicle.geometry.wheelWidth / 2,
                   bearing: vehicle.frontAxleAngle + 90,
                 ),
                 vehicleBearing: vehicle.frontAxleAngle,
-                width: vehicle.wheelWidth,
-                diameter: vehicle.wheelDiameter,
+                width: vehicle.geometry.wheelWidth,
+                diameter: vehicle.geometry.wheelDiameter,
                 rotation:
                     vehicle.wheelsRolledDistance /
-                    (vehicle.wheelDiameter * pi) %
+                    (vehicle.geometry.wheelDiameter * pi) %
                     1,
                 isRightWheel: true,
                 centerMapOnVehicle: centerMapOnVehicle,
                 vehicleIsArticulated: true,
-                numWheels: vehicle.numWheels,
-                wheelSpacing: vehicle.wheelSpacing,
+                numWheels: vehicle.geometry.numWheels,
+                wheelSpacing: vehicle.geometry.wheelSpacing,
               ),
               WheelPainter(
                 innerPosition: vehicle.rearAxlePosition.rhumb.destinationPoint(
-                  distance: vehicle.trackWidth / 2 - vehicle.wheelWidth / 2,
+                  distance:
+                      vehicle.geometry.trackWidth / 2 -
+                      vehicle.geometry.wheelWidth / 2,
                   bearing: vehicle.rearAxleAngle - 90 + 180,
                 ),
                 vehicleBearing: vehicle.rearAxleAngle + 180,
-                width: vehicle.wheelWidth,
-                diameter: vehicle.wheelDiameter,
+                width: vehicle.geometry.wheelWidth,
+                diameter: vehicle.geometry.wheelDiameter,
                 rotation:
                     vehicle.wheelsRolledDistance /
-                    (vehicle.wheelDiameter * pi) %
+                    (vehicle.geometry.wheelDiameter * pi) %
                     1,
                 centerMapOnVehicle: centerMapOnVehicle,
                 vehicleIsArticulated: true,
-                numWheels: vehicle.numWheels,
-                wheelSpacing: vehicle.wheelSpacing,
+                numWheels: vehicle.geometry.numWheels,
+                wheelSpacing: vehicle.geometry.wheelSpacing,
               ),
               WheelPainter(
                 innerPosition: vehicle.rearAxlePosition.rhumb.destinationPoint(
-                  distance: vehicle.trackWidth / 2 - vehicle.wheelWidth / 2,
+                  distance:
+                      vehicle.geometry.trackWidth / 2 -
+                      vehicle.geometry.wheelWidth / 2,
                   bearing: vehicle.rearAxleAngle + 90 + 180,
                 ),
                 vehicleBearing: vehicle.rearAxleAngle + 180,
-                width: vehicle.wheelWidth,
-                diameter: vehicle.wheelDiameter,
+                width: vehicle.geometry.wheelWidth,
+                diameter: vehicle.geometry.wheelDiameter,
                 rotation:
                     vehicle.wheelsRolledDistance /
-                    (vehicle.wheelDiameter * pi) %
+                    (vehicle.geometry.wheelDiameter * pi) %
                     1,
                 isRightWheel: true,
                 centerMapOnVehicle: centerMapOnVehicle,
                 vehicleIsArticulated: true,
-                numWheels: vehicle.numWheels,
-                wheelSpacing: vehicle.wheelSpacing,
+                numWheels: vehicle.geometry.numWheels,
+                wheelSpacing: vehicle.geometry.wheelSpacing,
               ),
             ],
           ),
@@ -195,39 +205,41 @@ class VehicleDrawerLayer extends ConsumerWidget {
           WheelPainter(
             innerPosition: vehicle.steeringAxlePosition.rhumb.destinationPoint(
               distance:
-                  vehicle.trackWidth / 2 - vehicle.steeringAxleWheelWidth / 2,
+                  vehicle.geometry.trackWidth / 2 -
+                  vehicle.geometry.steeringAxleWheelWidth / 2,
               bearing: vehicle.bearing - 90,
             ),
             vehicleBearing: vehicle.bearing,
             steeringAngle: vehicle.leftSteeringWheelAngle,
-            width: vehicle.steeringAxleWheelWidth,
-            diameter: vehicle.steeringAxleWheelDiameter,
+            width: vehicle.geometry.steeringAxleWheelWidth,
+            diameter: vehicle.geometry.steeringAxleWheelDiameter,
             rotation:
                 vehicle.wheelsRolledDistance /
-                (vehicle.steeringAxleWheelDiameter * pi) %
+                (vehicle.geometry.steeringAxleWheelDiameter * pi) %
                 1,
             centerMapOnVehicle: centerMapOnVehicle,
-            numWheels: vehicle.numWheels,
-            wheelSpacing: vehicle.wheelSpacing,
+            numWheels: vehicle.geometry.numWheels,
+            wheelSpacing: vehicle.geometry.wheelSpacing,
           ),
           WheelPainter(
             innerPosition: vehicle.steeringAxlePosition.rhumb.destinationPoint(
               distance:
-                  vehicle.trackWidth / 2 - vehicle.steeringAxleWheelWidth / 2,
+                  vehicle.geometry.trackWidth / 2 -
+                  vehicle.geometry.steeringAxleWheelWidth / 2,
               bearing: vehicle.bearing + 90,
             ),
             vehicleBearing: vehicle.bearing,
             steeringAngle: vehicle.rightSteeringWheelAngle,
-            width: vehicle.steeringAxleWheelWidth,
-            diameter: vehicle.steeringAxleWheelDiameter,
+            width: vehicle.geometry.steeringAxleWheelWidth,
+            diameter: vehicle.geometry.steeringAxleWheelDiameter,
             rotation:
                 vehicle.wheelsRolledDistance /
-                (vehicle.steeringAxleWheelDiameter * pi) %
+                (vehicle.geometry.steeringAxleWheelDiameter * pi) %
                 1,
             isRightWheel: true,
             centerMapOnVehicle: centerMapOnVehicle,
-            numWheels: vehicle.numWheels,
-            wheelSpacing: vehicle.wheelSpacing,
+            numWheels: vehicle.geometry.numWheels,
+            wheelSpacing: vehicle.geometry.wheelSpacing,
           ),
         ],
         CircleLayer(
@@ -306,12 +318,14 @@ class MapVehicleTopDownPainter extends StatelessWidget {
         .steeringAxlePosition
         .rhumb
         .destinationPoint(
-          distance: vehicle.width / 2,
+          distance: vehicle.geometry.width / 2,
           bearing: vehicle.bearing - 90,
         );
     final steeringAxleOffset =
-        axleLeftPosition.rhumb.distanceTo(points.first) / vehicle.length;
-    final steeringAxleWidth = vehicle.trackWidth / vehicle.width;
+        axleLeftPosition.rhumb.distanceTo(points.first) /
+        vehicle.geometry.length;
+    final steeringAxleWidth =
+        vehicle.geometry.trackWidth / vehicle.geometry.width;
 
     return Positioned(
       left: bounds.topLeft.dx,

@@ -204,7 +204,7 @@ class _LoadVehicleMenu extends ConsumerWidget {
         .watch(savedVehiclesProvider)
         .maybeWhen(
           data: (data) =>
-              data.sorted((a, b) => b.lastUsed.compareTo(a.lastUsed)),
+              data.sorted((a, b) => b.lastUsedAt.compareTo(a.lastUsedAt)),
           orElse: () => <Vehicle>[],
           skipLoadingOnRefresh: false,
         );
@@ -223,7 +223,7 @@ class _LoadVehicleMenu extends ConsumerWidget {
             (vehicle) => ConstrainedBox(
               constraints: const BoxConstraints(minWidth: 200),
               child: ListTile(
-                title: Text(vehicle.name ?? vehicle.uuid, style: textStyle),
+                title: Text(vehicle.name ?? strings.noName, style: textStyle),
                 subtitle: Text(
                   strings.vehicleType(vehicle.runtimeType.toString()),
                 ),
@@ -237,7 +237,7 @@ class _LoadVehicleMenu extends ConsumerWidget {
                   vehicle
                     ..position = position
                     ..bearing = bearing
-                    ..lastUsed = DateTime.now();
+                    ..lastUsedAt = DateTime.now();
 
                   ref.read(mainVehicleProvider.notifier).update(vehicle);
 
@@ -262,7 +262,7 @@ class _LoadVehicleMenu extends ConsumerWidget {
                                     ref,
                                     child,
                                   ) => DeleteDialog(
-                                    name: vehicle.name ?? vehicle.uuid,
+                                    name: vehicle.name ?? strings.noName,
                                     onDelete: () async => await ref.watch(
                                       deleteVehicleProvider(
                                         vehicle,

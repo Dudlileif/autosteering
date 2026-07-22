@@ -1229,7 +1229,7 @@ final class SavedFieldsProvider
   }
 }
 
-String _$savedFieldsHash() => r'f7493e6ecfac6850213e6f0ce78c1e88e5a4d40b';
+String _$savedFieldsHash() => r'fc23b1736f10f7e7593bf9ba74f16ea673b149ed';
 
 /// A provider for deleting [field] from the user file system.
 ///

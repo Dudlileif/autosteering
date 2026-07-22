@@ -43,8 +43,7 @@ enum ABTrackingType {
   abLine('AB Line'),
 
   /// AB curve
-  abCurve('AB Curve')
-  ;
+  abCurve('AB Curve');
 
   const ABTrackingType(this.name);
 
@@ -75,6 +74,7 @@ sealed class ABTracking {
     double? baseLineSidewaysOffset,
     this.correctedBaseLine,
     String? uuid,
+    this.id,
   }) : uuid = uuid ?? const Uuid().v4(),
        start = baseLine.first,
        end = baseLine.last,
@@ -124,7 +124,11 @@ sealed class ABTracking {
     return ABLine.fromJson(json);
   }
 
+  /// The local database ID of this.
+  int? id;
+
   /// The unique identifier for this.
+  @Deprecated('To be removed')
   final String uuid;
 
   /// Which subtype of [ABTracking] this is.
@@ -1024,7 +1028,9 @@ sealed class ABTracking {
       currentPathTracking = null;
       return;
     }
-    final pathTrackingIsCorrectMode = switch (vehicle.pathTrackingMode) {
+    final pathTrackingIsCorrectMode = switch (vehicle
+        .pathTrackingParameters
+        .mode) {
       PathTrackingMode.stanley => currentPathTracking is StanleyPathTracking,
       PathTrackingMode.purePursuit =>
         currentPathTracking is PurePursuitPathTracking,
@@ -1033,7 +1039,7 @@ sealed class ABTracking {
     // Return if we're already in the right mode.
     if (force || !pathTrackingIsCorrectMode) {
       if (currentLine != null) {
-        currentPathTracking = switch (vehicle.pathTrackingMode) {
+        currentPathTracking = switch (vehicle.pathTrackingParameters.mode) {
           PathTrackingMode.stanley => StanleyPathTracking(
             wayPoints: currentLine!,
           ),
@@ -1041,7 +1047,7 @@ sealed class ABTracking {
             wayPoints: currentLine!,
           ),
         }..setIndexToClosestPoint(vehicle);
-        baseLinePathTracking = switch (vehicle.pathTrackingMode) {
+        baseLinePathTracking = switch (vehicle.pathTrackingParameters.mode) {
           PathTrackingMode.stanley => StanleyPathTracking(wayPoints: baseLine),
           PathTrackingMode.purePursuit => PurePursuitPathTracking(
             wayPoints: baseLine,
@@ -1055,7 +1061,7 @@ sealed class ABTracking {
         nextPathTracking = null;
       } else if (nextOffset != null && nextLine != null) {
         nextPathTracking =
-            switch (vehicle.pathTrackingMode) {
+            switch (vehicle.pathTrackingParameters.mode) {
                 PathTrackingMode.stanley => StanleyPathTracking(
                   wayPoints: nextLine!,
                 ),
@@ -1163,7 +1169,7 @@ sealed class ABTracking {
           false => dubinsPath,
         };
 
-        final turn = switch (vehicle.pathTrackingMode) {
+        final turn = switch (vehicle.pathTrackingParameters.mode) {
           PathTrackingMode.purePursuit => PurePursuitPathTracking(
             wayPoints: turnPath,
           ),
@@ -1212,7 +1218,7 @@ sealed class ABTracking {
                   ),
                 },
               } +
-              switch (vehicle.pathTrackingMode) {
+              switch (vehicle.pathTrackingParameters.mode) {
                 PathTrackingMode.purePursuit => vehicle.lookAheadDistance,
                 _ => 0,
               },
@@ -1239,7 +1245,7 @@ sealed class ABTracking {
                   ),
                 },
               } +
-              switch (vehicle.pathTrackingMode) {
+              switch (vehicle.pathTrackingParameters.mode) {
                 PathTrackingMode.purePursuit => vehicle.lookAheadDistance,
                 _ => 0,
               },

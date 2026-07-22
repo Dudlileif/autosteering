@@ -20,6 +20,7 @@ import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
+import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -99,8 +100,18 @@ FutureOr<List<EquipmentSetup>> savedEquipmentSetups(Ref ref) async => await ref
         folder: path.join('equipment', 'setups'),
       ).future,
     )
-    .then((data) {
+    .then((data) async {
       final setups = data.cast<EquipmentSetup>();
+
+      final savedEquipments = await ref.watch(savedEquipmentsProvider.future);
+      for (final setup in setups) {
+        for (final equipment in setup.allAttached.cast<Equipment>()) {
+          setup.updateChild(
+            savedEquipments.firstWhereOrNull((s) => s.uuid == equipment.uuid) ??
+                equipment,
+          );
+        }
+      }
 
       return setups;
     });

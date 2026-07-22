@@ -109,7 +109,7 @@ final class ConfiguredEquipmentProvider
 }
 
 String _$configuredEquipmentHash() =>
-    r'b7c8ba36e74c11777dea123a17b281783100b62b';
+    r'279df5556bf59b2bfff5bc3d4c1edcd6835c1270';
 
 /// A provider for the equipment from the configurator.
 

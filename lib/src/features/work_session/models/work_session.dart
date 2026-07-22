@@ -23,12 +23,12 @@ import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
-import 'package:uuid/uuid.dart';
 
 /// A class that contains objects used in and info about a work session.
 class WorkSession {
   /// A class that contains objects used in and info about a work session.
   WorkSession({
+    this.id,
     this.field,
     this.vehicle,
     this.equipmentSetup,
@@ -38,12 +38,13 @@ class WorkSession {
     this.note,
     this.start,
     this.end,
-    Map<String, List<EquipmentLogRecord>>? equipmentLogs,
-    String? uuid,
+    Map<String, List<EquipmentLogRecord>>? equipmentLogsUuids,
+    Map<int, List<EquipmentLogRecord>>? equipmentLogs,
+    this.uuid,
   }) : abTracking = abTracking ?? [],
        pathTracking = pathTracking ?? [],
-       equipmentLogs = equipmentLogs ?? {},
-       uuid = uuid ?? const Uuid().v4();
+       equipmentLogsUuids = equipmentLogsUuids ?? {},
+       equipmentLogs = equipmentLogs ?? {};
 
   /// Creates a work session object from the [json] object.
   factory WorkSession.fromJson(Map<String, dynamic> json) {
@@ -90,7 +91,7 @@ class WorkSession {
         ? DateTime.tryParse(time['end'] as String)
         : null;
 
-    final equipmentLogs = json['equipment_logs'] != null
+    final equipmentLogsUuids = json['equipment_logs'] != null
         ? Map<String, dynamic>.from(json['equipment_logs'] as Map).map(
             (uuid, log) => MapEntry(
               uuid,
@@ -116,9 +117,12 @@ class WorkSession {
       uuid: uuid,
       start: start,
       end: end,
-      equipmentLogs: equipmentLogs,
+      equipmentLogsUuids: equipmentLogsUuids,
     );
   }
+
+  /// The local database ID of this.
+  int? id;
 
   /// The field this work session was on.
   Field? field;
@@ -139,7 +143,7 @@ class WorkSession {
   String? name;
 
   /// A unique identifier for this.
-  final String uuid;
+  String? uuid;
 
   /// A note for adding some info about the work, e.g. type of work done,
   /// species, application rate etc...
@@ -164,9 +168,9 @@ class WorkSession {
     }
     DateTime? firstWorkTime;
 
-    final timeSpans = <String, List<({DateTime start, DateTime end})>>{};
+    final timeSpans = <int, List<({DateTime start, DateTime end})>>{};
     for (final equipment in equipmentLogs.entries) {
-      final uuid = equipment.key;
+      final equipmentId = equipment.key;
       final logs = equipment.value;
 
       DateTime? start;
@@ -180,7 +184,7 @@ class WorkSession {
         } else if (record.activeSections.isEmpty) {
           if (start != null) {
             timeSpans.update(
-              uuid,
+              equipmentId,
               (prevSpans) => [...prevSpans, (start: start!, end: record.time)],
               ifAbsent: () => [(start: start!, end: record.time)],
             );
@@ -280,11 +284,11 @@ class WorkSession {
     if (equipmentLogs.isEmpty) {
       return null;
     } else if (equipmentLogs.length == 1) {
-      final timeSpans = <String, List<({DateTime start, DateTime end})>>{};
+      final timeSpans = <int, List<({DateTime start, DateTime end})>>{};
       DateTime? firstTime;
 
       for (final equipment in equipmentLogs.entries) {
-        final uuid = equipment.key;
+        final equipmentId = equipment.key;
         final logs = equipment.value;
 
         DateTime? start;
@@ -298,7 +302,7 @@ class WorkSession {
           } else {
             if (start != null) {
               timeSpans.update(
-                uuid,
+                equipmentId,
                 (prevSpans) => [
                   ...prevSpans,
                   (start: start!, end: record.time),
@@ -361,7 +365,12 @@ class WorkSession {
 
   /// A map with equipment logs for all the equipment that have been active at
   /// some point.
-  Map<String, List<EquipmentLogRecord>> equipmentLogs;
+  @Deprecated('Will be removed in favour of equipmentLogs')
+  Map<String, List<EquipmentLogRecord>> equipmentLogsUuids;
+
+  /// A map with equipment logs for all the equipment that have been active at
+  /// some point.
+  Map<int, List<EquipmentLogRecord>> equipmentLogs;
 
   /// Creates a json compatible structure of the object.
   Map<String, dynamic> toJson({bool withEquipmentLogs = false}) {
@@ -378,14 +387,14 @@ class WorkSession {
 
     map['vehicle'] = vehicle;
 
-    map['equipment_setup'] = equipmentSetup;
+    map['equipment_setup'] = equipmentSetup?.toJson();
 
     map['ab_tracking'] = abTracking;
 
     map['path_tracking'] = pathTracking;
 
-    if (withEquipmentLogs && equipmentLogs.isNotEmpty) {
-      map['equipment_logs'] = equipmentLogs.map(
+    if (withEquipmentLogs && equipmentLogsUuids.isNotEmpty) {
+      map['equipment_logs'] = equipmentLogsUuids.map(
         (uuid, log) => MapEntry(
           uuid,
           log.map((record) => jsonEncode(record.toJson())).toList(),
@@ -407,9 +416,12 @@ class WorkSession {
     String? note,
     DateTime? start,
     DateTime? end,
-    Map<String, List<EquipmentLogRecord>>? equipmentLogs,
+    Map<String, List<EquipmentLogRecord>>? equipmentLogsUuids,
+    Map<int, List<EquipmentLogRecord>>? equipmentLogs,
     String? uuid,
+    int? id,
   }) => WorkSession(
+    id: id ?? this.id,
     uuid: uuid ?? this.uuid,
     field: field ?? this.field,
     vehicle: vehicle ?? this.vehicle,
@@ -420,6 +432,7 @@ class WorkSession {
     note: note ?? this.note,
     start: start ?? this.start,
     end: end ?? this.end,
+    equipmentLogsUuids: equipmentLogsUuids ?? Map.from(this.equipmentLogsUuids),
     equipmentLogs: equipmentLogs ?? Map.from(this.equipmentLogs),
   );
 }

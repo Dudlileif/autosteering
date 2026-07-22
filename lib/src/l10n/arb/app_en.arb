@@ -33,6 +33,8 @@
     },
     "addButton": "Add button",
     "@addButton": {},
+    "addConnector": "Add connector",
+    "@addConnector": {},
     "addInteriorBoundary": "Add interior boundary",
     "@addInteriorBoundary": {},
     "addPoint": "Add point",
@@ -198,6 +200,33 @@
     },
     "confirm": "Confirm",
     "@confirm": {},
+    "connectorRelation": "{type, select, other{Relation} child{Child} parent{Parent}}",
+    "@connectorRelation": {
+        "placeholders": {
+            "type": {
+                "type": "String",
+                "example": "child"
+            }
+        }
+    },
+    "connectors": "{count, plural, other{Connectors} zero{Connectors} one{Connector} two{Connectors} few{Connectors} many{Connectors}}",
+    "@connectors": {
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "example": "1"
+            }
+        }
+    },
+    "connectorType": "{type, select, other{Connector} fixed{Fixed} drawbar{Drawbar}}",
+    "@connectorType": {
+        "placeholders": {
+            "type": {
+                "type": "String",
+                "example": "fixed"
+            }
+        }
+    },
     "coolStepMinRpm": "{option, select, disabled{CoolStep min: Disabled} other{CoolStep min: {rpm} RPM}}",
     "@coolStepMinRpm": {
         "placeholders": {
@@ -517,7 +546,7 @@
             }
         }
     },
-    "hitchOption": "{option, select, other{Hitch} frontFixed{Front fixed} rearFixed{Rear fixed} rearDrawbar{Rear drawbar}}",
+    "hitchOption": "{option, select, other{Hitch} fixed{Fixed} drawbar{Drawbar}}",
     "@hitchOption": {
         "placeholders": {
             "option": {
@@ -534,15 +563,6 @@
     "@hitchToRearFixedHitchDistance": {},
     "hitchToRearDrawbarDistance": "Hitch to rear drawbar distance",
     "@hitchToRearDrawbarDistance": {},
-    "hitchType": "{type, select, other{Hitch} fixed{Fixed} drawbar{Drawbar}}",
-    "@hitchType": {
-        "placeholders": {
-            "type": {
-                "type": "String",
-                "example": "fixed"
-            }
-        }
-    },
     "hitches": "{count, plural, other{Hitches} zero{Hitches} one{Hitch} two{Hitches} few{Hitches} many{Hitches}}",
     "@hitches": {
         "description": "hitches",

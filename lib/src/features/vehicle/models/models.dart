@@ -19,3 +19,5 @@ export 'ackermann_steering.dart';
 export 'autosteering_state.dart';
 export 'preconfigured_vehicles.dart';
 export 'vehicle.dart';
+export 'vehicle_geometry.dart';
+export 'vehicle_thresholds.dart';

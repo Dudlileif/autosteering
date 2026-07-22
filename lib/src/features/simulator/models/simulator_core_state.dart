@@ -27,7 +27,6 @@ import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
-import 'package:autosteering/src/features/vehicle/models/threshold_velocities.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
@@ -192,7 +191,7 @@ class SimulatorCoreState {
     final now = DateTime.now();
     period = now.difference(prevUpdateTime).inMicroseconds / 1e6;
     prevUpdateTime = now;
-    vehicle?.lastUsed = now;
+    vehicle?.lastUsedAt = now;
   }
 
   /// Change state parameters/values according to the incomming [message].
@@ -208,15 +207,9 @@ class SimulatorCoreState {
           -message.steeringAngleMax,
           message.steeringAngleMax,
         ),
-        hitchFrontFixedChild:
-            message.hitchFrontFixedChild ?? vehicle?.hitchFrontFixedChild,
-        hitchRearFixedChild:
-            message.hitchRearFixedChild ?? vehicle?.hitchRearFixedChild,
-        hitchRearDrawbarChild:
-            message.hitchRearDrawbarChild ?? vehicle?.hitchRearDrawbarChild,
         manualSimulationMode: allowManualSimInput,
       );
-      pathTrackingMode = message.pathTrackingMode;
+      pathTrackingMode = message.pathTrackingParameters.mode;
     }
     // Update whether the simulation should accept manual controls.
     else if (message is ({bool allowManualSimInput})) {
@@ -285,8 +278,8 @@ class SimulatorCoreState {
       vehicle?.steeringHardwareConfig = message;
     }
     // Update the autosteering threshold velocities of the vehicle.
-    else if (message is ThresholdVelocities) {
-      vehicle?.thresholdVelocities = message;
+    else if (message is VehicleThresholds) {
+      vehicle?.thresholds = message;
     }
     // Update bearing
     else if (message is ({double bearing})) {
@@ -421,16 +414,28 @@ class SimulatorCoreState {
     }
     // Update pure pursuit parameters.
     else if (message is PurePursuitParameters) {
-      vehicle?.purePursuitParameters = message;
+      vehicle = vehicle?.copyWith(
+        pathTrackingParameters: vehicle?.pathTrackingParameters.copyWith(
+          purePursuit: message,
+        ),
+      );
     }
     // Update Stanley parameters.
     else if (message is StanleyParameters) {
-      vehicle?.stanleyParameters = message;
+      vehicle = vehicle?.copyWith(
+        pathTrackingParameters: vehicle?.pathTrackingParameters.copyWith(
+          stanley: message,
+        ),
+      );
     }
     // Change pure pursuit mode.
     else if (message is PathTrackingMode) {
       pathTrackingMode = message;
-      vehicle?.pathTrackingMode = pathTrackingMode;
+      vehicle = vehicle?.copyWith(
+        pathTrackingParameters: vehicle?.pathTrackingParameters.copyWith(
+          mode: pathTrackingMode,
+        ),
+      );
       if (pathTracking != null) {
         final index = pathTracking!.currentIndex;
         pathTracking = switch (pathTrackingMode) {
@@ -472,19 +477,21 @@ class SimulatorCoreState {
         pathTracking!.cumulativeIndex = pathTracking!.closestIndex(vehicle!);
       }
     }
-    // Attach a new equipment. Detach by sending null as the equipment with
-    // the same hitch position.
-    else if (message is ({Equipment child, Hitch position})) {
-      vehicle?.attachChild(message.child, message.position);
-    }
-    // Attach a new equipment. Detach by sending null as the equipment with
-    // the same hitch position.
+    // Attach a new equipment to the parent with the given connectors.
     else if (message
-        is ({String parentUuid, Equipment child, Hitch position})) {
+        is ({
+          Equipment child,
+          Connector childConnector,
+          Connector parentConnector,
+          int parentId,
+          bool parentIsVehicle,
+        })) {
       vehicle?.attachChildTo(
-        message.parentUuid,
-        message.child,
-        message.position,
+        parentId: message.parentId,
+        parentConnector: message.parentConnector,
+        child: message.child,
+        childConnector: message.childConnector,
+        parentIsVehicle: message.parentIsVehicle,
       );
     }
     // Update an already attached equipment in the hierarchy.
@@ -492,36 +499,45 @@ class SimulatorCoreState {
       vehicle?.updateChild(message.updatedEquipment);
     }
     // Detach an equipment in the hierarchy.
-    else if (message is ({String detachUuid})) {
-      vehicle?.detachChild(message.detachUuid);
+    else if (message is ({int detachId})) {
+      vehicle?.detachChild(message.detachId);
     }
     // Detach all equipment in the hierarchy from the parent with the given
-    // uuid.
-    else if (message is ({String detachAllFromUuid})) {
-      vehicle?.detachAllFrom(message.detachAllFromUuid);
+    // id.
+    else if (message is ({int detachAllFromId, bool parentIsVehicle})) {
+      vehicle?.detachAllFrom(
+        message.detachAllFromId,
+        isVehicle: message.parentIsVehicle,
+      );
     }
     // Apply the sent equipment setup to the chosen parent.
-    else if (message is ({EquipmentSetup equipmentSetup, String parentUuid})) {
-      final parent = vehicle?.findChildRecursive(message.parentUuid);
+    else if (message
+        is ({
+          EquipmentSetup equipmentSetup,
+          int parentId,
+          bool parentIsVehicle,
+        })) {
+      final parent = message.parentIsVehicle
+          ? vehicle
+          : vehicle?.findChildRecursive(message.parentId);
       if (parent != null) {
         message.equipmentSetup.attachChildrenTo(parent);
       }
     }
-    // Update the active sections of the equipment with the given uuid.
-    else if (message is ({String uuid, Map<int, bool> activeSections})) {
-      final equipment = vehicle?.findChildRecursive(message.uuid);
-      if (equipment != null && equipment is Equipment) {
+    // Update the active sections of the equipment with the given id.
+    else if (message is ({int id, Map<int, bool> activeSections})) {
+      final equipment = vehicle?.findChildRecursive(message.id);
+      if (equipment != null) {
         message.activeSections.forEach((section, active) {
           equipment.sections[section].active = active;
         });
       }
     }
     // Update whether to automate section activation of the equipment with the
-    // given uuid.
-    else if (message
-        is ({String uuid, Map<int, bool> automateActiveSections})) {
-      final equipment = vehicle?.findChildRecursive(message.uuid);
-      if (equipment != null && equipment is Equipment) {
+    // given id.
+    else if (message is ({int id, Map<int, bool> automateActiveSections})) {
+      final equipment = vehicle?.findChildRecursive(message.id);
+      if (equipment != null) {
         message.automateActiveSections.forEach((section, automate) {
           equipment.sections[section].automateActivation = automate;
         });
@@ -833,7 +849,7 @@ class SimulatorCoreState {
       // Clamp steering target to within safe range given by max angular
       // velocity with some margin.
       final maxSteeringAngle = vehicle!.steeringAngleFromAngularVelocity(
-        vehicle!.thresholdVelocities.maxAngularVelocity * 0.95,
+        vehicle!.thresholds.maxAngularVelocity * 0.95,
       );
       steeringAngleTarget = switch (steeringAngleTarget!) {
         final target when target.abs() > maxSteeringAngle =>
@@ -899,29 +915,28 @@ class SimulatorCoreState {
       vehicle.velocity,
       vehicle.angularVelocity?.abs(),
     )) {
-      case (final velocity, _)
-          when velocity > vehicle.thresholdVelocities.maxVelocity:
+      case (final velocity, _) when velocity > vehicle.thresholds.maxVelocity:
         if (autosteeringState == AutosteeringState.enabled) {
           mainThreadSendStream.add(
             LogEvent(
               Level.warning,
               [
                 '''Autosteer standby! Max velocity threshold exceeded: ''',
-                '${velocity.toStringAsFixed(2)} / ${vehicle.thresholdVelocities.maxVelocity.toStringAsFixed(2)} m/s',
+                '${velocity.toStringAsFixed(2)} / ${vehicle.thresholds.maxVelocity.toStringAsFixed(2)} m/s',
               ].join(),
             ),
           );
         }
         return false;
       case (_, final double angularVelocity)
-          when angularVelocity > vehicle.thresholdVelocities.maxAngularVelocity:
+          when angularVelocity > vehicle.thresholds.maxAngularVelocity:
         if (autosteeringState == AutosteeringState.enabled) {
           mainThreadSendStream.add(
             LogEvent(
               Level.warning,
               [
                 '''Autosteer standby! Max angular velocity threshold exceeded: ''',
-                '${angularVelocity.toStringAsFixed(2)} / ${vehicle.thresholdVelocities.maxAngularVelocity.toStringAsFixed(2)} °/s',
+                '${angularVelocity.toStringAsFixed(2)} / ${vehicle.thresholds.maxAngularVelocity.toStringAsFixed(2)} °/s',
               ].join(),
             ),
           );
@@ -929,35 +944,35 @@ class SimulatorCoreState {
         return false;
       case (final velocity, _)
           when velocity < 0 &&
-              velocity.abs() > vehicle.thresholdVelocities.maxReversingVelocity:
+              velocity.abs() > vehicle.thresholds.maxReversingVelocity:
         if (autosteeringState == AutosteeringState.enabled) {
           mainThreadSendStream.add(
             LogEvent(
               Level.warning,
               [
                 '''Autosteer standby! Max reversing velocity threshold exceeded: ''',
-                '${velocity.toStringAsFixed(2)} / ${vehicle.thresholdVelocities.maxReversingVelocity.toStringAsFixed(2)} m/s',
+                '${velocity.toStringAsFixed(2)} / ${vehicle.thresholds.maxReversingVelocity.toStringAsFixed(2)} m/s',
               ].join(),
             ),
           );
         }
         return false;
       case (final velocity, _)
-          when velocity.abs() < vehicle.thresholdVelocities.minVelocity:
+          when velocity.abs() < vehicle.thresholds.minVelocity:
         if (autosteeringState != AutosteeringState.standby) {
           mainThreadSendStream.add(
             LogEvent(
               Level.warning,
               [
                 '''Autosteer standby! Below min velocity threshold: ''',
-                '${velocity.toStringAsFixed(2)} / ${vehicle.thresholdVelocities.minVelocity.toStringAsFixed(2)} m/s',
+                '${velocity.toStringAsFixed(2)} / ${vehicle.thresholds.minVelocity.toStringAsFixed(2)} m/s',
               ].join(),
             ),
           );
         }
         return false;
       case (final velocity, _)
-          when velocity.abs() > vehicle.thresholdVelocities.minVelocity:
+          when velocity.abs() > vehicle.thresholds.minVelocity:
         if (autosteeringState != AutosteeringState.enabled) {
           mainThreadSendStream.add(
             LogEvent(

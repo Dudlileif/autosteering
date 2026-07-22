@@ -259,7 +259,7 @@ final class DebugEquipmentTravelledPathListProvider
     extends
         $NotifierProvider<
           DebugEquipmentTravelledPathList,
-          Map<String, List<LatLng>>
+          Map<int, List<LatLng>>
         > {
   /// A list of the last [DebugEquipmentTravelledPathSize] position points for the
   /// equipments.
@@ -282,33 +282,33 @@ final class DebugEquipmentTravelledPathListProvider
   DebugEquipmentTravelledPathList create() => DebugEquipmentTravelledPathList();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(Map<String, List<LatLng>> value) {
+  Override overrideWithValue(Map<int, List<LatLng>> value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<Map<String, List<LatLng>>>(value),
+      providerOverride: $SyncValueProvider<Map<int, List<LatLng>>>(value),
     );
   }
 }
 
 String _$debugEquipmentTravelledPathListHash() =>
-    r'd0f6d8966fcfd69b2de45bf32a3c4a03518e47de';
+    r'118059aed79cd43ae37cb1a73211f46fc866c49f';
 
 /// A list of the last [DebugEquipmentTravelledPathSize] position points for the
 /// equipments.
 
 abstract class _$DebugEquipmentTravelledPathList
-    extends $Notifier<Map<String, List<LatLng>>> {
-  Map<String, List<LatLng>> build();
+    extends $Notifier<Map<int, List<LatLng>>> {
+  Map<int, List<LatLng>> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final ref =
-        this.ref as $Ref<Map<String, List<LatLng>>, Map<String, List<LatLng>>>;
+        this.ref as $Ref<Map<int, List<LatLng>>, Map<int, List<LatLng>>>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<Map<String, List<LatLng>>, Map<String, List<LatLng>>>,
-              Map<String, List<LatLng>>,
+              AnyNotifier<Map<int, List<LatLng>>, Map<int, List<LatLng>>>,
+              Map<int, List<LatLng>>,
               Object?,
               Object?
             >;

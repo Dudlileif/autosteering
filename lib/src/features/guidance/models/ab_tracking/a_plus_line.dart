@@ -43,6 +43,7 @@ class APlusLine extends ABTracking {
     super.correctedBaseLine,
     super.name,
     super.uuid,
+    super.id,
   }) : super(
          baseLine: [start, start.moveRhumb(distance: 1000)],
          type: ABTrackingType.aPlusLine,
@@ -145,6 +146,7 @@ class APlusLine extends ABTracking {
       correctedBaseLine: correctedBaseLine,
       baseLineSidewaysOffset: json['base_line_sideways_offset'] as double?,
       name: json['name'] as String?,
+      uuid: json['uuid'] as String?,
     );
   }
 }

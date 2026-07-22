@@ -16,30 +16,11 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/equipment/equipment.dart';
+import 'package:autosteering/src/features/hitching/hitching.dart';
+import 'package:autosteering/src/features/vehicle/vehicle.dart' show Vehicle;
 import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
 import 'package:uuid/uuid.dart';
-
-/// Which type of hitch a [Hitchable] is using to connect to it's parent.
-enum HitchType {
-  /// A three point hitch.
-  fixed,
-
-  /// A drawbar or similar articulating hitch.
-  drawbar,
-}
-
-/// Which position and hitch type a hitch is.
-enum Hitch {
-  /// The front three point hitch.
-  frontFixed,
-
-  /// The rear three point hitch.
-  rearFixed,
-
-  /// The rear drawbar or similar articulating hitch.
-  rearDrawbar,
-}
 
 //?: make this sealed/final for vehicle and equipment
 
@@ -51,45 +32,74 @@ abstract class Hitchable {
   ///
   /// Give a [name] to make it easier to identify in the UI.
   /// If a [uuid] is not supplied, a new one will be generated.
-  /// Set a [hitchParent] if this hitchable is a child/equipment attached to
-  /// said parent.
-  /// Attach [hitchFrontFixedChild], [hitchRearFixedChild] and/or
-  /// [hitchRearDrawbarChild] to attach children to this hitchable.
-  ///
   Hitchable({
     this.name,
-    this.hitchParent,
-    this.hitchFrontFixedChild,
-    this.hitchRearFixedChild,
-    this.hitchRearDrawbarChild,
-    String? uuid,
-    DateTime? lastUsed,
+    this.connectors = const [],
+    this.childConnections = const [],
+    this.id,
+    @Deprecated('To be removed') String? uuid,
+    DateTime? lastUsedAt,
+    DateTime? createdAt,
+    DateTime? lastUpdatedAt,
   }) : uuid = uuid ?? const Uuid().v4(),
-       lastUsed = lastUsed ?? DateTime.now();
+       lastUsedAt = lastUsedAt ?? DateTime.now(),
+       createdAt = createdAt ?? DateTime.now(),
+       lastUpdatedAt = lastUpdatedAt ?? DateTime.now();
+
+  /// Local database id;
+  final int? id;
 
   /// A unique identifier for every [Hitchable].
-  final String uuid;
+  @Deprecated('To be removed')
+  String? uuid;
 
   /// The name/id of this.
   String? name;
 
   /// The last time this was used.
-  DateTime lastUsed;
+  DateTime lastUsedAt;
 
-  /// The parent of this, if there is one.
-  Hitchable? hitchParent;
+  /// Creation time of this.
+  DateTime createdAt;
 
-  /// Which position of the parent this is connected to.
-  Hitch? parentHitch;
+  /// Last time parameters of this was changed.
+  DateTime lastUpdatedAt;
 
-  /// The child of this front fixed hitch.
-  Hitchable? hitchFrontFixedChild;
+  /// The connectors on this.
+  List<Connector> connectors;
 
-  /// The child of this rear fixed hitch.
-  Hitchable? hitchRearFixedChild;
+  /// The current [Connection]s on this for connected child [Equipment]s.
+  List<Connection> childConnections;
 
-  /// The child of this rear drawbar hitch.
-  Hitchable? hitchRearDrawbarChild;
+  /// The connectors on this that can be the parent in [Connection]s.
+  List<Connector> get parentConnectors =>
+      connectors.where((c) => c.relation == .parent).toList();
+
+  /// The connectors on this that can be the child in [Connection]s.
+  List<Connector> get childConnectors =>
+      connectors.where((c) => c.relation == .child).toList();
+
+  /// Available [parentConnectors] that are not connected to an child
+  /// [Equipment] in [connectors].
+  List<Connector> get availableParentConnectors => parentConnectors
+      .where(
+        (connector) => childConnections.none(
+          (connectedConnector) =>
+              connector == connectedConnector.parentConnector,
+        ),
+      )
+      .toList();
+
+  /// Available [childConnectors] that are not connected to a parent [Hitchable]
+  /// in [connectors]
+  List<Connector> get availableChildConnectors => childConnectors
+      .where(
+        (connector) => childConnections.none(
+          (connectedConnector) =>
+              connector == connectedConnector.childConnector,
+        ),
+      )
+      .toList();
 
   /// The position of this hitchable.
   Geographic get position;
@@ -130,14 +140,16 @@ abstract class Hitchable {
   }
 
   /// Attach a [child] hitchable (equipment) to this at the given [position].
-  void attachChild(Hitchable child, [Hitch position = Hitch.rearFixed]) {
+  void attachChild({
+    required Hitchable child,
+    required Connector childConnector,
+    required Connector parentConnector,
+  }) {
     child.runFunctionRecursively((hitchable) => hitchable.bearing = bearing);
-    var childToAttach = child;
+    var childToAttach = child as Equipment;
 
-    final uuidAlreadyAttached = findChildRecursive(child.uuid);
-    if (uuidAlreadyAttached != null &&
-        uuidAlreadyAttached is Equipment &&
-        childToAttach is Equipment) {
+    final uuidAlreadyAttached = findChildRecursive(child.id);
+    if (uuidAlreadyAttached != null) {
       final newSections = childToAttach.sections;
       for (final (index, section) in newSections.indexed) {
         newSections[index] = section.copyWith(
@@ -151,82 +163,90 @@ abstract class Hitchable {
         decorationLength: childToAttach.decorationLength,
         decorationSidewaysOffset: childToAttach.decorationSidewaysOffset,
         decorationWidth: childToAttach.decorationWidth,
-        drawbarLength: childToAttach.drawbarLength,
-        sidewaysOffset: childToAttach.sidewaysOffset,
-        workingAreaLength: childToAttach.workingAreaLength,
-        lastUsed: childToAttach.lastUsed,
+        lastUsedAt: childToAttach.lastUsedAt,
         name: childToAttach.name,
-        hitchType: childToAttach.hitchType,
         sections: newSections,
+      )..parentConnection = null;
+      childConnections.removeWhere(
+        (connection) =>
+            connection.child.uuid == childToAttach.uuid &&
+            connection.parent.uuid == uuid,
       );
     }
-
-    switch (position) {
-      case Hitch.frontFixed:
-        hitchFrontFixedChild = childToAttach..parentHitch = Hitch.frontFixed;
-
-      case Hitch.rearFixed:
-        hitchRearFixedChild = childToAttach..parentHitch = Hitch.rearFixed;
-
-      case Hitch.rearDrawbar:
-        hitchRearDrawbarChild = childToAttach..parentHitch = Hitch.rearDrawbar;
-    }
+    final connection = Connection(
+      child: childToAttach,
+      childConnector: childConnector,
+      parent: this,
+      parentConnector: parentConnector,
+    );
+    childConnections.add(connection);
+    childToAttach.parentConnection = connection;
     updateChildren(0);
   }
 
-  /// Attach the [child] to the parent [Hitchable] with uuid [parentUuid] at
+  /// Attach the [child] to the parent [Hitchable] with uuid [parentId] at
   /// the [position] hitch.
-  void attachChildTo(
-    String parentUuid,
-    Hitchable child, [
-    Hitch position = Hitch.rearFixed,
-  ]) {
+  void attachChildTo({
+    required int parentId,
+    required Hitchable child,
+    required Connector childConnector,
+    required Connector parentConnector,
+    bool parentIsVehicle = false,
+  }) {
     var childToAttach = child;
 
-    final uuidAlreadyAttached = findChildRecursive(child.uuid);
-    if (uuidAlreadyAttached != null &&
-        childToAttach is Equipment &&
-        uuidAlreadyAttached is Equipment) {
+    final idAlreadyAttached = findChildRecursive(child.id);
+    if (idAlreadyAttached != null && childToAttach is Equipment) {
       final newSections = childToAttach.sections;
       for (final (index, section) in newSections.indexed) {
         newSections[index] = section.copyWith(
-          active: uuidAlreadyAttached.sections
+          active: idAlreadyAttached.sections
               .firstWhereOrNull((element) => element.index == section.index)
               ?.active,
         );
       }
 
-      childToAttach = uuidAlreadyAttached.copyWith(
+      childToAttach = idAlreadyAttached.copyWith(
         decorationLength: childToAttach.decorationLength,
         decorationSidewaysOffset: childToAttach.decorationSidewaysOffset,
         decorationWidth: childToAttach.decorationWidth,
-        drawbarLength: childToAttach.drawbarLength,
-        sidewaysOffset: childToAttach.sidewaysOffset,
-        workingAreaLength: childToAttach.workingAreaLength,
-        lastUsed: childToAttach.lastUsed,
+        lastUsedAt: childToAttach.lastUsedAt,
         name: childToAttach.name,
-        hitchType: childToAttach.hitchType,
         sections: newSections,
       );
     }
 
-    if (uuid == parentUuid) {
-      attachChild(childToAttach, position);
+    final idIsThis = switch (this) {
+      Vehicle(:final id) when id == parentId && parentIsVehicle => true,
+      Equipment(:final id) when id == parentId && !parentIsVehicle => true,
+      _ => false,
+    };
+
+    if (idIsThis) {
+      attachChild(
+        child: childToAttach,
+        childConnector: childConnector,
+        parentConnector: parentConnector,
+      );
     } else {
-      final foundChild = findChildRecursive(parentUuid);
-      foundChild?.attachChild(childToAttach, position);
+      final foundChild = findChildRecursive(parentId);
+      foundChild?.attachChild(
+        child: childToAttach,
+        childConnector: childConnector,
+        parentConnector: parentConnector,
+      );
     }
   }
 
   /// Recursively looks through the connected children of this and itself to
-  /// find a [Hitchable] with the given [uuid]. If there isn't one, null is
+  /// find an [Equipment] with the given [id]. If there isn't one, null is
   /// returned.
-  Hitchable? findChildRecursive(String uuid) {
-    if (uuid == this.uuid) {
-      return this;
+  Equipment? findChildRecursive(int? id) {
+    if (this case final Equipment equipment when equipment.id == id) {
+      return equipment;
     }
-    for (final element in hitchChildren) {
-      final recursiveChild = element.findChildRecursive(uuid);
+    for (final connection in childConnections) {
+      final recursiveChild = connection.child.findChildRecursive(id);
       if (recursiveChild != null) {
         return recursiveChild;
       }
@@ -236,88 +256,58 @@ abstract class Hitchable {
 
   /// Update the [child] at the correct point/position in the hierarchy.
   bool updateChild(Hitchable child) {
-    final foundChild = findChildRecursive(child.uuid);
+    final foundChild = findChildRecursive(child.id);
 
-    foundChild?.hitchParent?.attachChild(
-      child.copyWith(
-        hitchFrontFixedChild: foundChild.hitchFrontFixedChild,
-        hitchRearFixedChild: foundChild.hitchRearFixedChild,
-        hitchRearDrawbarChild: foundChild.hitchRearDrawbarChild,
-      ),
-      foundChild.parentHitch ?? Hitch.rearFixed,
-    );
+    if (foundChild?.parentConnection case final Connection connection) {
+      connection.parent.attachChild(
+        child: child,
+        childConnector: connection.childConnector,
+        parentConnector: connection.parentConnector,
+      );
+    }
     return foundChild != null;
   }
 
-  /// Detaches the child with the given [uuid] from the hierarchy.
-  void detachChild(String uuid) {
-    final foundChild = findChildRecursive(uuid);
-
-    switch (foundChild?.parentHitch) {
-      case Hitch.frontFixed:
-        foundChild?.hitchParent?.hitchFrontFixedChild = null;
-      case Hitch.rearFixed:
-        foundChild?.hitchParent?.hitchRearFixedChild = null;
-
-      case Hitch.rearDrawbar:
-        foundChild?.hitchParent?.hitchRearDrawbarChild = null;
-      case null:
-    }
-    foundChild?.hitchParent = null;
+  /// Detaches the child with the given [id] from the hierarchy.
+  void detachChild(int? id) {
+    final foundChild = findChildRecursive(id);
+    foundChild?.parentConnection?.parent.childConnections.removeWhere(
+      (connection) => connection.child.id == id,
+    );
+    foundChild?.parentConnection = null;
   }
 
   /// Detaches all children from the child with given [uuid] from the hierarchy.
-  void detachAllFrom(String uuid) {
-    final foundChild = findChildRecursive(uuid);
+  void detachAllFrom(int? id, {bool isVehicle = false}) {
+    final foundChild = switch (this) {
+      Vehicle(id: final vehicleId) when isVehicle && vehicleId == id => this,
+      Equipment(id: final equipmentId) when !isVehicle && equipmentId == id =>
+        this,
+      _ => findChildRecursive(id),
+    };
 
-    foundChild?.hitchFrontFixedChild?.hitchParent = null;
-    foundChild?.hitchFrontFixedChild = null;
-
-    foundChild?.hitchRearFixedChild?.hitchParent = null;
-    foundChild?.hitchRearFixedChild = null;
-
-    foundChild?.hitchRearDrawbarChild?.hitchParent = null;
-    foundChild?.hitchRearDrawbarChild = null;
+    foundChild?.childConnections.forEach((c) {
+      c.child.parentConnection = null;
+    });
+    foundChild?.childConnections = [];
   }
 
   /// A list of the directly attached children.
-  List<Hitchable> get hitchChildren => [
-    ?hitchFrontFixedChild,
-    ?hitchRearFixedChild,
-    ?hitchRearDrawbarChild,
-  ];
+  List<Hitchable> get hitchChildren =>
+      childConnections.map((e) => e.child).toList();
 
   /// A list of the all the recursively attached children.
   List<Hitchable> get hitchChildrenRecursively => [
-    if (hitchFrontFixedChild != null) ...[
-      hitchFrontFixedChild!,
-      ...hitchFrontFixedChild!.hitchChildrenRecursively,
-    ],
-    if (hitchRearFixedChild != null) ...[
-      hitchRearFixedChild!,
-      ...hitchRearFixedChild!.hitchChildrenRecursively,
-    ],
-    if (hitchRearDrawbarChild != null) ...[
-      hitchRearDrawbarChild!,
-      ...hitchRearDrawbarChild!.hitchChildrenRecursively,
-    ],
+    ...childConnections
+        .map(
+          (c) => [c.child, ...c.child.hitchChildrenRecursively],
+        )
+        .flattened,
   ];
 
-  /// The position of the front fixed hitch point, if there is one.
-  Geographic? get hitchFrontFixedPoint;
-
-  /// The position of the rear fixed hitch point, if there is one.
-  Geographic? get hitchRearFixedPoint;
-
-  /// The position of the rear drawbar hitch point, if there is one.
-  Geographic? get hitchRearDrawbarPoint;
-
-  /// The hitch positions of this that are not null.
-  Iterable<Geographic> get hitchPoints => [
-    hitchFrontFixedPoint,
-    hitchRearFixedPoint,
-    hitchRearDrawbarPoint,
-  ].nonNulls;
+  /// The connector positions of this that are not null.
+  Iterable<Geographic> get connectorPoints =>
+      childConnections.map((c) => c.connectionPoint);
 
   /// The number of children recursively attached to this.
   int get numAttachedChildren => hitchChildren.fold(
@@ -327,27 +317,24 @@ abstract class Hitchable {
 
   /// Update the children connected to this.
   void updateChildren(double period) {
-    hitchFrontFixedChild?.hitchParent = this;
-    hitchFrontFixedChild?.lastUsed = lastUsed;
-    hitchFrontFixedChild?.updateChildren(period);
-    hitchRearFixedChild?.hitchParent = this;
-    hitchRearFixedChild?.lastUsed = lastUsed;
-    hitchRearFixedChild?.updateChildren(period);
-    hitchRearDrawbarChild?.hitchParent = this;
-    hitchRearDrawbarChild?.lastUsed = lastUsed;
-    hitchRearDrawbarChild?.updateChildren(period);
+    childConnections = childConnections.map((c) {
+      final connection = c.copyWith(
+        parent: this,
+        child: c.child.copyWith(lastUsedAt: lastUsedAt),
+      );
+      connection.child.updateChildren(period);
+      return connection;
+    }).toList();
   }
 
   /// Create a new [Hitchable] based on this one, but with parameters/variables
   /// changed.
   Hitchable copyWith({
-    Hitchable? hitchParent,
-    Hitchable? hitchFrontFixedChild,
-    Hitchable? hitchRearFixedChild,
-    Hitchable? hitchRearDrawbarChild,
+    List<Connector>? connectors,
+    List<Connection>? childConnections,
     String? name,
     String? uuid,
-    DateTime? lastUsed,
+    DateTime? lastUsedAt,
   });
 
   /// Converts the object to a json compatible structure.
@@ -358,11 +345,16 @@ abstract class Hitchable {
   Map<String, dynamic> toJsonWithChildren() {
     final map = toJson();
 
-    map['children'] = {
-      'front_fixed': hitchFrontFixedChild?.toJsonWithChildren(),
-      'rear_fixed': hitchRearFixedChild?.toJsonWithChildren(),
-      'rear_drawbar': hitchRearDrawbarChild?.toJsonWithChildren(),
-    };
+    map['connections'] = childConnections
+        .map(
+          (c) => {
+            'child': c.child.toJson(),
+            'childConnector': c.childConnector.toJson(),
+            'parent': c.parent.toJson(),
+            'parentConnector': c.parentConnector.toJson(),
+          },
+        )
+        .toList();
 
     return map;
   }

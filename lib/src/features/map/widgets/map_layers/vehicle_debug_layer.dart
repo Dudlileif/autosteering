@@ -96,9 +96,9 @@ class VehicleDebugLayer extends ConsumerWidget {
         CircleLayer(
           circles: [
             if (debugHitches)
-              ...vehicle.hitchPoints.map(
-                (hitch) => CircleMarker(
-                  point: hitch.latLng,
+              ...vehicle.connectorPoints.map(
+                (connector) => CircleMarker(
+                  point: connector.latLng,
                   radius: 5,
                   color: Colors.orange,
                 ),

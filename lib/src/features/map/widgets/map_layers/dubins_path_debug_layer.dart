@@ -43,7 +43,9 @@ class DubinsPathDebugLayer extends ConsumerWidget {
             showDubinsPathDebugCirclesProvider,
           );
           final minTurningRadius = ref.watch(
-            mainVehicleProvider.select((vehicle) => vehicle.minTurningRadius),
+            mainVehicleProvider.select(
+              (vehicle) => vehicle.geometry.minTurningRadius,
+            ),
           );
           final wayPoints = dubinsPath.dubinsPathPlan(pathType)!.wayPoints!;
 

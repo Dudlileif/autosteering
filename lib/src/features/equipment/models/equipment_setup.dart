@@ -26,9 +26,7 @@ class EquipmentSetup {
   /// can be saved and applied/attached to [Hitchable]s.
   EquipmentSetup({
     required this.name,
-    this.frontFixedChild,
-    this.rearFixedChild,
-    this.rearDrawbarChild,
+    this.children = const [],
     DateTime? lastUsed,
   }) : lastUsed = lastUsed ?? DateTime.now();
 
@@ -38,141 +36,115 @@ class EquipmentSetup {
     final lastUsed = DateTime.tryParse(json['last_used'] as String);
 
     final frontFixedChild = json['front_fixed_child'] != null
-        ? Equipment.fromJson(
-            Map<String, dynamic>.from(json['front_fixed_child'] as Map),
+        ? (
+            type: ConnectorType.fixed,
+            angle: 0.0,
+            child: Equipment.fromJson(
+              Map<String, dynamic>.from(json['front_fixed_child'] as Map),
+            ),
           )
         : null;
 
     final rearFixedChild = json['rear_fixed_child'] != null
-        ? Equipment.fromJson(
-            Map<String, dynamic>.from(json['rear_fixed_child'] as Map),
+        ? (
+            type: ConnectorType.fixed,
+            angle: 180.0,
+            child: Equipment.fromJson(
+              Map<String, dynamic>.from(json['rear_fixed_child'] as Map),
+            ),
           )
         : null;
 
     final rearDrawbarChild = json['rear_drawbar_child'] != null
-        ? Equipment.fromJson(
-            Map<String, dynamic>.from(json['rear_drawbar_child'] as Map),
+        ? (
+            type: ConnectorType.drawbar,
+            angle: 180.0,
+            child: Equipment.fromJson(
+              Map<String, dynamic>.from(json['rear_drawbar_child'] as Map),
+            ),
           )
         : null;
 
     return EquipmentSetup(
       name: name,
       lastUsed: lastUsed,
-      frontFixedChild: frontFixedChild,
-      rearFixedChild: rearFixedChild,
-      rearDrawbarChild: rearDrawbarChild,
+      children: [?frontFixedChild, ?rearFixedChild, ?rearDrawbarChild],
     );
   }
 
   /// The name of the setup.
   String name;
 
-  /// The front fixed [Hitchable] of the setup.
-  Hitchable? frontFixedChild;
-
-  /// The rear fixed [Hitchable] of the setup.
-  Hitchable? rearFixedChild;
-
-  /// The rear drawbar [Hitchable] of the setup.
-  Hitchable? rearDrawbarChild;
+  /// The [Hitchable] children of the setup.
+  List<({ConnectorType type, double angle, Hitchable child})> children;
 
   /// The last time the setup was used/saved.
   DateTime lastUsed;
 
   /// Attaches the children of the setup to the [parent].
   void attachChildrenTo(Hitchable parent) {
-    if (frontFixedChild != null) {
-      parent.attachChild(frontFixedChild!, Hitch.frontFixed);
-    }
-    if (rearFixedChild != null) {
-      parent.attachChild(rearFixedChild!);
-    }
-    if (rearDrawbarChild != null) {
-      parent.attachChild(rearDrawbarChild!, Hitch.rearDrawbar);
+    for (final (:child, :angle, :type) in children) {
+      if (parent.availableParentConnectors.firstWhereOrNull(
+            (connector) => connector.type == type && connector.angle == angle,
+          )
+          case final connector?) {
+        parent.attachChild(
+          child: child,
+          childConnector: child.childConnectors.first,
+          parentConnector: connector,
+        );
+      }
     }
   }
 
   /// Attempts to update [child] if it's in the hierarchy.
   bool updateChild(Hitchable child) {
     var updated = false;
-    if (frontFixedChild?.uuid == child.uuid) {
-      frontFixedChild = child
-        ..copyWith(
-          hitchFrontFixedChild: frontFixedChild!.hitchFrontFixedChild,
-          hitchRearFixedChild: frontFixedChild!.hitchRearFixedChild,
-          hitchRearDrawbarChild: frontFixedChild!.hitchRearDrawbarChild,
-        );
+    if (children.indexWhere(
+          (connectedChild) =>
+              connectedChild.child.id == child.id ||
+              connectedChild.child.uuid == child.uuid,
+        )
+        case final index when index >= 0) {
+      final existing = children[index];
+      children.replaceRange(index, index + 1, [
+        (
+          type: existing.type,
+          angle: existing.angle,
+          child: child.copyWith(
+            childConnections: existing.child.childConnections,
+          ),
+        ),
+      ]);
       updated = true;
-    } else if (rearFixedChild?.uuid == child.uuid) {
-      rearFixedChild = child
-        ..copyWith(
-          hitchFrontFixedChild: rearFixedChild!.hitchFrontFixedChild,
-          hitchRearFixedChild: rearFixedChild!.hitchRearFixedChild,
-          hitchRearDrawbarChild: rearFixedChild!.hitchRearDrawbarChild,
-        );
-      updated = true;
-    } else if (rearDrawbarChild?.uuid == child.uuid) {
-      rearDrawbarChild = child
-        ..copyWith(
-          hitchFrontFixedChild: rearDrawbarChild!.hitchFrontFixedChild,
-          hitchRearFixedChild: rearDrawbarChild!.hitchRearFixedChild,
-          hitchRearDrawbarChild: rearDrawbarChild!.hitchRearDrawbarChild,
-        );
-      updated = true;
-    } else {
-      updated =
-          (frontFixedChild?.updateChild(child) ?? false) ||
-          (rearFixedChild?.updateChild(child) ?? false) ||
-          (rearDrawbarChild?.updateChild(child) ?? false);
     }
     return updated;
   }
 
   /// Lists all the children attached and their children recursively.
-  List<Hitchable> get allAttached {
-    final list = <Hitchable>[
-      if (frontFixedChild != null) ...[
-        frontFixedChild!,
-        ...frontFixedChild!.hitchChildrenRecursively,
-      ],
-      if (rearFixedChild != null) ...[
-        rearFixedChild!,
-        ...rearFixedChild!.hitchChildrenRecursively,
-      ],
-      if (rearDrawbarChild != null) ...[
-        rearDrawbarChild!,
-        ...rearDrawbarChild!.hitchChildrenRecursively,
-      ],
-    ];
-
-    return list;
-  }
-
-  /// Attempts to find the parent-child hitch relation of [child] in this,
-  /// otherwise returns null.
-  Hitch? findHitchOfChild(Hitchable child) {
-    if (child.uuid == frontFixedChild?.uuid) {
-      return Hitch.frontFixed;
-    }
-    if (child.uuid == rearFixedChild?.uuid) {
-      return Hitch.rearFixed;
-    }
-    if (child.uuid == rearDrawbarChild?.uuid) {
-      return Hitch.rearDrawbar;
-    }
-    final recursiveChild = allAttached.firstWhereOrNull(
-      (element) => element.uuid == child.uuid,
-    );
-    return recursiveChild?.parentHitch;
-  }
+  List<Hitchable> get allAttached => children
+      .map((child) => [child.child, ...child.child.hitchChildrenRecursively])
+      .flattenedToList;
 
   /// Converts the object to a json compatible structure.
   Map<String, dynamic> toJson() => {
     'name': name,
     'last_used': lastUsed.toIso8601String(),
-    'front_fixed_child': frontFixedChild?.toJsonWithChildren(),
-    'rear_fixed_child': rearFixedChild?.toJsonWithChildren(),
-    'rear_drawbar_child': rearDrawbarChild?.toJsonWithChildren(),
+    'front_fixed_child': children
+        .where((child) => child.angle == 0 && child.type == .fixed)
+        .firstOrNull
+        ?.child
+        .toJsonWithChildren(),
+    'rear_fixed_child': children
+        .where((child) => child.angle == 180 && child.type == .fixed)
+        .firstOrNull
+        ?.child
+        .toJsonWithChildren(),
+    'rear_drawbar_child': children
+        .where((child) => child.angle == 180 && child.type == .drawbar)
+        .firstOrNull
+        ?.child
+        .toJsonWithChildren(),
   };
 }
 
@@ -184,8 +156,14 @@ extension EquipmentSetupOfHitchable on Hitchable {
   /// The setup requires a [name].
   EquipmentSetup equipmentSetup(String name) => EquipmentSetup(
     name: name,
-    frontFixedChild: hitchFrontFixedChild,
-    rearFixedChild: hitchRearFixedChild,
-    rearDrawbarChild: hitchRearDrawbarChild,
+    children: childConnections
+        .map(
+          (connection) => (
+            type: connection.parentConnector.type,
+            angle: connection.parentConnector.angle,
+            child: connection.child,
+          ),
+        )
+        .toList(),
   );
 }

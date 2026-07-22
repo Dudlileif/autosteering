@@ -348,7 +348,7 @@ final class DebugDubinsPathProvider
   }
 }
 
-String _$debugDubinsPathHash() => r'068a0465a7cf1281bb525158fa27f300d88c13f5';
+String _$debugDubinsPathHash() => r'a8f0f4a514414c5f4d128633ccfb0b97b67425c7';
 
 /// Which type of Dubins path to debug/draw.
 

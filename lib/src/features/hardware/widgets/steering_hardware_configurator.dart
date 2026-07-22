@@ -23,7 +23,6 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/hardware/hardware.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/providers/providers.dart';
-import 'package:autosteering/src/features/vehicle/models/threshold_velocities.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -322,7 +321,7 @@ class _MotorPage extends ConsumerWidget {
           title: child,
           onTap: () => showDialog<void>(
             context: context,
-            builder: (context) => const _ThresholdVelocitiesDialog(),
+            builder: (context) => const _VehicleThresholdsDialog(),
           ),
         ),
       ),
@@ -1628,18 +1627,18 @@ class _PidPage extends ConsumerWidget {
   }
 }
 
-class _ThresholdVelocitiesDialog extends ConsumerStatefulWidget {
-  const _ThresholdVelocitiesDialog();
+class _VehicleThresholdsDialog extends ConsumerStatefulWidget {
+  const _VehicleThresholdsDialog();
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      __ThresholdVelocitiesDialogState();
+      __VehicleThresholdsDialogState();
 }
 
-class __ThresholdVelocitiesDialogState
-    extends ConsumerState<_ThresholdVelocitiesDialog> {
-  late ThresholdVelocities thresholdVelocities = ref.read(
-    mainVehicleProvider.select((vehicle) => vehicle.thresholdVelocities),
+class __VehicleThresholdsDialogState
+    extends ConsumerState<_VehicleThresholdsDialog> {
+  late VehicleThresholds vehicleThresholds = ref.read(
+    mainVehicleProvider.select((vehicle) => vehicle.thresholds),
   );
 
   @override
@@ -1655,7 +1654,7 @@ class __ThresholdVelocitiesDialogState
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              '${strings.min} ${strings.velocity.toLowerCase()}: ${(thresholdVelocities.minVelocity * 3.6).toStringAsFixed(1)} km/h',
+              '${strings.min} ${strings.velocity.toLowerCase()}: ${(vehicleThresholds.minVelocity * 3.6).toStringAsFixed(1)} km/h',
               style: textTheme.bodyLarge,
             ),
             Text(
@@ -1663,16 +1662,16 @@ class __ThresholdVelocitiesDialogState
               style: textTheme.bodySmall,
             ),
             Slider(
-              value: thresholdVelocities.minVelocity,
+              value: vehicleThresholds.minVelocity,
               max: 2,
               divisions: 100,
               onChanged: (value) => setState(
                 () {
-                  thresholdVelocities = thresholdVelocities.copyWith(
+                  vehicleThresholds = vehicleThresholds.copyWith(
                     minVelocity: value,
-                    maxVelocity: thresholdVelocities.maxVelocity < value
+                    maxVelocity: vehicleThresholds.maxVelocity < value
                         ? value
-                        : thresholdVelocities.maxVelocity,
+                        : vehicleThresholds.maxVelocity,
                   );
                 },
               ),
@@ -1683,7 +1682,7 @@ class __ThresholdVelocitiesDialogState
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              '${strings.max} ${strings.velocity.toLowerCase()}: ${(thresholdVelocities.maxVelocity * 3.6).toStringAsFixed(1)} km/h',
+              '${strings.max} ${strings.velocity.toLowerCase()}: ${(vehicleThresholds.maxVelocity * 3.6).toStringAsFixed(1)} km/h',
               style: textTheme.bodyLarge,
             ),
             Text(
@@ -1691,12 +1690,12 @@ class __ThresholdVelocitiesDialogState
               style: textTheme.bodySmall,
             ),
             Slider(
-              value: thresholdVelocities.maxVelocity,
-              min: thresholdVelocities.minVelocity,
+              value: vehicleThresholds.maxVelocity,
+              min: vehicleThresholds.minVelocity,
               max: 5,
               divisions: 60,
               onChanged: (value) => setState(
-                () => thresholdVelocities = thresholdVelocities.copyWith(
+                () => vehicleThresholds = vehicleThresholds.copyWith(
                   maxVelocity: value,
                 ),
               ),
@@ -1708,7 +1707,7 @@ class __ThresholdVelocitiesDialogState
           children: [
             Text(
               strings.maxReversingVelocity(
-                velocityUnit.fromUnit(thresholdVelocities.maxReversingVelocity),
+                velocityUnit.fromUnit(vehicleThresholds.maxReversingVelocity),
                 strings.unitVelocityDisplay(velocityUnit.symbol),
               ),
               style: textTheme.bodyLarge,
@@ -1725,11 +1724,11 @@ class __ThresholdVelocitiesDialogState
               ),
             ),
             Slider(
-              value: thresholdVelocities.maxReversingVelocity,
+              value: vehicleThresholds.maxReversingVelocity,
               max: 2,
               divisions: 100,
               onChanged: (value) => setState(
-                () => thresholdVelocities = thresholdVelocities.copyWith(
+                () => vehicleThresholds = vehicleThresholds.copyWith(
                   maxReversingVelocity: value,
                 ),
               ),
@@ -1741,7 +1740,7 @@ class __ThresholdVelocitiesDialogState
           children: [
             Text(
               strings.maxAngularVelocity(
-                thresholdVelocities.maxAngularVelocity.round(),
+                vehicleThresholds.maxAngularVelocity.round(),
               ),
               style: textTheme.bodyLarge,
             ),
@@ -1750,12 +1749,12 @@ class __ThresholdVelocitiesDialogState
               style: textTheme.bodySmall,
             ),
             Slider(
-              value: thresholdVelocities.maxAngularVelocity,
+              value: vehicleThresholds.maxAngularVelocity,
               max: 50,
               min: 10,
               divisions: 40,
               onChanged: (value) => setState(
-                () => thresholdVelocities = thresholdVelocities.copyWith(
+                () => vehicleThresholds = vehicleThresholds.copyWith(
                   maxAngularVelocity: value,
                 ),
               ),
@@ -1781,19 +1780,17 @@ class __ThresholdVelocitiesDialogState
                   onPressed: () {
                     final oldValues = ref.read(
                       mainVehicleProvider.select(
-                        (value) => value.thresholdVelocities,
+                        (value) => value.thresholds,
                       ),
                     );
-                    ref
-                        .read(simInputProvider.notifier)
-                        .send(thresholdVelocities);
+                    ref.read(simInputProvider.notifier).send(vehicleThresholds);
                     // Wait a short while before saving the hopefully
                     // updated vehicle.
                     Timer(const Duration(milliseconds: 100), () {
                       final vehicle = ref.watch(mainVehicleProvider);
                       ref.read(saveVehicleProvider(vehicle));
                       Logger.instance.i(
-                        '''Updated vehicle threshold velocities: $oldValues -> ${vehicle.thresholdVelocities}''',
+                        '''Updated vehicle threshold velocities: $oldValues -> ${vehicle.thresholds}''',
                       );
                     });
                     Navigator.of(context).pop();

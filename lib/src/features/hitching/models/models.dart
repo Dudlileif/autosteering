@@ -15,4 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+export 'connection.dart';
+export 'connector.dart';
 export 'hitchable.dart';

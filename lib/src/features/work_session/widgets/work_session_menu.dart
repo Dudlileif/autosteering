@@ -16,7 +16,6 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
@@ -33,9 +32,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:path/path.dart' as path;
 import 'package:quiver/strings.dart';
-import 'package:universal_io/io.dart';
 
 /// A menu for creating, loading and handling work sessions.
 class WorkSessionMenu extends ConsumerWidget {
@@ -236,7 +233,7 @@ class _CloseDialog extends ConsumerWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(strings.closeValue(workSession.name ?? workSession.uuid)),
+            Text(strings.closeValue(workSession.name ?? strings.noName)),
             const CloseButton(),
           ],
         ),
@@ -774,13 +771,13 @@ class _CreateWorkSessionDialogState
                       (workSession.name != null &&
                           workSession.name!.isNotEmpty &&
                           workSessions.none((e) => e.name == workSession.name))
-                      ? () {
+                      ? () async {
                           workSession
                             ..vehicle = ref.watch(mainVehicleProvider)
                             ..equipmentSetup ??= ref
                                 .watch(mainVehicleProvider)
                                 .equipmentSetup('${workSession.name} setup');
-                          ref
+                          await ref
                               .read(activeWorkSessionProvider.notifier)
                               .update(workSession);
                           ref.read(saveWorkSessionProvider(workSession));
@@ -790,14 +787,17 @@ class _CreateWorkSessionDialogState
                           if (workSession.equipmentSetup != null) {
                             ref.read(simInputProvider.notifier).send((
                               equipmentSetup: workSession.equipmentSetup!,
-                              parentUuid: ref.watch(
+                              parentId: ref.watch(
                                 mainVehicleProvider.select(
-                                  (value) => value.uuid,
+                                  (value) => value.id,
                                 ),
                               ),
+                              parentIsVehicle: true,
                             ));
                           }
-                          Navigator.of(context).pop();
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
+                          }
                         }
                       : null,
                   icon: const Icon(Icons.check),
@@ -879,10 +879,12 @@ class _WorkSessionMenuItem extends ConsumerWidget {
             return text.isNotEmpty ? Text(text) : const SizedBox.shrink();
           },
         ),
-        onTap: () {
+        onTap: () async {
           Logger.instance.i('Loaded work session: ${workSession.name}.');
+          await ref
+              .read(activeWorkSessionProvider.notifier)
+              .update(workSession);
           ref
-            ..read(activeWorkSessionProvider.notifier).update(workSession)
             ..read(activeFieldProvider.notifier).update(workSession.field)
             ..read(
               configuredEquipmentSetupProvider.notifier,
@@ -890,96 +892,23 @@ class _WorkSessionMenuItem extends ConsumerWidget {
           if (workSession.equipmentSetup != null) {
             ref.read(simInputProvider.notifier).send((
               equipmentSetup: workSession.equipmentSetup,
-              parentUuid: ref.watch(
-                mainVehicleProvider.select((value) => value.uuid),
+              parentId: ref.watch(
+                mainVehicleProvider.select((value) => value.id),
               ),
+              parentIsVehicle: true,
             ));
           }
           if (workSession.equipmentLogs.isNotEmpty) {
             for (final equipment
                 in workSession.equipmentSetup!.allAttached.cast<Equipment>()) {
-              final records = workSession.equipmentLogs[equipment.uuid];
+              final records = workSession.equipmentLogs[equipment.id];
               if (records != null) {
-                final overrideHitch = workSession.equipmentSetup
-                    ?.findHitchOfChild(equipment);
-
                 ref
-                    .read(equipmentPathsProvider(equipment.uuid).notifier)
+                    .read(equipmentPathsProvider(equipment.id!).notifier)
                     .updateFromLogRecords(
                       records: records,
                       equipment: equipment,
-                      overrideHitch: overrideHitch,
                     );
-              }
-            }
-          }
-          if (Device.isNative) {
-            for (final equipment
-                in workSession.equipmentSetup!.allAttached.cast<Equipment>()) {
-              final fileName = path.join(
-                ref.read(fileDirectoryProvider).requireValue.path,
-                'work_sessions',
-                workSession.name ?? workSession.uuid,
-                'equipment_logs',
-                '${equipment.uuid}.log',
-              );
-              final file = File(fileName);
-
-              if (file.existsSync()) {
-                Logger.instance.i(
-                  'Loading equipment logs from file: $fileName.',
-                );
-                final records = const LineSplitter()
-                    .convert(file.readAsStringSync())
-                    .map(
-                      (line) => EquipmentLogRecord.fromJson(
-                        Map<String, dynamic>.from(jsonDecode(line) as Map),
-                      ),
-                    )
-                    .toList();
-                if (records.isNotEmpty) {
-                  workSession.equipmentLogs.update(
-                    equipment.uuid,
-                    (oldRecords) => oldRecords.isEmpty
-                        ? [...records]
-                        : [
-                            ...oldRecords,
-                            ...records.where(
-                              (record) =>
-                                  oldRecords.last.time.isBefore(record.time),
-                            ),
-                          ],
-                    ifAbsent: () => records,
-                  );
-                }
-
-                Logger.instance.i(
-                  '''Loaded ${records.length} log records from: $fileName.''',
-                );
-
-                final overrideHitch = workSession.equipmentSetup
-                    ?.findHitchOfChild(equipment);
-
-                ref
-                    .read(equipmentPathsProvider(equipment.uuid).notifier)
-                    .updateFromLogRecords(
-                      records: records,
-                      equipment: equipment,
-                      overrideHitch: overrideHitch,
-                    );
-              } else {
-                if (workSession.equipmentLogs.containsKey(equipment.uuid)) {
-                  file
-                    ..createSync(recursive: true)
-                    ..writeAsStringSync(
-                      [
-                        workSession.equipmentLogs[equipment.uuid]!
-                            .map((e) => jsonEncode(e.toJson()))
-                            .join(Platform.lineTerminator),
-                        Platform.lineTerminator,
-                      ].join(),
-                    );
-                }
               }
             }
           }

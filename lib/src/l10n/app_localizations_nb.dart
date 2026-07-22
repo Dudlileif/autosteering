@@ -51,6 +51,9 @@ class AppLocalizationsNb extends AppLocalizations {
   String get addButton => 'Legg til knapp';
 
   @override
+  String get addConnector => 'Legg til kobling';
+
+  @override
   String get addInteriorBoundary => 'Legg til indre grense';
 
   @override
@@ -267,6 +270,47 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get confirm => 'Bekreft';
+
+  @override
+  String connectorRelation(String type) {
+    String _temp0 = intl.Intl.selectLogic(
+      type,
+      {
+        'other': 'Relasjon',
+        'child': 'Barn',
+        'parent': 'Forelder',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String connectors(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      many: 'Koblinger',
+      few: 'Koblinger',
+      two: 'Koblinger',
+      one: 'Kobling',
+      zero: 'Koblinger',
+      other: 'Koblinger',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String connectorType(String type) {
+    String _temp0 = intl.Intl.selectLogic(
+      type,
+      {
+        'other': 'Kobling',
+        'fixed': 'Fast',
+        'drawbar': 'Drag',
+      },
+    );
+    return '$_temp0';
+  }
 
   @override
   String coolStepMinRpm(String option, num rpm) {
@@ -659,9 +703,8 @@ class AppLocalizationsNb extends AppLocalizations {
       option,
       {
         'other': 'Feste',
-        'frontFixed': 'Front fast',
-        'rearFixed': 'Bak fast',
-        'rearDrawbar': 'Bak drag',
+        'fixed': 'Trepunkt',
+        'drawbar': 'Drag',
       },
     );
     return '$_temp0';
@@ -680,19 +723,6 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get hitchToRearDrawbarDistance => 'Avstand fra kobling til drag bak';
-
-  @override
-  String hitchType(String type) {
-    String _temp0 = intl.Intl.selectLogic(
-      type,
-      {
-        'other': 'Kobling',
-        'fixed': 'Fast',
-        'drawbar': 'Drag',
-      },
-    );
-    return '$_temp0';
-  }
 
   @override
   String hitches(int count) {

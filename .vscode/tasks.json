@@ -30,6 +30,21 @@
 			"group": "build",
 			"label": "dart: Run build_runner in build mode",
 			"detail": "Starts a build_runner that will build once."
+		},
+		{
+			"type": "dart",
+			"command": "dart",
+			"args": [
+				"run",
+				"drift_dev",
+				"schema",
+				"dump",
+				"lib/src/features/database/models/database.dart",
+				"drift_schemas/"
+			],
+			"group": "build",
+			"label": "dart: Create drift schema file",
+			"detail": "Creates the drift_schema_vX.json file for the database"
 		}
 	]
 }

@@ -19,10 +19,13 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/database/database.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
+import 'package:collection/collection.dart';
+import 'package:drift/drift.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as path;
@@ -88,7 +91,9 @@ class ConfiguredPathTracking extends _$ConfiguredPathTracking {
     final wayPoints = ref.watch(pathTrackingPointsProvider);
     if (wayPoints != null) {
       return switch (ref.read(
-        mainVehicleProvider.select((vehicle) => vehicle.pathTrackingMode),
+        mainVehicleProvider.select(
+          (vehicle) => vehicle.pathTrackingParameters.mode,
+        ),
       )) {
         PathTrackingMode.purePursuit => PurePursuitPathTracking(
           wayPoints: wayPoints,
@@ -257,7 +262,104 @@ FutureOr<List<PathTracking>> savedPathTrackings(Ref ref) async => await ref
         folder: path.join('guidance', 'path_tracking'),
       ).future,
     )
-    .then((data) => data.cast());
+    .then((data) async {
+      final trackings = data.cast<PathTracking>();
+
+      await ref.watch(
+        importMissingPathTrackingsToDatabaseProvider(trackings).future,
+      );
+
+      return trackings;
+    });
+
+/// A provider for importing missing path trackings to the database.
+@riverpod
+Future<List<int>> importMissingPathTrackingsToDatabase(
+  Ref ref,
+  List<PathTracking> trackings,
+) async {
+  final database = ref.watch(databaseProvider);
+
+  final guidanceLinks = await database.managers.links
+      .filter((link) => link.tableRef.equals('guidance_patterns'))
+      .get();
+
+  final trackingsToAdd = <PathTracking>[];
+  for (final tracking in trackings) {
+    if (!guidanceLinks.map((link) => link.linkValue).contains(tracking.uuid)) {
+      trackingsToAdd.add(tracking);
+    }
+  }
+  final patternIds = <int>[];
+  for (final tracking in trackingsToAdd) {
+    final createdLineString = await database.managers.lineStrings
+        .createReturning(
+          (o) => o(
+            type: .guidancePattern,
+            length: Value(
+              (tracking.cumulativePathSegmentLengths.last * 100).round(),
+            ),
+          ),
+        );
+
+    final maxPointId =
+        await database.managers.points
+            .orderBy((p) => p.id.desc())
+            .limit(1)
+            .map((p) => p.id)
+            .getSingleOrNull() ??
+        0;
+    await database.managers.points.bulkCreate(
+      (o) => tracking.path.mapIndexed(
+        (index, wayPoint) => o(
+          type: switch (index) {
+            0 => .guidanceReferenceA,
+            final index when index == tracking.path.length - 1 =>
+              .guidanceReferenceB,
+            _ => .guidancePoint,
+          },
+          latitude: wayPoint.position.lat,
+          longitude: wayPoint.position.lon,
+          elevation: Value.absentIfNull(
+            wayPoint.position.is3D ? wayPoint.position.elev : null,
+          ),
+        ),
+      ),
+    );
+    final pointIds = await database.managers.points
+        .filter((p) => p.id.isBiggerThan(maxPointId))
+        .map((p) => p.id)
+        .get();
+    await database.managers.lineStringPoints.bulkCreate(
+      (o) => pointIds.map(
+        (id) => o(lineString: createdLineString.id, point: id),
+      ),
+    );
+
+    final patternId = await database.managers.guidancePatterns.create(
+      (o) => o(
+        lineString: createdLineString.id,
+        type: .spiral,
+        name: Value.absentIfNull(tracking.name),
+        propagationDirection: const Value(.noPropagation),
+        extension: const Value(.noExtensions),
+      ),
+    );
+    final link = await database.managers.links.createReturning(
+      (o) => o(
+        tableRef: 'guidance_patterns',
+        refId: patternId,
+        linkValue: Value(tracking.uuid),
+        name: Value.absentIfNull(tracking.name),
+      ),
+    );
+
+    guidanceLinks.add(link);
+    tracking.id = patternId;
+    patternIds.add(patternId);
+  }
+  return patternIds;
+}
 
 /// A provider for deleting [tracking] from the user file systemm.
 ///

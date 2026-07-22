@@ -265,7 +265,7 @@ class CommonMessageHandler {
         );
         for (final equipment in equipments) {
           _ref.read(simInputProvider.notifier).send((
-            uuid: equipment.uuid,
+            id: equipment.id,
             activeSections:
                 (equipment..toggleAll(deactivateAllIfAnyActive: true))
                     .sectionActivationStatus,

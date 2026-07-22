@@ -1,10 +1,28 @@
 targets:
   $default:
     builders:
-      freezed: 
+      drift_dev:
+        options:
+          schema_dir: drift_schemas/
+          store_date_time_values_as_text: true
+          databases:
+            database: lib/src/features/database/models/database.dart
+          sql:
+            dialect: sqlite
+            options:
+              modules:
+                - json1
+                - fts5
+        generate_for:
+          include:
+            - lib/**database/**.dart
+          exclude:
+            - lib/**.g.dart
+            - lib/**.freezed.dart
+      freezed:
         enabled: true
         generate_for:
-          include: 
+          include:
             - lib/**models/**.dart
           exclude:
             - lib/**.g.dart
@@ -12,15 +30,15 @@ targets:
       json_serializable:
         enabled: true
         generate_for:
-          include: 
+          include:
             - lib/**models/**.dart
           exclude:
             - lib/**.g.dart
             - lib/**.freezed.dart
-      riverpod_generator: 
+      riverpod_generator:
         enabled: true
         generate_for:
-          include: 
+          include:
             - lib/**providers/**.dart
           exclude:
             - lib/**.g.dart
