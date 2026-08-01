@@ -8,7 +8,7 @@ version: 0.2.0+1
 
 environment:
     sdk: ">=3.12.0 <4.0.0"
-    flutter: 3.44.7
+    flutter: 3.44.8
 
 dependencies:
     archive: ^4.0.9
@@ -43,7 +43,7 @@ dependencies:
     json_annotation: ^4.11.0
     latlong2: ^0.10.1
     logger: ^2.7.0
-    material_symbols_icons: ^4.2928.1
+    material_symbols_icons: ^4.2960.0
     nmea: ^3.3.3
     package_info_plus: ^10.2.1
     path: ^1.9.1
