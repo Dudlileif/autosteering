@@ -13,6 +13,7 @@ analyzer:
     exclude:
         - build/**
         - lib/**.g.dart
+        - lib/**.drift.dart
 
         # Added to allow files to be present even though package isn't
         # enabled in pubspec.

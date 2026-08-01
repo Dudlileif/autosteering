@@ -6,8 +6,8 @@ plugins {
 
 android {
     namespace = "com.dudlileif.autosteering"
-    compileSdk = 36
-    ndkVersion = "28.2.13676358"
+    compileSdk = 37
+    ndkVersion = "29.0.14206865"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -20,7 +20,7 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 31
-        targetSdk = 36
+        targetSdk = 37
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
