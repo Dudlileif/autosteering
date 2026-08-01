@@ -226,7 +226,17 @@ void simCoreVehicleDriving(Ref ref) {
       mapController.moveAndRotate(
         ref.watch(offsetVehiclePositionProvider),
         mapController.camera.zoom,
-        -ref.watch(mainVehicleProvider.select((value) => value.bearing)),
+        -ref.watch(
+          mainVehicleProvider.select(
+            (vehicle) => switch (vehicle) {
+              AxleSteeredVehicle(:final bearing) => bearing,
+              ArticulatedTractor(
+                :final frontAxleAngle,
+              ) =>
+                frontAxleAngle,
+            },
+          ),
+        ),
       );
     }
   }

@@ -23,7 +23,6 @@ import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/l10n/app_localizations.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -201,10 +200,9 @@ class _LoadVehicleMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final vehicles = ref
-        .watch(savedVehiclesProvider)
+        .watch(vehiclesProvider())
         .maybeWhen(
-          data: (data) =>
-              data.sorted((a, b) => b.lastUsedAt.compareTo(a.lastUsedAt)),
+          data: (data) => data,
           orElse: () => <Vehicle>[],
           skipLoadingOnRefresh: false,
         );
@@ -243,7 +241,7 @@ class _LoadVehicleMenu extends ConsumerWidget {
 
                   ref.read(simInputProvider.notifier).send(vehicle);
 
-                  ref.read(saveVehicleProvider(vehicle));
+                  ref.read(updateVehicleProvider(vehicle));
 
                   ref.read(configuredVehicleProvider.notifier).update(vehicle);
                   ref.invalidate(

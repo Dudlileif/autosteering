@@ -15,7 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/equipment/widgets/equipment_configurator/equipment_connectors_page.dart';
 import 'package:autosteering/src/features/equipment/widgets/equipment_configurator/equipment_decoration_page.dart';
@@ -327,12 +326,6 @@ class _ApplyConfigurationToAttachedEquipmentButton extends ConsumerWidget {
                 ref.read(simInputProvider.notifier).send((
                   updatedEquipment: equipment,
                 ));
-                final updatedSetups = await ref.watch(
-                  savedEquipmentSetupsProvider.selectAsync(
-                    (data) =>
-                        data.where((element) => element.updateChild(equipment)),
-                  ),
-                );
 
                 ref.read(
                   activeWorkSessionProvider.select(
@@ -341,25 +334,15 @@ class _ApplyConfigurationToAttachedEquipmentButton extends ConsumerWidget {
                   ),
                 );
 
-                final updatedWorkSessions = await ref.watch(
-                  savedWorkSessionsProvider.selectAsync(
-                    (data) => data.where(
-                      (element) =>
-                          element.equipmentSetup?.updateChild(equipment) ??
-                          false,
-                    ),
-                  ),
-                );
-                if (Device.isNative) {
-                  await ref.read(saveEquipmentProvider(equipment).future);
-                  for (final setup in updatedSetups) {
-                    await ref.read(saveEquipmentSetupProvider(setup).future);
-                  }
-                  for (final session in updatedWorkSessions) {
-                    await ref.read(saveWorkSessionProvider(session).future);
-                  }
+                if (equipment.id == null) {
+                  await ref.read(
+                    insertImplementProvider(equipment, setLoaded: true).future,
+                  );
+                } else {
+                  await ref.read(
+                    updateImplementProvider(equipment, setLoaded: true).future,
+                  );
                 }
-                ref.read(loadedEquipmentProvider.notifier).update(equipment);
               });
 
               if (context.mounted) {

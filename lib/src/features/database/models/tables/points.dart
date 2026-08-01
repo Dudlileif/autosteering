@@ -16,13 +16,14 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/database/database.dart';
+import 'package:autosteering/src/features/database/models/tables/table_timestamps_mixin.dart';
 import 'package:autosteering/src/features/database/models/tables/tables.dart';
 import 'package:drift/drift.dart';
 
 /// A table of geographic points in the world.
 ///
 /// These are used in [LineStrings] and standalone in [Partfields].
-class Points extends Table {
+class Points extends Table with TableTimestamps {
   /// The local database ID of this.
   late final Column<int> id = integer().autoIncrement()();
 
@@ -40,14 +41,6 @@ class Points extends Table {
 
   /// The elevation of this, deviation in meters from WGS84 ellipsoid.
   late final Column<double> elevation = real().nullable()();
-
-  /// When this was created.
-  late final Column<DateTime> createdAt = dateTime().clientDefault(
-    DateTime.now,
-  )();
-
-  /// When this was last updated.
-  late final Column<DateTime> lastUpdatedAt = dateTime().nullable()();
 }
 
 /// An enumerator for what type a [Point] is.

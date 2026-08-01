@@ -133,7 +133,6 @@ class Equipment extends Hitchable {
   /// Constructor for use with the local database.
   factory Equipment.fromDatabase({
     required int id,
-    required String uuid,
     String? name,
     DateTime? createdAt,
     DateTime? lastUsedAt,
@@ -141,7 +140,6 @@ class Equipment extends Hitchable {
   }) {
     return Equipment(
       id: id,
-      uuid: uuid,
       name: name,
       createdAt: createdAt,
       lastUpdatedAt: lastUpdatedAt,

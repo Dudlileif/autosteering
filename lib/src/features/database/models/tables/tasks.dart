@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/database/database.dart';
+import 'package:autosteering/src/features/database/models/tables/table_timestamps_mixin.dart';
 import 'package:autosteering/src/features/database/models/tables/tables.dart';
 import 'package:drift/drift.dart';
 
@@ -23,7 +24,7 @@ import 'package:drift/drift.dart';
 /// [GuidancePatterns], [GuidanceShifts] and [GuidanceGroups] through
 /// [GuidanceAllocations], and [Implements] and [Vehicles] through
 /// [Connections].
-class Tasks extends Table {
+class Tasks extends Table with TableTimestamps {
   /// The local database ID of this.
   late final Column<int> id = integer().autoIncrement()();
 
@@ -44,12 +45,50 @@ class Tasks extends Table {
 
   /// When the work ended.
   late final Column<DateTime> workEndedAt = dateTime().nullable()();
+}
 
-  /// When this was started.
-  late final Column<DateTime> createdAt = dateTime().clientDefault(
-    DateTime.now,
-  )();
+/// A [Task] extended with all children/refs loaded.
+class TaskWithRefs extends Task {
+  /// A [Task] extended with all children/refs loaded.
+  factory TaskWithRefs({
+    required Task task,
+    PartfieldWithRefs? partfieldObj,
+    List<ConnectionWithRefs>? connections,
+    List<GuidanceAllocationWithRefs>? guidanceAllocations,
+  }) => TaskWithRefs._(
+    id: task.id,
+    name: task.name,
+    note: task.note,
+    partfield: task.partfield,
+    workStartedAt: task.workStartedAt,
+    workEndedAt: task.workEndedAt,
+    createdAt: task.createdAt,
+    lastUpdatedAt: task.lastUpdatedAt,
+    partfieldObj: partfieldObj,
+    connections: connections ?? [],
+    guidanceAllocations: guidanceAllocations ?? [],
+  );
 
-  /// When this was last updated.
-  late final Column<DateTime> lastUpdatedAt = dateTime().nullable()();
+  const TaskWithRefs._({
+    required super.id,
+    required super.name,
+    required super.createdAt,
+    super.note,
+    super.partfield,
+    super.workStartedAt,
+    super.workEndedAt,
+    super.lastUpdatedAt,
+    this.partfieldObj,
+    this.connections = const [],
+    this.guidanceAllocations = const [],
+  });
+
+  /// The loaded optional partfield.
+  final PartfieldWithRefs? partfieldObj;
+
+  /// The loaded connections.
+  final List<ConnectionWithRefs> connections;
+
+  /// The loaded guidance allocations.
+  final List<GuidanceAllocationWithRefs> guidanceAllocations;
 }

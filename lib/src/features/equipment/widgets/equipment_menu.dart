@@ -24,7 +24,6 @@ import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/l10n/app_localizations.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -252,10 +251,9 @@ class _LoadEquipmentMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final equipments = ref
-        .watch(savedEquipmentsProvider)
+        .watch(implementsProvider())
         .maybeWhen(
-          data: (data) =>
-              data.sorted((a, b) => b.lastUsedAt.compareTo(a.lastUsedAt)),
+          data: (data) => data,
           orElse: () => <Equipment>[],
           skipLoadingOnRefresh: false,
         );
@@ -285,7 +283,7 @@ class _LoadEquipmentMenu extends ConsumerWidget {
                     ..read(
                       loadedEquipmentProvider.notifier,
                     ).update(equipment)
-                    ..read(saveEquipmentProvider(equipment));
+                    ..read(updateImplementProvider(equipment));
                 },
                 title: Text(
                   equipment.name ?? strings.noName,

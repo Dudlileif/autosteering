@@ -1,14 +1,37 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
+// dart format width=80
+// ignore_for_file: type=lint
 part of 'database.dart';
 
-// ignore_for_file: type=lint
 class $PartfieldsTable extends Partfields
     with TableInfo<$PartfieldsTable, Partfield> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $PartfieldsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: DateTime.now,
+  );
+  static const VerificationMeta _lastUpdatedAtMeta = const VerificationMeta(
+    'lastUpdatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastUpdatedAt =
+      GeneratedColumn<DateTime>(
+        'last_updated_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -54,50 +77,14 @@ class $PartfieldsTable extends Partfields
     type: DriftSqlType.double,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _lastUsedAtMeta = const VerificationMeta(
-    'lastUsedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> lastUsedAt = GeneratedColumn<DateTime>(
-    'last_used_at',
-    aliasedName,
-    true,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    clientDefault: DateTime.now,
-  );
-  static const VerificationMeta _lastUpdatedAtMeta = const VerificationMeta(
-    'lastUpdatedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> lastUpdatedAt =
-      GeneratedColumn<DateTime>(
-        'last_updated_at',
-        aliasedName,
-        true,
-        type: DriftSqlType.dateTime,
-        requiredDuringInsert: false,
-      );
   @override
   List<GeneratedColumn> get $columns => [
+    createdAt,
+    lastUpdatedAt,
     id,
     parentField,
     name,
     area,
-    lastUsedAt,
-    createdAt,
-    lastUpdatedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -111,6 +98,21 @@ class $PartfieldsTable extends Partfields
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('last_updated_at')) {
+      context.handle(
+        _lastUpdatedAtMeta,
+        lastUpdatedAt.isAcceptableOrUnknown(
+          data['last_updated_at']!,
+          _lastUpdatedAtMeta,
+        ),
+      );
+    }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
@@ -137,30 +139,6 @@ class $PartfieldsTable extends Partfields
     } else if (isInserting) {
       context.missing(_areaMeta);
     }
-    if (data.containsKey('last_used_at')) {
-      context.handle(
-        _lastUsedAtMeta,
-        lastUsedAt.isAcceptableOrUnknown(
-          data['last_used_at']!,
-          _lastUsedAtMeta,
-        ),
-      );
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    }
-    if (data.containsKey('last_updated_at')) {
-      context.handle(
-        _lastUpdatedAtMeta,
-        lastUpdatedAt.isAcceptableOrUnknown(
-          data['last_updated_at']!,
-          _lastUpdatedAtMeta,
-        ),
-      );
-    }
     return context;
   }
 
@@ -170,6 +148,14 @@ class $PartfieldsTable extends Partfields
   Partfield map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Partfield(
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      lastUpdatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_updated_at'],
+      ),
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -186,18 +172,6 @@ class $PartfieldsTable extends Partfields
         DriftSqlType.double,
         data['${effectivePrefix}area'],
       )!,
-      lastUsedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}last_used_at'],
-      ),
-      createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at'],
-      )!,
-      lastUpdatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}last_updated_at'],
-      ),
     );
   }
 
@@ -208,6 +182,12 @@ class $PartfieldsTable extends Partfields
 }
 
 class Partfield extends DataClass implements Insertable<Partfield> {
+  /// When this was created.
+  final DateTime createdAt;
+
+  /// When this was last updated.
+  final DateTime? lastUpdatedAt;
+
   /// The local database ID of this.
   final int id;
 
@@ -219,27 +199,21 @@ class Partfield extends DataClass implements Insertable<Partfield> {
 
   /// The area of this, in m².
   final double area;
-
-  /// When this was last used.
-  final DateTime? lastUsedAt;
-
-  /// When this was created.
-  final DateTime createdAt;
-
-  /// When this was last updated.
-  final DateTime? lastUpdatedAt;
   const Partfield({
+    required this.createdAt,
+    this.lastUpdatedAt,
     required this.id,
     this.parentField,
     this.name,
     required this.area,
-    this.lastUsedAt,
-    required this.createdAt,
-    this.lastUpdatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || lastUpdatedAt != null) {
+      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt);
+    }
     map['id'] = Variable<int>(id);
     if (!nullToAbsent || parentField != null) {
       map['parent_field'] = Variable<int>(parentField);
@@ -248,31 +222,21 @@ class Partfield extends DataClass implements Insertable<Partfield> {
       map['name'] = Variable<String>(name);
     }
     map['area'] = Variable<double>(area);
-    if (!nullToAbsent || lastUsedAt != null) {
-      map['last_used_at'] = Variable<DateTime>(lastUsedAt);
-    }
-    map['created_at'] = Variable<DateTime>(createdAt);
-    if (!nullToAbsent || lastUpdatedAt != null) {
-      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt);
-    }
     return map;
   }
 
   PartfieldsCompanion toCompanion(bool nullToAbsent) {
     return PartfieldsCompanion(
+      createdAt: Value(createdAt),
+      lastUpdatedAt: lastUpdatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastUpdatedAt),
       id: Value(id),
       parentField: parentField == null && nullToAbsent
           ? const Value.absent()
           : Value(parentField),
       name: name == null && nullToAbsent ? const Value.absent() : Value(name),
       area: Value(area),
-      lastUsedAt: lastUsedAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(lastUsedAt),
-      createdAt: Value(createdAt),
-      lastUpdatedAt: lastUpdatedAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(lastUpdatedAt),
     );
   }
 
@@ -282,172 +246,155 @@ class Partfield extends DataClass implements Insertable<Partfield> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Partfield(
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      lastUpdatedAt: serializer.fromJson<DateTime?>(json['lastUpdatedAt']),
       id: serializer.fromJson<int>(json['id']),
       parentField: serializer.fromJson<int?>(json['parentField']),
       name: serializer.fromJson<String?>(json['name']),
       area: serializer.fromJson<double>(json['area']),
-      lastUsedAt: serializer.fromJson<DateTime?>(json['lastUsedAt']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      lastUpdatedAt: serializer.fromJson<DateTime?>(json['lastUpdatedAt']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'lastUpdatedAt': serializer.toJson<DateTime?>(lastUpdatedAt),
       'id': serializer.toJson<int>(id),
       'parentField': serializer.toJson<int?>(parentField),
       'name': serializer.toJson<String?>(name),
       'area': serializer.toJson<double>(area),
-      'lastUsedAt': serializer.toJson<DateTime?>(lastUsedAt),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'lastUpdatedAt': serializer.toJson<DateTime?>(lastUpdatedAt),
     };
   }
 
   Partfield copyWith({
+    DateTime? createdAt,
+    Value<DateTime?> lastUpdatedAt = const Value.absent(),
     int? id,
     Value<int?> parentField = const Value.absent(),
     Value<String?> name = const Value.absent(),
     double? area,
-    Value<DateTime?> lastUsedAt = const Value.absent(),
-    DateTime? createdAt,
-    Value<DateTime?> lastUpdatedAt = const Value.absent(),
   }) => Partfield(
-    id: id ?? this.id,
-    parentField: parentField.present ? parentField.value : this.parentField,
-    name: name.present ? name.value : this.name,
-    area: area ?? this.area,
-    lastUsedAt: lastUsedAt.present ? lastUsedAt.value : this.lastUsedAt,
     createdAt: createdAt ?? this.createdAt,
     lastUpdatedAt: lastUpdatedAt.present
         ? lastUpdatedAt.value
         : this.lastUpdatedAt,
+    id: id ?? this.id,
+    parentField: parentField.present ? parentField.value : this.parentField,
+    name: name.present ? name.value : this.name,
+    area: area ?? this.area,
   );
   Partfield copyWithCompanion(PartfieldsCompanion data) {
     return Partfield(
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      lastUpdatedAt: data.lastUpdatedAt.present
+          ? data.lastUpdatedAt.value
+          : this.lastUpdatedAt,
       id: data.id.present ? data.id.value : this.id,
       parentField: data.parentField.present
           ? data.parentField.value
           : this.parentField,
       name: data.name.present ? data.name.value : this.name,
       area: data.area.present ? data.area.value : this.area,
-      lastUsedAt: data.lastUsedAt.present
-          ? data.lastUsedAt.value
-          : this.lastUsedAt,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      lastUpdatedAt: data.lastUpdatedAt.present
-          ? data.lastUpdatedAt.value
-          : this.lastUpdatedAt,
     );
   }
 
   @override
   String toString() {
     return (StringBuffer('Partfield(')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastUpdatedAt: $lastUpdatedAt, ')
           ..write('id: $id, ')
           ..write('parentField: $parentField, ')
           ..write('name: $name, ')
-          ..write('area: $area, ')
-          ..write('lastUsedAt: $lastUsedAt, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('lastUpdatedAt: $lastUpdatedAt')
+          ..write('area: $area')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-    id,
-    parentField,
-    name,
-    area,
-    lastUsedAt,
-    createdAt,
-    lastUpdatedAt,
-  );
+  int get hashCode =>
+      Object.hash(createdAt, lastUpdatedAt, id, parentField, name, area);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Partfield &&
+          other.createdAt == this.createdAt &&
+          other.lastUpdatedAt == this.lastUpdatedAt &&
           other.id == this.id &&
           other.parentField == this.parentField &&
           other.name == this.name &&
-          other.area == this.area &&
-          other.lastUsedAt == this.lastUsedAt &&
-          other.createdAt == this.createdAt &&
-          other.lastUpdatedAt == this.lastUpdatedAt);
+          other.area == this.area);
 }
 
 class PartfieldsCompanion extends UpdateCompanion<Partfield> {
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> lastUpdatedAt;
   final Value<int> id;
   final Value<int?> parentField;
   final Value<String?> name;
   final Value<double> area;
-  final Value<DateTime?> lastUsedAt;
-  final Value<DateTime> createdAt;
-  final Value<DateTime?> lastUpdatedAt;
   const PartfieldsCompanion({
+    this.createdAt = const Value.absent(),
+    this.lastUpdatedAt = const Value.absent(),
     this.id = const Value.absent(),
     this.parentField = const Value.absent(),
     this.name = const Value.absent(),
     this.area = const Value.absent(),
-    this.lastUsedAt = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.lastUpdatedAt = const Value.absent(),
   });
   PartfieldsCompanion.insert({
+    this.createdAt = const Value.absent(),
+    this.lastUpdatedAt = const Value.absent(),
     this.id = const Value.absent(),
     this.parentField = const Value.absent(),
     this.name = const Value.absent(),
     required double area,
-    this.lastUsedAt = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.lastUpdatedAt = const Value.absent(),
   }) : area = Value(area);
   static Insertable<Partfield> custom({
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? lastUpdatedAt,
     Expression<int>? id,
     Expression<int>? parentField,
     Expression<String>? name,
     Expression<double>? area,
-    Expression<DateTime>? lastUsedAt,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? lastUpdatedAt,
   }) {
     return RawValuesInsertable({
+      if (createdAt != null) 'created_at': createdAt,
+      if (lastUpdatedAt != null) 'last_updated_at': lastUpdatedAt,
       if (id != null) 'id': id,
       if (parentField != null) 'parent_field': parentField,
       if (name != null) 'name': name,
       if (area != null) 'area': area,
-      if (lastUsedAt != null) 'last_used_at': lastUsedAt,
-      if (createdAt != null) 'created_at': createdAt,
-      if (lastUpdatedAt != null) 'last_updated_at': lastUpdatedAt,
     });
   }
 
   PartfieldsCompanion copyWith({
+    Value<DateTime>? createdAt,
+    Value<DateTime?>? lastUpdatedAt,
     Value<int>? id,
     Value<int?>? parentField,
     Value<String?>? name,
     Value<double>? area,
-    Value<DateTime?>? lastUsedAt,
-    Value<DateTime>? createdAt,
-    Value<DateTime?>? lastUpdatedAt,
   }) {
     return PartfieldsCompanion(
+      createdAt: createdAt ?? this.createdAt,
+      lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
       id: id ?? this.id,
       parentField: parentField ?? this.parentField,
       name: name ?? this.name,
       area: area ?? this.area,
-      lastUsedAt: lastUsedAt ?? this.lastUsedAt,
-      createdAt: createdAt ?? this.createdAt,
-      lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (lastUpdatedAt.present) {
+      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt.value);
+    }
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
@@ -460,28 +407,18 @@ class PartfieldsCompanion extends UpdateCompanion<Partfield> {
     if (area.present) {
       map['area'] = Variable<double>(area.value);
     }
-    if (lastUsedAt.present) {
-      map['last_used_at'] = Variable<DateTime>(lastUsedAt.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (lastUpdatedAt.present) {
-      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt.value);
-    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('PartfieldsCompanion(')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastUpdatedAt: $lastUpdatedAt, ')
           ..write('id: $id, ')
           ..write('parentField: $parentField, ')
           ..write('name: $name, ')
-          ..write('area: $area, ')
-          ..write('lastUsedAt: $lastUsedAt, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('lastUpdatedAt: $lastUpdatedAt')
+          ..write('area: $area')
           ..write(')'))
         .toString();
   }
@@ -492,6 +429,30 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $TasksTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: DateTime.now,
+  );
+  static const VerificationMeta _lastUpdatedAtMeta = const VerificationMeta(
+    'lastUpdatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastUpdatedAt =
+      GeneratedColumn<DateTime>(
+        'last_updated_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -560,40 +521,16 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    clientDefault: DateTime.now,
-  );
-  static const VerificationMeta _lastUpdatedAtMeta = const VerificationMeta(
-    'lastUpdatedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> lastUpdatedAt =
-      GeneratedColumn<DateTime>(
-        'last_updated_at',
-        aliasedName,
-        true,
-        type: DriftSqlType.dateTime,
-        requiredDuringInsert: false,
-      );
   @override
   List<GeneratedColumn> get $columns => [
+    createdAt,
+    lastUpdatedAt,
     id,
     name,
     note,
     partfield,
     workStartedAt,
     workEndedAt,
-    createdAt,
-    lastUpdatedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -607,6 +544,21 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('last_updated_at')) {
+      context.handle(
+        _lastUpdatedAtMeta,
+        lastUpdatedAt.isAcceptableOrUnknown(
+          data['last_updated_at']!,
+          _lastUpdatedAtMeta,
+        ),
+      );
+    }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
@@ -648,21 +600,6 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
         ),
       );
     }
-    if (data.containsKey('created_at')) {
-      context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    }
-    if (data.containsKey('last_updated_at')) {
-      context.handle(
-        _lastUpdatedAtMeta,
-        lastUpdatedAt.isAcceptableOrUnknown(
-          data['last_updated_at']!,
-          _lastUpdatedAtMeta,
-        ),
-      );
-    }
     return context;
   }
 
@@ -672,6 +609,14 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
   Task map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Task(
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      lastUpdatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_updated_at'],
+      ),
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -696,14 +641,6 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
         DriftSqlType.dateTime,
         data['${effectivePrefix}work_ended_at'],
       ),
-      createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at'],
-      )!,
-      lastUpdatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}last_updated_at'],
-      ),
     );
   }
 
@@ -714,6 +651,12 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
 }
 
 class Task extends DataClass implements Insertable<Task> {
+  /// When this was created.
+  final DateTime createdAt;
+
+  /// When this was last updated.
+  final DateTime? lastUpdatedAt;
+
   /// The local database ID of this.
   final int id;
 
@@ -731,25 +674,23 @@ class Task extends DataClass implements Insertable<Task> {
 
   /// When the work ended.
   final DateTime? workEndedAt;
-
-  /// When this was started.
-  final DateTime createdAt;
-
-  /// When this was last updated.
-  final DateTime? lastUpdatedAt;
   const Task({
+    required this.createdAt,
+    this.lastUpdatedAt,
     required this.id,
     required this.name,
     this.note,
     this.partfield,
     this.workStartedAt,
     this.workEndedAt,
-    required this.createdAt,
-    this.lastUpdatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || lastUpdatedAt != null) {
+      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt);
+    }
     map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
     if (!nullToAbsent || note != null) {
@@ -764,15 +705,15 @@ class Task extends DataClass implements Insertable<Task> {
     if (!nullToAbsent || workEndedAt != null) {
       map['work_ended_at'] = Variable<DateTime>(workEndedAt);
     }
-    map['created_at'] = Variable<DateTime>(createdAt);
-    if (!nullToAbsent || lastUpdatedAt != null) {
-      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt);
-    }
     return map;
   }
 
   TasksCompanion toCompanion(bool nullToAbsent) {
     return TasksCompanion(
+      createdAt: Value(createdAt),
+      lastUpdatedAt: lastUpdatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastUpdatedAt),
       id: Value(id),
       name: Value(name),
       note: note == null && nullToAbsent ? const Value.absent() : Value(note),
@@ -785,10 +726,6 @@ class Task extends DataClass implements Insertable<Task> {
       workEndedAt: workEndedAt == null && nullToAbsent
           ? const Value.absent()
           : Value(workEndedAt),
-      createdAt: Value(createdAt),
-      lastUpdatedAt: lastUpdatedAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(lastUpdatedAt),
     );
   }
 
@@ -798,41 +735,45 @@ class Task extends DataClass implements Insertable<Task> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Task(
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      lastUpdatedAt: serializer.fromJson<DateTime?>(json['lastUpdatedAt']),
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       note: serializer.fromJson<String?>(json['note']),
       partfield: serializer.fromJson<int?>(json['partfield']),
       workStartedAt: serializer.fromJson<DateTime?>(json['workStartedAt']),
       workEndedAt: serializer.fromJson<DateTime?>(json['workEndedAt']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      lastUpdatedAt: serializer.fromJson<DateTime?>(json['lastUpdatedAt']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'lastUpdatedAt': serializer.toJson<DateTime?>(lastUpdatedAt),
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
       'note': serializer.toJson<String?>(note),
       'partfield': serializer.toJson<int?>(partfield),
       'workStartedAt': serializer.toJson<DateTime?>(workStartedAt),
       'workEndedAt': serializer.toJson<DateTime?>(workEndedAt),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'lastUpdatedAt': serializer.toJson<DateTime?>(lastUpdatedAt),
     };
   }
 
   Task copyWith({
+    DateTime? createdAt,
+    Value<DateTime?> lastUpdatedAt = const Value.absent(),
     int? id,
     String? name,
     Value<String?> note = const Value.absent(),
     Value<int?> partfield = const Value.absent(),
     Value<DateTime?> workStartedAt = const Value.absent(),
     Value<DateTime?> workEndedAt = const Value.absent(),
-    DateTime? createdAt,
-    Value<DateTime?> lastUpdatedAt = const Value.absent(),
   }) => Task(
+    createdAt: createdAt ?? this.createdAt,
+    lastUpdatedAt: lastUpdatedAt.present
+        ? lastUpdatedAt.value
+        : this.lastUpdatedAt,
     id: id ?? this.id,
     name: name ?? this.name,
     note: note.present ? note.value : this.note,
@@ -841,13 +782,13 @@ class Task extends DataClass implements Insertable<Task> {
         ? workStartedAt.value
         : this.workStartedAt,
     workEndedAt: workEndedAt.present ? workEndedAt.value : this.workEndedAt,
-    createdAt: createdAt ?? this.createdAt,
-    lastUpdatedAt: lastUpdatedAt.present
-        ? lastUpdatedAt.value
-        : this.lastUpdatedAt,
   );
   Task copyWithCompanion(TasksCompanion data) {
     return Task(
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      lastUpdatedAt: data.lastUpdatedAt.present
+          ? data.lastUpdatedAt.value
+          : this.lastUpdatedAt,
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       note: data.note.present ? data.note.value : this.note,
@@ -858,129 +799,131 @@ class Task extends DataClass implements Insertable<Task> {
       workEndedAt: data.workEndedAt.present
           ? data.workEndedAt.value
           : this.workEndedAt,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      lastUpdatedAt: data.lastUpdatedAt.present
-          ? data.lastUpdatedAt.value
-          : this.lastUpdatedAt,
     );
   }
 
   @override
   String toString() {
     return (StringBuffer('Task(')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastUpdatedAt: $lastUpdatedAt, ')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('note: $note, ')
           ..write('partfield: $partfield, ')
           ..write('workStartedAt: $workStartedAt, ')
-          ..write('workEndedAt: $workEndedAt, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('lastUpdatedAt: $lastUpdatedAt')
+          ..write('workEndedAt: $workEndedAt')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(
+    createdAt,
+    lastUpdatedAt,
     id,
     name,
     note,
     partfield,
     workStartedAt,
     workEndedAt,
-    createdAt,
-    lastUpdatedAt,
   );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Task &&
+          other.createdAt == this.createdAt &&
+          other.lastUpdatedAt == this.lastUpdatedAt &&
           other.id == this.id &&
           other.name == this.name &&
           other.note == this.note &&
           other.partfield == this.partfield &&
           other.workStartedAt == this.workStartedAt &&
-          other.workEndedAt == this.workEndedAt &&
-          other.createdAt == this.createdAt &&
-          other.lastUpdatedAt == this.lastUpdatedAt);
+          other.workEndedAt == this.workEndedAt);
 }
 
 class TasksCompanion extends UpdateCompanion<Task> {
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> lastUpdatedAt;
   final Value<int> id;
   final Value<String> name;
   final Value<String?> note;
   final Value<int?> partfield;
   final Value<DateTime?> workStartedAt;
   final Value<DateTime?> workEndedAt;
-  final Value<DateTime> createdAt;
-  final Value<DateTime?> lastUpdatedAt;
   const TasksCompanion({
+    this.createdAt = const Value.absent(),
+    this.lastUpdatedAt = const Value.absent(),
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.note = const Value.absent(),
     this.partfield = const Value.absent(),
     this.workStartedAt = const Value.absent(),
     this.workEndedAt = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.lastUpdatedAt = const Value.absent(),
   });
   TasksCompanion.insert({
+    this.createdAt = const Value.absent(),
+    this.lastUpdatedAt = const Value.absent(),
     this.id = const Value.absent(),
     required String name,
     this.note = const Value.absent(),
     this.partfield = const Value.absent(),
     this.workStartedAt = const Value.absent(),
     this.workEndedAt = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.lastUpdatedAt = const Value.absent(),
   }) : name = Value(name);
   static Insertable<Task> custom({
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? lastUpdatedAt,
     Expression<int>? id,
     Expression<String>? name,
     Expression<String>? note,
     Expression<int>? partfield,
     Expression<DateTime>? workStartedAt,
     Expression<DateTime>? workEndedAt,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? lastUpdatedAt,
   }) {
     return RawValuesInsertable({
+      if (createdAt != null) 'created_at': createdAt,
+      if (lastUpdatedAt != null) 'last_updated_at': lastUpdatedAt,
       if (id != null) 'id': id,
       if (name != null) 'name': name,
       if (note != null) 'note': note,
       if (partfield != null) 'partfield': partfield,
       if (workStartedAt != null) 'work_started_at': workStartedAt,
       if (workEndedAt != null) 'work_ended_at': workEndedAt,
-      if (createdAt != null) 'created_at': createdAt,
-      if (lastUpdatedAt != null) 'last_updated_at': lastUpdatedAt,
     });
   }
 
   TasksCompanion copyWith({
+    Value<DateTime>? createdAt,
+    Value<DateTime?>? lastUpdatedAt,
     Value<int>? id,
     Value<String>? name,
     Value<String?>? note,
     Value<int?>? partfield,
     Value<DateTime?>? workStartedAt,
     Value<DateTime?>? workEndedAt,
-    Value<DateTime>? createdAt,
-    Value<DateTime?>? lastUpdatedAt,
   }) {
     return TasksCompanion(
+      createdAt: createdAt ?? this.createdAt,
+      lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
       id: id ?? this.id,
       name: name ?? this.name,
       note: note ?? this.note,
       partfield: partfield ?? this.partfield,
       workStartedAt: workStartedAt ?? this.workStartedAt,
       workEndedAt: workEndedAt ?? this.workEndedAt,
-      createdAt: createdAt ?? this.createdAt,
-      lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (lastUpdatedAt.present) {
+      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt.value);
+    }
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
@@ -999,26 +942,20 @@ class TasksCompanion extends UpdateCompanion<Task> {
     if (workEndedAt.present) {
       map['work_ended_at'] = Variable<DateTime>(workEndedAt.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (lastUpdatedAt.present) {
-      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt.value);
-    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('TasksCompanion(')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastUpdatedAt: $lastUpdatedAt, ')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('note: $note, ')
           ..write('partfield: $partfield, ')
           ..write('workStartedAt: $workStartedAt, ')
-          ..write('workEndedAt: $workEndedAt, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('lastUpdatedAt: $lastUpdatedAt')
+          ..write('workEndedAt: $workEndedAt')
           ..write(')'))
         .toString();
   }
@@ -1029,6 +966,30 @@ class $VehiclesTable extends Vehicles with TableInfo<$VehiclesTable, Vehicle> {
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $VehiclesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: DateTime.now,
+  );
+  static const VerificationMeta _lastUpdatedAtMeta = const VerificationMeta(
+    'lastUpdatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastUpdatedAt =
+      GeneratedColumn<DateTime>(
+        'last_updated_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -1141,43 +1102,10 @@ class $VehiclesTable extends Vehicles with TableInfo<$VehiclesTable, Vehicle> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   ).withConverter<ManufacturerColors?>($VehiclesTable.$convertercolorSchemen);
-  static const VerificationMeta _lastUsedAtMeta = const VerificationMeta(
-    'lastUsedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> lastUsedAt = GeneratedColumn<DateTime>(
-    'last_used_at',
-    aliasedName,
-    true,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    clientDefault: DateTime.now,
-  );
-  static const VerificationMeta _lastUpdatedAtMeta = const VerificationMeta(
-    'lastUpdatedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> lastUpdatedAt =
-      GeneratedColumn<DateTime>(
-        'last_updated_at',
-        aliasedName,
-        true,
-        type: DriftSqlType.dateTime,
-        requiredDuringInsert: false,
-      );
   @override
   List<GeneratedColumn> get $columns => [
+    createdAt,
+    lastUpdatedAt,
     id,
     type,
     name,
@@ -1189,9 +1117,6 @@ class $VehiclesTable extends Vehicles with TableInfo<$VehiclesTable, Vehicle> {
     thresholds,
     pathTrackingParameters,
     colorScheme,
-    lastUsedAt,
-    createdAt,
-    lastUpdatedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1205,24 +1130,6 @@ class $VehiclesTable extends Vehicles with TableInfo<$VehiclesTable, Vehicle> {
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-        _nameMeta,
-        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
-      );
-    }
-    if (data.containsKey('last_used_at')) {
-      context.handle(
-        _lastUsedAtMeta,
-        lastUsedAt.isAcceptableOrUnknown(
-          data['last_used_at']!,
-          _lastUsedAtMeta,
-        ),
-      );
-    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -1236,6 +1143,15 @@ class $VehiclesTable extends Vehicles with TableInfo<$VehiclesTable, Vehicle> {
           data['last_updated_at']!,
           _lastUpdatedAtMeta,
         ),
+      );
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
       );
     }
     return context;
@@ -1305,10 +1221,6 @@ class $VehiclesTable extends Vehicles with TableInfo<$VehiclesTable, Vehicle> {
           data['${effectivePrefix}color_scheme'],
         ),
       ),
-      lastUsedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}last_used_at'],
-      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -1366,6 +1278,8 @@ class $VehiclesTable extends Vehicles with TableInfo<$VehiclesTable, Vehicle> {
 }
 
 class VehiclesCompanion extends UpdateCompanion<Vehicle> {
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> lastUpdatedAt;
   final Value<int> id;
   final Value<VehicleType> type;
   final Value<String?> name;
@@ -1377,10 +1291,9 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
   final Value<VehicleThresholds?> thresholds;
   final Value<PathTrackingParameters?> pathTrackingParameters;
   final Value<ManufacturerColors?> colorScheme;
-  final Value<DateTime?> lastUsedAt;
-  final Value<DateTime> createdAt;
-  final Value<DateTime?> lastUpdatedAt;
   const VehiclesCompanion({
+    this.createdAt = const Value.absent(),
+    this.lastUpdatedAt = const Value.absent(),
     this.id = const Value.absent(),
     this.type = const Value.absent(),
     this.name = const Value.absent(),
@@ -1392,11 +1305,10 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
     this.thresholds = const Value.absent(),
     this.pathTrackingParameters = const Value.absent(),
     this.colorScheme = const Value.absent(),
-    this.lastUsedAt = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.lastUpdatedAt = const Value.absent(),
   });
   VehiclesCompanion.insert({
+    this.createdAt = const Value.absent(),
+    this.lastUpdatedAt = const Value.absent(),
     this.id = const Value.absent(),
     required VehicleType type,
     this.name = const Value.absent(),
@@ -1408,12 +1320,11 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
     this.thresholds = const Value.absent(),
     this.pathTrackingParameters = const Value.absent(),
     this.colorScheme = const Value.absent(),
-    this.lastUsedAt = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.lastUpdatedAt = const Value.absent(),
   }) : type = Value(type),
        geometry = Value(geometry);
   static Insertable<Vehicle> custom({
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? lastUpdatedAt,
     Expression<int>? id,
     Expression<String>? type,
     Expression<String>? name,
@@ -1425,11 +1336,10 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
     Expression<String>? thresholds,
     Expression<String>? pathTrackingParameters,
     Expression<String>? colorScheme,
-    Expression<DateTime>? lastUsedAt,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? lastUpdatedAt,
   }) {
     return RawValuesInsertable({
+      if (createdAt != null) 'created_at': createdAt,
+      if (lastUpdatedAt != null) 'last_updated_at': lastUpdatedAt,
       if (id != null) 'id': id,
       if (type != null) 'type': type,
       if (name != null) 'name': name,
@@ -1443,13 +1353,12 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
       if (pathTrackingParameters != null)
         'path_tracking_parameters': pathTrackingParameters,
       if (colorScheme != null) 'color_scheme': colorScheme,
-      if (lastUsedAt != null) 'last_used_at': lastUsedAt,
-      if (createdAt != null) 'created_at': createdAt,
-      if (lastUpdatedAt != null) 'last_updated_at': lastUpdatedAt,
     });
   }
 
   VehiclesCompanion copyWith({
+    Value<DateTime>? createdAt,
+    Value<DateTime?>? lastUpdatedAt,
     Value<int>? id,
     Value<VehicleType>? type,
     Value<String?>? name,
@@ -1461,11 +1370,10 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
     Value<VehicleThresholds?>? thresholds,
     Value<PathTrackingParameters?>? pathTrackingParameters,
     Value<ManufacturerColors?>? colorScheme,
-    Value<DateTime?>? lastUsedAt,
-    Value<DateTime>? createdAt,
-    Value<DateTime?>? lastUpdatedAt,
   }) {
     return VehiclesCompanion(
+      createdAt: createdAt ?? this.createdAt,
+      lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
       id: id ?? this.id,
       type: type ?? this.type,
       name: name ?? this.name,
@@ -1479,15 +1387,18 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
       pathTrackingParameters:
           pathTrackingParameters ?? this.pathTrackingParameters,
       colorScheme: colorScheme ?? this.colorScheme,
-      lastUsedAt: lastUsedAt ?? this.lastUsedAt,
-      createdAt: createdAt ?? this.createdAt,
-      lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (lastUpdatedAt.present) {
+      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt.value);
+    }
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
@@ -1545,21 +1456,14 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
         $VehiclesTable.$convertercolorSchemen.toSql(colorScheme.value),
       );
     }
-    if (lastUsedAt.present) {
-      map['last_used_at'] = Variable<DateTime>(lastUsedAt.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (lastUpdatedAt.present) {
-      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt.value);
-    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('VehiclesCompanion(')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastUpdatedAt: $lastUpdatedAt, ')
           ..write('id: $id, ')
           ..write('type: $type, ')
           ..write('name: $name, ')
@@ -1570,54 +1474,18 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
           ..write('steeringHardwareConfig: $steeringHardwareConfig, ')
           ..write('thresholds: $thresholds, ')
           ..write('pathTrackingParameters: $pathTrackingParameters, ')
-          ..write('colorScheme: $colorScheme, ')
-          ..write('lastUsedAt: $lastUsedAt, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('lastUpdatedAt: $lastUpdatedAt')
+          ..write('colorScheme: $colorScheme')
           ..write(')'))
         .toString();
   }
 }
 
 class $ImplementsTable extends Implements
-    with TableInfo<$ImplementsTable, Implement> {
+    with TableInfo<$ImplementsTable, Equipment> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $ImplementsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
-  @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-    'name',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _lastUsedAtMeta = const VerificationMeta(
-    'lastUsedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> lastUsedAt = GeneratedColumn<DateTime>(
-    'last_used_at',
-    aliasedName,
-    true,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -1642,14 +1510,30 @@ class $ImplementsTable extends Implements
         type: DriftSqlType.dateTime,
         requiredDuringInsert: false,
       );
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    name,
-    lastUsedAt,
-    createdAt,
-    lastUpdatedAt,
-  ];
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [createdAt, lastUpdatedAt, id, name];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1657,29 +1541,11 @@ class $ImplementsTable extends Implements
   static const String $name = 'implements';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Implement> instance, {
+    Insertable<Equipment> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-        _nameMeta,
-        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
-      );
-    }
-    if (data.containsKey('last_used_at')) {
-      context.handle(
-        _lastUsedAtMeta,
-        lastUsedAt.isAcceptableOrUnknown(
-          data['last_used_at']!,
-          _lastUsedAtMeta,
-        ),
-      );
-    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -1695,15 +1561,24 @@ class $ImplementsTable extends Implements
         ),
       );
     }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    }
     return context;
   }
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Implement map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Equipment map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Implement(
+    return Equipment.fromDatabase(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -1711,10 +1586,6 @@ class $ImplementsTable extends Implements
       name: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}name'],
-      ),
-      lastUsedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}last_used_at'],
       ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
@@ -1733,208 +1604,65 @@ class $ImplementsTable extends Implements
   }
 }
 
-class Implement extends DataClass implements Insertable<Implement> {
-  /// The local database ID of this.
-  final int id;
-
-  /// The name of this.
-  final String? name;
-
-  /// When this was last used.
-  final DateTime? lastUsedAt;
-
-  /// When this was created.
-  final DateTime createdAt;
-
-  /// When this was last updated.
-  final DateTime? lastUpdatedAt;
-  const Implement({
-    required this.id,
-    this.name,
-    this.lastUsedAt,
-    required this.createdAt,
-    this.lastUpdatedAt,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    if (!nullToAbsent || name != null) {
-      map['name'] = Variable<String>(name);
-    }
-    if (!nullToAbsent || lastUsedAt != null) {
-      map['last_used_at'] = Variable<DateTime>(lastUsedAt);
-    }
-    map['created_at'] = Variable<DateTime>(createdAt);
-    if (!nullToAbsent || lastUpdatedAt != null) {
-      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt);
-    }
-    return map;
-  }
-
-  ImplementsCompanion toCompanion(bool nullToAbsent) {
-    return ImplementsCompanion(
-      id: Value(id),
-      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
-      lastUsedAt: lastUsedAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(lastUsedAt),
-      createdAt: Value(createdAt),
-      lastUpdatedAt: lastUpdatedAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(lastUpdatedAt),
-    );
-  }
-
-  factory Implement.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Implement(
-      id: serializer.fromJson<int>(json['id']),
-      name: serializer.fromJson<String?>(json['name']),
-      lastUsedAt: serializer.fromJson<DateTime?>(json['lastUsedAt']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      lastUpdatedAt: serializer.fromJson<DateTime?>(json['lastUpdatedAt']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'name': serializer.toJson<String?>(name),
-      'lastUsedAt': serializer.toJson<DateTime?>(lastUsedAt),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'lastUpdatedAt': serializer.toJson<DateTime?>(lastUpdatedAt),
-    };
-  }
-
-  Implement copyWith({
-    int? id,
-    Value<String?> name = const Value.absent(),
-    Value<DateTime?> lastUsedAt = const Value.absent(),
-    DateTime? createdAt,
-    Value<DateTime?> lastUpdatedAt = const Value.absent(),
-  }) => Implement(
-    id: id ?? this.id,
-    name: name.present ? name.value : this.name,
-    lastUsedAt: lastUsedAt.present ? lastUsedAt.value : this.lastUsedAt,
-    createdAt: createdAt ?? this.createdAt,
-    lastUpdatedAt: lastUpdatedAt.present
-        ? lastUpdatedAt.value
-        : this.lastUpdatedAt,
-  );
-  Implement copyWithCompanion(ImplementsCompanion data) {
-    return Implement(
-      id: data.id.present ? data.id.value : this.id,
-      name: data.name.present ? data.name.value : this.name,
-      lastUsedAt: data.lastUsedAt.present
-          ? data.lastUsedAt.value
-          : this.lastUsedAt,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      lastUpdatedAt: data.lastUpdatedAt.present
-          ? data.lastUpdatedAt.value
-          : this.lastUpdatedAt,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('Implement(')
-          ..write('id: $id, ')
-          ..write('name: $name, ')
-          ..write('lastUsedAt: $lastUsedAt, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('lastUpdatedAt: $lastUpdatedAt')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(id, name, lastUsedAt, createdAt, lastUpdatedAt);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Implement &&
-          other.id == this.id &&
-          other.name == this.name &&
-          other.lastUsedAt == this.lastUsedAt &&
-          other.createdAt == this.createdAt &&
-          other.lastUpdatedAt == this.lastUpdatedAt);
-}
-
-class ImplementsCompanion extends UpdateCompanion<Implement> {
-  final Value<int> id;
-  final Value<String?> name;
-  final Value<DateTime?> lastUsedAt;
+class ImplementsCompanion extends UpdateCompanion<Equipment> {
   final Value<DateTime> createdAt;
   final Value<DateTime?> lastUpdatedAt;
+  final Value<int> id;
+  final Value<String?> name;
   const ImplementsCompanion({
-    this.id = const Value.absent(),
-    this.name = const Value.absent(),
-    this.lastUsedAt = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.lastUpdatedAt = const Value.absent(),
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
   });
   ImplementsCompanion.insert({
-    this.id = const Value.absent(),
-    this.name = const Value.absent(),
-    this.lastUsedAt = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.lastUpdatedAt = const Value.absent(),
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
   });
-  static Insertable<Implement> custom({
-    Expression<int>? id,
-    Expression<String>? name,
-    Expression<DateTime>? lastUsedAt,
+  static Insertable<Equipment> custom({
     Expression<DateTime>? createdAt,
     Expression<DateTime>? lastUpdatedAt,
+    Expression<int>? id,
+    Expression<String>? name,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (name != null) 'name': name,
-      if (lastUsedAt != null) 'last_used_at': lastUsedAt,
       if (createdAt != null) 'created_at': createdAt,
       if (lastUpdatedAt != null) 'last_updated_at': lastUpdatedAt,
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
     });
   }
 
   ImplementsCompanion copyWith({
-    Value<int>? id,
-    Value<String?>? name,
-    Value<DateTime?>? lastUsedAt,
     Value<DateTime>? createdAt,
     Value<DateTime?>? lastUpdatedAt,
+    Value<int>? id,
+    Value<String?>? name,
   }) {
     return ImplementsCompanion(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      lastUsedAt: lastUsedAt ?? this.lastUsedAt,
       createdAt: createdAt ?? this.createdAt,
       lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
+      id: id ?? this.id,
+      name: name ?? this.name,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
-    }
-    if (lastUsedAt.present) {
-      map['last_used_at'] = Variable<DateTime>(lastUsedAt.value);
-    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
     if (lastUpdatedAt.present) {
       map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
     }
     return map;
   }
@@ -1942,11 +1670,10 @@ class ImplementsCompanion extends UpdateCompanion<Implement> {
   @override
   String toString() {
     return (StringBuffer('ImplementsCompanion(')
-          ..write('id: $id, ')
-          ..write('name: $name, ')
-          ..write('lastUsedAt: $lastUsedAt, ')
           ..write('createdAt: $createdAt, ')
-          ..write('lastUpdatedAt: $lastUpdatedAt')
+          ..write('lastUpdatedAt: $lastUpdatedAt, ')
+          ..write('id: $id, ')
+          ..write('name: $name')
           ..write(')'))
         .toString();
   }
@@ -1958,6 +1685,30 @@ class $ConnectorsTable extends Connectors
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $ConnectorsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: DateTime.now,
+  );
+  static const VerificationMeta _lastUpdatedAtMeta = const VerificationMeta(
+    'lastUpdatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastUpdatedAt =
+      GeneratedColumn<DateTime>(
+        'last_updated_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -2060,32 +1811,10 @@ class $ConnectorsTable extends Connectors
     type: DriftSqlType.double,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    clientDefault: DateTime.now,
-  );
-  static const VerificationMeta _lastUpdatedAtMeta = const VerificationMeta(
-    'lastUpdatedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> lastUpdatedAt =
-      GeneratedColumn<DateTime>(
-        'last_updated_at',
-        aliasedName,
-        true,
-        type: DriftSqlType.dateTime,
-        requiredDuringInsert: false,
-      );
   @override
   List<GeneratedColumn> get $columns => [
+    createdAt,
+    lastUpdatedAt,
     id,
     vehicle,
     implement,
@@ -2095,8 +1824,6 @@ class $ConnectorsTable extends Connectors
     lateralOffsetFromRef,
     verticalOffsetFromRef,
     angle,
-    createdAt,
-    lastUpdatedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2110,6 +1837,21 @@ class $ConnectorsTable extends Connectors
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('last_updated_at')) {
+      context.handle(
+        _lastUpdatedAtMeta,
+        lastUpdatedAt.isAcceptableOrUnknown(
+          data['last_updated_at']!,
+          _lastUpdatedAtMeta,
+        ),
+      );
+    }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
@@ -2163,21 +1905,6 @@ class $ConnectorsTable extends Connectors
       );
     } else if (isInserting) {
       context.missing(_angleMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    }
-    if (data.containsKey('last_updated_at')) {
-      context.handle(
-        _lastUpdatedAtMeta,
-        lastUpdatedAt.isAcceptableOrUnknown(
-          data['last_updated_at']!,
-          _lastUpdatedAtMeta,
-        ),
-      );
     }
     return context;
   }
@@ -2253,6 +1980,8 @@ class $ConnectorsTable extends Connectors
 }
 
 class ConnectorsCompanion extends UpdateCompanion<Connector> {
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> lastUpdatedAt;
   final Value<int> id;
   final Value<int?> vehicle;
   final Value<int?> implement;
@@ -2262,9 +1991,9 @@ class ConnectorsCompanion extends UpdateCompanion<Connector> {
   final Value<double> lateralOffsetFromRef;
   final Value<double> verticalOffsetFromRef;
   final Value<double> angle;
-  final Value<DateTime> createdAt;
-  final Value<DateTime?> lastUpdatedAt;
   const ConnectorsCompanion({
+    this.createdAt = const Value.absent(),
+    this.lastUpdatedAt = const Value.absent(),
     this.id = const Value.absent(),
     this.vehicle = const Value.absent(),
     this.implement = const Value.absent(),
@@ -2274,10 +2003,10 @@ class ConnectorsCompanion extends UpdateCompanion<Connector> {
     this.lateralOffsetFromRef = const Value.absent(),
     this.verticalOffsetFromRef = const Value.absent(),
     this.angle = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.lastUpdatedAt = const Value.absent(),
   });
   ConnectorsCompanion.insert({
+    this.createdAt = const Value.absent(),
+    this.lastUpdatedAt = const Value.absent(),
     this.id = const Value.absent(),
     this.vehicle = const Value.absent(),
     this.implement = const Value.absent(),
@@ -2287,14 +2016,14 @@ class ConnectorsCompanion extends UpdateCompanion<Connector> {
     required double lateralOffsetFromRef,
     this.verticalOffsetFromRef = const Value.absent(),
     required double angle,
-    this.createdAt = const Value.absent(),
-    this.lastUpdatedAt = const Value.absent(),
   }) : type = Value(type),
        relation = Value(relation),
        longitudinalOffsetFromRef = Value(longitudinalOffsetFromRef),
        lateralOffsetFromRef = Value(lateralOffsetFromRef),
        angle = Value(angle);
   static Insertable<Connector> custom({
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? lastUpdatedAt,
     Expression<int>? id,
     Expression<int>? vehicle,
     Expression<int>? implement,
@@ -2304,10 +2033,10 @@ class ConnectorsCompanion extends UpdateCompanion<Connector> {
     Expression<double>? lateralOffsetFromRef,
     Expression<double>? verticalOffsetFromRef,
     Expression<double>? angle,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? lastUpdatedAt,
   }) {
     return RawValuesInsertable({
+      if (createdAt != null) 'created_at': createdAt,
+      if (lastUpdatedAt != null) 'last_updated_at': lastUpdatedAt,
       if (id != null) 'id': id,
       if (vehicle != null) 'vehicle': vehicle,
       if (implement != null) 'implement': implement,
@@ -2320,12 +2049,12 @@ class ConnectorsCompanion extends UpdateCompanion<Connector> {
       if (verticalOffsetFromRef != null)
         'vertical_offset_from_ref': verticalOffsetFromRef,
       if (angle != null) 'angle': angle,
-      if (createdAt != null) 'created_at': createdAt,
-      if (lastUpdatedAt != null) 'last_updated_at': lastUpdatedAt,
     });
   }
 
   ConnectorsCompanion copyWith({
+    Value<DateTime>? createdAt,
+    Value<DateTime?>? lastUpdatedAt,
     Value<int>? id,
     Value<int?>? vehicle,
     Value<int?>? implement,
@@ -2335,10 +2064,10 @@ class ConnectorsCompanion extends UpdateCompanion<Connector> {
     Value<double>? lateralOffsetFromRef,
     Value<double>? verticalOffsetFromRef,
     Value<double>? angle,
-    Value<DateTime>? createdAt,
-    Value<DateTime?>? lastUpdatedAt,
   }) {
     return ConnectorsCompanion(
+      createdAt: createdAt ?? this.createdAt,
+      lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
       id: id ?? this.id,
       vehicle: vehicle ?? this.vehicle,
       implement: implement ?? this.implement,
@@ -2350,14 +2079,18 @@ class ConnectorsCompanion extends UpdateCompanion<Connector> {
       verticalOffsetFromRef:
           verticalOffsetFromRef ?? this.verticalOffsetFromRef,
       angle: angle ?? this.angle,
-      createdAt: createdAt ?? this.createdAt,
-      lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (lastUpdatedAt.present) {
+      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt.value);
+    }
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
@@ -2395,18 +2128,14 @@ class ConnectorsCompanion extends UpdateCompanion<Connector> {
     if (angle.present) {
       map['angle'] = Variable<double>(angle.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (lastUpdatedAt.present) {
-      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt.value);
-    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('ConnectorsCompanion(')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastUpdatedAt: $lastUpdatedAt, ')
           ..write('id: $id, ')
           ..write('vehicle: $vehicle, ')
           ..write('implement: $implement, ')
@@ -2415,9 +2144,7 @@ class ConnectorsCompanion extends UpdateCompanion<Connector> {
           ..write('longitudinalOffsetFromRef: $longitudinalOffsetFromRef, ')
           ..write('lateralOffsetFromRef: $lateralOffsetFromRef, ')
           ..write('verticalOffsetFromRef: $verticalOffsetFromRef, ')
-          ..write('angle: $angle, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('lastUpdatedAt: $lastUpdatedAt')
+          ..write('angle: $angle')
           ..write(')'))
         .toString();
   }
@@ -2517,7 +2244,11 @@ class $ConnectionsTable extends Connections
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {parentConnector, childConnector};
+  Set<GeneratedColumn> get $primaryKey => {
+    task,
+    parentConnector,
+    childConnector,
+  };
   @override
   Connection map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -2708,6 +2439,30 @@ class $PolygonsTable extends Polygons with TableInfo<$PolygonsTable, Polygon> {
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $PolygonsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: DateTime.now,
+  );
+  static const VerificationMeta _lastUpdatedAtMeta = const VerificationMeta(
+    'lastUpdatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastUpdatedAt =
+      GeneratedColumn<DateTime>(
+        'last_updated_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -2740,7 +2495,13 @@ class $PolygonsTable extends Polygons with TableInfo<$PolygonsTable, Polygon> {
     requiredDuringInsert: false,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, type, name];
+  List<GeneratedColumn> get $columns => [
+    createdAt,
+    lastUpdatedAt,
+    id,
+    type,
+    name,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -2753,6 +2514,21 @@ class $PolygonsTable extends Polygons with TableInfo<$PolygonsTable, Polygon> {
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('last_updated_at')) {
+      context.handle(
+        _lastUpdatedAtMeta,
+        lastUpdatedAt.isAcceptableOrUnknown(
+          data['last_updated_at']!,
+          _lastUpdatedAtMeta,
+        ),
+      );
+    }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
@@ -2771,6 +2547,14 @@ class $PolygonsTable extends Polygons with TableInfo<$PolygonsTable, Polygon> {
   Polygon map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Polygon(
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      lastUpdatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_updated_at'],
+      ),
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -2798,6 +2582,12 @@ class $PolygonsTable extends Polygons with TableInfo<$PolygonsTable, Polygon> {
 }
 
 class Polygon extends DataClass implements Insertable<Polygon> {
+  /// When this was created.
+  final DateTime createdAt;
+
+  /// When this was last updated.
+  final DateTime? lastUpdatedAt;
+
   /// The local database ID of this.
   final int id;
 
@@ -2806,10 +2596,20 @@ class Polygon extends DataClass implements Insertable<Polygon> {
 
   /// The name of this.
   final String? name;
-  const Polygon({required this.id, required this.type, this.name});
+  const Polygon({
+    required this.createdAt,
+    this.lastUpdatedAt,
+    required this.id,
+    required this.type,
+    this.name,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || lastUpdatedAt != null) {
+      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt);
+    }
     map['id'] = Variable<int>(id);
     {
       map['type'] = Variable<int>($PolygonsTable.$convertertype.toSql(type));
@@ -2822,6 +2622,10 @@ class Polygon extends DataClass implements Insertable<Polygon> {
 
   PolygonsCompanion toCompanion(bool nullToAbsent) {
     return PolygonsCompanion(
+      createdAt: Value(createdAt),
+      lastUpdatedAt: lastUpdatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastUpdatedAt),
       id: Value(id),
       type: Value(type),
       name: name == null && nullToAbsent ? const Value.absent() : Value(name),
@@ -2834,6 +2638,8 @@ class Polygon extends DataClass implements Insertable<Polygon> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Polygon(
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      lastUpdatedAt: serializer.fromJson<DateTime?>(json['lastUpdatedAt']),
       id: serializer.fromJson<int>(json['id']),
       type: serializer.fromJson<PolygonType>(json['type']),
       name: serializer.fromJson<String?>(json['name']),
@@ -2843,6 +2649,8 @@ class Polygon extends DataClass implements Insertable<Polygon> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'lastUpdatedAt': serializer.toJson<DateTime?>(lastUpdatedAt),
       'id': serializer.toJson<int>(id),
       'type': serializer.toJson<PolygonType>(type),
       'name': serializer.toJson<String?>(name),
@@ -2850,16 +2658,26 @@ class Polygon extends DataClass implements Insertable<Polygon> {
   }
 
   Polygon copyWith({
+    DateTime? createdAt,
+    Value<DateTime?> lastUpdatedAt = const Value.absent(),
     int? id,
     PolygonType? type,
     Value<String?> name = const Value.absent(),
   }) => Polygon(
+    createdAt: createdAt ?? this.createdAt,
+    lastUpdatedAt: lastUpdatedAt.present
+        ? lastUpdatedAt.value
+        : this.lastUpdatedAt,
     id: id ?? this.id,
     type: type ?? this.type,
     name: name.present ? name.value : this.name,
   );
   Polygon copyWithCompanion(PolygonsCompanion data) {
     return Polygon(
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      lastUpdatedAt: data.lastUpdatedAt.present
+          ? data.lastUpdatedAt.value
+          : this.lastUpdatedAt,
       id: data.id.present ? data.id.value : this.id,
       type: data.type.present ? data.type.value : this.type,
       name: data.name.present ? data.name.value : this.name,
@@ -2869,6 +2687,8 @@ class Polygon extends DataClass implements Insertable<Polygon> {
   @override
   String toString() {
     return (StringBuffer('Polygon(')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastUpdatedAt: $lastUpdatedAt, ')
           ..write('id: $id, ')
           ..write('type: $type, ')
           ..write('name: $name')
@@ -2877,36 +2697,48 @@ class Polygon extends DataClass implements Insertable<Polygon> {
   }
 
   @override
-  int get hashCode => Object.hash(id, type, name);
+  int get hashCode => Object.hash(createdAt, lastUpdatedAt, id, type, name);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Polygon &&
+          other.createdAt == this.createdAt &&
+          other.lastUpdatedAt == this.lastUpdatedAt &&
           other.id == this.id &&
           other.type == this.type &&
           other.name == this.name);
 }
 
 class PolygonsCompanion extends UpdateCompanion<Polygon> {
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> lastUpdatedAt;
   final Value<int> id;
   final Value<PolygonType> type;
   final Value<String?> name;
   const PolygonsCompanion({
+    this.createdAt = const Value.absent(),
+    this.lastUpdatedAt = const Value.absent(),
     this.id = const Value.absent(),
     this.type = const Value.absent(),
     this.name = const Value.absent(),
   });
   PolygonsCompanion.insert({
+    this.createdAt = const Value.absent(),
+    this.lastUpdatedAt = const Value.absent(),
     this.id = const Value.absent(),
     required PolygonType type,
     this.name = const Value.absent(),
   }) : type = Value(type);
   static Insertable<Polygon> custom({
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? lastUpdatedAt,
     Expression<int>? id,
     Expression<int>? type,
     Expression<String>? name,
   }) {
     return RawValuesInsertable({
+      if (createdAt != null) 'created_at': createdAt,
+      if (lastUpdatedAt != null) 'last_updated_at': lastUpdatedAt,
       if (id != null) 'id': id,
       if (type != null) 'type': type,
       if (name != null) 'name': name,
@@ -2914,11 +2746,15 @@ class PolygonsCompanion extends UpdateCompanion<Polygon> {
   }
 
   PolygonsCompanion copyWith({
+    Value<DateTime>? createdAt,
+    Value<DateTime?>? lastUpdatedAt,
     Value<int>? id,
     Value<PolygonType>? type,
     Value<String?>? name,
   }) {
     return PolygonsCompanion(
+      createdAt: createdAt ?? this.createdAt,
+      lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
       id: id ?? this.id,
       type: type ?? this.type,
       name: name ?? this.name,
@@ -2928,6 +2764,12 @@ class PolygonsCompanion extends UpdateCompanion<Polygon> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (lastUpdatedAt.present) {
+      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt.value);
+    }
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
@@ -2945,6 +2787,8 @@ class PolygonsCompanion extends UpdateCompanion<Polygon> {
   @override
   String toString() {
     return (StringBuffer('PolygonsCompanion(')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastUpdatedAt: $lastUpdatedAt, ')
           ..write('id: $id, ')
           ..write('type: $type, ')
           ..write('name: $name')
@@ -2959,6 +2803,30 @@ class $GuidanceGroupsTable extends GuidanceGroups
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $GuidanceGroupsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: DateTime.now,
+  );
+  static const VerificationMeta _lastUpdatedAtMeta = const VerificationMeta(
+    'lastUpdatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastUpdatedAt =
+      GeneratedColumn<DateTime>(
+        'last_updated_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -2971,6 +2839,15 @@ class $GuidanceGroupsTable extends GuidanceGroups
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'PRIMARY KEY AUTOINCREMENT',
     ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _borderPolygonMeta = const VerificationMeta(
     'borderPolygon',
@@ -2987,7 +2864,13 @@ class $GuidanceGroupsTable extends GuidanceGroups
     ),
   );
   @override
-  List<GeneratedColumn> get $columns => [id, borderPolygon];
+  List<GeneratedColumn> get $columns => [
+    createdAt,
+    lastUpdatedAt,
+    id,
+    name,
+    borderPolygon,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -3000,8 +2883,29 @@ class $GuidanceGroupsTable extends GuidanceGroups
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('last_updated_at')) {
+      context.handle(
+        _lastUpdatedAtMeta,
+        lastUpdatedAt.isAcceptableOrUnknown(
+          data['last_updated_at']!,
+          _lastUpdatedAtMeta,
+        ),
+      );
+    }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
     }
     if (data.containsKey('border_polygon')) {
       context.handle(
@@ -3021,10 +2925,22 @@ class $GuidanceGroupsTable extends GuidanceGroups
   GuidanceGroup map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return GuidanceGroup(
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      lastUpdatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_updated_at'],
+      ),
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      ),
       borderPolygon: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}border_polygon'],
@@ -3039,16 +2955,38 @@ class $GuidanceGroupsTable extends GuidanceGroups
 }
 
 class GuidanceGroup extends DataClass implements Insertable<GuidanceGroup> {
+  /// When this was created.
+  final DateTime createdAt;
+
+  /// When this was last updated.
+  final DateTime? lastUpdatedAt;
+
   /// The local database ID of this.
   final int id;
 
+  /// The name of this.
+  final String? name;
+
   /// Reference to a border [Polygon], if there is one.
   final int? borderPolygon;
-  const GuidanceGroup({required this.id, this.borderPolygon});
+  const GuidanceGroup({
+    required this.createdAt,
+    this.lastUpdatedAt,
+    required this.id,
+    this.name,
+    this.borderPolygon,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || lastUpdatedAt != null) {
+      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt);
+    }
     map['id'] = Variable<int>(id);
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
+    }
     if (!nullToAbsent || borderPolygon != null) {
       map['border_polygon'] = Variable<int>(borderPolygon);
     }
@@ -3057,7 +2995,12 @@ class GuidanceGroup extends DataClass implements Insertable<GuidanceGroup> {
 
   GuidanceGroupsCompanion toCompanion(bool nullToAbsent) {
     return GuidanceGroupsCompanion(
+      createdAt: Value(createdAt),
+      lastUpdatedAt: lastUpdatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastUpdatedAt),
       id: Value(id),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
       borderPolygon: borderPolygon == null && nullToAbsent
           ? const Value.absent()
           : Value(borderPolygon),
@@ -3070,7 +3013,10 @@ class GuidanceGroup extends DataClass implements Insertable<GuidanceGroup> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return GuidanceGroup(
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      lastUpdatedAt: serializer.fromJson<DateTime?>(json['lastUpdatedAt']),
       id: serializer.fromJson<int>(json['id']),
+      name: serializer.fromJson<String?>(json['name']),
       borderPolygon: serializer.fromJson<int?>(json['borderPolygon']),
     );
   }
@@ -3078,23 +3024,39 @@ class GuidanceGroup extends DataClass implements Insertable<GuidanceGroup> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'lastUpdatedAt': serializer.toJson<DateTime?>(lastUpdatedAt),
       'id': serializer.toJson<int>(id),
+      'name': serializer.toJson<String?>(name),
       'borderPolygon': serializer.toJson<int?>(borderPolygon),
     };
   }
 
   GuidanceGroup copyWith({
+    DateTime? createdAt,
+    Value<DateTime?> lastUpdatedAt = const Value.absent(),
     int? id,
+    Value<String?> name = const Value.absent(),
     Value<int?> borderPolygon = const Value.absent(),
   }) => GuidanceGroup(
+    createdAt: createdAt ?? this.createdAt,
+    lastUpdatedAt: lastUpdatedAt.present
+        ? lastUpdatedAt.value
+        : this.lastUpdatedAt,
     id: id ?? this.id,
+    name: name.present ? name.value : this.name,
     borderPolygon: borderPolygon.present
         ? borderPolygon.value
         : this.borderPolygon,
   );
   GuidanceGroup copyWithCompanion(GuidanceGroupsCompanion data) {
     return GuidanceGroup(
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      lastUpdatedAt: data.lastUpdatedAt.present
+          ? data.lastUpdatedAt.value
+          : this.lastUpdatedAt,
       id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
       borderPolygon: data.borderPolygon.present
           ? data.borderPolygon.value
           : this.borderPolygon,
@@ -3104,49 +3066,77 @@ class GuidanceGroup extends DataClass implements Insertable<GuidanceGroup> {
   @override
   String toString() {
     return (StringBuffer('GuidanceGroup(')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastUpdatedAt: $lastUpdatedAt, ')
           ..write('id: $id, ')
+          ..write('name: $name, ')
           ..write('borderPolygon: $borderPolygon')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, borderPolygon);
+  int get hashCode =>
+      Object.hash(createdAt, lastUpdatedAt, id, name, borderPolygon);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is GuidanceGroup &&
+          other.createdAt == this.createdAt &&
+          other.lastUpdatedAt == this.lastUpdatedAt &&
           other.id == this.id &&
+          other.name == this.name &&
           other.borderPolygon == this.borderPolygon);
 }
 
 class GuidanceGroupsCompanion extends UpdateCompanion<GuidanceGroup> {
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> lastUpdatedAt;
   final Value<int> id;
+  final Value<String?> name;
   final Value<int?> borderPolygon;
   const GuidanceGroupsCompanion({
+    this.createdAt = const Value.absent(),
+    this.lastUpdatedAt = const Value.absent(),
     this.id = const Value.absent(),
+    this.name = const Value.absent(),
     this.borderPolygon = const Value.absent(),
   });
   GuidanceGroupsCompanion.insert({
+    this.createdAt = const Value.absent(),
+    this.lastUpdatedAt = const Value.absent(),
     this.id = const Value.absent(),
+    this.name = const Value.absent(),
     this.borderPolygon = const Value.absent(),
   });
   static Insertable<GuidanceGroup> custom({
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? lastUpdatedAt,
     Expression<int>? id,
+    Expression<String>? name,
     Expression<int>? borderPolygon,
   }) {
     return RawValuesInsertable({
+      if (createdAt != null) 'created_at': createdAt,
+      if (lastUpdatedAt != null) 'last_updated_at': lastUpdatedAt,
       if (id != null) 'id': id,
+      if (name != null) 'name': name,
       if (borderPolygon != null) 'border_polygon': borderPolygon,
     });
   }
 
   GuidanceGroupsCompanion copyWith({
+    Value<DateTime>? createdAt,
+    Value<DateTime?>? lastUpdatedAt,
     Value<int>? id,
+    Value<String?>? name,
     Value<int?>? borderPolygon,
   }) {
     return GuidanceGroupsCompanion(
+      createdAt: createdAt ?? this.createdAt,
+      lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
       id: id ?? this.id,
+      name: name ?? this.name,
       borderPolygon: borderPolygon ?? this.borderPolygon,
     );
   }
@@ -3154,8 +3144,17 @@ class GuidanceGroupsCompanion extends UpdateCompanion<GuidanceGroup> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (lastUpdatedAt.present) {
+      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt.value);
+    }
     if (id.present) {
       map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
     }
     if (borderPolygon.present) {
       map['border_polygon'] = Variable<int>(borderPolygon.value);
@@ -3166,7 +3165,10 @@ class GuidanceGroupsCompanion extends UpdateCompanion<GuidanceGroup> {
   @override
   String toString() {
     return (StringBuffer('GuidanceGroupsCompanion(')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastUpdatedAt: $lastUpdatedAt, ')
           ..write('id: $id, ')
+          ..write('name: $name, ')
           ..write('borderPolygon: $borderPolygon')
           ..write(')'))
         .toString();
@@ -3179,6 +3181,30 @@ class $GuidanceAllocationsTable extends GuidanceAllocations
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $GuidanceAllocationsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: DateTime.now,
+  );
+  static const VerificationMeta _lastUpdatedAtMeta = const VerificationMeta(
+    'lastUpdatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastUpdatedAt =
+      GeneratedColumn<DateTime>(
+        'last_updated_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -3218,6 +3244,322 @@ class $GuidanceAllocationsTable extends GuidanceAllocations
       'REFERENCES guidance_groups (id)',
     ),
   );
+  @override
+  List<GeneratedColumn> get $columns => [
+    createdAt,
+    lastUpdatedAt,
+    id,
+    task,
+    guidanceGroup,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'guidance_allocations';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<GuidanceAllocation> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('last_updated_at')) {
+      context.handle(
+        _lastUpdatedAtMeta,
+        lastUpdatedAt.isAcceptableOrUnknown(
+          data['last_updated_at']!,
+          _lastUpdatedAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('task')) {
+      context.handle(
+        _taskMeta,
+        task.isAcceptableOrUnknown(data['task']!, _taskMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_taskMeta);
+    }
+    if (data.containsKey('guidance_group')) {
+      context.handle(
+        _guidanceGroupMeta,
+        guidanceGroup.isAcceptableOrUnknown(
+          data['guidance_group']!,
+          _guidanceGroupMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_guidanceGroupMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  GuidanceAllocation map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return GuidanceAllocation(
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      lastUpdatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_updated_at'],
+      ),
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      task: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}task'],
+      )!,
+      guidanceGroup: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}guidance_group'],
+      )!,
+    );
+  }
+
+  @override
+  $GuidanceAllocationsTable createAlias(String alias) {
+    return $GuidanceAllocationsTable(attachedDatabase, alias);
+  }
+}
+
+class GuidanceAllocation extends DataClass
+    implements Insertable<GuidanceAllocation> {
+  /// When this was created.
+  final DateTime createdAt;
+
+  /// When this was last updated.
+  final DateTime? lastUpdatedAt;
+
+  /// The local database ID of this.
+  final int id;
+
+  /// Reference to a [Task].
+  final int task;
+
+  /// Reference to a [GuidanceGroup].
+  final int guidanceGroup;
+  const GuidanceAllocation({
+    required this.createdAt,
+    this.lastUpdatedAt,
+    required this.id,
+    required this.task,
+    required this.guidanceGroup,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || lastUpdatedAt != null) {
+      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt);
+    }
+    map['id'] = Variable<int>(id);
+    map['task'] = Variable<int>(task);
+    map['guidance_group'] = Variable<int>(guidanceGroup);
+    return map;
+  }
+
+  GuidanceAllocationsCompanion toCompanion(bool nullToAbsent) {
+    return GuidanceAllocationsCompanion(
+      createdAt: Value(createdAt),
+      lastUpdatedAt: lastUpdatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastUpdatedAt),
+      id: Value(id),
+      task: Value(task),
+      guidanceGroup: Value(guidanceGroup),
+    );
+  }
+
+  factory GuidanceAllocation.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return GuidanceAllocation(
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      lastUpdatedAt: serializer.fromJson<DateTime?>(json['lastUpdatedAt']),
+      id: serializer.fromJson<int>(json['id']),
+      task: serializer.fromJson<int>(json['task']),
+      guidanceGroup: serializer.fromJson<int>(json['guidanceGroup']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'lastUpdatedAt': serializer.toJson<DateTime?>(lastUpdatedAt),
+      'id': serializer.toJson<int>(id),
+      'task': serializer.toJson<int>(task),
+      'guidanceGroup': serializer.toJson<int>(guidanceGroup),
+    };
+  }
+
+  GuidanceAllocation copyWith({
+    DateTime? createdAt,
+    Value<DateTime?> lastUpdatedAt = const Value.absent(),
+    int? id,
+    int? task,
+    int? guidanceGroup,
+  }) => GuidanceAllocation(
+    createdAt: createdAt ?? this.createdAt,
+    lastUpdatedAt: lastUpdatedAt.present
+        ? lastUpdatedAt.value
+        : this.lastUpdatedAt,
+    id: id ?? this.id,
+    task: task ?? this.task,
+    guidanceGroup: guidanceGroup ?? this.guidanceGroup,
+  );
+  GuidanceAllocation copyWithCompanion(GuidanceAllocationsCompanion data) {
+    return GuidanceAllocation(
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      lastUpdatedAt: data.lastUpdatedAt.present
+          ? data.lastUpdatedAt.value
+          : this.lastUpdatedAt,
+      id: data.id.present ? data.id.value : this.id,
+      task: data.task.present ? data.task.value : this.task,
+      guidanceGroup: data.guidanceGroup.present
+          ? data.guidanceGroup.value
+          : this.guidanceGroup,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('GuidanceAllocation(')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastUpdatedAt: $lastUpdatedAt, ')
+          ..write('id: $id, ')
+          ..write('task: $task, ')
+          ..write('guidanceGroup: $guidanceGroup')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(createdAt, lastUpdatedAt, id, task, guidanceGroup);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is GuidanceAllocation &&
+          other.createdAt == this.createdAt &&
+          other.lastUpdatedAt == this.lastUpdatedAt &&
+          other.id == this.id &&
+          other.task == this.task &&
+          other.guidanceGroup == this.guidanceGroup);
+}
+
+class GuidanceAllocationsCompanion extends UpdateCompanion<GuidanceAllocation> {
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> lastUpdatedAt;
+  final Value<int> id;
+  final Value<int> task;
+  final Value<int> guidanceGroup;
+  const GuidanceAllocationsCompanion({
+    this.createdAt = const Value.absent(),
+    this.lastUpdatedAt = const Value.absent(),
+    this.id = const Value.absent(),
+    this.task = const Value.absent(),
+    this.guidanceGroup = const Value.absent(),
+  });
+  GuidanceAllocationsCompanion.insert({
+    this.createdAt = const Value.absent(),
+    this.lastUpdatedAt = const Value.absent(),
+    this.id = const Value.absent(),
+    required int task,
+    required int guidanceGroup,
+  }) : task = Value(task),
+       guidanceGroup = Value(guidanceGroup);
+  static Insertable<GuidanceAllocation> custom({
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? lastUpdatedAt,
+    Expression<int>? id,
+    Expression<int>? task,
+    Expression<int>? guidanceGroup,
+  }) {
+    return RawValuesInsertable({
+      if (createdAt != null) 'created_at': createdAt,
+      if (lastUpdatedAt != null) 'last_updated_at': lastUpdatedAt,
+      if (id != null) 'id': id,
+      if (task != null) 'task': task,
+      if (guidanceGroup != null) 'guidance_group': guidanceGroup,
+    });
+  }
+
+  GuidanceAllocationsCompanion copyWith({
+    Value<DateTime>? createdAt,
+    Value<DateTime?>? lastUpdatedAt,
+    Value<int>? id,
+    Value<int>? task,
+    Value<int>? guidanceGroup,
+  }) {
+    return GuidanceAllocationsCompanion(
+      createdAt: createdAt ?? this.createdAt,
+      lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
+      id: id ?? this.id,
+      task: task ?? this.task,
+      guidanceGroup: guidanceGroup ?? this.guidanceGroup,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (lastUpdatedAt.present) {
+      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (task.present) {
+      map['task'] = Variable<int>(task.value);
+    }
+    if (guidanceGroup.present) {
+      map['guidance_group'] = Variable<int>(guidanceGroup.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('GuidanceAllocationsCompanion(')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastUpdatedAt: $lastUpdatedAt, ')
+          ..write('id: $id, ')
+          ..write('task: $task, ')
+          ..write('guidanceGroup: $guidanceGroup')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $LineStringsTable extends LineStrings
+    with TableInfo<$LineStringsTable, LineString> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LineStringsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -3242,322 +3584,6 @@ class $GuidanceAllocationsTable extends GuidanceAllocations
         type: DriftSqlType.dateTime,
         requiredDuringInsert: false,
       );
-  @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    task,
-    guidanceGroup,
-    createdAt,
-    lastUpdatedAt,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'guidance_allocations';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<GuidanceAllocation> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('task')) {
-      context.handle(
-        _taskMeta,
-        task.isAcceptableOrUnknown(data['task']!, _taskMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_taskMeta);
-    }
-    if (data.containsKey('guidance_group')) {
-      context.handle(
-        _guidanceGroupMeta,
-        guidanceGroup.isAcceptableOrUnknown(
-          data['guidance_group']!,
-          _guidanceGroupMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_guidanceGroupMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    }
-    if (data.containsKey('last_updated_at')) {
-      context.handle(
-        _lastUpdatedAtMeta,
-        lastUpdatedAt.isAcceptableOrUnknown(
-          data['last_updated_at']!,
-          _lastUpdatedAtMeta,
-        ),
-      );
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  GuidanceAllocation map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return GuidanceAllocation(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
-      task: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}task'],
-      )!,
-      guidanceGroup: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}guidance_group'],
-      )!,
-      createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at'],
-      )!,
-      lastUpdatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}last_updated_at'],
-      ),
-    );
-  }
-
-  @override
-  $GuidanceAllocationsTable createAlias(String alias) {
-    return $GuidanceAllocationsTable(attachedDatabase, alias);
-  }
-}
-
-class GuidanceAllocation extends DataClass
-    implements Insertable<GuidanceAllocation> {
-  /// The local database ID of this.
-  final int id;
-
-  /// Reference to a [Task].
-  final int task;
-
-  /// Reference to a [GuidanceGroup].
-  final int guidanceGroup;
-
-  /// When this was created.
-  final DateTime createdAt;
-
-  /// When this was last updated.
-  final DateTime? lastUpdatedAt;
-  const GuidanceAllocation({
-    required this.id,
-    required this.task,
-    required this.guidanceGroup,
-    required this.createdAt,
-    this.lastUpdatedAt,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['task'] = Variable<int>(task);
-    map['guidance_group'] = Variable<int>(guidanceGroup);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    if (!nullToAbsent || lastUpdatedAt != null) {
-      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt);
-    }
-    return map;
-  }
-
-  GuidanceAllocationsCompanion toCompanion(bool nullToAbsent) {
-    return GuidanceAllocationsCompanion(
-      id: Value(id),
-      task: Value(task),
-      guidanceGroup: Value(guidanceGroup),
-      createdAt: Value(createdAt),
-      lastUpdatedAt: lastUpdatedAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(lastUpdatedAt),
-    );
-  }
-
-  factory GuidanceAllocation.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return GuidanceAllocation(
-      id: serializer.fromJson<int>(json['id']),
-      task: serializer.fromJson<int>(json['task']),
-      guidanceGroup: serializer.fromJson<int>(json['guidanceGroup']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      lastUpdatedAt: serializer.fromJson<DateTime?>(json['lastUpdatedAt']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'task': serializer.toJson<int>(task),
-      'guidanceGroup': serializer.toJson<int>(guidanceGroup),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'lastUpdatedAt': serializer.toJson<DateTime?>(lastUpdatedAt),
-    };
-  }
-
-  GuidanceAllocation copyWith({
-    int? id,
-    int? task,
-    int? guidanceGroup,
-    DateTime? createdAt,
-    Value<DateTime?> lastUpdatedAt = const Value.absent(),
-  }) => GuidanceAllocation(
-    id: id ?? this.id,
-    task: task ?? this.task,
-    guidanceGroup: guidanceGroup ?? this.guidanceGroup,
-    createdAt: createdAt ?? this.createdAt,
-    lastUpdatedAt: lastUpdatedAt.present
-        ? lastUpdatedAt.value
-        : this.lastUpdatedAt,
-  );
-  GuidanceAllocation copyWithCompanion(GuidanceAllocationsCompanion data) {
-    return GuidanceAllocation(
-      id: data.id.present ? data.id.value : this.id,
-      task: data.task.present ? data.task.value : this.task,
-      guidanceGroup: data.guidanceGroup.present
-          ? data.guidanceGroup.value
-          : this.guidanceGroup,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      lastUpdatedAt: data.lastUpdatedAt.present
-          ? data.lastUpdatedAt.value
-          : this.lastUpdatedAt,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('GuidanceAllocation(')
-          ..write('id: $id, ')
-          ..write('task: $task, ')
-          ..write('guidanceGroup: $guidanceGroup, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('lastUpdatedAt: $lastUpdatedAt')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(id, task, guidanceGroup, createdAt, lastUpdatedAt);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is GuidanceAllocation &&
-          other.id == this.id &&
-          other.task == this.task &&
-          other.guidanceGroup == this.guidanceGroup &&
-          other.createdAt == this.createdAt &&
-          other.lastUpdatedAt == this.lastUpdatedAt);
-}
-
-class GuidanceAllocationsCompanion extends UpdateCompanion<GuidanceAllocation> {
-  final Value<int> id;
-  final Value<int> task;
-  final Value<int> guidanceGroup;
-  final Value<DateTime> createdAt;
-  final Value<DateTime?> lastUpdatedAt;
-  const GuidanceAllocationsCompanion({
-    this.id = const Value.absent(),
-    this.task = const Value.absent(),
-    this.guidanceGroup = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.lastUpdatedAt = const Value.absent(),
-  });
-  GuidanceAllocationsCompanion.insert({
-    this.id = const Value.absent(),
-    required int task,
-    required int guidanceGroup,
-    this.createdAt = const Value.absent(),
-    this.lastUpdatedAt = const Value.absent(),
-  }) : task = Value(task),
-       guidanceGroup = Value(guidanceGroup);
-  static Insertable<GuidanceAllocation> custom({
-    Expression<int>? id,
-    Expression<int>? task,
-    Expression<int>? guidanceGroup,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? lastUpdatedAt,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (task != null) 'task': task,
-      if (guidanceGroup != null) 'guidance_group': guidanceGroup,
-      if (createdAt != null) 'created_at': createdAt,
-      if (lastUpdatedAt != null) 'last_updated_at': lastUpdatedAt,
-    });
-  }
-
-  GuidanceAllocationsCompanion copyWith({
-    Value<int>? id,
-    Value<int>? task,
-    Value<int>? guidanceGroup,
-    Value<DateTime>? createdAt,
-    Value<DateTime?>? lastUpdatedAt,
-  }) {
-    return GuidanceAllocationsCompanion(
-      id: id ?? this.id,
-      task: task ?? this.task,
-      guidanceGroup: guidanceGroup ?? this.guidanceGroup,
-      createdAt: createdAt ?? this.createdAt,
-      lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (task.present) {
-      map['task'] = Variable<int>(task.value);
-    }
-    if (guidanceGroup.present) {
-      map['guidance_group'] = Variable<int>(guidanceGroup.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (lastUpdatedAt.present) {
-      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('GuidanceAllocationsCompanion(')
-          ..write('id: $id, ')
-          ..write('task: $task, ')
-          ..write('guidanceGroup: $guidanceGroup, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('lastUpdatedAt: $lastUpdatedAt')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $LineStringsTable extends LineStrings
-    with TableInfo<$LineStringsTable, LineString> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $LineStringsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -3607,6 +3633,395 @@ class $LineStringsTable extends LineStrings
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  @override
+  List<GeneratedColumn> get $columns => [
+    createdAt,
+    lastUpdatedAt,
+    id,
+    type,
+    name,
+    width,
+    length,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'line_strings';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LineString> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('last_updated_at')) {
+      context.handle(
+        _lastUpdatedAtMeta,
+        lastUpdatedAt.isAcceptableOrUnknown(
+          data['last_updated_at']!,
+          _lastUpdatedAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    }
+    if (data.containsKey('width')) {
+      context.handle(
+        _widthMeta,
+        width.isAcceptableOrUnknown(data['width']!, _widthMeta),
+      );
+    }
+    if (data.containsKey('length')) {
+      context.handle(
+        _lengthMeta,
+        length.isAcceptableOrUnknown(data['length']!, _lengthMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  LineString map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LineString(
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      lastUpdatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_updated_at'],
+      ),
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      type: $LineStringsTable.$convertertype.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}type'],
+        )!,
+      ),
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      ),
+      width: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}width'],
+      ),
+      length: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}length'],
+      ),
+    );
+  }
+
+  @override
+  $LineStringsTable createAlias(String alias) {
+    return $LineStringsTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<LineStringType, int> $convertertype =
+      const LineStringTypeConverter();
+}
+
+class LineString extends DataClass implements Insertable<LineString> {
+  /// When this was created.
+  final DateTime createdAt;
+
+  /// When this was last updated.
+  final DateTime? lastUpdatedAt;
+
+  /// The local database ID of this.
+  final int id;
+
+  /// Which type of line string this is.
+  final LineStringType type;
+
+  /// The name of this.
+  final String? name;
+
+  /// Width of this in millimeters, typically used as the spacing for separating
+  /// adjacent path in [GuidancePattern]s.
+  final int? width;
+
+  /// Length of this in millimeters.
+  final int? length;
+  const LineString({
+    required this.createdAt,
+    this.lastUpdatedAt,
+    required this.id,
+    required this.type,
+    this.name,
+    this.width,
+    this.length,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || lastUpdatedAt != null) {
+      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt);
+    }
+    map['id'] = Variable<int>(id);
+    {
+      map['type'] = Variable<int>($LineStringsTable.$convertertype.toSql(type));
+    }
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
+    }
+    if (!nullToAbsent || width != null) {
+      map['width'] = Variable<int>(width);
+    }
+    if (!nullToAbsent || length != null) {
+      map['length'] = Variable<int>(length);
+    }
+    return map;
+  }
+
+  LineStringsCompanion toCompanion(bool nullToAbsent) {
+    return LineStringsCompanion(
+      createdAt: Value(createdAt),
+      lastUpdatedAt: lastUpdatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastUpdatedAt),
+      id: Value(id),
+      type: Value(type),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      width: width == null && nullToAbsent
+          ? const Value.absent()
+          : Value(width),
+      length: length == null && nullToAbsent
+          ? const Value.absent()
+          : Value(length),
+    );
+  }
+
+  factory LineString.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LineString(
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      lastUpdatedAt: serializer.fromJson<DateTime?>(json['lastUpdatedAt']),
+      id: serializer.fromJson<int>(json['id']),
+      type: serializer.fromJson<LineStringType>(json['type']),
+      name: serializer.fromJson<String?>(json['name']),
+      width: serializer.fromJson<int?>(json['width']),
+      length: serializer.fromJson<int?>(json['length']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'lastUpdatedAt': serializer.toJson<DateTime?>(lastUpdatedAt),
+      'id': serializer.toJson<int>(id),
+      'type': serializer.toJson<LineStringType>(type),
+      'name': serializer.toJson<String?>(name),
+      'width': serializer.toJson<int?>(width),
+      'length': serializer.toJson<int?>(length),
+    };
+  }
+
+  LineString copyWith({
+    DateTime? createdAt,
+    Value<DateTime?> lastUpdatedAt = const Value.absent(),
+    int? id,
+    LineStringType? type,
+    Value<String?> name = const Value.absent(),
+    Value<int?> width = const Value.absent(),
+    Value<int?> length = const Value.absent(),
+  }) => LineString(
+    createdAt: createdAt ?? this.createdAt,
+    lastUpdatedAt: lastUpdatedAt.present
+        ? lastUpdatedAt.value
+        : this.lastUpdatedAt,
+    id: id ?? this.id,
+    type: type ?? this.type,
+    name: name.present ? name.value : this.name,
+    width: width.present ? width.value : this.width,
+    length: length.present ? length.value : this.length,
+  );
+  LineString copyWithCompanion(LineStringsCompanion data) {
+    return LineString(
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      lastUpdatedAt: data.lastUpdatedAt.present
+          ? data.lastUpdatedAt.value
+          : this.lastUpdatedAt,
+      id: data.id.present ? data.id.value : this.id,
+      type: data.type.present ? data.type.value : this.type,
+      name: data.name.present ? data.name.value : this.name,
+      width: data.width.present ? data.width.value : this.width,
+      length: data.length.present ? data.length.value : this.length,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LineString(')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastUpdatedAt: $lastUpdatedAt, ')
+          ..write('id: $id, ')
+          ..write('type: $type, ')
+          ..write('name: $name, ')
+          ..write('width: $width, ')
+          ..write('length: $length')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(createdAt, lastUpdatedAt, id, type, name, width, length);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LineString &&
+          other.createdAt == this.createdAt &&
+          other.lastUpdatedAt == this.lastUpdatedAt &&
+          other.id == this.id &&
+          other.type == this.type &&
+          other.name == this.name &&
+          other.width == this.width &&
+          other.length == this.length);
+}
+
+class LineStringsCompanion extends UpdateCompanion<LineString> {
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> lastUpdatedAt;
+  final Value<int> id;
+  final Value<LineStringType> type;
+  final Value<String?> name;
+  final Value<int?> width;
+  final Value<int?> length;
+  const LineStringsCompanion({
+    this.createdAt = const Value.absent(),
+    this.lastUpdatedAt = const Value.absent(),
+    this.id = const Value.absent(),
+    this.type = const Value.absent(),
+    this.name = const Value.absent(),
+    this.width = const Value.absent(),
+    this.length = const Value.absent(),
+  });
+  LineStringsCompanion.insert({
+    this.createdAt = const Value.absent(),
+    this.lastUpdatedAt = const Value.absent(),
+    this.id = const Value.absent(),
+    required LineStringType type,
+    this.name = const Value.absent(),
+    this.width = const Value.absent(),
+    this.length = const Value.absent(),
+  }) : type = Value(type);
+  static Insertable<LineString> custom({
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? lastUpdatedAt,
+    Expression<int>? id,
+    Expression<int>? type,
+    Expression<String>? name,
+    Expression<int>? width,
+    Expression<int>? length,
+  }) {
+    return RawValuesInsertable({
+      if (createdAt != null) 'created_at': createdAt,
+      if (lastUpdatedAt != null) 'last_updated_at': lastUpdatedAt,
+      if (id != null) 'id': id,
+      if (type != null) 'type': type,
+      if (name != null) 'name': name,
+      if (width != null) 'width': width,
+      if (length != null) 'length': length,
+    });
+  }
+
+  LineStringsCompanion copyWith({
+    Value<DateTime>? createdAt,
+    Value<DateTime?>? lastUpdatedAt,
+    Value<int>? id,
+    Value<LineStringType>? type,
+    Value<String?>? name,
+    Value<int?>? width,
+    Value<int?>? length,
+  }) {
+    return LineStringsCompanion(
+      createdAt: createdAt ?? this.createdAt,
+      lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
+      id: id ?? this.id,
+      type: type ?? this.type,
+      name: name ?? this.name,
+      width: width ?? this.width,
+      length: length ?? this.length,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (lastUpdatedAt.present) {
+      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<int>(
+        $LineStringsTable.$convertertype.toSql(type.value),
+      );
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (width.present) {
+      map['width'] = Variable<int>(width.value);
+    }
+    if (length.present) {
+      map['length'] = Variable<int>(length.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LineStringsCompanion(')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastUpdatedAt: $lastUpdatedAt, ')
+          ..write('id: $id, ')
+          ..write('type: $type, ')
+          ..write('name: $name, ')
+          ..write('width: $width, ')
+          ..write('length: $length')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $GuidancePatternsTable extends GuidancePatterns
+    with TableInfo<$GuidancePatternsTable, GuidancePattern> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $GuidancePatternsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -3631,395 +4046,6 @@ class $LineStringsTable extends LineStrings
         type: DriftSqlType.dateTime,
         requiredDuringInsert: false,
       );
-  @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    type,
-    name,
-    width,
-    length,
-    createdAt,
-    lastUpdatedAt,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'line_strings';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<LineString> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-        _nameMeta,
-        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
-      );
-    }
-    if (data.containsKey('width')) {
-      context.handle(
-        _widthMeta,
-        width.isAcceptableOrUnknown(data['width']!, _widthMeta),
-      );
-    }
-    if (data.containsKey('length')) {
-      context.handle(
-        _lengthMeta,
-        length.isAcceptableOrUnknown(data['length']!, _lengthMeta),
-      );
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    }
-    if (data.containsKey('last_updated_at')) {
-      context.handle(
-        _lastUpdatedAtMeta,
-        lastUpdatedAt.isAcceptableOrUnknown(
-          data['last_updated_at']!,
-          _lastUpdatedAtMeta,
-        ),
-      );
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  LineString map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return LineString(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
-      type: $LineStringsTable.$convertertype.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.int,
-          data['${effectivePrefix}type'],
-        )!,
-      ),
-      name: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}name'],
-      ),
-      width: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}width'],
-      ),
-      length: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}length'],
-      ),
-      createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at'],
-      )!,
-      lastUpdatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}last_updated_at'],
-      ),
-    );
-  }
-
-  @override
-  $LineStringsTable createAlias(String alias) {
-    return $LineStringsTable(attachedDatabase, alias);
-  }
-
-  static TypeConverter<LineStringType, int> $convertertype =
-      const LineStringTypeConverter();
-}
-
-class LineString extends DataClass implements Insertable<LineString> {
-  /// The local database ID of this.
-  final int id;
-
-  /// Which type of line string this is.
-  final LineStringType type;
-
-  /// The name of this.
-  final String? name;
-
-  /// Width of this in millimeters, typically used as the spacing for separating
-  /// adjacent path in [GuidancePattern]s.
-  final int? width;
-
-  /// Length of this in millimeters.
-  final int? length;
-
-  /// When this was created.
-  final DateTime createdAt;
-
-  /// When this was last updated.
-  final DateTime? lastUpdatedAt;
-  const LineString({
-    required this.id,
-    required this.type,
-    this.name,
-    this.width,
-    this.length,
-    required this.createdAt,
-    this.lastUpdatedAt,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    {
-      map['type'] = Variable<int>($LineStringsTable.$convertertype.toSql(type));
-    }
-    if (!nullToAbsent || name != null) {
-      map['name'] = Variable<String>(name);
-    }
-    if (!nullToAbsent || width != null) {
-      map['width'] = Variable<int>(width);
-    }
-    if (!nullToAbsent || length != null) {
-      map['length'] = Variable<int>(length);
-    }
-    map['created_at'] = Variable<DateTime>(createdAt);
-    if (!nullToAbsent || lastUpdatedAt != null) {
-      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt);
-    }
-    return map;
-  }
-
-  LineStringsCompanion toCompanion(bool nullToAbsent) {
-    return LineStringsCompanion(
-      id: Value(id),
-      type: Value(type),
-      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
-      width: width == null && nullToAbsent
-          ? const Value.absent()
-          : Value(width),
-      length: length == null && nullToAbsent
-          ? const Value.absent()
-          : Value(length),
-      createdAt: Value(createdAt),
-      lastUpdatedAt: lastUpdatedAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(lastUpdatedAt),
-    );
-  }
-
-  factory LineString.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return LineString(
-      id: serializer.fromJson<int>(json['id']),
-      type: serializer.fromJson<LineStringType>(json['type']),
-      name: serializer.fromJson<String?>(json['name']),
-      width: serializer.fromJson<int?>(json['width']),
-      length: serializer.fromJson<int?>(json['length']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      lastUpdatedAt: serializer.fromJson<DateTime?>(json['lastUpdatedAt']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'type': serializer.toJson<LineStringType>(type),
-      'name': serializer.toJson<String?>(name),
-      'width': serializer.toJson<int?>(width),
-      'length': serializer.toJson<int?>(length),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'lastUpdatedAt': serializer.toJson<DateTime?>(lastUpdatedAt),
-    };
-  }
-
-  LineString copyWith({
-    int? id,
-    LineStringType? type,
-    Value<String?> name = const Value.absent(),
-    Value<int?> width = const Value.absent(),
-    Value<int?> length = const Value.absent(),
-    DateTime? createdAt,
-    Value<DateTime?> lastUpdatedAt = const Value.absent(),
-  }) => LineString(
-    id: id ?? this.id,
-    type: type ?? this.type,
-    name: name.present ? name.value : this.name,
-    width: width.present ? width.value : this.width,
-    length: length.present ? length.value : this.length,
-    createdAt: createdAt ?? this.createdAt,
-    lastUpdatedAt: lastUpdatedAt.present
-        ? lastUpdatedAt.value
-        : this.lastUpdatedAt,
-  );
-  LineString copyWithCompanion(LineStringsCompanion data) {
-    return LineString(
-      id: data.id.present ? data.id.value : this.id,
-      type: data.type.present ? data.type.value : this.type,
-      name: data.name.present ? data.name.value : this.name,
-      width: data.width.present ? data.width.value : this.width,
-      length: data.length.present ? data.length.value : this.length,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      lastUpdatedAt: data.lastUpdatedAt.present
-          ? data.lastUpdatedAt.value
-          : this.lastUpdatedAt,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('LineString(')
-          ..write('id: $id, ')
-          ..write('type: $type, ')
-          ..write('name: $name, ')
-          ..write('width: $width, ')
-          ..write('length: $length, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('lastUpdatedAt: $lastUpdatedAt')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(id, type, name, width, length, createdAt, lastUpdatedAt);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is LineString &&
-          other.id == this.id &&
-          other.type == this.type &&
-          other.name == this.name &&
-          other.width == this.width &&
-          other.length == this.length &&
-          other.createdAt == this.createdAt &&
-          other.lastUpdatedAt == this.lastUpdatedAt);
-}
-
-class LineStringsCompanion extends UpdateCompanion<LineString> {
-  final Value<int> id;
-  final Value<LineStringType> type;
-  final Value<String?> name;
-  final Value<int?> width;
-  final Value<int?> length;
-  final Value<DateTime> createdAt;
-  final Value<DateTime?> lastUpdatedAt;
-  const LineStringsCompanion({
-    this.id = const Value.absent(),
-    this.type = const Value.absent(),
-    this.name = const Value.absent(),
-    this.width = const Value.absent(),
-    this.length = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.lastUpdatedAt = const Value.absent(),
-  });
-  LineStringsCompanion.insert({
-    this.id = const Value.absent(),
-    required LineStringType type,
-    this.name = const Value.absent(),
-    this.width = const Value.absent(),
-    this.length = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.lastUpdatedAt = const Value.absent(),
-  }) : type = Value(type);
-  static Insertable<LineString> custom({
-    Expression<int>? id,
-    Expression<int>? type,
-    Expression<String>? name,
-    Expression<int>? width,
-    Expression<int>? length,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? lastUpdatedAt,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (type != null) 'type': type,
-      if (name != null) 'name': name,
-      if (width != null) 'width': width,
-      if (length != null) 'length': length,
-      if (createdAt != null) 'created_at': createdAt,
-      if (lastUpdatedAt != null) 'last_updated_at': lastUpdatedAt,
-    });
-  }
-
-  LineStringsCompanion copyWith({
-    Value<int>? id,
-    Value<LineStringType>? type,
-    Value<String?>? name,
-    Value<int?>? width,
-    Value<int?>? length,
-    Value<DateTime>? createdAt,
-    Value<DateTime?>? lastUpdatedAt,
-  }) {
-    return LineStringsCompanion(
-      id: id ?? this.id,
-      type: type ?? this.type,
-      name: name ?? this.name,
-      width: width ?? this.width,
-      length: length ?? this.length,
-      createdAt: createdAt ?? this.createdAt,
-      lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (type.present) {
-      map['type'] = Variable<int>(
-        $LineStringsTable.$convertertype.toSql(type.value),
-      );
-    }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
-    }
-    if (width.present) {
-      map['width'] = Variable<int>(width.value);
-    }
-    if (length.present) {
-      map['length'] = Variable<int>(length.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (lastUpdatedAt.present) {
-      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('LineStringsCompanion(')
-          ..write('id: $id, ')
-          ..write('type: $type, ')
-          ..write('name: $name, ')
-          ..write('width: $width, ')
-          ..write('length: $length, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('lastUpdatedAt: $lastUpdatedAt')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $GuidancePatternsTable extends GuidancePatterns
-    with TableInfo<$GuidancePatternsTable, GuidancePattern> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $GuidancePatternsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -4160,32 +4186,10 @@ class $GuidancePatternsTable extends GuidancePatterns
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    clientDefault: DateTime.now,
-  );
-  static const VerificationMeta _lastUpdatedAtMeta = const VerificationMeta(
-    'lastUpdatedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> lastUpdatedAt =
-      GeneratedColumn<DateTime>(
-        'last_updated_at',
-        aliasedName,
-        true,
-        type: DriftSqlType.dateTime,
-        requiredDuringInsert: false,
-      );
   @override
   List<GeneratedColumn> get $columns => [
+    createdAt,
+    lastUpdatedAt,
     id,
     lineString,
     borderPolygon,
@@ -4198,8 +4202,6 @@ class $GuidancePatternsTable extends GuidancePatterns
     extension,
     numberOfSwathsLeft,
     numberOfSwathsRight,
-    createdAt,
-    lastUpdatedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -4213,6 +4215,21 @@ class $GuidancePatternsTable extends GuidancePatterns
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('last_updated_at')) {
+      context.handle(
+        _lastUpdatedAtMeta,
+        lastUpdatedAt.isAcceptableOrUnknown(
+          data['last_updated_at']!,
+          _lastUpdatedAtMeta,
+        ),
+      );
+    }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
@@ -4269,21 +4286,6 @@ class $GuidancePatternsTable extends GuidancePatterns
         ),
       );
     }
-    if (data.containsKey('created_at')) {
-      context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    }
-    if (data.containsKey('last_updated_at')) {
-      context.handle(
-        _lastUpdatedAtMeta,
-        lastUpdatedAt.isAcceptableOrUnknown(
-          data['last_updated_at']!,
-          _lastUpdatedAtMeta,
-        ),
-      );
-    }
     return context;
   }
 
@@ -4293,6 +4295,14 @@ class $GuidancePatternsTable extends GuidancePatterns
   GuidancePattern map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return GuidancePattern(
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      lastUpdatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_updated_at'],
+      ),
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -4351,14 +4361,6 @@ class $GuidancePatternsTable extends GuidancePatterns
         DriftSqlType.int,
         data['${effectivePrefix}number_of_swaths_right'],
       ),
-      createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at'],
-      )!,
-      lastUpdatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}last_updated_at'],
-      ),
     );
   }
 
@@ -4387,6 +4389,12 @@ class $GuidancePatternsTable extends GuidancePatterns
 }
 
 class GuidancePattern extends DataClass implements Insertable<GuidancePattern> {
+  /// When this was created.
+  final DateTime createdAt;
+
+  /// When this was last updated.
+  final DateTime? lastUpdatedAt;
+
   /// The local database ID of this.
   final int id;
 
@@ -4424,13 +4432,9 @@ class GuidancePattern extends DataClass implements Insertable<GuidancePattern> {
   /// The number of swaths to the right of the linestring, as seen from the
   /// point A in the direction to the first next point or the [heading].
   final int? numberOfSwathsRight;
-
-  /// When this was created.
-  final DateTime createdAt;
-
-  /// When this was last updated.
-  final DateTime? lastUpdatedAt;
   const GuidancePattern({
+    required this.createdAt,
+    this.lastUpdatedAt,
     required this.id,
     required this.lineString,
     this.borderPolygon,
@@ -4443,12 +4447,14 @@ class GuidancePattern extends DataClass implements Insertable<GuidancePattern> {
     this.extension,
     this.numberOfSwathsLeft,
     this.numberOfSwathsRight,
-    required this.createdAt,
-    this.lastUpdatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || lastUpdatedAt != null) {
+      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt);
+    }
     map['id'] = Variable<int>(id);
     map['line_string'] = Variable<int>(lineString);
     if (!nullToAbsent || borderPolygon != null) {
@@ -4491,15 +4497,15 @@ class GuidancePattern extends DataClass implements Insertable<GuidancePattern> {
     if (!nullToAbsent || numberOfSwathsRight != null) {
       map['number_of_swaths_right'] = Variable<int>(numberOfSwathsRight);
     }
-    map['created_at'] = Variable<DateTime>(createdAt);
-    if (!nullToAbsent || lastUpdatedAt != null) {
-      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt);
-    }
     return map;
   }
 
   GuidancePatternsCompanion toCompanion(bool nullToAbsent) {
     return GuidancePatternsCompanion(
+      createdAt: Value(createdAt),
+      lastUpdatedAt: lastUpdatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastUpdatedAt),
       id: Value(id),
       lineString: Value(lineString),
       borderPolygon: borderPolygon == null && nullToAbsent
@@ -4528,10 +4534,6 @@ class GuidancePattern extends DataClass implements Insertable<GuidancePattern> {
       numberOfSwathsRight: numberOfSwathsRight == null && nullToAbsent
           ? const Value.absent()
           : Value(numberOfSwathsRight),
-      createdAt: Value(createdAt),
-      lastUpdatedAt: lastUpdatedAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(lastUpdatedAt),
     );
   }
 
@@ -4541,6 +4543,8 @@ class GuidancePattern extends DataClass implements Insertable<GuidancePattern> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return GuidancePattern(
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      lastUpdatedAt: serializer.fromJson<DateTime?>(json['lastUpdatedAt']),
       id: serializer.fromJson<int>(json['id']),
       lineString: serializer.fromJson<int>(json['lineString']),
       borderPolygon: serializer.fromJson<int?>(json['borderPolygon']),
@@ -4560,14 +4564,14 @@ class GuidancePattern extends DataClass implements Insertable<GuidancePattern> {
       numberOfSwathsRight: serializer.fromJson<int?>(
         json['numberOfSwathsRight'],
       ),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      lastUpdatedAt: serializer.fromJson<DateTime?>(json['lastUpdatedAt']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'lastUpdatedAt': serializer.toJson<DateTime?>(lastUpdatedAt),
       'id': serializer.toJson<int>(id),
       'lineString': serializer.toJson<int>(lineString),
       'borderPolygon': serializer.toJson<int?>(borderPolygon),
@@ -4581,12 +4585,12 @@ class GuidancePattern extends DataClass implements Insertable<GuidancePattern> {
       'extension': serializer.toJson<GuidancePatternExtension?>(extension),
       'numberOfSwathsLeft': serializer.toJson<int?>(numberOfSwathsLeft),
       'numberOfSwathsRight': serializer.toJson<int?>(numberOfSwathsRight),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'lastUpdatedAt': serializer.toJson<DateTime?>(lastUpdatedAt),
     };
   }
 
   GuidancePattern copyWith({
+    DateTime? createdAt,
+    Value<DateTime?> lastUpdatedAt = const Value.absent(),
     int? id,
     int? lineString,
     Value<int?> borderPolygon = const Value.absent(),
@@ -4600,9 +4604,11 @@ class GuidancePattern extends DataClass implements Insertable<GuidancePattern> {
     Value<GuidancePatternExtension?> extension = const Value.absent(),
     Value<int?> numberOfSwathsLeft = const Value.absent(),
     Value<int?> numberOfSwathsRight = const Value.absent(),
-    DateTime? createdAt,
-    Value<DateTime?> lastUpdatedAt = const Value.absent(),
   }) => GuidancePattern(
+    createdAt: createdAt ?? this.createdAt,
+    lastUpdatedAt: lastUpdatedAt.present
+        ? lastUpdatedAt.value
+        : this.lastUpdatedAt,
     id: id ?? this.id,
     lineString: lineString ?? this.lineString,
     borderPolygon: borderPolygon.present
@@ -4623,13 +4629,13 @@ class GuidancePattern extends DataClass implements Insertable<GuidancePattern> {
     numberOfSwathsRight: numberOfSwathsRight.present
         ? numberOfSwathsRight.value
         : this.numberOfSwathsRight,
-    createdAt: createdAt ?? this.createdAt,
-    lastUpdatedAt: lastUpdatedAt.present
-        ? lastUpdatedAt.value
-        : this.lastUpdatedAt,
   );
   GuidancePattern copyWithCompanion(GuidancePatternsCompanion data) {
     return GuidancePattern(
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      lastUpdatedAt: data.lastUpdatedAt.present
+          ? data.lastUpdatedAt.value
+          : this.lastUpdatedAt,
       id: data.id.present ? data.id.value : this.id,
       lineString: data.lineString.present
           ? data.lineString.value
@@ -4652,16 +4658,14 @@ class GuidancePattern extends DataClass implements Insertable<GuidancePattern> {
       numberOfSwathsRight: data.numberOfSwathsRight.present
           ? data.numberOfSwathsRight.value
           : this.numberOfSwathsRight,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      lastUpdatedAt: data.lastUpdatedAt.present
-          ? data.lastUpdatedAt.value
-          : this.lastUpdatedAt,
     );
   }
 
   @override
   String toString() {
     return (StringBuffer('GuidancePattern(')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastUpdatedAt: $lastUpdatedAt, ')
           ..write('id: $id, ')
           ..write('lineString: $lineString, ')
           ..write('borderPolygon: $borderPolygon, ')
@@ -4673,15 +4677,15 @@ class GuidancePattern extends DataClass implements Insertable<GuidancePattern> {
           ..write('propagationDirection: $propagationDirection, ')
           ..write('extension: $extension, ')
           ..write('numberOfSwathsLeft: $numberOfSwathsLeft, ')
-          ..write('numberOfSwathsRight: $numberOfSwathsRight, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('lastUpdatedAt: $lastUpdatedAt')
+          ..write('numberOfSwathsRight: $numberOfSwathsRight')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(
+    createdAt,
+    lastUpdatedAt,
     id,
     lineString,
     borderPolygon,
@@ -4694,13 +4698,13 @@ class GuidancePattern extends DataClass implements Insertable<GuidancePattern> {
     extension,
     numberOfSwathsLeft,
     numberOfSwathsRight,
-    createdAt,
-    lastUpdatedAt,
   );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is GuidancePattern &&
+          other.createdAt == this.createdAt &&
+          other.lastUpdatedAt == this.lastUpdatedAt &&
           other.id == this.id &&
           other.lineString == this.lineString &&
           other.borderPolygon == this.borderPolygon &&
@@ -4712,12 +4716,12 @@ class GuidancePattern extends DataClass implements Insertable<GuidancePattern> {
           other.propagationDirection == this.propagationDirection &&
           other.extension == this.extension &&
           other.numberOfSwathsLeft == this.numberOfSwathsLeft &&
-          other.numberOfSwathsRight == this.numberOfSwathsRight &&
-          other.createdAt == this.createdAt &&
-          other.lastUpdatedAt == this.lastUpdatedAt);
+          other.numberOfSwathsRight == this.numberOfSwathsRight);
 }
 
 class GuidancePatternsCompanion extends UpdateCompanion<GuidancePattern> {
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> lastUpdatedAt;
   final Value<int> id;
   final Value<int> lineString;
   final Value<int?> borderPolygon;
@@ -4730,9 +4734,9 @@ class GuidancePatternsCompanion extends UpdateCompanion<GuidancePattern> {
   final Value<GuidancePatternExtension?> extension;
   final Value<int?> numberOfSwathsLeft;
   final Value<int?> numberOfSwathsRight;
-  final Value<DateTime> createdAt;
-  final Value<DateTime?> lastUpdatedAt;
   const GuidancePatternsCompanion({
+    this.createdAt = const Value.absent(),
+    this.lastUpdatedAt = const Value.absent(),
     this.id = const Value.absent(),
     this.lineString = const Value.absent(),
     this.borderPolygon = const Value.absent(),
@@ -4745,10 +4749,10 @@ class GuidancePatternsCompanion extends UpdateCompanion<GuidancePattern> {
     this.extension = const Value.absent(),
     this.numberOfSwathsLeft = const Value.absent(),
     this.numberOfSwathsRight = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.lastUpdatedAt = const Value.absent(),
   });
   GuidancePatternsCompanion.insert({
+    this.createdAt = const Value.absent(),
+    this.lastUpdatedAt = const Value.absent(),
     this.id = const Value.absent(),
     required int lineString,
     this.borderPolygon = const Value.absent(),
@@ -4761,11 +4765,11 @@ class GuidancePatternsCompanion extends UpdateCompanion<GuidancePattern> {
     this.extension = const Value.absent(),
     this.numberOfSwathsLeft = const Value.absent(),
     this.numberOfSwathsRight = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.lastUpdatedAt = const Value.absent(),
   }) : lineString = Value(lineString),
        type = Value(type);
   static Insertable<GuidancePattern> custom({
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? lastUpdatedAt,
     Expression<int>? id,
     Expression<int>? lineString,
     Expression<int>? borderPolygon,
@@ -4778,10 +4782,10 @@ class GuidancePatternsCompanion extends UpdateCompanion<GuidancePattern> {
     Expression<int>? extension,
     Expression<int>? numberOfSwathsLeft,
     Expression<int>? numberOfSwathsRight,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? lastUpdatedAt,
   }) {
     return RawValuesInsertable({
+      if (createdAt != null) 'created_at': createdAt,
+      if (lastUpdatedAt != null) 'last_updated_at': lastUpdatedAt,
       if (id != null) 'id': id,
       if (lineString != null) 'line_string': lineString,
       if (borderPolygon != null) 'border_polygon': borderPolygon,
@@ -4797,12 +4801,12 @@ class GuidancePatternsCompanion extends UpdateCompanion<GuidancePattern> {
         'number_of_swaths_left': numberOfSwathsLeft,
       if (numberOfSwathsRight != null)
         'number_of_swaths_right': numberOfSwathsRight,
-      if (createdAt != null) 'created_at': createdAt,
-      if (lastUpdatedAt != null) 'last_updated_at': lastUpdatedAt,
     });
   }
 
   GuidancePatternsCompanion copyWith({
+    Value<DateTime>? createdAt,
+    Value<DateTime?>? lastUpdatedAt,
     Value<int>? id,
     Value<int>? lineString,
     Value<int?>? borderPolygon,
@@ -4815,10 +4819,10 @@ class GuidancePatternsCompanion extends UpdateCompanion<GuidancePattern> {
     Value<GuidancePatternExtension?>? extension,
     Value<int?>? numberOfSwathsLeft,
     Value<int?>? numberOfSwathsRight,
-    Value<DateTime>? createdAt,
-    Value<DateTime?>? lastUpdatedAt,
   }) {
     return GuidancePatternsCompanion(
+      createdAt: createdAt ?? this.createdAt,
+      lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
       id: id ?? this.id,
       lineString: lineString ?? this.lineString,
       borderPolygon: borderPolygon ?? this.borderPolygon,
@@ -4831,14 +4835,18 @@ class GuidancePatternsCompanion extends UpdateCompanion<GuidancePattern> {
       extension: extension ?? this.extension,
       numberOfSwathsLeft: numberOfSwathsLeft ?? this.numberOfSwathsLeft,
       numberOfSwathsRight: numberOfSwathsRight ?? this.numberOfSwathsRight,
-      createdAt: createdAt ?? this.createdAt,
-      lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (lastUpdatedAt.present) {
+      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt.value);
+    }
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
@@ -4885,18 +4893,14 @@ class GuidancePatternsCompanion extends UpdateCompanion<GuidancePattern> {
     if (numberOfSwathsRight.present) {
       map['number_of_swaths_right'] = Variable<int>(numberOfSwathsRight.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (lastUpdatedAt.present) {
-      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt.value);
-    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('GuidancePatternsCompanion(')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastUpdatedAt: $lastUpdatedAt, ')
           ..write('id: $id, ')
           ..write('lineString: $lineString, ')
           ..write('borderPolygon: $borderPolygon, ')
@@ -4908,9 +4912,7 @@ class GuidancePatternsCompanion extends UpdateCompanion<GuidancePattern> {
           ..write('propagationDirection: $propagationDirection, ')
           ..write('extension: $extension, ')
           ..write('numberOfSwathsLeft: $numberOfSwathsLeft, ')
-          ..write('numberOfSwathsRight: $numberOfSwathsRight, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('lastUpdatedAt: $lastUpdatedAt')
+          ..write('numberOfSwathsRight: $numberOfSwathsRight')
           ..write(')'))
         .toString();
   }
@@ -5155,6 +5157,30 @@ class $PointsTable extends Points with TableInfo<$PointsTable, Point> {
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $PointsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: DateTime.now,
+  );
+  static const VerificationMeta _lastUpdatedAtMeta = const VerificationMeta(
+    'lastUpdatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastUpdatedAt =
+      GeneratedColumn<DateTime>(
+        'last_updated_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -5219,40 +5245,16 @@ class $PointsTable extends Points with TableInfo<$PointsTable, Point> {
     type: DriftSqlType.double,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    clientDefault: DateTime.now,
-  );
-  static const VerificationMeta _lastUpdatedAtMeta = const VerificationMeta(
-    'lastUpdatedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> lastUpdatedAt =
-      GeneratedColumn<DateTime>(
-        'last_updated_at',
-        aliasedName,
-        true,
-        type: DriftSqlType.dateTime,
-        requiredDuringInsert: false,
-      );
   @override
   List<GeneratedColumn> get $columns => [
+    createdAt,
+    lastUpdatedAt,
     id,
     type,
     name,
     latitude,
     longitude,
     elevation,
-    createdAt,
-    lastUpdatedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -5266,6 +5268,21 @@ class $PointsTable extends Points with TableInfo<$PointsTable, Point> {
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('last_updated_at')) {
+      context.handle(
+        _lastUpdatedAtMeta,
+        lastUpdatedAt.isAcceptableOrUnknown(
+          data['last_updated_at']!,
+          _lastUpdatedAtMeta,
+        ),
+      );
+    }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
@@ -5297,21 +5314,6 @@ class $PointsTable extends Points with TableInfo<$PointsTable, Point> {
         elevation.isAcceptableOrUnknown(data['elevation']!, _elevationMeta),
       );
     }
-    if (data.containsKey('created_at')) {
-      context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    }
-    if (data.containsKey('last_updated_at')) {
-      context.handle(
-        _lastUpdatedAtMeta,
-        lastUpdatedAt.isAcceptableOrUnknown(
-          data['last_updated_at']!,
-          _lastUpdatedAtMeta,
-        ),
-      );
-    }
     return context;
   }
 
@@ -5321,6 +5323,14 @@ class $PointsTable extends Points with TableInfo<$PointsTable, Point> {
   Point map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Point(
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      lastUpdatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_updated_at'],
+      ),
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -5347,14 +5357,6 @@ class $PointsTable extends Points with TableInfo<$PointsTable, Point> {
         DriftSqlType.double,
         data['${effectivePrefix}elevation'],
       ),
-      createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at'],
-      )!,
-      lastUpdatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}last_updated_at'],
-      ),
     );
   }
 
@@ -5368,6 +5370,12 @@ class $PointsTable extends Points with TableInfo<$PointsTable, Point> {
 }
 
 class Point extends DataClass implements Insertable<Point> {
+  /// When this was created.
+  final DateTime createdAt;
+
+  /// When this was last updated.
+  final DateTime? lastUpdatedAt;
+
   /// The local database ID of this.
   final int id;
 
@@ -5385,25 +5393,23 @@ class Point extends DataClass implements Insertable<Point> {
 
   /// The elevation of this, deviation in meters from WGS84 ellipsoid.
   final double? elevation;
-
-  /// When this was created.
-  final DateTime createdAt;
-
-  /// When this was last updated.
-  final DateTime? lastUpdatedAt;
   const Point({
+    required this.createdAt,
+    this.lastUpdatedAt,
     required this.id,
     required this.type,
     this.name,
     required this.latitude,
     required this.longitude,
     this.elevation,
-    required this.createdAt,
-    this.lastUpdatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || lastUpdatedAt != null) {
+      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt);
+    }
     map['id'] = Variable<int>(id);
     {
       map['type'] = Variable<int>($PointsTable.$convertertype.toSql(type));
@@ -5416,15 +5422,15 @@ class Point extends DataClass implements Insertable<Point> {
     if (!nullToAbsent || elevation != null) {
       map['elevation'] = Variable<double>(elevation);
     }
-    map['created_at'] = Variable<DateTime>(createdAt);
-    if (!nullToAbsent || lastUpdatedAt != null) {
-      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt);
-    }
     return map;
   }
 
   PointsCompanion toCompanion(bool nullToAbsent) {
     return PointsCompanion(
+      createdAt: Value(createdAt),
+      lastUpdatedAt: lastUpdatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastUpdatedAt),
       id: Value(id),
       type: Value(type),
       name: name == null && nullToAbsent ? const Value.absent() : Value(name),
@@ -5433,10 +5439,6 @@ class Point extends DataClass implements Insertable<Point> {
       elevation: elevation == null && nullToAbsent
           ? const Value.absent()
           : Value(elevation),
-      createdAt: Value(createdAt),
-      lastUpdatedAt: lastUpdatedAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(lastUpdatedAt),
     );
   }
 
@@ -5446,185 +5448,191 @@ class Point extends DataClass implements Insertable<Point> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Point(
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      lastUpdatedAt: serializer.fromJson<DateTime?>(json['lastUpdatedAt']),
       id: serializer.fromJson<int>(json['id']),
       type: serializer.fromJson<PointType>(json['type']),
       name: serializer.fromJson<String?>(json['name']),
       latitude: serializer.fromJson<double>(json['latitude']),
       longitude: serializer.fromJson<double>(json['longitude']),
       elevation: serializer.fromJson<double?>(json['elevation']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      lastUpdatedAt: serializer.fromJson<DateTime?>(json['lastUpdatedAt']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'lastUpdatedAt': serializer.toJson<DateTime?>(lastUpdatedAt),
       'id': serializer.toJson<int>(id),
       'type': serializer.toJson<PointType>(type),
       'name': serializer.toJson<String?>(name),
       'latitude': serializer.toJson<double>(latitude),
       'longitude': serializer.toJson<double>(longitude),
       'elevation': serializer.toJson<double?>(elevation),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'lastUpdatedAt': serializer.toJson<DateTime?>(lastUpdatedAt),
     };
   }
 
   Point copyWith({
+    DateTime? createdAt,
+    Value<DateTime?> lastUpdatedAt = const Value.absent(),
     int? id,
     PointType? type,
     Value<String?> name = const Value.absent(),
     double? latitude,
     double? longitude,
     Value<double?> elevation = const Value.absent(),
-    DateTime? createdAt,
-    Value<DateTime?> lastUpdatedAt = const Value.absent(),
   }) => Point(
+    createdAt: createdAt ?? this.createdAt,
+    lastUpdatedAt: lastUpdatedAt.present
+        ? lastUpdatedAt.value
+        : this.lastUpdatedAt,
     id: id ?? this.id,
     type: type ?? this.type,
     name: name.present ? name.value : this.name,
     latitude: latitude ?? this.latitude,
     longitude: longitude ?? this.longitude,
     elevation: elevation.present ? elevation.value : this.elevation,
-    createdAt: createdAt ?? this.createdAt,
-    lastUpdatedAt: lastUpdatedAt.present
-        ? lastUpdatedAt.value
-        : this.lastUpdatedAt,
   );
   Point copyWithCompanion(PointsCompanion data) {
     return Point(
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      lastUpdatedAt: data.lastUpdatedAt.present
+          ? data.lastUpdatedAt.value
+          : this.lastUpdatedAt,
       id: data.id.present ? data.id.value : this.id,
       type: data.type.present ? data.type.value : this.type,
       name: data.name.present ? data.name.value : this.name,
       latitude: data.latitude.present ? data.latitude.value : this.latitude,
       longitude: data.longitude.present ? data.longitude.value : this.longitude,
       elevation: data.elevation.present ? data.elevation.value : this.elevation,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      lastUpdatedAt: data.lastUpdatedAt.present
-          ? data.lastUpdatedAt.value
-          : this.lastUpdatedAt,
     );
   }
 
   @override
   String toString() {
     return (StringBuffer('Point(')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastUpdatedAt: $lastUpdatedAt, ')
           ..write('id: $id, ')
           ..write('type: $type, ')
           ..write('name: $name, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
-          ..write('elevation: $elevation, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('lastUpdatedAt: $lastUpdatedAt')
+          ..write('elevation: $elevation')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(
+    createdAt,
+    lastUpdatedAt,
     id,
     type,
     name,
     latitude,
     longitude,
     elevation,
-    createdAt,
-    lastUpdatedAt,
   );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Point &&
+          other.createdAt == this.createdAt &&
+          other.lastUpdatedAt == this.lastUpdatedAt &&
           other.id == this.id &&
           other.type == this.type &&
           other.name == this.name &&
           other.latitude == this.latitude &&
           other.longitude == this.longitude &&
-          other.elevation == this.elevation &&
-          other.createdAt == this.createdAt &&
-          other.lastUpdatedAt == this.lastUpdatedAt);
+          other.elevation == this.elevation);
 }
 
 class PointsCompanion extends UpdateCompanion<Point> {
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> lastUpdatedAt;
   final Value<int> id;
   final Value<PointType> type;
   final Value<String?> name;
   final Value<double> latitude;
   final Value<double> longitude;
   final Value<double?> elevation;
-  final Value<DateTime> createdAt;
-  final Value<DateTime?> lastUpdatedAt;
   const PointsCompanion({
+    this.createdAt = const Value.absent(),
+    this.lastUpdatedAt = const Value.absent(),
     this.id = const Value.absent(),
     this.type = const Value.absent(),
     this.name = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
     this.elevation = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.lastUpdatedAt = const Value.absent(),
   });
   PointsCompanion.insert({
+    this.createdAt = const Value.absent(),
+    this.lastUpdatedAt = const Value.absent(),
     this.id = const Value.absent(),
     required PointType type,
     this.name = const Value.absent(),
     required double latitude,
     required double longitude,
     this.elevation = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.lastUpdatedAt = const Value.absent(),
   }) : type = Value(type),
        latitude = Value(latitude),
        longitude = Value(longitude);
   static Insertable<Point> custom({
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? lastUpdatedAt,
     Expression<int>? id,
     Expression<int>? type,
     Expression<String>? name,
     Expression<double>? latitude,
     Expression<double>? longitude,
     Expression<double>? elevation,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? lastUpdatedAt,
   }) {
     return RawValuesInsertable({
+      if (createdAt != null) 'created_at': createdAt,
+      if (lastUpdatedAt != null) 'last_updated_at': lastUpdatedAt,
       if (id != null) 'id': id,
       if (type != null) 'type': type,
       if (name != null) 'name': name,
       if (latitude != null) 'latitude': latitude,
       if (longitude != null) 'longitude': longitude,
       if (elevation != null) 'elevation': elevation,
-      if (createdAt != null) 'created_at': createdAt,
-      if (lastUpdatedAt != null) 'last_updated_at': lastUpdatedAt,
     });
   }
 
   PointsCompanion copyWith({
+    Value<DateTime>? createdAt,
+    Value<DateTime?>? lastUpdatedAt,
     Value<int>? id,
     Value<PointType>? type,
     Value<String?>? name,
     Value<double>? latitude,
     Value<double>? longitude,
     Value<double?>? elevation,
-    Value<DateTime>? createdAt,
-    Value<DateTime?>? lastUpdatedAt,
   }) {
     return PointsCompanion(
+      createdAt: createdAt ?? this.createdAt,
+      lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
       id: id ?? this.id,
       type: type ?? this.type,
       name: name ?? this.name,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       elevation: elevation ?? this.elevation,
-      createdAt: createdAt ?? this.createdAt,
-      lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (lastUpdatedAt.present) {
+      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt.value);
+    }
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
@@ -5645,26 +5653,20 @@ class PointsCompanion extends UpdateCompanion<Point> {
     if (elevation.present) {
       map['elevation'] = Variable<double>(elevation.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (lastUpdatedAt.present) {
-      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt.value);
-    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('PointsCompanion(')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastUpdatedAt: $lastUpdatedAt, ')
           ..write('id: $id, ')
           ..write('type: $type, ')
           ..write('name: $name, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
-          ..write('elevation: $elevation, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('lastUpdatedAt: $lastUpdatedAt')
+          ..write('elevation: $elevation')
           ..write(')'))
         .toString();
   }
@@ -5893,17 +5895,15 @@ class $LinksTable extends Links with TableInfo<$LinksTable, Link> {
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $LinksTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _tableRefMeta = const VerificationMeta(
-    'tableRef',
-  );
   @override
-  late final GeneratedColumn<String> tableRef = GeneratedColumn<String>(
-    'table_ref',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<LinkTableRef, String> tableRef =
+      GeneratedColumn<String>(
+        'table_ref',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<LinkTableRef>($LinksTable.$convertertableRef);
   static const VerificationMeta _refIdMeta = const VerificationMeta('refId');
   @override
   late final GeneratedColumn<int> refId = GeneratedColumn<int>(
@@ -5948,14 +5948,6 @@ class $LinksTable extends Links with TableInfo<$LinksTable, Link> {
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('table_ref')) {
-      context.handle(
-        _tableRefMeta,
-        tableRef.isAcceptableOrUnknown(data['table_ref']!, _tableRefMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_tableRefMeta);
-    }
     if (data.containsKey('ref_id')) {
       context.handle(
         _refIdMeta,
@@ -5985,10 +5977,12 @@ class $LinksTable extends Links with TableInfo<$LinksTable, Link> {
   Link map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Link(
-      tableRef: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}table_ref'],
-      )!,
+      tableRef: $LinksTable.$convertertableRef.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}table_ref'],
+        )!,
+      ),
       refId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}ref_id'],
@@ -6009,13 +6003,15 @@ class $LinksTable extends Links with TableInfo<$LinksTable, Link> {
     return $LinksTable(attachedDatabase, alias);
   }
 
+  static TypeConverter<LinkTableRef, String> $convertertableRef =
+      const LinkTableRefConverter();
   @override
   bool get withoutRowId => true;
 }
 
 class Link extends DataClass implements Insertable<Link> {
   /// Which table this referes to.
-  final String tableRef;
+  final LinkTableRef tableRef;
 
   /// Which row in the reference table this referes to.
   final int refId;
@@ -6034,7 +6030,11 @@ class Link extends DataClass implements Insertable<Link> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['table_ref'] = Variable<String>(tableRef);
+    {
+      map['table_ref'] = Variable<String>(
+        $LinksTable.$convertertableRef.toSql(tableRef),
+      );
+    }
     map['ref_id'] = Variable<int>(refId);
     map['link_value'] = Variable<String>(linkValue);
     if (!nullToAbsent || name != null) {
@@ -6058,7 +6058,7 @@ class Link extends DataClass implements Insertable<Link> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Link(
-      tableRef: serializer.fromJson<String>(json['tableRef']),
+      tableRef: serializer.fromJson<LinkTableRef>(json['tableRef']),
       refId: serializer.fromJson<int>(json['refId']),
       linkValue: serializer.fromJson<String>(json['linkValue']),
       name: serializer.fromJson<String?>(json['name']),
@@ -6068,7 +6068,7 @@ class Link extends DataClass implements Insertable<Link> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'tableRef': serializer.toJson<String>(tableRef),
+      'tableRef': serializer.toJson<LinkTableRef>(tableRef),
       'refId': serializer.toJson<int>(refId),
       'linkValue': serializer.toJson<String>(linkValue),
       'name': serializer.toJson<String?>(name),
@@ -6076,7 +6076,7 @@ class Link extends DataClass implements Insertable<Link> {
   }
 
   Link copyWith({
-    String? tableRef,
+    LinkTableRef? tableRef,
     int? refId,
     String? linkValue,
     Value<String?> name = const Value.absent(),
@@ -6119,7 +6119,7 @@ class Link extends DataClass implements Insertable<Link> {
 }
 
 class LinksCompanion extends UpdateCompanion<Link> {
-  final Value<String> tableRef;
+  final Value<LinkTableRef> tableRef;
   final Value<int> refId;
   final Value<String> linkValue;
   final Value<String?> name;
@@ -6130,7 +6130,7 @@ class LinksCompanion extends UpdateCompanion<Link> {
     this.name = const Value.absent(),
   });
   LinksCompanion.insert({
-    required String tableRef,
+    required LinkTableRef tableRef,
     required int refId,
     this.linkValue = const Value.absent(),
     this.name = const Value.absent(),
@@ -6151,7 +6151,7 @@ class LinksCompanion extends UpdateCompanion<Link> {
   }
 
   LinksCompanion copyWith({
-    Value<String>? tableRef,
+    Value<LinkTableRef>? tableRef,
     Value<int>? refId,
     Value<String>? linkValue,
     Value<String?>? name,
@@ -6168,7 +6168,9 @@ class LinksCompanion extends UpdateCompanion<Link> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (tableRef.present) {
-      map['table_ref'] = Variable<String>(tableRef.value);
+      map['table_ref'] = Variable<String>(
+        $LinksTable.$convertertableRef.toSql(tableRef.value),
+      );
     }
     if (refId.present) {
       map['ref_id'] = Variable<int>(refId.value);
@@ -7319,6 +7321,30 @@ class $SectionsTable extends Sections with TableInfo<$SectionsTable, Section> {
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $SectionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: DateTime.now,
+  );
+  static const VerificationMeta _lastUpdatedAtMeta = const VerificationMeta(
+    'lastUpdatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastUpdatedAt =
+      GeneratedColumn<DateTime>(
+        'last_updated_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -7429,32 +7455,10 @@ class $SectionsTable extends Sections with TableInfo<$SectionsTable, Section> {
         type: DriftSqlType.string,
         requiredDuringInsert: false,
       ).withConverter<Color?>($SectionsTable.$converterworkedPathColorn);
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    clientDefault: DateTime.now,
-  );
-  static const VerificationMeta _lastUpdatedAtMeta = const VerificationMeta(
-    'lastUpdatedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> lastUpdatedAt =
-      GeneratedColumn<DateTime>(
-        'last_updated_at',
-        aliasedName,
-        true,
-        type: DriftSqlType.dateTime,
-        requiredDuringInsert: false,
-      );
   @override
   List<GeneratedColumn> get $columns => [
+    createdAt,
+    lastUpdatedAt,
     id,
     implement,
     longitudinalOffset,
@@ -7465,8 +7469,6 @@ class $SectionsTable extends Sections with TableInfo<$SectionsTable, Section> {
     automateActivation,
     color,
     workedPathColor,
-    createdAt,
-    lastUpdatedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -7480,6 +7482,21 @@ class $SectionsTable extends Sections with TableInfo<$SectionsTable, Section> {
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('last_updated_at')) {
+      context.handle(
+        _lastUpdatedAtMeta,
+        lastUpdatedAt.isAcceptableOrUnknown(
+          data['last_updated_at']!,
+          _lastUpdatedAtMeta,
+        ),
+      );
+    }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
@@ -7549,21 +7566,6 @@ class $SectionsTable extends Sections with TableInfo<$SectionsTable, Section> {
         ),
       );
     }
-    if (data.containsKey('created_at')) {
-      context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    }
-    if (data.containsKey('last_updated_at')) {
-      context.handle(
-        _lastUpdatedAtMeta,
-        lastUpdatedAt.isAcceptableOrUnknown(
-          data['last_updated_at']!,
-          _lastUpdatedAtMeta,
-        ),
-      );
-    }
     return context;
   }
 
@@ -7617,6 +7619,14 @@ class $SectionsTable extends Sections with TableInfo<$SectionsTable, Section> {
         DriftSqlType.int,
         data['${effectivePrefix}implement'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      lastUpdatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_updated_at'],
+      ),
     );
   }
 
@@ -7635,6 +7645,8 @@ class $SectionsTable extends Sections with TableInfo<$SectionsTable, Section> {
 }
 
 class SectionsCompanion extends UpdateCompanion<Section> {
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> lastUpdatedAt;
   final Value<int> id;
   final Value<int> implement;
   final Value<double> longitudinalOffset;
@@ -7645,9 +7657,9 @@ class SectionsCompanion extends UpdateCompanion<Section> {
   final Value<bool> automateActivation;
   final Value<Color?> color;
   final Value<Color?> workedPathColor;
-  final Value<DateTime> createdAt;
-  final Value<DateTime?> lastUpdatedAt;
   const SectionsCompanion({
+    this.createdAt = const Value.absent(),
+    this.lastUpdatedAt = const Value.absent(),
     this.id = const Value.absent(),
     this.implement = const Value.absent(),
     this.longitudinalOffset = const Value.absent(),
@@ -7658,10 +7670,10 @@ class SectionsCompanion extends UpdateCompanion<Section> {
     this.automateActivation = const Value.absent(),
     this.color = const Value.absent(),
     this.workedPathColor = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.lastUpdatedAt = const Value.absent(),
   });
   SectionsCompanion.insert({
+    this.createdAt = const Value.absent(),
+    this.lastUpdatedAt = const Value.absent(),
     this.id = const Value.absent(),
     required int implement,
     required double longitudinalOffset,
@@ -7672,8 +7684,6 @@ class SectionsCompanion extends UpdateCompanion<Section> {
     this.automateActivation = const Value.absent(),
     this.color = const Value.absent(),
     this.workedPathColor = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.lastUpdatedAt = const Value.absent(),
   }) : implement = Value(implement),
        longitudinalOffset = Value(longitudinalOffset),
        lateralOffset = Value(lateralOffset),
@@ -7681,6 +7691,8 @@ class SectionsCompanion extends UpdateCompanion<Section> {
        workingWidth = Value(workingWidth),
        length = Value(length);
   static Insertable<Section> custom({
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? lastUpdatedAt,
     Expression<int>? id,
     Expression<int>? implement,
     Expression<double>? longitudinalOffset,
@@ -7691,10 +7703,10 @@ class SectionsCompanion extends UpdateCompanion<Section> {
     Expression<bool>? automateActivation,
     Expression<String>? color,
     Expression<String>? workedPathColor,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? lastUpdatedAt,
   }) {
     return RawValuesInsertable({
+      if (createdAt != null) 'created_at': createdAt,
+      if (lastUpdatedAt != null) 'last_updated_at': lastUpdatedAt,
       if (id != null) 'id': id,
       if (implement != null) 'implement': implement,
       if (longitudinalOffset != null) 'longitudinal_offset': longitudinalOffset,
@@ -7705,12 +7717,12 @@ class SectionsCompanion extends UpdateCompanion<Section> {
       if (automateActivation != null) 'automate_activation': automateActivation,
       if (color != null) 'color': color,
       if (workedPathColor != null) 'worked_path_color': workedPathColor,
-      if (createdAt != null) 'created_at': createdAt,
-      if (lastUpdatedAt != null) 'last_updated_at': lastUpdatedAt,
     });
   }
 
   SectionsCompanion copyWith({
+    Value<DateTime>? createdAt,
+    Value<DateTime?>? lastUpdatedAt,
     Value<int>? id,
     Value<int>? implement,
     Value<double>? longitudinalOffset,
@@ -7721,10 +7733,10 @@ class SectionsCompanion extends UpdateCompanion<Section> {
     Value<bool>? automateActivation,
     Value<Color?>? color,
     Value<Color?>? workedPathColor,
-    Value<DateTime>? createdAt,
-    Value<DateTime?>? lastUpdatedAt,
   }) {
     return SectionsCompanion(
+      createdAt: createdAt ?? this.createdAt,
+      lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
       id: id ?? this.id,
       implement: implement ?? this.implement,
       longitudinalOffset: longitudinalOffset ?? this.longitudinalOffset,
@@ -7735,14 +7747,18 @@ class SectionsCompanion extends UpdateCompanion<Section> {
       automateActivation: automateActivation ?? this.automateActivation,
       color: color ?? this.color,
       workedPathColor: workedPathColor ?? this.workedPathColor,
-      createdAt: createdAt ?? this.createdAt,
-      lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (lastUpdatedAt.present) {
+      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt.value);
+    }
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
@@ -7777,18 +7793,14 @@ class SectionsCompanion extends UpdateCompanion<Section> {
         $SectionsTable.$converterworkedPathColorn.toSql(workedPathColor.value),
       );
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (lastUpdatedAt.present) {
-      map['last_updated_at'] = Variable<DateTime>(lastUpdatedAt.value);
-    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('SectionsCompanion(')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastUpdatedAt: $lastUpdatedAt, ')
           ..write('id: $id, ')
           ..write('implement: $implement, ')
           ..write('longitudinalOffset: $longitudinalOffset, ')
@@ -7798,9 +7810,7 @@ class SectionsCompanion extends UpdateCompanion<Section> {
           ..write('length: $length, ')
           ..write('automateActivation: $automateActivation, ')
           ..write('color: $color, ')
-          ..write('workedPathColor: $workedPathColor, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('lastUpdatedAt: $lastUpdatedAt')
+          ..write('workedPathColor: $workedPathColor')
           ..write(')'))
         .toString();
   }
@@ -7842,6 +7852,22 @@ abstract class _$Database extends GeneratedDatabase {
   late final $PolygonLineStringsTable polygonLineStrings =
       $PolygonLineStringsTable(this);
   late final $SectionsTable sections = $SectionsTable(this);
+  late final ConnectionsDao connectionsDao = ConnectionsDao(this as Database);
+  late final GuidanceAllocationsDao guidanceAllocationsDao =
+      GuidanceAllocationsDao(this as Database);
+  late final GuidanceGroupsDao guidanceGroupsDao = GuidanceGroupsDao(
+    this as Database,
+  );
+  late final GuidancePatternsDao guidancePatternsDao = GuidancePatternsDao(
+    this as Database,
+  );
+  late final ImplementsDao implementsDao = ImplementsDao(this as Database);
+  late final LineStringsDao lineStringsDao = LineStringsDao(this as Database);
+  late final PartfieldsDao partfieldsDao = PartfieldsDao(this as Database);
+  late final PointsDao pointsDao = PointsDao(this as Database);
+  late final PolygonsDao polygonsDao = PolygonsDao(this as Database);
+  late final TasksDao tasksDao = TasksDao(this as Database);
+  late final VehiclesDao vehiclesDao = VehiclesDao(this as Database);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -7876,23 +7902,21 @@ abstract class _$Database extends GeneratedDatabase {
 
 typedef $$PartfieldsTableCreateCompanionBuilder =
     PartfieldsCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastUpdatedAt,
       Value<int> id,
       Value<int?> parentField,
       Value<String?> name,
       required double area,
-      Value<DateTime?> lastUsedAt,
-      Value<DateTime> createdAt,
-      Value<DateTime?> lastUpdatedAt,
     });
 typedef $$PartfieldsTableUpdateCompanionBuilder =
     PartfieldsCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastUpdatedAt,
       Value<int> id,
       Value<int?> parentField,
       Value<String?> name,
       Value<double> area,
-      Value<DateTime?> lastUsedAt,
-      Value<DateTime> createdAt,
-      Value<DateTime?> lastUpdatedAt,
     });
 
 final class $$PartfieldsTableReferences
@@ -7900,7 +7924,9 @@ final class $$PartfieldsTableReferences
   $$PartfieldsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static $PartfieldsTable _parentFieldTable(_$Database db) =>
-      db.partfields.createAlias('partfields__parent_field__partfields__id');
+      db.partfields.createAlias(
+        $_aliasNameGenerator(db.partfields.parentField, db.partfields.id),
+      );
 
   $$PartfieldsTableProcessedTableManager? get parentField {
     final $_column = $_itemColumn<int>('parent_field');
@@ -7920,7 +7946,7 @@ final class $$PartfieldsTableReferences
     _$Database db,
   ) => MultiTypedResultKey.fromTable(
     db.tasks,
-    aliasName: 'partfields__id__tasks__partfield',
+    aliasName: $_aliasNameGenerator(db.partfields.id, db.tasks.partfield),
   );
 
   $$TasksTableProcessedTableManager get taskPartfield {
@@ -7942,7 +7968,10 @@ final class $$PartfieldsTableReferences
   _partfieldGuidanceGroupPartfieldTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.partfieldGuidanceGroups,
-        aliasName: 'partfields__id__partfield_guidance_groups__partfield',
+        aliasName: $_aliasNameGenerator(
+          db.partfields.id,
+          db.partfieldGuidanceGroups.partfield,
+        ),
       );
 
   $$PartfieldGuidanceGroupsTableProcessedTableManager
@@ -7964,7 +7993,10 @@ final class $$PartfieldsTableReferences
   _partfieldPolygonPartfieldTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.partfieldPolygons,
-        aliasName: 'partfields__id__partfield_polygons__partfield',
+        aliasName: $_aliasNameGenerator(
+          db.partfields.id,
+          db.partfieldPolygons.partfield,
+        ),
       );
 
   $$PartfieldPolygonsTableProcessedTableManager get partfieldPolygonPartfield {
@@ -7988,7 +8020,10 @@ final class $$PartfieldsTableReferences
   _partfieldLineStringPartfieldTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.partfieldLineStrings,
-        aliasName: 'partfields__id__partfield_line_strings__partfield',
+        aliasName: $_aliasNameGenerator(
+          db.partfields.id,
+          db.partfieldLineStrings.partfield,
+        ),
       );
 
   $$PartfieldLineStringsTableProcessedTableManager
@@ -8009,7 +8044,10 @@ final class $$PartfieldsTableReferences
   static MultiTypedResultKey<$PartfieldPointsTable, List<PartfieldPoint>>
   _partfieldPointPartfieldTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.partfieldPoints,
-    aliasName: 'partfields__id__partfield_points__partfield',
+    aliasName: $_aliasNameGenerator(
+      db.partfields.id,
+      db.partfieldPoints.partfield,
+    ),
   );
 
   $$PartfieldPointsTableProcessedTableManager get partfieldPointPartfield {
@@ -8036,6 +8074,16 @@ class $$PartfieldsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
@@ -8048,21 +8096,6 @@ class $$PartfieldsTableFilterComposer
 
   ColumnFilters<double> get area => $composableBuilder(
     column: $table.area,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get lastUsedAt => $composableBuilder(
-    column: $table.lastUsedAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -8225,6 +8258,16 @@ class $$PartfieldsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
@@ -8237,21 +8280,6 @@ class $$PartfieldsTableOrderingComposer
 
   ColumnOrderings<double> get area => $composableBuilder(
     column: $table.area,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get lastUsedAt => $composableBuilder(
-    column: $table.lastUsedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -8288,6 +8316,14 @@ class $$PartfieldsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
@@ -8296,19 +8332,6 @@ class $$PartfieldsTableAnnotationComposer
 
   GeneratedColumn<double> get area =>
       $composableBuilder(column: $table.area, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get lastUsedAt => $composableBuilder(
-    column: $table.lastUsedAt,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
-    builder: (column) => column,
-  );
 
   $$PartfieldsTableAnnotationComposer get parentField {
     final $$PartfieldsTableAnnotationComposer composer = $composerBuilder(
@@ -8498,39 +8521,35 @@ class $$PartfieldsTableTableManager
               $$PartfieldsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastUpdatedAt = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 Value<int?> parentField = const Value.absent(),
                 Value<String?> name = const Value.absent(),
                 Value<double> area = const Value.absent(),
-                Value<DateTime?> lastUsedAt = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime?> lastUpdatedAt = const Value.absent(),
               }) => PartfieldsCompanion(
+                createdAt: createdAt,
+                lastUpdatedAt: lastUpdatedAt,
                 id: id,
                 parentField: parentField,
                 name: name,
                 area: area,
-                lastUsedAt: lastUsedAt,
-                createdAt: createdAt,
-                lastUpdatedAt: lastUpdatedAt,
               ),
           createCompanionCallback:
               ({
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastUpdatedAt = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 Value<int?> parentField = const Value.absent(),
                 Value<String?> name = const Value.absent(),
                 required double area,
-                Value<DateTime?> lastUsedAt = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime?> lastUpdatedAt = const Value.absent(),
               }) => PartfieldsCompanion.insert(
+                createdAt: createdAt,
+                lastUpdatedAt: lastUpdatedAt,
                 id: id,
                 parentField: parentField,
                 name: name,
                 area: area,
-                lastUsedAt: lastUsedAt,
-                createdAt: createdAt,
-                lastUpdatedAt: lastUpdatedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -8730,33 +8749,33 @@ typedef $$PartfieldsTableProcessedTableManager =
     >;
 typedef $$TasksTableCreateCompanionBuilder =
     TasksCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastUpdatedAt,
       Value<int> id,
       required String name,
       Value<String?> note,
       Value<int?> partfield,
       Value<DateTime?> workStartedAt,
       Value<DateTime?> workEndedAt,
-      Value<DateTime> createdAt,
-      Value<DateTime?> lastUpdatedAt,
     });
 typedef $$TasksTableUpdateCompanionBuilder =
     TasksCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastUpdatedAt,
       Value<int> id,
       Value<String> name,
       Value<String?> note,
       Value<int?> partfield,
       Value<DateTime?> workStartedAt,
       Value<DateTime?> workEndedAt,
-      Value<DateTime> createdAt,
-      Value<DateTime?> lastUpdatedAt,
     });
 
 final class $$TasksTableReferences
     extends BaseReferences<_$Database, $TasksTable, Task> {
   $$TasksTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $PartfieldsTable _partfieldTable(_$Database db) =>
-      db.partfields.createAlias('tasks__partfield__partfields__id');
+  static $PartfieldsTable _partfieldTable(_$Database db) => db.partfields
+      .createAlias($_aliasNameGenerator(db.tasks.partfield, db.partfields.id));
 
   $$PartfieldsTableProcessedTableManager? get partfield {
     final $_column = $_itemColumn<int>('partfield');
@@ -8775,7 +8794,7 @@ final class $$TasksTableReferences
   static MultiTypedResultKey<$ConnectionsTable, List<Connection>>
   _connectionTaskTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.connections,
-    aliasName: 'tasks__id__connections__task',
+    aliasName: $_aliasNameGenerator(db.tasks.id, db.connections.task),
   );
 
   $$ConnectionsTableProcessedTableManager get connectionTask {
@@ -8796,7 +8815,7 @@ final class $$TasksTableReferences
   >
   _guidanceAllocationTaskTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.guidanceAllocations,
-    aliasName: 'tasks__id__guidance_allocations__task',
+    aliasName: $_aliasNameGenerator(db.tasks.id, db.guidanceAllocations.task),
   );
 
   $$GuidanceAllocationsTableProcessedTableManager get guidanceAllocationTask {
@@ -8822,6 +8841,16 @@ class $$TasksTableFilterComposer extends Composer<_$Database, $TasksTable> {
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
@@ -8844,16 +8873,6 @@ class $$TasksTableFilterComposer extends Composer<_$Database, $TasksTable> {
 
   ColumnFilters<DateTime> get workEndedAt => $composableBuilder(
     column: $table.workEndedAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -8939,6 +8958,16 @@ class $$TasksTableOrderingComposer extends Composer<_$Database, $TasksTable> {
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
@@ -8961,16 +8990,6 @@ class $$TasksTableOrderingComposer extends Composer<_$Database, $TasksTable> {
 
   ColumnOrderings<DateTime> get workEndedAt => $composableBuilder(
     column: $table.workEndedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -9006,6 +9025,14 @@ class $$TasksTableAnnotationComposer extends Composer<_$Database, $TasksTable> {
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
@@ -9022,14 +9049,6 @@ class $$TasksTableAnnotationComposer extends Composer<_$Database, $TasksTable> {
 
   GeneratedColumn<DateTime> get workEndedAt => $composableBuilder(
     column: $table.workEndedAt,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
     builder: (column) => column,
   );
 
@@ -9140,43 +9159,43 @@ class $$TasksTableTableManager
               $$TasksTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastUpdatedAt = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String?> note = const Value.absent(),
                 Value<int?> partfield = const Value.absent(),
                 Value<DateTime?> workStartedAt = const Value.absent(),
                 Value<DateTime?> workEndedAt = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime?> lastUpdatedAt = const Value.absent(),
               }) => TasksCompanion(
+                createdAt: createdAt,
+                lastUpdatedAt: lastUpdatedAt,
                 id: id,
                 name: name,
                 note: note,
                 partfield: partfield,
                 workStartedAt: workStartedAt,
                 workEndedAt: workEndedAt,
-                createdAt: createdAt,
-                lastUpdatedAt: lastUpdatedAt,
               ),
           createCompanionCallback:
               ({
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastUpdatedAt = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 required String name,
                 Value<String?> note = const Value.absent(),
                 Value<int?> partfield = const Value.absent(),
                 Value<DateTime?> workStartedAt = const Value.absent(),
                 Value<DateTime?> workEndedAt = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime?> lastUpdatedAt = const Value.absent(),
               }) => TasksCompanion.insert(
+                createdAt: createdAt,
+                lastUpdatedAt: lastUpdatedAt,
                 id: id,
                 name: name,
                 note: note,
                 partfield: partfield,
                 workStartedAt: workStartedAt,
                 workEndedAt: workEndedAt,
-                createdAt: createdAt,
-                lastUpdatedAt: lastUpdatedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -9300,6 +9319,8 @@ typedef $$TasksTableProcessedTableManager =
     >;
 typedef $$VehiclesTableCreateCompanionBuilder =
     VehiclesCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastUpdatedAt,
       Value<int> id,
       required VehicleType type,
       Value<String?> name,
@@ -9311,12 +9332,11 @@ typedef $$VehiclesTableCreateCompanionBuilder =
       Value<VehicleThresholds?> thresholds,
       Value<PathTrackingParameters?> pathTrackingParameters,
       Value<ManufacturerColors?> colorScheme,
-      Value<DateTime?> lastUsedAt,
-      Value<DateTime> createdAt,
-      Value<DateTime?> lastUpdatedAt,
     });
 typedef $$VehiclesTableUpdateCompanionBuilder =
     VehiclesCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastUpdatedAt,
       Value<int> id,
       Value<VehicleType> type,
       Value<String?> name,
@@ -9328,9 +9348,6 @@ typedef $$VehiclesTableUpdateCompanionBuilder =
       Value<VehicleThresholds?> thresholds,
       Value<PathTrackingParameters?> pathTrackingParameters,
       Value<ManufacturerColors?> colorScheme,
-      Value<DateTime?> lastUsedAt,
-      Value<DateTime> createdAt,
-      Value<DateTime?> lastUpdatedAt,
     });
 
 final class $$VehiclesTableReferences
@@ -9340,7 +9357,7 @@ final class $$VehiclesTableReferences
   static MultiTypedResultKey<$ConnectorsTable, List<Connector>>
   _connectorVehicleTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.connectors,
-    aliasName: 'vehicles__id__connectors__vehicle',
+    aliasName: $_aliasNameGenerator(db.vehicles.id, db.connectors.vehicle),
   );
 
   $$ConnectorsTableProcessedTableManager get connectorVehicle {
@@ -9365,6 +9382,16 @@ class $$VehiclesTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
@@ -9441,21 +9468,6 @@ class $$VehiclesTableFilterComposer
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnFilters<DateTime> get lastUsedAt => $composableBuilder(
-    column: $table.lastUsedAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
   Expression<bool> connectorVehicle(
     Expression<bool> Function($$ConnectorsTableFilterComposer f) f,
   ) {
@@ -9491,6 +9503,16 @@ class $$VehiclesTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
@@ -9545,21 +9567,6 @@ class $$VehiclesTableOrderingComposer
     column: $table.colorScheme,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<DateTime> get lastUsedAt => $composableBuilder(
-    column: $table.lastUsedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
 }
 
 class $$VehiclesTableAnnotationComposer
@@ -9571,6 +9578,14 @@ class $$VehiclesTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
@@ -9616,19 +9631,6 @@ class $$VehiclesTableAnnotationComposer
   GeneratedColumnWithTypeConverter<ManufacturerColors?, String>
   get colorScheme => $composableBuilder(
     column: $table.colorScheme,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<DateTime> get lastUsedAt => $composableBuilder(
-    column: $table.lastUsedAt,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
     builder: (column) => column,
   );
 
@@ -9686,6 +9688,8 @@ class $$VehiclesTableTableManager
               $$VehiclesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastUpdatedAt = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 Value<VehicleType> type = const Value.absent(),
                 Value<String?> name = const Value.absent(),
@@ -9700,10 +9704,9 @@ class $$VehiclesTableTableManager
                 Value<PathTrackingParameters?> pathTrackingParameters =
                     const Value.absent(),
                 Value<ManufacturerColors?> colorScheme = const Value.absent(),
-                Value<DateTime?> lastUsedAt = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime?> lastUpdatedAt = const Value.absent(),
               }) => VehiclesCompanion(
+                createdAt: createdAt,
+                lastUpdatedAt: lastUpdatedAt,
                 id: id,
                 type: type,
                 name: name,
@@ -9715,12 +9718,11 @@ class $$VehiclesTableTableManager
                 thresholds: thresholds,
                 pathTrackingParameters: pathTrackingParameters,
                 colorScheme: colorScheme,
-                lastUsedAt: lastUsedAt,
-                createdAt: createdAt,
-                lastUpdatedAt: lastUpdatedAt,
               ),
           createCompanionCallback:
               ({
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastUpdatedAt = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 required VehicleType type,
                 Value<String?> name = const Value.absent(),
@@ -9735,10 +9737,9 @@ class $$VehiclesTableTableManager
                 Value<PathTrackingParameters?> pathTrackingParameters =
                     const Value.absent(),
                 Value<ManufacturerColors?> colorScheme = const Value.absent(),
-                Value<DateTime?> lastUsedAt = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime?> lastUpdatedAt = const Value.absent(),
               }) => VehiclesCompanion.insert(
+                createdAt: createdAt,
+                lastUpdatedAt: lastUpdatedAt,
                 id: id,
                 type: type,
                 name: name,
@@ -9750,9 +9751,6 @@ class $$VehiclesTableTableManager
                 thresholds: thresholds,
                 pathTrackingParameters: pathTrackingParameters,
                 colorScheme: colorScheme,
-                lastUsedAt: lastUsedAt,
-                createdAt: createdAt,
-                lastUpdatedAt: lastUpdatedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -9811,29 +9809,27 @@ typedef $$VehiclesTableProcessedTableManager =
     >;
 typedef $$ImplementsTableCreateCompanionBuilder =
     ImplementsCompanion Function({
-      Value<int> id,
-      Value<String?> name,
-      Value<DateTime?> lastUsedAt,
       Value<DateTime> createdAt,
       Value<DateTime?> lastUpdatedAt,
+      Value<int> id,
+      Value<String?> name,
     });
 typedef $$ImplementsTableUpdateCompanionBuilder =
     ImplementsCompanion Function({
-      Value<int> id,
-      Value<String?> name,
-      Value<DateTime?> lastUsedAt,
       Value<DateTime> createdAt,
       Value<DateTime?> lastUpdatedAt,
+      Value<int> id,
+      Value<String?> name,
     });
 
 final class $$ImplementsTableReferences
-    extends BaseReferences<_$Database, $ImplementsTable, Implement> {
+    extends BaseReferences<_$Database, $ImplementsTable, Equipment> {
   $$ImplementsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static MultiTypedResultKey<$ConnectorsTable, List<Connector>>
   _connectorImplementTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.connectors,
-    aliasName: 'implements__id__connectors__implement',
+    aliasName: $_aliasNameGenerator(db.implements.id, db.connectors.implement),
   );
 
   $$ConnectorsTableProcessedTableManager get connectorImplement {
@@ -9851,7 +9847,7 @@ final class $$ImplementsTableReferences
   static MultiTypedResultKey<$SectionsTable, List<Section>>
   _sectionImplementTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.sections,
-    aliasName: 'implements__id__sections__implement',
+    aliasName: $_aliasNameGenerator(db.implements.id, db.sections.implement),
   );
 
   $$SectionsTableProcessedTableManager get sectionImplement {
@@ -9876,21 +9872,6 @@ class $$ImplementsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get lastUsedAt => $composableBuilder(
-    column: $table.lastUsedAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
@@ -9898,6 +9879,16 @@ class $$ImplementsTableFilterComposer
 
   ColumnFilters<DateTime> get lastUpdatedAt => $composableBuilder(
     column: $table.lastUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -9961,21 +9952,6 @@ class $$ImplementsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get lastUsedAt => $composableBuilder(
-    column: $table.lastUsedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -9983,6 +9959,16 @@ class $$ImplementsTableOrderingComposer
 
   ColumnOrderings<DateTime> get lastUpdatedAt => $composableBuilder(
     column: $table.lastUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -9996,17 +9982,6 @@ class $$ImplementsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get lastUsedAt => $composableBuilder(
-    column: $table.lastUsedAt,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -10014,6 +9989,12 @@ class $$ImplementsTableAnnotationComposer
     column: $table.lastUpdatedAt,
     builder: (column) => column,
   );
+
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
 
   Expression<T> connectorImplement<T extends Object>(
     Expression<T> Function($$ConnectorsTableAnnotationComposer a) f,
@@ -10071,14 +10052,14 @@ class $$ImplementsTableTableManager
         RootTableManager<
           _$Database,
           $ImplementsTable,
-          Implement,
+          Equipment,
           $$ImplementsTableFilterComposer,
           $$ImplementsTableOrderingComposer,
           $$ImplementsTableAnnotationComposer,
           $$ImplementsTableCreateCompanionBuilder,
           $$ImplementsTableUpdateCompanionBuilder,
-          (Implement, $$ImplementsTableReferences),
-          Implement,
+          (Equipment, $$ImplementsTableReferences),
+          Equipment,
           PrefetchHooks Function({
             bool connectorImplement,
             bool sectionImplement,
@@ -10097,31 +10078,27 @@ class $$ImplementsTableTableManager
               $$ImplementsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
-                Value<String?> name = const Value.absent(),
-                Value<DateTime?> lastUsedAt = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> lastUpdatedAt = const Value.absent(),
+                Value<int> id = const Value.absent(),
+                Value<String?> name = const Value.absent(),
               }) => ImplementsCompanion(
-                id: id,
-                name: name,
-                lastUsedAt: lastUsedAt,
                 createdAt: createdAt,
                 lastUpdatedAt: lastUpdatedAt,
+                id: id,
+                name: name,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
-                Value<String?> name = const Value.absent(),
-                Value<DateTime?> lastUsedAt = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> lastUpdatedAt = const Value.absent(),
+                Value<int> id = const Value.absent(),
+                Value<String?> name = const Value.absent(),
               }) => ImplementsCompanion.insert(
-                id: id,
-                name: name,
-                lastUsedAt: lastUsedAt,
                 createdAt: createdAt,
                 lastUpdatedAt: lastUpdatedAt,
+                id: id,
+                name: name,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -10144,7 +10121,7 @@ class $$ImplementsTableTableManager
                     return [
                       if (connectorImplement)
                         await $_getPrefetchedData<
-                          Implement,
+                          Equipment,
                           $ImplementsTable,
                           Connector
                         >(
@@ -10165,7 +10142,7 @@ class $$ImplementsTableTableManager
                         ),
                       if (sectionImplement)
                         await $_getPrefetchedData<
-                          Implement,
+                          Equipment,
                           $ImplementsTable,
                           Section
                         >(
@@ -10196,18 +10173,20 @@ typedef $$ImplementsTableProcessedTableManager =
     ProcessedTableManager<
       _$Database,
       $ImplementsTable,
-      Implement,
+      Equipment,
       $$ImplementsTableFilterComposer,
       $$ImplementsTableOrderingComposer,
       $$ImplementsTableAnnotationComposer,
       $$ImplementsTableCreateCompanionBuilder,
       $$ImplementsTableUpdateCompanionBuilder,
-      (Implement, $$ImplementsTableReferences),
-      Implement,
+      (Equipment, $$ImplementsTableReferences),
+      Equipment,
       PrefetchHooks Function({bool connectorImplement, bool sectionImplement})
     >;
 typedef $$ConnectorsTableCreateCompanionBuilder =
     ConnectorsCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastUpdatedAt,
       Value<int> id,
       Value<int?> vehicle,
       Value<int?> implement,
@@ -10217,11 +10196,11 @@ typedef $$ConnectorsTableCreateCompanionBuilder =
       required double lateralOffsetFromRef,
       Value<double> verticalOffsetFromRef,
       required double angle,
-      Value<DateTime> createdAt,
-      Value<DateTime?> lastUpdatedAt,
     });
 typedef $$ConnectorsTableUpdateCompanionBuilder =
     ConnectorsCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastUpdatedAt,
       Value<int> id,
       Value<int?> vehicle,
       Value<int?> implement,
@@ -10231,16 +10210,15 @@ typedef $$ConnectorsTableUpdateCompanionBuilder =
       Value<double> lateralOffsetFromRef,
       Value<double> verticalOffsetFromRef,
       Value<double> angle,
-      Value<DateTime> createdAt,
-      Value<DateTime?> lastUpdatedAt,
     });
 
 final class $$ConnectorsTableReferences
     extends BaseReferences<_$Database, $ConnectorsTable, Connector> {
   $$ConnectorsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $VehiclesTable _vehicleTable(_$Database db) =>
-      db.vehicles.createAlias('connectors__vehicle__vehicles__id');
+  static $VehiclesTable _vehicleTable(_$Database db) => db.vehicles.createAlias(
+    $_aliasNameGenerator(db.connectors.vehicle, db.vehicles.id),
+  );
 
   $$VehiclesTableProcessedTableManager? get vehicle {
     final $_column = $_itemColumn<int>('vehicle');
@@ -10257,7 +10235,9 @@ final class $$ConnectorsTableReferences
   }
 
   static $ImplementsTable _implementTable(_$Database db) =>
-      db.implements.createAlias('connectors__implement__implements__id');
+      db.implements.createAlias(
+        $_aliasNameGenerator(db.connectors.implement, db.implements.id),
+      );
 
   $$ImplementsTableProcessedTableManager? get implement {
     final $_column = $_itemColumn<int>('implement');
@@ -10276,7 +10256,10 @@ final class $$ConnectorsTableReferences
   static MultiTypedResultKey<$ConnectionsTable, List<Connection>>
   _connectionParentTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.connections,
-    aliasName: 'connectors__id__connections__parent_connector',
+    aliasName: $_aliasNameGenerator(
+      db.connectors.id,
+      db.connections.parentConnector,
+    ),
   );
 
   $$ConnectionsTableProcessedTableManager get connectionParent {
@@ -10294,7 +10277,10 @@ final class $$ConnectorsTableReferences
   static MultiTypedResultKey<$ConnectionsTable, List<Connection>>
   _connectionChildTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.connections,
-    aliasName: 'connectors__id__connections__child_connector',
+    aliasName: $_aliasNameGenerator(
+      db.connectors.id,
+      db.connections.childConnector,
+    ),
   );
 
   $$ConnectionsTableProcessedTableManager get connectionChild {
@@ -10319,6 +10305,16 @@ class $$ConnectorsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
@@ -10353,16 +10349,6 @@ class $$ConnectorsTableFilterComposer
 
   ColumnFilters<double> get angle => $composableBuilder(
     column: $table.angle,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -10472,6 +10458,16 @@ class $$ConnectorsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
@@ -10504,16 +10500,6 @@ class $$ConnectorsTableOrderingComposer
 
   ColumnOrderings<double> get angle => $composableBuilder(
     column: $table.angle,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -10573,6 +10559,14 @@ class $$ConnectorsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
@@ -10599,14 +10593,6 @@ class $$ConnectorsTableAnnotationComposer
 
   GeneratedColumn<double> get angle =>
       $composableBuilder(column: $table.angle, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
-    builder: (column) => column,
-  );
 
   $$VehiclesTableAnnotationComposer get vehicle {
     final $$VehiclesTableAnnotationComposer composer = $composerBuilder(
@@ -10738,6 +10724,8 @@ class $$ConnectorsTableTableManager
               $$ConnectorsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastUpdatedAt = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 Value<int?> vehicle = const Value.absent(),
                 Value<int?> implement = const Value.absent(),
@@ -10747,9 +10735,9 @@ class $$ConnectorsTableTableManager
                 Value<double> lateralOffsetFromRef = const Value.absent(),
                 Value<double> verticalOffsetFromRef = const Value.absent(),
                 Value<double> angle = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime?> lastUpdatedAt = const Value.absent(),
               }) => ConnectorsCompanion(
+                createdAt: createdAt,
+                lastUpdatedAt: lastUpdatedAt,
                 id: id,
                 vehicle: vehicle,
                 implement: implement,
@@ -10759,11 +10747,11 @@ class $$ConnectorsTableTableManager
                 lateralOffsetFromRef: lateralOffsetFromRef,
                 verticalOffsetFromRef: verticalOffsetFromRef,
                 angle: angle,
-                createdAt: createdAt,
-                lastUpdatedAt: lastUpdatedAt,
               ),
           createCompanionCallback:
               ({
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastUpdatedAt = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 Value<int?> vehicle = const Value.absent(),
                 Value<int?> implement = const Value.absent(),
@@ -10773,9 +10761,9 @@ class $$ConnectorsTableTableManager
                 required double lateralOffsetFromRef,
                 Value<double> verticalOffsetFromRef = const Value.absent(),
                 required double angle,
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime?> lastUpdatedAt = const Value.absent(),
               }) => ConnectorsCompanion.insert(
+                createdAt: createdAt,
+                lastUpdatedAt: lastUpdatedAt,
                 id: id,
                 vehicle: vehicle,
                 implement: implement,
@@ -10785,8 +10773,6 @@ class $$ConnectorsTableTableManager
                 lateralOffsetFromRef: lateralOffsetFromRef,
                 verticalOffsetFromRef: verticalOffsetFromRef,
                 angle: angle,
-                createdAt: createdAt,
-                lastUpdatedAt: lastUpdatedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -10944,8 +10930,9 @@ final class $$ConnectionsTableReferences
     extends BaseReferences<_$Database, $ConnectionsTable, Connection> {
   $$ConnectionsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $TasksTable _taskTable(_$Database db) =>
-      db.tasks.createAlias('connections__task__tasks__id');
+  static $TasksTable _taskTable(_$Database db) => db.tasks.createAlias(
+    $_aliasNameGenerator(db.connections.task, db.tasks.id),
+  );
 
   $$TasksTableProcessedTableManager get task {
     final $_column = $_itemColumn<int>('task')!;
@@ -10961,8 +10948,10 @@ final class $$ConnectionsTableReferences
     );
   }
 
-  static $ConnectorsTable _parentConnectorTable(_$Database db) => db.connectors
-      .createAlias('connections__parent_connector__connectors__id');
+  static $ConnectorsTable _parentConnectorTable(_$Database db) =>
+      db.connectors.createAlias(
+        $_aliasNameGenerator(db.connections.parentConnector, db.connectors.id),
+      );
 
   $$ConnectorsTableProcessedTableManager get parentConnector {
     final $_column = $_itemColumn<int>('parent_connector')!;
@@ -10979,7 +10968,9 @@ final class $$ConnectionsTableReferences
   }
 
   static $ConnectorsTable _childConnectorTable(_$Database db) =>
-      db.connectors.createAlias('connections__child_connector__connectors__id');
+      db.connectors.createAlias(
+        $_aliasNameGenerator(db.connections.childConnector, db.connectors.id),
+      );
 
   $$ConnectorsTableProcessedTableManager get childConnector {
     final $_column = $_itemColumn<int>('child_connector')!;
@@ -11394,12 +11385,16 @@ typedef $$ConnectionsTableProcessedTableManager =
     >;
 typedef $$PolygonsTableCreateCompanionBuilder =
     PolygonsCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastUpdatedAt,
       Value<int> id,
       required PolygonType type,
       Value<String?> name,
     });
 typedef $$PolygonsTableUpdateCompanionBuilder =
     PolygonsCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastUpdatedAt,
       Value<int> id,
       Value<PolygonType> type,
       Value<String?> name,
@@ -11413,7 +11408,10 @@ final class $$PolygonsTableReferences
   _guidanceGroupBorderPolygonTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.guidanceGroups,
-        aliasName: 'polygons__id__guidance_groups__border_polygon',
+        aliasName: $_aliasNameGenerator(
+          db.polygons.id,
+          db.guidanceGroups.borderPolygon,
+        ),
       );
 
   $$GuidanceGroupsTableProcessedTableManager get guidanceGroupBorderPolygon {
@@ -11434,7 +11432,10 @@ final class $$PolygonsTableReferences
   _guidancePatternBorderPolygonTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.guidancePatterns,
-        aliasName: 'polygons__id__guidance_patterns__border_polygon',
+        aliasName: $_aliasNameGenerator(
+          db.polygons.id,
+          db.guidancePatterns.borderPolygon,
+        ),
       );
 
   $$GuidancePatternsTableProcessedTableManager
@@ -11455,7 +11456,10 @@ final class $$PolygonsTableReferences
   static MultiTypedResultKey<$PartfieldPolygonsTable, List<PartfieldPolygon>>
   _partfieldPolygonPolygonTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.partfieldPolygons,
-    aliasName: 'polygons__id__partfield_polygons__polygon',
+    aliasName: $_aliasNameGenerator(
+      db.polygons.id,
+      db.partfieldPolygons.polygon,
+    ),
   );
 
   $$PartfieldPolygonsTableProcessedTableManager get partfieldPolygonPolygon {
@@ -11476,7 +11480,10 @@ final class $$PolygonsTableReferences
   _polygonLineStringPolygonTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.polygonLineStrings,
-        aliasName: 'polygons__id__polygon_line_strings__polygon',
+        aliasName: $_aliasNameGenerator(
+          db.polygons.id,
+          db.polygonLineStrings.polygon,
+        ),
       );
 
   $$PolygonLineStringsTableProcessedTableManager get polygonLineStringPolygon {
@@ -11503,6 +11510,16 @@ class $$PolygonsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
@@ -11629,6 +11646,16 @@ class $$PolygonsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
@@ -11654,6 +11681,14 @@ class $$PolygonsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
@@ -11799,16 +11834,32 @@ class $$PolygonsTableTableManager
               $$PolygonsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastUpdatedAt = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 Value<PolygonType> type = const Value.absent(),
                 Value<String?> name = const Value.absent(),
-              }) => PolygonsCompanion(id: id, type: type, name: name),
+              }) => PolygonsCompanion(
+                createdAt: createdAt,
+                lastUpdatedAt: lastUpdatedAt,
+                id: id,
+                type: type,
+                name: name,
+              ),
           createCompanionCallback:
               ({
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastUpdatedAt = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 required PolygonType type,
                 Value<String?> name = const Value.absent(),
-              }) => PolygonsCompanion.insert(id: id, type: type, name: name),
+              }) => PolygonsCompanion.insert(
+                createdAt: createdAt,
+                lastUpdatedAt: lastUpdatedAt,
+                id: id,
+                type: type,
+                name: name,
+              ),
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
@@ -11948,12 +11999,18 @@ typedef $$PolygonsTableProcessedTableManager =
     >;
 typedef $$GuidanceGroupsTableCreateCompanionBuilder =
     GuidanceGroupsCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastUpdatedAt,
       Value<int> id,
+      Value<String?> name,
       Value<int?> borderPolygon,
     });
 typedef $$GuidanceGroupsTableUpdateCompanionBuilder =
     GuidanceGroupsCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastUpdatedAt,
       Value<int> id,
+      Value<String?> name,
       Value<int?> borderPolygon,
     });
 
@@ -11966,7 +12023,9 @@ final class $$GuidanceGroupsTableReferences
   );
 
   static $PolygonsTable _borderPolygonTable(_$Database db) =>
-      db.polygons.createAlias('guidance_groups__border_polygon__polygons__id');
+      db.polygons.createAlias(
+        $_aliasNameGenerator(db.guidanceGroups.borderPolygon, db.polygons.id),
+      );
 
   $$PolygonsTableProcessedTableManager? get borderPolygon {
     final $_column = $_itemColumn<int>('border_polygon');
@@ -11989,7 +12048,10 @@ final class $$GuidanceGroupsTableReferences
   _guidanceAllocationGuidanceGroupTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.guidanceAllocations,
-        aliasName: 'guidance_groups__id__guidance_allocations__guidance_group',
+        aliasName: $_aliasNameGenerator(
+          db.guidanceGroups.id,
+          db.guidanceAllocations.guidanceGroup,
+        ),
       );
 
   $$GuidanceAllocationsTableProcessedTableManager
@@ -12013,7 +12075,10 @@ final class $$GuidanceGroupsTableReferences
   >
   _guidanceGroupGroupTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.guidanceGroupPatterns,
-    aliasName: 'guidance_groups__id__guidance_group_patterns__guidance_group',
+    aliasName: $_aliasNameGenerator(
+      db.guidanceGroups.id,
+      db.guidanceGroupPatterns.guidanceGroup,
+    ),
   );
 
   $$GuidanceGroupPatternsTableProcessedTableManager get guidanceGroupGroup {
@@ -12035,8 +12100,10 @@ final class $$GuidanceGroupsTableReferences
   _partfieldGuidanceGroupGuidanceGroupTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.partfieldGuidanceGroups,
-        aliasName:
-            'guidance_groups__id__partfield_guidance_groups__guidance_group',
+        aliasName: $_aliasNameGenerator(
+          db.guidanceGroups.id,
+          db.partfieldGuidanceGroups.guidanceGroup,
+        ),
       );
 
   $$PartfieldGuidanceGroupsTableProcessedTableManager
@@ -12064,8 +12131,23 @@ class $$GuidanceGroupsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -12179,8 +12261,23 @@ class $$GuidanceGroupsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -12217,8 +12314,19 @@ class $$GuidanceGroupsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
 
   $$PolygonsTableAnnotationComposer get borderPolygon {
     final $$PolygonsTableAnnotationComposer composer = $composerBuilder(
@@ -12356,16 +12464,30 @@ class $$GuidanceGroupsTableTableManager
               $$GuidanceGroupsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastUpdatedAt = const Value.absent(),
                 Value<int> id = const Value.absent(),
+                Value<String?> name = const Value.absent(),
                 Value<int?> borderPolygon = const Value.absent(),
-              }) =>
-                  GuidanceGroupsCompanion(id: id, borderPolygon: borderPolygon),
+              }) => GuidanceGroupsCompanion(
+                createdAt: createdAt,
+                lastUpdatedAt: lastUpdatedAt,
+                id: id,
+                name: name,
+                borderPolygon: borderPolygon,
+              ),
           createCompanionCallback:
               ({
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastUpdatedAt = const Value.absent(),
                 Value<int> id = const Value.absent(),
+                Value<String?> name = const Value.absent(),
                 Value<int?> borderPolygon = const Value.absent(),
               }) => GuidanceGroupsCompanion.insert(
+                createdAt: createdAt,
+                lastUpdatedAt: lastUpdatedAt,
                 id: id,
+                name: name,
                 borderPolygon: borderPolygon,
               ),
           withReferenceMapper: (p0) => p0
@@ -12519,19 +12641,19 @@ typedef $$GuidanceGroupsTableProcessedTableManager =
     >;
 typedef $$GuidanceAllocationsTableCreateCompanionBuilder =
     GuidanceAllocationsCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastUpdatedAt,
       Value<int> id,
       required int task,
       required int guidanceGroup,
-      Value<DateTime> createdAt,
-      Value<DateTime?> lastUpdatedAt,
     });
 typedef $$GuidanceAllocationsTableUpdateCompanionBuilder =
     GuidanceAllocationsCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastUpdatedAt,
       Value<int> id,
       Value<int> task,
       Value<int> guidanceGroup,
-      Value<DateTime> createdAt,
-      Value<DateTime?> lastUpdatedAt,
     });
 
 final class $$GuidanceAllocationsTableReferences
@@ -12547,8 +12669,9 @@ final class $$GuidanceAllocationsTableReferences
     super.$_typedResult,
   );
 
-  static $TasksTable _taskTable(_$Database db) =>
-      db.tasks.createAlias('guidance_allocations__task__tasks__id');
+  static $TasksTable _taskTable(_$Database db) => db.tasks.createAlias(
+    $_aliasNameGenerator(db.guidanceAllocations.task, db.tasks.id),
+  );
 
   $$TasksTableProcessedTableManager get task {
     final $_column = $_itemColumn<int>('task')!;
@@ -12564,9 +12687,13 @@ final class $$GuidanceAllocationsTableReferences
     );
   }
 
-  static $GuidanceGroupsTable _guidanceGroupTable(_$Database db) => db
-      .guidanceGroups
-      .createAlias('guidance_allocations__guidance_group__guidance_groups__id');
+  static $GuidanceGroupsTable _guidanceGroupTable(_$Database db) =>
+      db.guidanceGroups.createAlias(
+        $_aliasNameGenerator(
+          db.guidanceAllocations.guidanceGroup,
+          db.guidanceGroups.id,
+        ),
+      );
 
   $$GuidanceGroupsTableProcessedTableManager get guidanceGroup {
     final $_column = $_itemColumn<int>('guidance_group')!;
@@ -12592,11 +12719,6 @@ class $$GuidanceAllocationsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
@@ -12604,6 +12726,11 @@ class $$GuidanceAllocationsTableFilterComposer
 
   ColumnFilters<DateTime> get lastUpdatedAt => $composableBuilder(
     column: $table.lastUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -12663,11 +12790,6 @@ class $$GuidanceAllocationsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -12675,6 +12797,11 @@ class $$GuidanceAllocationsTableOrderingComposer
 
   ColumnOrderings<DateTime> get lastUpdatedAt => $composableBuilder(
     column: $table.lastUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -12734,9 +12861,6 @@ class $$GuidanceAllocationsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -12744,6 +12868,9 @@ class $$GuidanceAllocationsTableAnnotationComposer
     column: $table.lastUpdatedAt,
     builder: (column) => column,
   );
+
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
 
   $$TasksTableAnnotationComposer get task {
     final $$TasksTableAnnotationComposer composer = $composerBuilder(
@@ -12828,31 +12955,31 @@ class $$GuidanceAllocationsTableTableManager
               ),
           updateCompanionCallback:
               ({
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastUpdatedAt = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 Value<int> task = const Value.absent(),
                 Value<int> guidanceGroup = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime?> lastUpdatedAt = const Value.absent(),
               }) => GuidanceAllocationsCompanion(
+                createdAt: createdAt,
+                lastUpdatedAt: lastUpdatedAt,
                 id: id,
                 task: task,
                 guidanceGroup: guidanceGroup,
-                createdAt: createdAt,
-                lastUpdatedAt: lastUpdatedAt,
               ),
           createCompanionCallback:
               ({
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastUpdatedAt = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 required int task,
                 required int guidanceGroup,
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime?> lastUpdatedAt = const Value.absent(),
               }) => GuidanceAllocationsCompanion.insert(
+                createdAt: createdAt,
+                lastUpdatedAt: lastUpdatedAt,
                 id: id,
                 task: task,
                 guidanceGroup: guidanceGroup,
-                createdAt: createdAt,
-                lastUpdatedAt: lastUpdatedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -12940,23 +13067,23 @@ typedef $$GuidanceAllocationsTableProcessedTableManager =
     >;
 typedef $$LineStringsTableCreateCompanionBuilder =
     LineStringsCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastUpdatedAt,
       Value<int> id,
       required LineStringType type,
       Value<String?> name,
       Value<int?> width,
       Value<int?> length,
-      Value<DateTime> createdAt,
-      Value<DateTime?> lastUpdatedAt,
     });
 typedef $$LineStringsTableUpdateCompanionBuilder =
     LineStringsCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastUpdatedAt,
       Value<int> id,
       Value<LineStringType> type,
       Value<String?> name,
       Value<int?> width,
       Value<int?> length,
-      Value<DateTime> createdAt,
-      Value<DateTime?> lastUpdatedAt,
     });
 
 final class $$LineStringsTableReferences
@@ -12967,7 +13094,10 @@ final class $$LineStringsTableReferences
   _guidancePatternLineStringTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.guidancePatterns,
-        aliasName: 'line_strings__id__guidance_patterns__line_string',
+        aliasName: $_aliasNameGenerator(
+          db.lineStrings.id,
+          db.guidancePatterns.lineString,
+        ),
       );
 
   $$GuidancePatternsTableProcessedTableManager get guidancePatternLineString {
@@ -12988,7 +13118,10 @@ final class $$LineStringsTableReferences
   _lineStringPointLineStringTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.lineStringPoints,
-        aliasName: 'line_strings__id__line_string_points__line_string',
+        aliasName: $_aliasNameGenerator(
+          db.lineStrings.id,
+          db.lineStringPoints.lineString,
+        ),
       );
 
   $$LineStringPointsTableProcessedTableManager get lineStringPointLineString {
@@ -13012,7 +13145,10 @@ final class $$LineStringsTableReferences
   _partfieldLineStringLineStringTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.partfieldLineStrings,
-        aliasName: 'line_strings__id__partfield_line_strings__line_string',
+        aliasName: $_aliasNameGenerator(
+          db.lineStrings.id,
+          db.partfieldLineStrings.lineString,
+        ),
       );
 
   $$PartfieldLineStringsTableProcessedTableManager
@@ -13034,7 +13170,10 @@ final class $$LineStringsTableReferences
   _polygonLineStringLineStringTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.polygonLineStrings,
-        aliasName: 'line_strings__id__polygon_line_strings__line_string',
+        aliasName: $_aliasNameGenerator(
+          db.lineStrings.id,
+          db.polygonLineStrings.lineString,
+        ),
       );
 
   $$PolygonLineStringsTableProcessedTableManager
@@ -13062,6 +13201,16 @@ class $$LineStringsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
@@ -13085,16 +13234,6 @@ class $$LineStringsTableFilterComposer
 
   ColumnFilters<int> get length => $composableBuilder(
     column: $table.length,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -13208,6 +13347,16 @@ class $$LineStringsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
@@ -13232,16 +13381,6 @@ class $$LineStringsTableOrderingComposer
     column: $table.length,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
 }
 
 class $$LineStringsTableAnnotationComposer
@@ -13253,6 +13392,14 @@ class $$LineStringsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
@@ -13267,14 +13414,6 @@ class $$LineStringsTableAnnotationComposer
 
   GeneratedColumn<int> get length =>
       $composableBuilder(column: $table.length, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
-    builder: (column) => column,
-  );
 
   Expression<T> guidancePatternLineString<T extends Object>(
     Expression<T> Function($$GuidancePatternsTableAnnotationComposer a) f,
@@ -13412,39 +13551,39 @@ class $$LineStringsTableTableManager
               $$LineStringsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastUpdatedAt = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 Value<LineStringType> type = const Value.absent(),
                 Value<String?> name = const Value.absent(),
                 Value<int?> width = const Value.absent(),
                 Value<int?> length = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime?> lastUpdatedAt = const Value.absent(),
               }) => LineStringsCompanion(
+                createdAt: createdAt,
+                lastUpdatedAt: lastUpdatedAt,
                 id: id,
                 type: type,
                 name: name,
                 width: width,
                 length: length,
-                createdAt: createdAt,
-                lastUpdatedAt: lastUpdatedAt,
               ),
           createCompanionCallback:
               ({
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastUpdatedAt = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 required LineStringType type,
                 Value<String?> name = const Value.absent(),
                 Value<int?> width = const Value.absent(),
                 Value<int?> length = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime?> lastUpdatedAt = const Value.absent(),
               }) => LineStringsCompanion.insert(
+                createdAt: createdAt,
+                lastUpdatedAt: lastUpdatedAt,
                 id: id,
                 type: type,
                 name: name,
                 width: width,
                 length: length,
-                createdAt: createdAt,
-                lastUpdatedAt: lastUpdatedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -13585,6 +13724,8 @@ typedef $$LineStringsTableProcessedTableManager =
     >;
 typedef $$GuidancePatternsTableCreateCompanionBuilder =
     GuidancePatternsCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastUpdatedAt,
       Value<int> id,
       required int lineString,
       Value<int?> borderPolygon,
@@ -13597,11 +13738,11 @@ typedef $$GuidancePatternsTableCreateCompanionBuilder =
       Value<GuidancePatternExtension?> extension,
       Value<int?> numberOfSwathsLeft,
       Value<int?> numberOfSwathsRight,
-      Value<DateTime> createdAt,
-      Value<DateTime?> lastUpdatedAt,
     });
 typedef $$GuidancePatternsTableUpdateCompanionBuilder =
     GuidancePatternsCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastUpdatedAt,
       Value<int> id,
       Value<int> lineString,
       Value<int?> borderPolygon,
@@ -13614,8 +13755,6 @@ typedef $$GuidancePatternsTableUpdateCompanionBuilder =
       Value<GuidancePatternExtension?> extension,
       Value<int?> numberOfSwathsLeft,
       Value<int?> numberOfSwathsRight,
-      Value<DateTime> createdAt,
-      Value<DateTime?> lastUpdatedAt,
     });
 
 final class $$GuidancePatternsTableReferences
@@ -13627,8 +13766,10 @@ final class $$GuidancePatternsTableReferences
     super.$_typedResult,
   );
 
-  static $LineStringsTable _lineStringTable(_$Database db) => db.lineStrings
-      .createAlias('guidance_patterns__line_string__line_strings__id');
+  static $LineStringsTable _lineStringTable(_$Database db) =>
+      db.lineStrings.createAlias(
+        $_aliasNameGenerator(db.guidancePatterns.lineString, db.lineStrings.id),
+      );
 
   $$LineStringsTableProcessedTableManager get lineString {
     final $_column = $_itemColumn<int>('line_string')!;
@@ -13644,8 +13785,10 @@ final class $$GuidancePatternsTableReferences
     );
   }
 
-  static $PolygonsTable _borderPolygonTable(_$Database db) => db.polygons
-      .createAlias('guidance_patterns__border_polygon__polygons__id');
+  static $PolygonsTable _borderPolygonTable(_$Database db) =>
+      db.polygons.createAlias(
+        $_aliasNameGenerator(db.guidancePatterns.borderPolygon, db.polygons.id),
+      );
 
   $$PolygonsTableProcessedTableManager? get borderPolygon {
     final $_column = $_itemColumn<int>('border_polygon');
@@ -13667,8 +13810,10 @@ final class $$GuidancePatternsTableReferences
   >
   _guidanceGroupPatternTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.guidanceGroupPatterns,
-    aliasName:
-        'guidance_patterns__id__guidance_group_patterns__guidance_pattern',
+    aliasName: $_aliasNameGenerator(
+      db.guidancePatterns.id,
+      db.guidanceGroupPatterns.guidancePattern,
+    ),
   );
 
   $$GuidanceGroupPatternsTableProcessedTableManager get guidanceGroupPattern {
@@ -13695,6 +13840,16 @@ class $$GuidancePatternsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
@@ -13758,16 +13913,6 @@ class $$GuidancePatternsTableFilterComposer
 
   ColumnFilters<int> get numberOfSwathsRight => $composableBuilder(
     column: $table.numberOfSwathsRight,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -13853,6 +13998,16 @@ class $$GuidancePatternsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
@@ -13900,16 +14055,6 @@ class $$GuidancePatternsTableOrderingComposer
 
   ColumnOrderings<int> get numberOfSwathsRight => $composableBuilder(
     column: $table.numberOfSwathsRight,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -13969,6 +14114,14 @@ class $$GuidancePatternsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
@@ -14004,14 +14157,6 @@ class $$GuidancePatternsTableAnnotationComposer
 
   GeneratedColumn<int> get numberOfSwathsRight => $composableBuilder(
     column: $table.numberOfSwathsRight,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
     builder: (column) => column,
   );
 
@@ -14122,6 +14267,8 @@ class $$GuidancePatternsTableTableManager
               $$GuidancePatternsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastUpdatedAt = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 Value<int> lineString = const Value.absent(),
                 Value<int?> borderPolygon = const Value.absent(),
@@ -14137,9 +14284,9 @@ class $$GuidancePatternsTableTableManager
                     const Value.absent(),
                 Value<int?> numberOfSwathsLeft = const Value.absent(),
                 Value<int?> numberOfSwathsRight = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime?> lastUpdatedAt = const Value.absent(),
               }) => GuidancePatternsCompanion(
+                createdAt: createdAt,
+                lastUpdatedAt: lastUpdatedAt,
                 id: id,
                 lineString: lineString,
                 borderPolygon: borderPolygon,
@@ -14152,11 +14299,11 @@ class $$GuidancePatternsTableTableManager
                 extension: extension,
                 numberOfSwathsLeft: numberOfSwathsLeft,
                 numberOfSwathsRight: numberOfSwathsRight,
-                createdAt: createdAt,
-                lastUpdatedAt: lastUpdatedAt,
               ),
           createCompanionCallback:
               ({
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastUpdatedAt = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 required int lineString,
                 Value<int?> borderPolygon = const Value.absent(),
@@ -14172,9 +14319,9 @@ class $$GuidancePatternsTableTableManager
                     const Value.absent(),
                 Value<int?> numberOfSwathsLeft = const Value.absent(),
                 Value<int?> numberOfSwathsRight = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime?> lastUpdatedAt = const Value.absent(),
               }) => GuidancePatternsCompanion.insert(
+                createdAt: createdAt,
+                lastUpdatedAt: lastUpdatedAt,
                 id: id,
                 lineString: lineString,
                 borderPolygon: borderPolygon,
@@ -14187,8 +14334,6 @@ class $$GuidancePatternsTableTableManager
                 extension: extension,
                 numberOfSwathsLeft: numberOfSwathsLeft,
                 numberOfSwathsRight: numberOfSwathsRight,
-                createdAt: createdAt,
-                lastUpdatedAt: lastUpdatedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -14333,7 +14478,10 @@ final class $$GuidanceGroupPatternsTableReferences
 
   static $GuidanceGroupsTable _guidanceGroupTable(_$Database db) =>
       db.guidanceGroups.createAlias(
-        'guidance_group_patterns__guidance_group__guidance_groups__id',
+        $_aliasNameGenerator(
+          db.guidanceGroupPatterns.guidanceGroup,
+          db.guidanceGroups.id,
+        ),
       );
 
   $$GuidanceGroupsTableProcessedTableManager get guidanceGroup {
@@ -14352,7 +14500,10 @@ final class $$GuidanceGroupPatternsTableReferences
 
   static $GuidancePatternsTable _guidancePatternTable(_$Database db) =>
       db.guidancePatterns.createAlias(
-        'guidance_group_patterns__guidance_pattern__guidance_patterns__id',
+        $_aliasNameGenerator(
+          db.guidanceGroupPatterns.guidancePattern,
+          db.guidancePatterns.id,
+        ),
       );
 
   $$GuidancePatternsTableProcessedTableManager get guidancePattern {
@@ -14676,25 +14827,25 @@ typedef $$GuidanceGroupPatternsTableProcessedTableManager =
     >;
 typedef $$PointsTableCreateCompanionBuilder =
     PointsCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastUpdatedAt,
       Value<int> id,
       required PointType type,
       Value<String?> name,
       required double latitude,
       required double longitude,
       Value<double?> elevation,
-      Value<DateTime> createdAt,
-      Value<DateTime?> lastUpdatedAt,
     });
 typedef $$PointsTableUpdateCompanionBuilder =
     PointsCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastUpdatedAt,
       Value<int> id,
       Value<PointType> type,
       Value<String?> name,
       Value<double> latitude,
       Value<double> longitude,
       Value<double?> elevation,
-      Value<DateTime> createdAt,
-      Value<DateTime?> lastUpdatedAt,
     });
 
 final class $$PointsTableReferences
@@ -14704,7 +14855,7 @@ final class $$PointsTableReferences
   static MultiTypedResultKey<$LineStringPointsTable, List<LineStringPoint>>
   _lineStringPointPointTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.lineStringPoints,
-    aliasName: 'points__id__line_string_points__point',
+    aliasName: $_aliasNameGenerator(db.points.id, db.lineStringPoints.point),
   );
 
   $$LineStringPointsTableProcessedTableManager get lineStringPointPoint {
@@ -14724,7 +14875,7 @@ final class $$PointsTableReferences
   static MultiTypedResultKey<$PartfieldPointsTable, List<PartfieldPoint>>
   _partfieldPointPointTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.partfieldPoints,
-    aliasName: 'points__id__partfield_points__point',
+    aliasName: $_aliasNameGenerator(db.points.id, db.partfieldPoints.point),
   );
 
   $$PartfieldPointsTableProcessedTableManager get partfieldPointPoint {
@@ -14750,6 +14901,16 @@ class $$PointsTableFilterComposer extends Composer<_$Database, $PointsTable> {
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
@@ -14778,16 +14939,6 @@ class $$PointsTableFilterComposer extends Composer<_$Database, $PointsTable> {
 
   ColumnFilters<double> get elevation => $composableBuilder(
     column: $table.elevation,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -14850,6 +15001,16 @@ class $$PointsTableOrderingComposer extends Composer<_$Database, $PointsTable> {
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
@@ -14879,16 +15040,6 @@ class $$PointsTableOrderingComposer extends Composer<_$Database, $PointsTable> {
     column: $table.elevation,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
 }
 
 class $$PointsTableAnnotationComposer
@@ -14900,6 +15051,14 @@ class $$PointsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
@@ -14917,14 +15076,6 @@ class $$PointsTableAnnotationComposer
 
   GeneratedColumn<double> get elevation =>
       $composableBuilder(column: $table.elevation, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
-    builder: (column) => column,
-  );
 
   Expression<T> lineStringPointPoint<T extends Object>(
     Expression<T> Function($$LineStringPointsTableAnnotationComposer a) f,
@@ -15008,43 +15159,43 @@ class $$PointsTableTableManager
               $$PointsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastUpdatedAt = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 Value<PointType> type = const Value.absent(),
                 Value<String?> name = const Value.absent(),
                 Value<double> latitude = const Value.absent(),
                 Value<double> longitude = const Value.absent(),
                 Value<double?> elevation = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime?> lastUpdatedAt = const Value.absent(),
               }) => PointsCompanion(
+                createdAt: createdAt,
+                lastUpdatedAt: lastUpdatedAt,
                 id: id,
                 type: type,
                 name: name,
                 latitude: latitude,
                 longitude: longitude,
                 elevation: elevation,
-                createdAt: createdAt,
-                lastUpdatedAt: lastUpdatedAt,
               ),
           createCompanionCallback:
               ({
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastUpdatedAt = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 required PointType type,
                 Value<String?> name = const Value.absent(),
                 required double latitude,
                 required double longitude,
                 Value<double?> elevation = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime?> lastUpdatedAt = const Value.absent(),
               }) => PointsCompanion.insert(
+                createdAt: createdAt,
+                lastUpdatedAt: lastUpdatedAt,
                 id: id,
                 type: type,
                 name: name,
                 latitude: latitude,
                 longitude: longitude,
                 elevation: elevation,
-                createdAt: createdAt,
-                lastUpdatedAt: lastUpdatedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -15150,8 +15301,10 @@ final class $$LineStringPointsTableReferences
     super.$_typedResult,
   );
 
-  static $LineStringsTable _lineStringTable(_$Database db) => db.lineStrings
-      .createAlias('line_string_points__line_string__line_strings__id');
+  static $LineStringsTable _lineStringTable(_$Database db) =>
+      db.lineStrings.createAlias(
+        $_aliasNameGenerator(db.lineStringPoints.lineString, db.lineStrings.id),
+      );
 
   $$LineStringsTableProcessedTableManager get lineString {
     final $_column = $_itemColumn<int>('line_string')!;
@@ -15167,8 +15320,9 @@ final class $$LineStringPointsTableReferences
     );
   }
 
-  static $PointsTable _pointTable(_$Database db) =>
-      db.points.createAlias('line_string_points__point__points__id');
+  static $PointsTable _pointTable(_$Database db) => db.points.createAlias(
+    $_aliasNameGenerator(db.lineStringPoints.point, db.points.id),
+  );
 
   $$PointsTableProcessedTableManager get point {
     final $_column = $_itemColumn<int>('point')!;
@@ -15481,14 +15635,14 @@ typedef $$LineStringPointsTableProcessedTableManager =
     >;
 typedef $$LinksTableCreateCompanionBuilder =
     LinksCompanion Function({
-      required String tableRef,
+      required LinkTableRef tableRef,
       required int refId,
       Value<String> linkValue,
       Value<String?> name,
     });
 typedef $$LinksTableUpdateCompanionBuilder =
     LinksCompanion Function({
-      Value<String> tableRef,
+      Value<LinkTableRef> tableRef,
       Value<int> refId,
       Value<String> linkValue,
       Value<String?> name,
@@ -15502,9 +15656,10 @@ class $$LinksTableFilterComposer extends Composer<_$Database, $LinksTable> {
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<String> get tableRef => $composableBuilder(
+  ColumnWithTypeConverterFilters<LinkTableRef, LinkTableRef, String>
+  get tableRef => $composableBuilder(
     column: $table.tableRef,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
   ColumnFilters<int> get refId => $composableBuilder(
@@ -15560,7 +15715,7 @@ class $$LinksTableAnnotationComposer extends Composer<_$Database, $LinksTable> {
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<String> get tableRef =>
+  GeneratedColumnWithTypeConverter<LinkTableRef, String> get tableRef =>
       $composableBuilder(column: $table.tableRef, builder: (column) => column);
 
   GeneratedColumn<int> get refId =>
@@ -15601,7 +15756,7 @@ class $$LinksTableTableManager
               $$LinksTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<String> tableRef = const Value.absent(),
+                Value<LinkTableRef> tableRef = const Value.absent(),
                 Value<int> refId = const Value.absent(),
                 Value<String> linkValue = const Value.absent(),
                 Value<String?> name = const Value.absent(),
@@ -15613,7 +15768,7 @@ class $$LinksTableTableManager
               ),
           createCompanionCallback:
               ({
-                required String tableRef,
+                required LinkTableRef tableRef,
                 required int refId,
                 Value<String> linkValue = const Value.absent(),
                 Value<String?> name = const Value.absent(),
@@ -15669,8 +15824,13 @@ final class $$PartfieldGuidanceGroupsTableReferences
     super.$_typedResult,
   );
 
-  static $PartfieldsTable _partfieldTable(_$Database db) => db.partfields
-      .createAlias('partfield_guidance_groups__partfield__partfields__id');
+  static $PartfieldsTable _partfieldTable(_$Database db) =>
+      db.partfields.createAlias(
+        $_aliasNameGenerator(
+          db.partfieldGuidanceGroups.partfield,
+          db.partfields.id,
+        ),
+      );
 
   $$PartfieldsTableProcessedTableManager get partfield {
     final $_column = $_itemColumn<int>('partfield')!;
@@ -15688,7 +15848,10 @@ final class $$PartfieldGuidanceGroupsTableReferences
 
   static $GuidanceGroupsTable _guidanceGroupTable(_$Database db) =>
       db.guidanceGroups.createAlias(
-        'partfield_guidance_groups__guidance_group__guidance_groups__id',
+        $_aliasNameGenerator(
+          db.partfieldGuidanceGroups.guidanceGroup,
+          db.guidanceGroups.id,
+        ),
       );
 
   $$GuidanceGroupsTableProcessedTableManager get guidanceGroup {
@@ -16029,8 +16192,10 @@ final class $$PartfieldPolygonsTableReferences
     super.$_typedResult,
   );
 
-  static $PartfieldsTable _partfieldTable(_$Database db) => db.partfields
-      .createAlias('partfield_polygons__partfield__partfields__id');
+  static $PartfieldsTable _partfieldTable(_$Database db) =>
+      db.partfields.createAlias(
+        $_aliasNameGenerator(db.partfieldPolygons.partfield, db.partfields.id),
+      );
 
   $$PartfieldsTableProcessedTableManager get partfield {
     final $_column = $_itemColumn<int>('partfield')!;
@@ -16046,8 +16211,9 @@ final class $$PartfieldPolygonsTableReferences
     );
   }
 
-  static $PolygonsTable _polygonTable(_$Database db) =>
-      db.polygons.createAlias('partfield_polygons__polygon__polygons__id');
+  static $PolygonsTable _polygonTable(_$Database db) => db.polygons.createAlias(
+    $_aliasNameGenerator(db.partfieldPolygons.polygon, db.polygons.id),
+  );
 
   $$PolygonsTableProcessedTableManager get polygon {
     final $_column = $_itemColumn<int>('polygon')!;
@@ -16385,8 +16551,13 @@ final class $$PartfieldLineStringsTableReferences
     super.$_typedResult,
   );
 
-  static $PartfieldsTable _partfieldTable(_$Database db) => db.partfields
-      .createAlias('partfield_line_strings__partfield__partfields__id');
+  static $PartfieldsTable _partfieldTable(_$Database db) =>
+      db.partfields.createAlias(
+        $_aliasNameGenerator(
+          db.partfieldLineStrings.partfield,
+          db.partfields.id,
+        ),
+      );
 
   $$PartfieldsTableProcessedTableManager get partfield {
     final $_column = $_itemColumn<int>('partfield')!;
@@ -16402,8 +16573,13 @@ final class $$PartfieldLineStringsTableReferences
     );
   }
 
-  static $LineStringsTable _lineStringTable(_$Database db) => db.lineStrings
-      .createAlias('partfield_line_strings__line_string__line_strings__id');
+  static $LineStringsTable _lineStringTable(_$Database db) =>
+      db.lineStrings.createAlias(
+        $_aliasNameGenerator(
+          db.partfieldLineStrings.lineString,
+          db.lineStrings.id,
+        ),
+      );
 
   $$LineStringsTableProcessedTableManager get lineString {
     final $_column = $_itemColumn<int>('line_string')!;
@@ -16737,7 +16913,9 @@ final class $$PartfieldPointsTableReferences
   );
 
   static $PartfieldsTable _partfieldTable(_$Database db) =>
-      db.partfields.createAlias('partfield_points__partfield__partfields__id');
+      db.partfields.createAlias(
+        $_aliasNameGenerator(db.partfieldPoints.partfield, db.partfields.id),
+      );
 
   $$PartfieldsTableProcessedTableManager get partfield {
     final $_column = $_itemColumn<int>('partfield')!;
@@ -16753,8 +16931,9 @@ final class $$PartfieldPointsTableReferences
     );
   }
 
-  static $PointsTable _pointTable(_$Database db) =>
-      db.points.createAlias('partfield_points__point__points__id');
+  static $PointsTable _pointTable(_$Database db) => db.points.createAlias(
+    $_aliasNameGenerator(db.partfieldPoints.point, db.points.id),
+  );
 
   $$PointsTableProcessedTableManager get point {
     final $_column = $_itemColumn<int>('point')!;
@@ -17087,8 +17266,9 @@ final class $$PolygonLineStringsTableReferences
     super.$_typedResult,
   );
 
-  static $PolygonsTable _polygonTable(_$Database db) =>
-      db.polygons.createAlias('polygon_line_strings__polygon__polygons__id');
+  static $PolygonsTable _polygonTable(_$Database db) => db.polygons.createAlias(
+    $_aliasNameGenerator(db.polygonLineStrings.polygon, db.polygons.id),
+  );
 
   $$PolygonsTableProcessedTableManager get polygon {
     final $_column = $_itemColumn<int>('polygon')!;
@@ -17104,8 +17284,13 @@ final class $$PolygonLineStringsTableReferences
     );
   }
 
-  static $LineStringsTable _lineStringTable(_$Database db) => db.lineStrings
-      .createAlias('polygon_line_strings__line_string__line_strings__id');
+  static $LineStringsTable _lineStringTable(_$Database db) =>
+      db.lineStrings.createAlias(
+        $_aliasNameGenerator(
+          db.polygonLineStrings.lineString,
+          db.lineStrings.id,
+        ),
+      );
 
   $$LineStringsTableProcessedTableManager get lineString {
     final $_column = $_itemColumn<int>('line_string')!;
@@ -17427,6 +17612,8 @@ typedef $$PolygonLineStringsTableProcessedTableManager =
     >;
 typedef $$SectionsTableCreateCompanionBuilder =
     SectionsCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastUpdatedAt,
       Value<int> id,
       required int implement,
       required double longitudinalOffset,
@@ -17437,11 +17624,11 @@ typedef $$SectionsTableCreateCompanionBuilder =
       Value<bool> automateActivation,
       Value<Color?> color,
       Value<Color?> workedPathColor,
-      Value<DateTime> createdAt,
-      Value<DateTime?> lastUpdatedAt,
     });
 typedef $$SectionsTableUpdateCompanionBuilder =
     SectionsCompanion Function({
+      Value<DateTime> createdAt,
+      Value<DateTime?> lastUpdatedAt,
       Value<int> id,
       Value<int> implement,
       Value<double> longitudinalOffset,
@@ -17452,8 +17639,6 @@ typedef $$SectionsTableUpdateCompanionBuilder =
       Value<bool> automateActivation,
       Value<Color?> color,
       Value<Color?> workedPathColor,
-      Value<DateTime> createdAt,
-      Value<DateTime?> lastUpdatedAt,
     });
 
 final class $$SectionsTableReferences
@@ -17461,7 +17646,9 @@ final class $$SectionsTableReferences
   $$SectionsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static $ImplementsTable _implementTable(_$Database db) =>
-      db.implements.createAlias('sections__implement__implements__id');
+      db.implements.createAlias(
+        $_aliasNameGenerator(db.sections.implement, db.implements.id),
+      );
 
   $$ImplementsTableProcessedTableManager get implement {
     final $_column = $_itemColumn<int>('implement')!;
@@ -17487,6 +17674,16 @@ class $$SectionsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
@@ -17534,16 +17731,6 @@ class $$SectionsTableFilterComposer
         builder: (column) => ColumnWithTypeConverterFilters(column),
       );
 
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
   $$ImplementsTableFilterComposer get implement {
     final $$ImplementsTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -17577,6 +17764,16 @@ class $$SectionsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
@@ -17622,16 +17819,6 @@ class $$SectionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   $$ImplementsTableOrderingComposer get implement {
     final $$ImplementsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -17665,6 +17852,14 @@ class $$SectionsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastUpdatedAt => $composableBuilder(
+    column: $table.lastUpdatedAt,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
@@ -17702,14 +17897,6 @@ class $$SectionsTableAnnotationComposer
         column: $table.workedPathColor,
         builder: (column) => column,
       );
-
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get lastUpdatedAt => $composableBuilder(
-    column: $table.lastUpdatedAt,
-    builder: (column) => column,
-  );
 
   $$ImplementsTableAnnotationComposer get implement {
     final $$ImplementsTableAnnotationComposer composer = $composerBuilder(
@@ -17763,6 +17950,8 @@ class $$SectionsTableTableManager
               $$SectionsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastUpdatedAt = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 Value<int> implement = const Value.absent(),
                 Value<double> longitudinalOffset = const Value.absent(),
@@ -17773,9 +17962,9 @@ class $$SectionsTableTableManager
                 Value<bool> automateActivation = const Value.absent(),
                 Value<Color?> color = const Value.absent(),
                 Value<Color?> workedPathColor = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime?> lastUpdatedAt = const Value.absent(),
               }) => SectionsCompanion(
+                createdAt: createdAt,
+                lastUpdatedAt: lastUpdatedAt,
                 id: id,
                 implement: implement,
                 longitudinalOffset: longitudinalOffset,
@@ -17786,11 +17975,11 @@ class $$SectionsTableTableManager
                 automateActivation: automateActivation,
                 color: color,
                 workedPathColor: workedPathColor,
-                createdAt: createdAt,
-                lastUpdatedAt: lastUpdatedAt,
               ),
           createCompanionCallback:
               ({
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> lastUpdatedAt = const Value.absent(),
                 Value<int> id = const Value.absent(),
                 required int implement,
                 required double longitudinalOffset,
@@ -17801,9 +17990,9 @@ class $$SectionsTableTableManager
                 Value<bool> automateActivation = const Value.absent(),
                 Value<Color?> color = const Value.absent(),
                 Value<Color?> workedPathColor = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime?> lastUpdatedAt = const Value.absent(),
               }) => SectionsCompanion.insert(
+                createdAt: createdAt,
+                lastUpdatedAt: lastUpdatedAt,
                 id: id,
                 implement: implement,
                 longitudinalOffset: longitudinalOffset,
@@ -17814,8 +18003,6 @@ class $$SectionsTableTableManager
                 automateActivation: automateActivation,
                 color: color,
                 workedPathColor: workedPathColor,
-                createdAt: createdAt,
-                lastUpdatedAt: lastUpdatedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map(

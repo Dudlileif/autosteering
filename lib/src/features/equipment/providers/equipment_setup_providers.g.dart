@@ -615,7 +615,7 @@ final class ImportEquipmentSetupProvider
 }
 
 String _$importEquipmentSetupHash() =>
-    r'91efa4a5203d66609c41cf98fb83a14a3ffd49b8';
+    r'ede259b9ce81d4f323d94690363f708d6a23e4de';
 
 /// A provider for importing a equipment setup configuration from the user file
 /// directory and applying it to the [ConfiguredEquipmentSetup] provider.

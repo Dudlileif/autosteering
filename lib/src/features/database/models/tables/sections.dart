@@ -18,18 +18,18 @@
 import 'dart:ui' show Color;
 
 import 'package:autosteering/src/features/common/common.dart';
-import 'package:autosteering/src/features/database/database.dart';
+import 'package:autosteering/src/features/database/models/tables/table_timestamps_mixin.dart';
 import 'package:autosteering/src/features/database/models/tables/tables.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:drift/drift.dart';
 
-/// A table for sections of an [Implement].
+/// A table for sections of an [Equipment].
 @UseRowClass(Section, constructor: 'fromDatabase')
-class Sections extends Table {
+class Sections extends Table with TableTimestamps {
   /// The local database ID of this.
   late final Column<int> id = integer().autoIncrement()();
 
-  /// Reference to the parent [Implement].
+  /// Reference to the parent [Equipment].
   @ReferenceName('sectionImplement')
   late final Column<int> implement = integer().references(
     Implements,
@@ -67,14 +67,6 @@ class Sections extends Table {
   late final Column<String> workedPathColor = text()
       .map(const ColorConverter())
       .nullable()();
-
-  /// When this was created.
-  late final Column<DateTime> createdAt = dateTime().clientDefault(
-    DateTime.now,
-  )();
-
-  /// When this was last updated.
-  late final Column<DateTime> lastUpdatedAt = dateTime().nullable()();
 }
 
 /// An SQL converter for [Color].

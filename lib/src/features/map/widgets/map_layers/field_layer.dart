@@ -16,12 +16,16 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/common/common.dart';
+import 'package:autosteering/src/features/database/models/tables/partfields.dart'
+    show PartfieldWithRefs;
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
 import 'package:autosteering/src/features/map/map.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:latlong2/latlong.dart';
 
 /// A combination layer for debugging the field feature.
 class FieldLayer extends ConsumerWidget {
@@ -30,9 +34,83 @@ class FieldLayer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final darkModeEnabled = Theme.brightnessOf(context) == Brightness.dark;
+
+    if (ref.watch(partfieldProvider(1)) case AsyncValue(
+      value: PartfieldWithRefs(
+        :final polygons,
+        :final lineStrings,
+        :final points,
+      ),
+    )) {
+      return Stack(
+        children: [
+          if (points.isNotEmpty)
+            CircleLayer(
+              circles: points
+                  .map(
+                    (p) => CircleMarker(
+                      point: LatLng(p.latitude, p.longitude),
+                      radius: 2,
+                      color: Colors.red,
+                    ),
+                  )
+                  .toList(),
+            ),
+          if (lineStrings.isNotEmpty)
+            PolylineLayer(
+              polylines: lineStrings
+                  .map(
+                    (l) => Polyline(
+                      points: l.points
+                          .map((p) => LatLng(p.latitude, p.longitude))
+                          .toList(),
+                      color: Colors.orange,
+                    ),
+                  )
+                  .toList(),
+            ),
+          if (polygons.isNotEmpty)
+            PolygonLayer(
+              polygons: polygons
+                  .map(
+                    (polygon) => Polygon(
+                      points: polygon.lineStrings
+                          .where(
+                            (l) => l.type == .polygonExterior,
+                          )
+                          .map(
+                            (l) => l.points.map(
+                              (p) => LatLng(p.latitude, p.longitude),
+                            ),
+                          )
+                          .flattenedToList,
+                      holePointsList: polygon.lineStrings
+                          .where(
+                            (l) => l.type == .polygonInterior,
+                          )
+                          .map(
+                            (l) => l.points
+                                .map(
+                                  (p) => LatLng(p.latitude, p.longitude),
+                                )
+                                .toList(),
+                          )
+                          .toList(),
+                      borderStrokeWidth: 1,
+                      borderColor: darkModeEnabled
+                          ? Colors.white
+                          : Colors.black,
+                    ),
+                  )
+                  .toList(),
+            ),
+        ],
+      );
+    }
+
     final field = ref.watch(activeFieldProvider);
 
-    final darkModeEnabled = Theme.of(context).brightness == Brightness.dark;
     if (field != null) {
       final enabled = ref.watch(showFieldLayerProvider);
       if (enabled) {
@@ -157,6 +235,7 @@ class FieldLayer extends ConsumerWidget {
         ],
       );
     }
+
     return const SizedBox.shrink();
   }
 }

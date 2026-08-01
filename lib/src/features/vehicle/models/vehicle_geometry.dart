@@ -121,12 +121,6 @@ sealed class VehicleGeometry with _$VehicleGeometry {
     /// vehicle, typically the bonnet or the frame.
     required double frontAxleToFrontDistance,
 
-    /// The distance from the rear axle to the rear fixed hitch point.
-    required double rearAxleToHitchDistance,
-
-    /// The distance from the rear axle to the rear drawbar hitch point.
-    required double rearAxleToDrawbarDistance,
-
     /// The distance from the rear axle position to the rearmost part of the
     /// vehicle, excluding hitches, typically wheel fenders.
     required double rearAxleToEndDistance,
@@ -136,6 +130,12 @@ sealed class VehicleGeometry with _$VehicleGeometry {
 
     /// The width of the wheels.
     required double wheelWidth,
+
+    /// The distance from the rear axle to the rear fixed hitch point.
+    double? rearAxleToHitchDistance,
+
+    /// The distance from the rear axle to the rear drawbar hitch point.
+    double? rearAxleToDrawbarDistance,
 
     /// The distance from the front axle to the front fixed hitch point.
     double? frontAxleToHitchDistance,

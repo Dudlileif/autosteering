@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/database/database.dart';
+import 'package:autosteering/src/features/database/models/tables/table_timestamps_mixin.dart';
 import 'package:autosteering/src/features/database/models/tables/tables.dart';
 import 'package:drift/drift.dart';
 
@@ -23,7 +24,7 @@ import 'package:drift/drift.dart';
 /// [Points]. Optionally the partfield can have one parent partfield, given that
 /// the parent does not have a parent itself, i.e. the recursion limit is 2.
 /// The partield can also have [GuidanceGroups] linked to it.
-class Partfields extends Table {
+class Partfields extends Table with TableTimestamps {
   /// The local database ID of this.
   late final Column<int> id = integer().autoIncrement()();
 
@@ -38,15 +39,58 @@ class Partfields extends Table {
 
   /// The area of this, in m².
   late final Column<double> area = real()();
+}
 
-  /// When this was last used.
-  late final Column<DateTime> lastUsedAt = dateTime().nullable()();
+/// A [Partfield] extended with all children/refs loaded.
+class PartfieldWithRefs extends Partfield {
+  /// A [Partfield] extended with all children/refs loaded.
+  factory PartfieldWithRefs({
+    required Partfield partfield,
+    Partfield? parent,
+    List<GuidanceGroupWithRefs>? guidanceGroups,
+    List<PolygonWithRefs>? polygons,
+    List<LineStringWithRefs>? lineStrings,
+    List<Point>? points,
+  }) => PartfieldWithRefs._(
+    id: partfield.id,
+    parentField: partfield.parentField,
+    name: partfield.name,
+    area: partfield.area,
+    createdAt: partfield.createdAt,
+    lastUpdatedAt: partfield.lastUpdatedAt,
+    parent: parent,
+    guidanceGroups: guidanceGroups ?? [],
+    polygons: polygons ?? [],
+    lineStrings: lineStrings ?? [],
+    points: points ?? [],
+  );
 
-  /// When this was created.
-  late final Column<DateTime> createdAt = dateTime().clientDefault(
-    DateTime.now,
-  )();
+  const PartfieldWithRefs._({
+    required super.id,
+    required super.createdAt,
+    super.parentField,
+    super.name,
+    super.area = 0,
+    super.lastUpdatedAt,
+    this.parent,
+    this.guidanceGroups = const [],
+    this.polygons = const [],
+    this.lineStrings = const [],
+    this.points = const [],
+  });
 
-  /// When this was last updated.
-  late final Column<DateTime> lastUpdatedAt = dateTime().nullable()();
+  /// The loaded optional parent partfield.
+  final Partfield? parent;
+
+  /// The loaded guidance groups.
+  final List<GuidanceGroupWithRefs> guidanceGroups;
+
+  /// The loaded polygons.
+  final List<PolygonWithRefs> polygons;
+
+  /// The laoded line strings.
+  final List<LineStringWithRefs> lineStrings;
+
+  /// The loaded points.
+  final List<Point> points;
 }

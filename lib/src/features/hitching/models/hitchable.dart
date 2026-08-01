@@ -17,7 +17,7 @@
 
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
-import 'package:autosteering/src/features/vehicle/vehicle.dart' show Vehicle;
+import 'package:autosteering/src/features/vehicle/models/models.dart';
 import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
 import 'package:uuid/uuid.dart';
@@ -305,9 +305,14 @@ abstract class Hitchable {
         .flattened,
   ];
 
-  /// The connector positions of this that are not null.
-  Iterable<Geographic> get connectorPoints =>
+  /// The connection positions of equipment connections.
+  Iterable<Geographic> get connectionPoints =>
       childConnections.map((c) => c.connectionPoint);
+
+  /// The connector positions of connectors.
+  Iterable<Geographic> get connectorPoints => connectors.map(
+    (c) => c.position(this),
+  );
 
   /// The number of children recursively attached to this.
   int get numAttachedChildren => hitchChildren.fold(

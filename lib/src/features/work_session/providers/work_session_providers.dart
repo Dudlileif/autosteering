@@ -20,6 +20,8 @@ import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/database/database.dart';
+import 'package:autosteering/src/features/database/models/tables/tasks.dart'
+    show TaskWithRefs;
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
@@ -303,7 +305,7 @@ class ActiveWorkSession extends _$ActiveWorkSession {
     // TODO(dudlileif): add database version
     final database = ref.watch(databaseProvider);
     final equipmentLinks = await database.managers.links
-        .filter((link) => link.tableRef.equals('implements'))
+        .filter((link) => link.tableRef.equals(.implements))
         .get();
     if (state case final workSession? when Device.isNative) {
       for (final equipment
@@ -658,7 +660,7 @@ FutureOr<List<WorkSession>> savedWorkSessions(Ref ref) async => await ref
 
       final sessions = data.cast<WorkSession>();
       final taskLinks = await database.managers.links
-          .filter((link) => link.tableRef.equals('tasks'))
+          .filter((link) => link.tableRef.equals(.tasks))
           .get();
       if (sessions.isNotEmpty) {
         if (sessions.any((element) => element.field != null)) {
@@ -668,7 +670,7 @@ FutureOr<List<WorkSession>> savedWorkSessions(Ref ref) async => await ref
             ),
           );
           final fieldLinks = await database.managers.links
-              .filter((link) => link.tableRef.equals('partfields'))
+              .filter((link) => link.tableRef.equals(.partfields))
               .get();
           final fieldsToAdd = <Field>[];
           for (final session in sessions.where(
@@ -701,7 +703,7 @@ FutureOr<List<WorkSession>> savedWorkSessions(Ref ref) async => await ref
             }
           }
           final updatedLinks = await database.managers.links
-              .filter((link) => link.tableRef.equals('partfields'))
+              .filter((link) => link.tableRef.equals(.partfields))
               .get();
           for (final session in sessions.where(
             (element) => element.field != null,
@@ -718,7 +720,7 @@ FutureOr<List<WorkSession>> savedWorkSessions(Ref ref) async => await ref
         }
         if (sessions.any((element) => element.equipmentSetup != null)) {
           final equipmentLinks = await database.managers.links
-              .filter((link) => link.tableRef.equals('implements'))
+              .filter((link) => link.tableRef.equals(.implements))
               .get();
           final savedSetups = await ref.read(
             savedEquipmentSetupsProvider.selectAsync(
@@ -762,7 +764,7 @@ FutureOr<List<WorkSession>> savedWorkSessions(Ref ref) async => await ref
         for (final session in sessions) {
           if (!taskLinks.any((link) => link.linkValue == session.uuid)) {
             final fieldId = await database.managers.links
-                .filter((link) => link.tableRef.equals('partfields'))
+                .filter((link) => link.tableRef.equals(.partfields))
                 .filter((link) => link.linkValue.equals(session.field?.uuid))
                 .map((link) => link.refId)
                 .getSingleOrNull();
@@ -779,7 +781,7 @@ FutureOr<List<WorkSession>> savedWorkSessions(Ref ref) async => await ref
 
             final link = await database.managers.links.createReturning(
               (o) => o(
-                tableRef: 'tasks',
+                tableRef: .tasks,
                 refId: task.id,
                 linkValue: Value(session.uuid!),
                 name: Value.absentIfNull(session.name),
@@ -794,7 +796,7 @@ FutureOr<List<WorkSession>> savedWorkSessions(Ref ref) async => await ref
                 (o) => o(task: task.id, guidanceGroup: guidanceGroupId),
               );
               final existing = await database.managers.links
-                  .filter((link) => link.tableRef.equals('guidance_patterns'))
+                  .filter((link) => link.tableRef.equals(.guidancePatterns))
                   .filter(
                     (link) => link.linkValue.isIn([
                       ...session.abTracking.map((t) => t.uuid),
@@ -822,13 +824,66 @@ FutureOr<List<WorkSession>> savedWorkSessions(Ref ref) async => await ref
                 ),
               );
             }
+            if (session.equipmentSetup != null) {
+              final vehicleConnectors = await database
+                  .select(database.connectors)
+                  .join([
+                    innerJoin(
+                      database.links,
+                      database.links.tableRef.equalsValue(.vehicles) &
+                          database.links.linkValue.equals(
+                            session.vehicle!.uuid!,
+                          ) &
+                          database.links.refId.equalsExp(
+                            database.connectors.vehicle,
+                          ),
+                    ),
+                  ])
+                  .map((row) => row.readTable(database.connectors))
+                  .get();
+              for (final connection in session.equipmentSetup!.children) {
+                final (:angle, :type, :child) = connection;
+                final childConnectors = await database
+                    .select(database.connectors)
+                    .join([
+                      innerJoin(
+                        database.links,
+                        database.links.tableRef.equalsValue(.implements) &
+                            database.links.linkValue.equals(
+                              child.uuid!,
+                            ) &
+                            database.links.refId.equalsExp(
+                              database.connectors.implement,
+                            ),
+                      ),
+                    ])
+                    .map((row) => row.readTable(database.connectors))
+                    .get();
+
+                final parentConnector = vehicleConnectors.firstWhere(
+                  (c) => c.angle == angle && c.type == type,
+                );
+
+                final childConnector = childConnectors.firstWhere(
+                  (c) => c.angle != angle && c.type == type,
+                );
+                await database.managers.connections.create(
+                  (o) => o(
+                    task: task.id,
+                    parentConnector: parentConnector.id!,
+                    childConnector: childConnector.id!,
+                  ),
+                );
+              }
+            }
+
             session.id = task.id;
 
             if (Device.isNative) {
               for (final equipment
                   in session.equipmentSetup!.allAttached.cast<Equipment>()) {
                 final equipmentLinks = await database.managers.links
-                    .filter((link) => link.tableRef.equals('implements'))
+                    .filter((link) => link.tableRef.equals(.implements))
                     .get();
                 final equipmentId = equipmentLinks
                     .firstWhereOrNull(

@@ -15,17 +15,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:autosteering/src/features/database/database.dart'
-    hide Connection;
+import 'package:autosteering/src/features/database/models/tables/table_timestamps_mixin.dart';
 import 'package:autosteering/src/features/database/models/tables/tables.dart';
+import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart'
     show Connection, Connector, ConnectorRelation, ConnectorType;
 import 'package:autosteering/src/features/vehicle/vehicle.dart' show Vehicle;
 import 'package:drift/drift.dart';
 
-/// A table for connector points on a [Vehicle] or [Implement].
+/// A table for connector points on a [Vehicle] or [Equipment].
 @UseRowClass(Connector, constructor: 'fromDatabase')
-class Connectors extends Table {
+class Connectors extends Table with TableTimestamps {
   /// The local database ID of this.
   late final Column<int> id = integer().autoIncrement()();
 
@@ -38,7 +38,7 @@ class Connectors extends Table {
       )
       .nullable()();
 
-  /// Reference to the parent [Implement], if there is one.
+  /// Reference to the parent [Equipment], if there is one.
   @ReferenceName('connectorImplement')
   late final Column<int> implement = integer()
       .references(
@@ -70,13 +70,10 @@ class Connectors extends Table {
   /// The angle of the connector, relative to the forward direction.
   late final Column<double> angle = real()();
 
-  /// When this was created.
-  late final Column<DateTime> createdAt = dateTime().clientDefault(
-    DateTime.now,
-  )();
-
-  /// When this was last updated.
-  late final Column<DateTime> lastUpdatedAt = dateTime().nullable()();
+  @override
+  List<String> get customConstraints => [
+    '''CHECK((vehicle IS NOT NULL AND implement IS NULL) OR (vehicle IS NULL AND implement IS NOT NULL))''',
+  ];
 }
 
 /// Extension with getters for ids for use with database inserts/extractions.
@@ -86,4 +83,23 @@ extension ConnectorIds on Connector {
 
   /// Same as [vehicleId].
   int? get vehicle => vehicleId;
+}
+
+/// A [Connector] extended with all children/refs loaded.
+class ConnectorWithRefs {
+  /// A [Connector] extended with all children/refs loaded.
+  const ConnectorWithRefs({
+    required this.connector,
+    this.vehicle,
+    this.implement,
+  });
+
+  /// The loaded connector.
+  final Connector connector;
+
+  /// The loaded parent vehicle.
+  final Vehicle? vehicle;
+
+  /// The loaded parent equipment.
+  final Equipment? implement;
 }

@@ -1229,7 +1229,7 @@ final class SavedFieldsProvider
   }
 }
 
-String _$savedFieldsHash() => r'fc23b1736f10f7e7593bf9ba74f16ea673b149ed';
+String _$savedFieldsHash() => r'ae1a8948fea8ea3821b1ebfe9290097361ae2959';
 
 /// A provider for deleting [field] from the user file system.
 ///
@@ -1461,7 +1461,7 @@ final class ImportFieldProvider
   }
 }
 
-String _$importFieldHash() => r'8f91ca2cdd0832304d6854f5b7849bea5aace053';
+String _$importFieldHash() => r'd004a2db31000428f21693d52845a381bc3ee32c';
 
 /// A provider for importing a field from a file and applying
 /// [ActiveField] provider.
@@ -1574,4 +1574,292 @@ final class ExportFieldsFamily extends $Family
 
   @override
   String toString() => r'exportFieldsProvider';
+}
+
+/// A provider for getting fields from the database.
+
+@ProviderFor(partfields)
+final partfieldsProvider = PartfieldsProvider._();
+
+/// A provider for getting fields from the database.
+
+final class PartfieldsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<PartfieldWithRefs>>,
+          List<PartfieldWithRefs>,
+          FutureOr<List<PartfieldWithRefs>>
+        >
+    with
+        $FutureModifier<List<PartfieldWithRefs>>,
+        $FutureProvider<List<PartfieldWithRefs>> {
+  /// A provider for getting fields from the database.
+  PartfieldsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'partfieldsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$partfieldsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<PartfieldWithRefs>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<PartfieldWithRefs>> create(Ref ref) {
+    return partfields(ref);
+  }
+}
+
+String _$partfieldsHash() => r'fe4bc507d918a66f9546d2fca3ef509a7cdd8732';
+
+/// A provider for getting a partfield from the database.
+
+@ProviderFor(partfield)
+final partfieldProvider = PartfieldFamily._();
+
+/// A provider for getting a partfield from the database.
+
+final class PartfieldProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<PartfieldWithRefs>,
+          PartfieldWithRefs,
+          FutureOr<PartfieldWithRefs>
+        >
+    with
+        $FutureModifier<PartfieldWithRefs>,
+        $FutureProvider<PartfieldWithRefs> {
+  /// A provider for getting a partfield from the database.
+  PartfieldProvider._({
+    required PartfieldFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'partfieldProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$partfieldHash();
+
+  @override
+  String toString() {
+    return r'partfieldProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<PartfieldWithRefs> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<PartfieldWithRefs> create(Ref ref) {
+    final argument = this.argument as int;
+    return partfield(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is PartfieldProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$partfieldHash() => r'686254cad7e87741f7d267e23edcb6fb580e4e97';
+
+/// A provider for getting a partfield from the database.
+
+final class PartfieldFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<PartfieldWithRefs>, int> {
+  PartfieldFamily._()
+    : super(
+        retry: null,
+        name: r'partfieldProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// A provider for getting a partfield from the database.
+
+  PartfieldProvider call(int id) =>
+      PartfieldProvider._(argument: id, from: this);
+
+  @override
+  String toString() => r'partfieldProvider';
+}
+
+/// A provider for inserting [partfield] into the database.
+
+@ProviderFor(insertPartfield)
+final insertPartfieldProvider = InsertPartfieldFamily._();
+
+/// A provider for inserting [partfield] into the database.
+
+final class InsertPartfieldProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+    with $FutureModifier<void>, $FutureProvider<void> {
+  /// A provider for inserting [partfield] into the database.
+  InsertPartfieldProvider._({
+    required InsertPartfieldFamily super.from,
+    required PartfieldWithRefs super.argument,
+  }) : super(
+         retry: null,
+         name: r'insertPartfieldProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$insertPartfieldHash();
+
+  @override
+  String toString() {
+    return r'insertPartfieldProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<void> create(Ref ref) {
+    final argument = this.argument as PartfieldWithRefs;
+    return insertPartfield(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is InsertPartfieldProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$insertPartfieldHash() => r'1a7e7a66e59aad8a966f257bc75e1dd12c1e9f6b';
+
+/// A provider for inserting [partfield] into the database.
+
+final class InsertPartfieldFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<void>, PartfieldWithRefs> {
+  InsertPartfieldFamily._()
+    : super(
+        retry: null,
+        name: r'insertPartfieldProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  /// A provider for inserting [partfield] into the database.
+
+  InsertPartfieldProvider call(PartfieldWithRefs partfield) =>
+      InsertPartfieldProvider._(argument: partfield, from: this);
+
+  @override
+  String toString() => r'insertPartfieldProvider';
+}
+
+/// A provider for updating [partfield] in the database.
+
+@ProviderFor(updatePartfield)
+final updatePartfieldProvider = UpdatePartfieldFamily._();
+
+/// A provider for updating [partfield] in the database.
+
+final class UpdatePartfieldProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+    with $FutureModifier<void>, $FutureProvider<void> {
+  /// A provider for updating [partfield] in the database.
+  UpdatePartfieldProvider._({
+    required UpdatePartfieldFamily super.from,
+    required PartfieldWithRefs super.argument,
+  }) : super(
+         retry: null,
+         name: r'updatePartfieldProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$updatePartfieldHash();
+
+  @override
+  String toString() {
+    return r'updatePartfieldProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<void> create(Ref ref) {
+    final argument = this.argument as PartfieldWithRefs;
+    return updatePartfield(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is UpdatePartfieldProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$updatePartfieldHash() => r'f3c636b02a37e35507074515d459d87fc561f924';
+
+/// A provider for updating [partfield] in the database.
+
+final class UpdatePartfieldFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<void>, PartfieldWithRefs> {
+  UpdatePartfieldFamily._()
+    : super(
+        retry: null,
+        name: r'updatePartfieldProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  /// A provider for updating [partfield] in the database.
+
+  UpdatePartfieldProvider call(PartfieldWithRefs partfield) =>
+      UpdatePartfieldProvider._(argument: partfield, from: this);
+
+  @override
+  String toString() => r'updatePartfieldProvider';
 }

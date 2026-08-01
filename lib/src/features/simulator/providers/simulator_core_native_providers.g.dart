@@ -227,4 +227,4 @@ final class SimCoreVehicleDrivingProvider
 }
 
 String _$simCoreVehicleDrivingHash() =>
-    r'2aee37a2af6fc4a14587a4c5231ed6a351b7798c';
+    r'3513a19686046d6df43ad9989e0345e517c1687b';

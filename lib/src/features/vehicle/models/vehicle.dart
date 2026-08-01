@@ -212,7 +212,8 @@ sealed class Vehicle extends Hitchable {
         ),
       );
     }
-    if ((json['hitches'] as Map?)?['solid_axle_to_rear_towbar_distance']
+    if ((json['hitches'] as Map?)?['solid_axle_to_rear_drawbar_distance'] ??
+            (json['hitches'] as Map?)?['solid_axle_to_rear_towbar_distance']
         case final double solidAxleToRearDrawbar) {
       connectors.add(
         Connector(
@@ -247,7 +248,8 @@ sealed class Vehicle extends Hitchable {
         ),
       );
     }
-    if ((json['hitches'] as Map?)?['rear_axle_to_towbar_distance']
+    if ((json['hitches'] as Map?)?['rear_axle_to_drawbar_distance'] ??
+            (json['hitches'] as Map?)?['rear_axle_to_towbar_distance']
         case final double rearAxleToDrawbar) {
       connectors.add(
         Connector(

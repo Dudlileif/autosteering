@@ -44,7 +44,7 @@ final class MainVehicleProvider
   }
 }
 
-String _$mainVehicleHash() => r'f4b8df15392be920dd0b41ea4a18dda9b15b3fe2';
+String _$mainVehicleHash() => r'2a0dbf8fe6d42fc1c92a93d8e5ce108834d386b4';
 
 /// The main provider for the vehicle state.
 
@@ -123,115 +123,6 @@ abstract class _$ActiveAutosteeringState extends $Notifier<AutosteeringState> {
             >;
     return element.handleCreate(ref, build);
   }
-}
-
-/// A provider for saving [vehicle] to a file in the user file directory.
-///
-/// Override the file name with [overrideName].
-
-@ProviderFor(saveVehicle)
-final saveVehicleProvider = SaveVehicleFamily._();
-
-/// A provider for saving [vehicle] to a file in the user file directory.
-///
-/// Override the file name with [overrideName].
-
-final class SaveVehicleProvider
-    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
-    with $FutureModifier<void>, $FutureProvider<void> {
-  /// A provider for saving [vehicle] to a file in the user file directory.
-  ///
-  /// Override the file name with [overrideName].
-  SaveVehicleProvider._({
-    required SaveVehicleFamily super.from,
-    required (Vehicle, {String? overrideName, bool downloadIfWeb})
-    super.argument,
-  }) : super(
-         retry: null,
-         name: r'saveVehicleProvider',
-         isAutoDispose: false,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
-
-  @override
-  String debugGetCreateSourceHash() => _$saveVehicleHash();
-
-  @override
-  String toString() {
-    return r'saveVehicleProvider'
-        ''
-        '$argument';
-  }
-
-  @$internal
-  @override
-  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<void> create(Ref ref) {
-    final argument =
-        this.argument as (Vehicle, {String? overrideName, bool downloadIfWeb});
-    return saveVehicle(
-      ref,
-      argument.$1,
-      overrideName: argument.overrideName,
-      downloadIfWeb: argument.downloadIfWeb,
-    );
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is SaveVehicleProvider && other.argument == argument;
-  }
-
-  @override
-  int get hashCode {
-    return argument.hashCode;
-  }
-}
-
-String _$saveVehicleHash() => r'7f266e71e3e40a7d5798944f87cc0021baff3646';
-
-/// A provider for saving [vehicle] to a file in the user file directory.
-///
-/// Override the file name with [overrideName].
-
-final class SaveVehicleFamily extends $Family
-    with
-        $FunctionalFamilyOverride<
-          FutureOr<void>,
-          (Vehicle, {String? overrideName, bool downloadIfWeb})
-        > {
-  SaveVehicleFamily._()
-    : super(
-        retry: null,
-        name: r'saveVehicleProvider',
-        dependencies: null,
-        $allTransitiveDependencies: null,
-        isAutoDispose: false,
-      );
-
-  /// A provider for saving [vehicle] to a file in the user file directory.
-  ///
-  /// Override the file name with [overrideName].
-
-  SaveVehicleProvider call(
-    Vehicle vehicle, {
-    String? overrideName,
-    bool downloadIfWeb = false,
-  }) => SaveVehicleProvider._(
-    argument: (
-      vehicle,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    ),
-    from: this,
-  );
-
-  @override
-  String toString() => r'saveVehicleProvider';
 }
 
 /// A provider for saving [vehicle] to a file.
@@ -407,7 +298,7 @@ final class SavedVehiclesProvider
   }
 }
 
-String _$savedVehiclesHash() => r'2dd4fac06ac062020b3741aa23eedbae819d0ead';
+String _$savedVehiclesHash() => r'1ed98e4ea3a0e3b67f0f903aa34a45ef02dd89d5';
 
 /// A provider for deleting [vehicle] from the user file system.
 ///
@@ -598,13 +489,8 @@ final lastUsedVehicleProvider = LastUsedVehicleProvider._();
 /// property.
 
 final class LastUsedVehicleProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<Vehicle>,
-          AsyncValue<Vehicle>,
-          AsyncValue<Vehicle>
-        >
-    with $Provider<AsyncValue<Vehicle>> {
+    extends $FunctionalProvider<AsyncValue<Vehicle>, Vehicle, FutureOr<Vehicle>>
+    with $FutureModifier<Vehicle>, $FutureProvider<Vehicle> {
   /// A provider for the most recently used [Vehicle].
   ///
   /// The vehicle is found by sorting the saved vehicles by their last used
@@ -625,25 +511,16 @@ final class LastUsedVehicleProvider
 
   @$internal
   @override
-  $ProviderElement<AsyncValue<Vehicle>> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+  $FutureProviderElement<Vehicle> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
 
   @override
-  AsyncValue<Vehicle> create(Ref ref) {
+  FutureOr<Vehicle> create(Ref ref) {
     return lastUsedVehicle(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(AsyncValue<Vehicle> value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<AsyncValue<Vehicle>>(value),
-    );
   }
 }
 
-String _$lastUsedVehicleHash() => r'd57f896ad558224302a10e419e004a87a151f999';
+String _$lastUsedVehicleHash() => r'0ce6572576da827d371db5965ba0499f033b7f5b';
 
 /// A provider for the target steering angle when using guidance.
 
@@ -763,7 +640,7 @@ final class ImportVehicleProvider
   }
 }
 
-String _$importVehicleHash() => r'df88498814a96427013f27fb1b2a345fa94ded98';
+String _$importVehicleHash() => r'd0767e70a21d6606176f47eaf78e0af8a160b6c0';
 
 /// A provider for importing a vehicle configuration from a file and applying it
 /// to the [ConfiguredVehicle] provider.
@@ -1056,4 +933,248 @@ final class ExportVehiclesFamily extends $Family
 
   @override
   String toString() => r'exportVehiclesProvider';
+}
+
+/// A provider for getting vehicles from the database.
+
+@ProviderFor(vehicles)
+final vehiclesProvider = VehiclesFamily._();
+
+/// A provider for getting vehicles from the database.
+
+final class VehiclesProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Vehicle>>,
+          List<Vehicle>,
+          FutureOr<List<Vehicle>>
+        >
+    with $FutureModifier<List<Vehicle>>, $FutureProvider<List<Vehicle>> {
+  /// A provider for getting vehicles from the database.
+  VehiclesProvider._({
+    required VehiclesFamily super.from,
+    required ({int limit, int? offset}) super.argument,
+  }) : super(
+         retry: null,
+         name: r'vehiclesProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$vehiclesHash();
+
+  @override
+  String toString() {
+    return r'vehiclesProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Vehicle>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Vehicle>> create(Ref ref) {
+    final argument = this.argument as ({int limit, int? offset});
+    return vehicles(ref, limit: argument.limit, offset: argument.offset);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is VehiclesProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$vehiclesHash() => r'dbed0b0d4338ae2163f29f8469711dac2c29d168';
+
+/// A provider for getting vehicles from the database.
+
+final class VehiclesFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<List<Vehicle>>,
+          ({int limit, int? offset})
+        > {
+  VehiclesFamily._()
+    : super(
+        retry: null,
+        name: r'vehiclesProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// A provider for getting vehicles from the database.
+
+  VehiclesProvider call({int limit = 10, int? offset}) =>
+      VehiclesProvider._(argument: (limit: limit, offset: offset), from: this);
+
+  @override
+  String toString() => r'vehiclesProvider';
+}
+
+/// A provider for inserting [vehicle] into the database.
+
+@ProviderFor(insertVehicle)
+final insertVehicleProvider = InsertVehicleFamily._();
+
+/// A provider for inserting [vehicle] into the database.
+
+final class InsertVehicleProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+    with $FutureModifier<void>, $FutureProvider<void> {
+  /// A provider for inserting [vehicle] into the database.
+  InsertVehicleProvider._({
+    required InsertVehicleFamily super.from,
+    required Vehicle super.argument,
+  }) : super(
+         retry: null,
+         name: r'insertVehicleProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$insertVehicleHash();
+
+  @override
+  String toString() {
+    return r'insertVehicleProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<void> create(Ref ref) {
+    final argument = this.argument as Vehicle;
+    return insertVehicle(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is InsertVehicleProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$insertVehicleHash() => r'244dffbfe8651fb5f7b37881f2c280063cd25e93';
+
+/// A provider for inserting [vehicle] into the database.
+
+final class InsertVehicleFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<void>, Vehicle> {
+  InsertVehicleFamily._()
+    : super(
+        retry: null,
+        name: r'insertVehicleProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  /// A provider for inserting [vehicle] into the database.
+
+  InsertVehicleProvider call(Vehicle vehicle) =>
+      InsertVehicleProvider._(argument: vehicle, from: this);
+
+  @override
+  String toString() => r'insertVehicleProvider';
+}
+
+/// A provider for updating [vehicle] in the database.
+
+@ProviderFor(updateVehicle)
+final updateVehicleProvider = UpdateVehicleFamily._();
+
+/// A provider for updating [vehicle] in the database.
+
+final class UpdateVehicleProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+    with $FutureModifier<void>, $FutureProvider<void> {
+  /// A provider for updating [vehicle] in the database.
+  UpdateVehicleProvider._({
+    required UpdateVehicleFamily super.from,
+    required Vehicle super.argument,
+  }) : super(
+         retry: null,
+         name: r'updateVehicleProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$updateVehicleHash();
+
+  @override
+  String toString() {
+    return r'updateVehicleProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<void> create(Ref ref) {
+    final argument = this.argument as Vehicle;
+    return updateVehicle(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is UpdateVehicleProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$updateVehicleHash() => r'e41e2c5d69ff969f4515c33bd6005aeb7a708684';
+
+/// A provider for updating [vehicle] in the database.
+
+final class UpdateVehicleFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<void>, Vehicle> {
+  UpdateVehicleFamily._()
+    : super(
+        retry: null,
+        name: r'updateVehicleProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  /// A provider for updating [vehicle] in the database.
+
+  UpdateVehicleProvider call(Vehicle vehicle) =>
+      UpdateVehicleProvider._(argument: vehicle, from: this);
+
+  @override
+  String toString() => r'updateVehicleProvider';
 }

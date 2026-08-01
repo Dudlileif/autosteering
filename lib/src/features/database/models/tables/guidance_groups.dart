@@ -16,18 +16,55 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/database/models/database.dart';
+import 'package:autosteering/src/features/database/models/tables/table_timestamps_mixin.dart';
 import 'package:autosteering/src/features/database/models/tables/tables.dart';
 import 'package:drift/drift.dart';
 
-/// A table for binding [GuidancePatterns] to [GuidanceGroups], with an optional
-/// border [Polygon].
-class GuidanceGroups extends Table {
+/// A table for storing a group of [GuidancePatterns], with an optional border
+/// [Polygon].
+class GuidanceGroups extends Table with TableTimestamps {
   /// The local database ID of this.
   late final Column<int> id = integer().autoIncrement()();
+
+  /// The name of this.
+  late final Column<String> name = text().nullable()();
 
   /// Reference to a border [Polygon], if there is one.
   @ReferenceName('guidanceGroupBorderPolygon')
   late final Column<int> borderPolygon = integer()
       .references(Polygons, #id)
       .nullable()();
+}
+
+/// A [GuidanceGroup] extended with all children/refs loaded.
+class GuidanceGroupWithRefs extends GuidanceGroup {
+  /// A [GuidanceGroup] extended with all children/refs loaded.
+  factory GuidanceGroupWithRefs({
+    required GuidanceGroup guidanceGroup,
+    PolygonWithRefs? borderPolygonObj,
+    List<GuidancePatternWithRefs>? guidancePatterns,
+  }) => GuidanceGroupWithRefs._(
+    id: guidanceGroup.id,
+    name: guidanceGroup.name,
+    createdAt: guidanceGroup.createdAt,
+    lastUpdatedAt: guidanceGroup.lastUpdatedAt,
+    borderPolygon: guidanceGroup.borderPolygon,
+    borderPolygonObj: borderPolygonObj,
+    guidancePatterns: guidancePatterns ?? [],
+  );
+  const GuidanceGroupWithRefs._({
+    required super.id,
+    required super.createdAt,
+    super.name,
+    super.lastUpdatedAt,
+    super.borderPolygon,
+    this.borderPolygonObj,
+    this.guidancePatterns = const [],
+  });
+
+  /// The loaded optional border polygon.
+  final PolygonWithRefs? borderPolygonObj;
+
+  /// The loaded guidance patterns.
+  final List<GuidancePatternWithRefs> guidancePatterns;
 }

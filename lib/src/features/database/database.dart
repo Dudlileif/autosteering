@@ -15,5 +15,5 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-export 'models/models.dart' hide Polygon;
+export 'models/models.dart';
 export 'providers/providers.dart';

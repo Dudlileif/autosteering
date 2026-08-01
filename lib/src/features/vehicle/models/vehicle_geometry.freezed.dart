@@ -189,11 +189,11 @@ return articulated(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( double length,  double width,  double minTurningRadius,  double steeringAngleMax,  double trackWidth,  double wheelBase,  double steeringAxleWheelDiameter,  double solidAxleWheelDiameter,  double steeringAxleWheelWidth,  double solidAxleWheelWidth,  double solidAxleToFrontDistance,  double? solidAxleToFrontHitchDistance,  double? solidAxleToRearHitchDistance,  double? solidAxleToRearDrawbarDistance,  double wheelSpacing,  int numWheels,  double ackermannSteeringRatio,  double ackermannPercentage)?  axleSteered,TResult Function( double length,  double width,  double minTurningRadius,  double steeringAngleMax,  double trackWidth,  double pivotToFrontAxle,  double pivotToRearAxle,  double frontAxleToFrontDistance,  double rearAxleToHitchDistance,  double rearAxleToDrawbarDistance,  double rearAxleToEndDistance,  double wheelDiameter,  double wheelWidth,  double? frontAxleToHitchDistance,  double wheelSpacing,  int numWheels)?  articulated,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( double length,  double width,  double minTurningRadius,  double steeringAngleMax,  double trackWidth,  double wheelBase,  double steeringAxleWheelDiameter,  double solidAxleWheelDiameter,  double steeringAxleWheelWidth,  double solidAxleWheelWidth,  double solidAxleToFrontDistance,  double? solidAxleToFrontHitchDistance,  double? solidAxleToRearHitchDistance,  double? solidAxleToRearDrawbarDistance,  double wheelSpacing,  int numWheels,  double ackermannSteeringRatio,  double ackermannPercentage)?  axleSteered,TResult Function( double length,  double width,  double minTurningRadius,  double steeringAngleMax,  double trackWidth,  double pivotToFrontAxle,  double pivotToRearAxle,  double frontAxleToFrontDistance,  double rearAxleToEndDistance,  double wheelDiameter,  double wheelWidth,  double? rearAxleToHitchDistance,  double? rearAxleToDrawbarDistance,  double? frontAxleToHitchDistance,  double wheelSpacing,  int numWheels)?  articulated,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case AxleSteeredVehicleGeometry() when axleSteered != null:
 return axleSteered(_that.length,_that.width,_that.minTurningRadius,_that.steeringAngleMax,_that.trackWidth,_that.wheelBase,_that.steeringAxleWheelDiameter,_that.solidAxleWheelDiameter,_that.steeringAxleWheelWidth,_that.solidAxleWheelWidth,_that.solidAxleToFrontDistance,_that.solidAxleToFrontHitchDistance,_that.solidAxleToRearHitchDistance,_that.solidAxleToRearDrawbarDistance,_that.wheelSpacing,_that.numWheels,_that.ackermannSteeringRatio,_that.ackermannPercentage);case ArticulatedVehicleGeometry() when articulated != null:
-return articulated(_that.length,_that.width,_that.minTurningRadius,_that.steeringAngleMax,_that.trackWidth,_that.pivotToFrontAxle,_that.pivotToRearAxle,_that.frontAxleToFrontDistance,_that.rearAxleToHitchDistance,_that.rearAxleToDrawbarDistance,_that.rearAxleToEndDistance,_that.wheelDiameter,_that.wheelWidth,_that.frontAxleToHitchDistance,_that.wheelSpacing,_that.numWheels);case _:
+return articulated(_that.length,_that.width,_that.minTurningRadius,_that.steeringAngleMax,_that.trackWidth,_that.pivotToFrontAxle,_that.pivotToRearAxle,_that.frontAxleToFrontDistance,_that.rearAxleToEndDistance,_that.wheelDiameter,_that.wheelWidth,_that.rearAxleToHitchDistance,_that.rearAxleToDrawbarDistance,_that.frontAxleToHitchDistance,_that.wheelSpacing,_that.numWheels);case _:
   return orElse();
 
 }
@@ -211,11 +211,11 @@ return articulated(_that.length,_that.width,_that.minTurningRadius,_that.steerin
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( double length,  double width,  double minTurningRadius,  double steeringAngleMax,  double trackWidth,  double wheelBase,  double steeringAxleWheelDiameter,  double solidAxleWheelDiameter,  double steeringAxleWheelWidth,  double solidAxleWheelWidth,  double solidAxleToFrontDistance,  double? solidAxleToFrontHitchDistance,  double? solidAxleToRearHitchDistance,  double? solidAxleToRearDrawbarDistance,  double wheelSpacing,  int numWheels,  double ackermannSteeringRatio,  double ackermannPercentage)  axleSteered,required TResult Function( double length,  double width,  double minTurningRadius,  double steeringAngleMax,  double trackWidth,  double pivotToFrontAxle,  double pivotToRearAxle,  double frontAxleToFrontDistance,  double rearAxleToHitchDistance,  double rearAxleToDrawbarDistance,  double rearAxleToEndDistance,  double wheelDiameter,  double wheelWidth,  double? frontAxleToHitchDistance,  double wheelSpacing,  int numWheels)  articulated,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( double length,  double width,  double minTurningRadius,  double steeringAngleMax,  double trackWidth,  double wheelBase,  double steeringAxleWheelDiameter,  double solidAxleWheelDiameter,  double steeringAxleWheelWidth,  double solidAxleWheelWidth,  double solidAxleToFrontDistance,  double? solidAxleToFrontHitchDistance,  double? solidAxleToRearHitchDistance,  double? solidAxleToRearDrawbarDistance,  double wheelSpacing,  int numWheels,  double ackermannSteeringRatio,  double ackermannPercentage)  axleSteered,required TResult Function( double length,  double width,  double minTurningRadius,  double steeringAngleMax,  double trackWidth,  double pivotToFrontAxle,  double pivotToRearAxle,  double frontAxleToFrontDistance,  double rearAxleToEndDistance,  double wheelDiameter,  double wheelWidth,  double? rearAxleToHitchDistance,  double? rearAxleToDrawbarDistance,  double? frontAxleToHitchDistance,  double wheelSpacing,  int numWheels)  articulated,}) {final _that = this;
 switch (_that) {
 case AxleSteeredVehicleGeometry():
 return axleSteered(_that.length,_that.width,_that.minTurningRadius,_that.steeringAngleMax,_that.trackWidth,_that.wheelBase,_that.steeringAxleWheelDiameter,_that.solidAxleWheelDiameter,_that.steeringAxleWheelWidth,_that.solidAxleWheelWidth,_that.solidAxleToFrontDistance,_that.solidAxleToFrontHitchDistance,_that.solidAxleToRearHitchDistance,_that.solidAxleToRearDrawbarDistance,_that.wheelSpacing,_that.numWheels,_that.ackermannSteeringRatio,_that.ackermannPercentage);case ArticulatedVehicleGeometry():
-return articulated(_that.length,_that.width,_that.minTurningRadius,_that.steeringAngleMax,_that.trackWidth,_that.pivotToFrontAxle,_that.pivotToRearAxle,_that.frontAxleToFrontDistance,_that.rearAxleToHitchDistance,_that.rearAxleToDrawbarDistance,_that.rearAxleToEndDistance,_that.wheelDiameter,_that.wheelWidth,_that.frontAxleToHitchDistance,_that.wheelSpacing,_that.numWheels);}
+return articulated(_that.length,_that.width,_that.minTurningRadius,_that.steeringAngleMax,_that.trackWidth,_that.pivotToFrontAxle,_that.pivotToRearAxle,_that.frontAxleToFrontDistance,_that.rearAxleToEndDistance,_that.wheelDiameter,_that.wheelWidth,_that.rearAxleToHitchDistance,_that.rearAxleToDrawbarDistance,_that.frontAxleToHitchDistance,_that.wheelSpacing,_that.numWheels);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -229,11 +229,11 @@ return articulated(_that.length,_that.width,_that.minTurningRadius,_that.steerin
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( double length,  double width,  double minTurningRadius,  double steeringAngleMax,  double trackWidth,  double wheelBase,  double steeringAxleWheelDiameter,  double solidAxleWheelDiameter,  double steeringAxleWheelWidth,  double solidAxleWheelWidth,  double solidAxleToFrontDistance,  double? solidAxleToFrontHitchDistance,  double? solidAxleToRearHitchDistance,  double? solidAxleToRearDrawbarDistance,  double wheelSpacing,  int numWheels,  double ackermannSteeringRatio,  double ackermannPercentage)?  axleSteered,TResult? Function( double length,  double width,  double minTurningRadius,  double steeringAngleMax,  double trackWidth,  double pivotToFrontAxle,  double pivotToRearAxle,  double frontAxleToFrontDistance,  double rearAxleToHitchDistance,  double rearAxleToDrawbarDistance,  double rearAxleToEndDistance,  double wheelDiameter,  double wheelWidth,  double? frontAxleToHitchDistance,  double wheelSpacing,  int numWheels)?  articulated,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( double length,  double width,  double minTurningRadius,  double steeringAngleMax,  double trackWidth,  double wheelBase,  double steeringAxleWheelDiameter,  double solidAxleWheelDiameter,  double steeringAxleWheelWidth,  double solidAxleWheelWidth,  double solidAxleToFrontDistance,  double? solidAxleToFrontHitchDistance,  double? solidAxleToRearHitchDistance,  double? solidAxleToRearDrawbarDistance,  double wheelSpacing,  int numWheels,  double ackermannSteeringRatio,  double ackermannPercentage)?  axleSteered,TResult? Function( double length,  double width,  double minTurningRadius,  double steeringAngleMax,  double trackWidth,  double pivotToFrontAxle,  double pivotToRearAxle,  double frontAxleToFrontDistance,  double rearAxleToEndDistance,  double wheelDiameter,  double wheelWidth,  double? rearAxleToHitchDistance,  double? rearAxleToDrawbarDistance,  double? frontAxleToHitchDistance,  double wheelSpacing,  int numWheels)?  articulated,}) {final _that = this;
 switch (_that) {
 case AxleSteeredVehicleGeometry() when axleSteered != null:
 return axleSteered(_that.length,_that.width,_that.minTurningRadius,_that.steeringAngleMax,_that.trackWidth,_that.wheelBase,_that.steeringAxleWheelDiameter,_that.solidAxleWheelDiameter,_that.steeringAxleWheelWidth,_that.solidAxleWheelWidth,_that.solidAxleToFrontDistance,_that.solidAxleToFrontHitchDistance,_that.solidAxleToRearHitchDistance,_that.solidAxleToRearDrawbarDistance,_that.wheelSpacing,_that.numWheels,_that.ackermannSteeringRatio,_that.ackermannPercentage);case ArticulatedVehicleGeometry() when articulated != null:
-return articulated(_that.length,_that.width,_that.minTurningRadius,_that.steeringAngleMax,_that.trackWidth,_that.pivotToFrontAxle,_that.pivotToRearAxle,_that.frontAxleToFrontDistance,_that.rearAxleToHitchDistance,_that.rearAxleToDrawbarDistance,_that.rearAxleToEndDistance,_that.wheelDiameter,_that.wheelWidth,_that.frontAxleToHitchDistance,_that.wheelSpacing,_that.numWheels);case _:
+return articulated(_that.length,_that.width,_that.minTurningRadius,_that.steeringAngleMax,_that.trackWidth,_that.pivotToFrontAxle,_that.pivotToRearAxle,_that.frontAxleToFrontDistance,_that.rearAxleToEndDistance,_that.wheelDiameter,_that.wheelWidth,_that.rearAxleToHitchDistance,_that.rearAxleToDrawbarDistance,_that.frontAxleToHitchDistance,_that.wheelSpacing,_that.numWheels);case _:
   return null;
 
 }
@@ -380,7 +380,7 @@ as double,
 @JsonSerializable()
 
 class ArticulatedVehicleGeometry implements VehicleGeometry {
-  const ArticulatedVehicleGeometry({required this.length, required this.width, required this.minTurningRadius, required this.steeringAngleMax, required this.trackWidth, required this.pivotToFrontAxle, required this.pivotToRearAxle, required this.frontAxleToFrontDistance, required this.rearAxleToHitchDistance, required this.rearAxleToDrawbarDistance, required this.rearAxleToEndDistance, required this.wheelDiameter, required this.wheelWidth, this.frontAxleToHitchDistance, this.wheelSpacing = 0.05, this.numWheels = 1, final  String? $type}): $type = $type ?? 'articulated';
+  const ArticulatedVehicleGeometry({required this.length, required this.width, required this.minTurningRadius, required this.steeringAngleMax, required this.trackWidth, required this.pivotToFrontAxle, required this.pivotToRearAxle, required this.frontAxleToFrontDistance, required this.rearAxleToEndDistance, required this.wheelDiameter, required this.wheelWidth, this.rearAxleToHitchDistance, this.rearAxleToDrawbarDistance, this.frontAxleToHitchDistance, this.wheelSpacing = 0.05, this.numWheels = 1, final  String? $type}): $type = $type ?? 'articulated';
   factory ArticulatedVehicleGeometry.fromJson(Map<String, dynamic> json) => _$ArticulatedVehicleGeometryFromJson(json);
 
 /// The length of the vehicle excluding wheels, in meters.
@@ -402,10 +402,6 @@ class ArticulatedVehicleGeometry implements VehicleGeometry {
 /// The distance from the front axle position to the frontmost part of the
 /// vehicle, typically the bonnet or the frame.
  final  double frontAxleToFrontDistance;
-/// The distance from the rear axle to the rear fixed hitch point.
- final  double rearAxleToHitchDistance;
-/// The distance from the rear axle to the rear drawbar hitch point.
- final  double rearAxleToDrawbarDistance;
 /// The distance from the rear axle position to the rearmost part of the
 /// vehicle, excluding hitches, typically wheel fenders.
  final  double rearAxleToEndDistance;
@@ -413,6 +409,10 @@ class ArticulatedVehicleGeometry implements VehicleGeometry {
  final  double wheelDiameter;
 /// The width of the wheels.
  final  double wheelWidth;
+/// The distance from the rear axle to the rear fixed hitch point.
+ final  double? rearAxleToHitchDistance;
+/// The distance from the rear axle to the rear drawbar hitch point.
+ final  double? rearAxleToDrawbarDistance;
 /// The distance from the front axle to the front fixed hitch point.
  final  double? frontAxleToHitchDistance;
 /// The distance between the twin/triple etc. wheels.
@@ -437,16 +437,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ArticulatedVehicleGeometry&&(identical(other.length, length) || other.length == length)&&(identical(other.width, width) || other.width == width)&&(identical(other.minTurningRadius, minTurningRadius) || other.minTurningRadius == minTurningRadius)&&(identical(other.steeringAngleMax, steeringAngleMax) || other.steeringAngleMax == steeringAngleMax)&&(identical(other.trackWidth, trackWidth) || other.trackWidth == trackWidth)&&(identical(other.pivotToFrontAxle, pivotToFrontAxle) || other.pivotToFrontAxle == pivotToFrontAxle)&&(identical(other.pivotToRearAxle, pivotToRearAxle) || other.pivotToRearAxle == pivotToRearAxle)&&(identical(other.frontAxleToFrontDistance, frontAxleToFrontDistance) || other.frontAxleToFrontDistance == frontAxleToFrontDistance)&&(identical(other.rearAxleToHitchDistance, rearAxleToHitchDistance) || other.rearAxleToHitchDistance == rearAxleToHitchDistance)&&(identical(other.rearAxleToDrawbarDistance, rearAxleToDrawbarDistance) || other.rearAxleToDrawbarDistance == rearAxleToDrawbarDistance)&&(identical(other.rearAxleToEndDistance, rearAxleToEndDistance) || other.rearAxleToEndDistance == rearAxleToEndDistance)&&(identical(other.wheelDiameter, wheelDiameter) || other.wheelDiameter == wheelDiameter)&&(identical(other.wheelWidth, wheelWidth) || other.wheelWidth == wheelWidth)&&(identical(other.frontAxleToHitchDistance, frontAxleToHitchDistance) || other.frontAxleToHitchDistance == frontAxleToHitchDistance)&&(identical(other.wheelSpacing, wheelSpacing) || other.wheelSpacing == wheelSpacing)&&(identical(other.numWheels, numWheels) || other.numWheels == numWheels));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ArticulatedVehicleGeometry&&(identical(other.length, length) || other.length == length)&&(identical(other.width, width) || other.width == width)&&(identical(other.minTurningRadius, minTurningRadius) || other.minTurningRadius == minTurningRadius)&&(identical(other.steeringAngleMax, steeringAngleMax) || other.steeringAngleMax == steeringAngleMax)&&(identical(other.trackWidth, trackWidth) || other.trackWidth == trackWidth)&&(identical(other.pivotToFrontAxle, pivotToFrontAxle) || other.pivotToFrontAxle == pivotToFrontAxle)&&(identical(other.pivotToRearAxle, pivotToRearAxle) || other.pivotToRearAxle == pivotToRearAxle)&&(identical(other.frontAxleToFrontDistance, frontAxleToFrontDistance) || other.frontAxleToFrontDistance == frontAxleToFrontDistance)&&(identical(other.rearAxleToEndDistance, rearAxleToEndDistance) || other.rearAxleToEndDistance == rearAxleToEndDistance)&&(identical(other.wheelDiameter, wheelDiameter) || other.wheelDiameter == wheelDiameter)&&(identical(other.wheelWidth, wheelWidth) || other.wheelWidth == wheelWidth)&&(identical(other.rearAxleToHitchDistance, rearAxleToHitchDistance) || other.rearAxleToHitchDistance == rearAxleToHitchDistance)&&(identical(other.rearAxleToDrawbarDistance, rearAxleToDrawbarDistance) || other.rearAxleToDrawbarDistance == rearAxleToDrawbarDistance)&&(identical(other.frontAxleToHitchDistance, frontAxleToHitchDistance) || other.frontAxleToHitchDistance == frontAxleToHitchDistance)&&(identical(other.wheelSpacing, wheelSpacing) || other.wheelSpacing == wheelSpacing)&&(identical(other.numWheels, numWheels) || other.numWheels == numWheels));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,length,width,minTurningRadius,steeringAngleMax,trackWidth,pivotToFrontAxle,pivotToRearAxle,frontAxleToFrontDistance,rearAxleToHitchDistance,rearAxleToDrawbarDistance,rearAxleToEndDistance,wheelDiameter,wheelWidth,frontAxleToHitchDistance,wheelSpacing,numWheels);
+int get hashCode => Object.hash(runtimeType,length,width,minTurningRadius,steeringAngleMax,trackWidth,pivotToFrontAxle,pivotToRearAxle,frontAxleToFrontDistance,rearAxleToEndDistance,wheelDiameter,wheelWidth,rearAxleToHitchDistance,rearAxleToDrawbarDistance,frontAxleToHitchDistance,wheelSpacing,numWheels);
 
 @override
 String toString() {
-  return 'VehicleGeometry.articulated(length: $length, width: $width, minTurningRadius: $minTurningRadius, steeringAngleMax: $steeringAngleMax, trackWidth: $trackWidth, pivotToFrontAxle: $pivotToFrontAxle, pivotToRearAxle: $pivotToRearAxle, frontAxleToFrontDistance: $frontAxleToFrontDistance, rearAxleToHitchDistance: $rearAxleToHitchDistance, rearAxleToDrawbarDistance: $rearAxleToDrawbarDistance, rearAxleToEndDistance: $rearAxleToEndDistance, wheelDiameter: $wheelDiameter, wheelWidth: $wheelWidth, frontAxleToHitchDistance: $frontAxleToHitchDistance, wheelSpacing: $wheelSpacing, numWheels: $numWheels)';
+  return 'VehicleGeometry.articulated(length: $length, width: $width, minTurningRadius: $minTurningRadius, steeringAngleMax: $steeringAngleMax, trackWidth: $trackWidth, pivotToFrontAxle: $pivotToFrontAxle, pivotToRearAxle: $pivotToRearAxle, frontAxleToFrontDistance: $frontAxleToFrontDistance, rearAxleToEndDistance: $rearAxleToEndDistance, wheelDiameter: $wheelDiameter, wheelWidth: $wheelWidth, rearAxleToHitchDistance: $rearAxleToHitchDistance, rearAxleToDrawbarDistance: $rearAxleToDrawbarDistance, frontAxleToHitchDistance: $frontAxleToHitchDistance, wheelSpacing: $wheelSpacing, numWheels: $numWheels)';
 }
 
 
@@ -457,7 +457,7 @@ abstract mixin class $ArticulatedVehicleGeometryCopyWith<$Res> implements $Vehic
   factory $ArticulatedVehicleGeometryCopyWith(ArticulatedVehicleGeometry value, $Res Function(ArticulatedVehicleGeometry) _then) = _$ArticulatedVehicleGeometryCopyWithImpl;
 @override @useResult
 $Res call({
- double length, double width, double minTurningRadius, double steeringAngleMax, double trackWidth, double pivotToFrontAxle, double pivotToRearAxle, double frontAxleToFrontDistance, double rearAxleToHitchDistance, double rearAxleToDrawbarDistance, double rearAxleToEndDistance, double wheelDiameter, double wheelWidth, double? frontAxleToHitchDistance, double wheelSpacing, int numWheels
+ double length, double width, double minTurningRadius, double steeringAngleMax, double trackWidth, double pivotToFrontAxle, double pivotToRearAxle, double frontAxleToFrontDistance, double rearAxleToEndDistance, double wheelDiameter, double wheelWidth, double? rearAxleToHitchDistance, double? rearAxleToDrawbarDistance, double? frontAxleToHitchDistance, double wheelSpacing, int numWheels
 });
 
 
@@ -474,7 +474,7 @@ class _$ArticulatedVehicleGeometryCopyWithImpl<$Res>
 
 /// Create a copy of VehicleGeometry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? length = null,Object? width = null,Object? minTurningRadius = null,Object? steeringAngleMax = null,Object? trackWidth = null,Object? pivotToFrontAxle = null,Object? pivotToRearAxle = null,Object? frontAxleToFrontDistance = null,Object? rearAxleToHitchDistance = null,Object? rearAxleToDrawbarDistance = null,Object? rearAxleToEndDistance = null,Object? wheelDiameter = null,Object? wheelWidth = null,Object? frontAxleToHitchDistance = freezed,Object? wheelSpacing = null,Object? numWheels = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? length = null,Object? width = null,Object? minTurningRadius = null,Object? steeringAngleMax = null,Object? trackWidth = null,Object? pivotToFrontAxle = null,Object? pivotToRearAxle = null,Object? frontAxleToFrontDistance = null,Object? rearAxleToEndDistance = null,Object? wheelDiameter = null,Object? wheelWidth = null,Object? rearAxleToHitchDistance = freezed,Object? rearAxleToDrawbarDistance = freezed,Object? frontAxleToHitchDistance = freezed,Object? wheelSpacing = null,Object? numWheels = null,}) {
   return _then(ArticulatedVehicleGeometry(
 length: null == length ? _self.length : length // ignore: cast_nullable_to_non_nullable
 as double,width: null == width ? _self.width : width // ignore: cast_nullable_to_non_nullable
@@ -484,12 +484,12 @@ as double,trackWidth: null == trackWidth ? _self.trackWidth : trackWidth // igno
 as double,pivotToFrontAxle: null == pivotToFrontAxle ? _self.pivotToFrontAxle : pivotToFrontAxle // ignore: cast_nullable_to_non_nullable
 as double,pivotToRearAxle: null == pivotToRearAxle ? _self.pivotToRearAxle : pivotToRearAxle // ignore: cast_nullable_to_non_nullable
 as double,frontAxleToFrontDistance: null == frontAxleToFrontDistance ? _self.frontAxleToFrontDistance : frontAxleToFrontDistance // ignore: cast_nullable_to_non_nullable
-as double,rearAxleToHitchDistance: null == rearAxleToHitchDistance ? _self.rearAxleToHitchDistance : rearAxleToHitchDistance // ignore: cast_nullable_to_non_nullable
-as double,rearAxleToDrawbarDistance: null == rearAxleToDrawbarDistance ? _self.rearAxleToDrawbarDistance : rearAxleToDrawbarDistance // ignore: cast_nullable_to_non_nullable
 as double,rearAxleToEndDistance: null == rearAxleToEndDistance ? _self.rearAxleToEndDistance : rearAxleToEndDistance // ignore: cast_nullable_to_non_nullable
 as double,wheelDiameter: null == wheelDiameter ? _self.wheelDiameter : wheelDiameter // ignore: cast_nullable_to_non_nullable
 as double,wheelWidth: null == wheelWidth ? _self.wheelWidth : wheelWidth // ignore: cast_nullable_to_non_nullable
-as double,frontAxleToHitchDistance: freezed == frontAxleToHitchDistance ? _self.frontAxleToHitchDistance : frontAxleToHitchDistance // ignore: cast_nullable_to_non_nullable
+as double,rearAxleToHitchDistance: freezed == rearAxleToHitchDistance ? _self.rearAxleToHitchDistance : rearAxleToHitchDistance // ignore: cast_nullable_to_non_nullable
+as double?,rearAxleToDrawbarDistance: freezed == rearAxleToDrawbarDistance ? _self.rearAxleToDrawbarDistance : rearAxleToDrawbarDistance // ignore: cast_nullable_to_non_nullable
+as double?,frontAxleToHitchDistance: freezed == frontAxleToHitchDistance ? _self.frontAxleToHitchDistance : frontAxleToHitchDistance // ignore: cast_nullable_to_non_nullable
 as double?,wheelSpacing: null == wheelSpacing ? _self.wheelSpacing : wheelSpacing // ignore: cast_nullable_to_non_nullable
 as double,numWheels: null == numWheels ? _self.numWheels : numWheels // ignore: cast_nullable_to_non_nullable
 as int,

@@ -767,116 +767,6 @@ final class LoadEquipmentFromFileFamily extends $Family
   String toString() => r'loadEquipmentFromFileProvider';
 }
 
-/// A provider for saving [equipment] to a file in the user file directory.
-///
-/// Override the file name with [overrideName].
-
-@ProviderFor(saveEquipment)
-final saveEquipmentProvider = SaveEquipmentFamily._();
-
-/// A provider for saving [equipment] to a file in the user file directory.
-///
-/// Override the file name with [overrideName].
-
-final class SaveEquipmentProvider
-    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
-    with $FutureModifier<void>, $FutureProvider<void> {
-  /// A provider for saving [equipment] to a file in the user file directory.
-  ///
-  /// Override the file name with [overrideName].
-  SaveEquipmentProvider._({
-    required SaveEquipmentFamily super.from,
-    required (Equipment, {String? overrideName, bool downloadIfWeb})
-    super.argument,
-  }) : super(
-         retry: null,
-         name: r'saveEquipmentProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
-
-  @override
-  String debugGetCreateSourceHash() => _$saveEquipmentHash();
-
-  @override
-  String toString() {
-    return r'saveEquipmentProvider'
-        ''
-        '$argument';
-  }
-
-  @$internal
-  @override
-  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<void> create(Ref ref) {
-    final argument =
-        this.argument
-            as (Equipment, {String? overrideName, bool downloadIfWeb});
-    return saveEquipment(
-      ref,
-      argument.$1,
-      overrideName: argument.overrideName,
-      downloadIfWeb: argument.downloadIfWeb,
-    );
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is SaveEquipmentProvider && other.argument == argument;
-  }
-
-  @override
-  int get hashCode {
-    return argument.hashCode;
-  }
-}
-
-String _$saveEquipmentHash() => r'fb3ace3b464775329ba09cac30bf895097a2c639';
-
-/// A provider for saving [equipment] to a file in the user file directory.
-///
-/// Override the file name with [overrideName].
-
-final class SaveEquipmentFamily extends $Family
-    with
-        $FunctionalFamilyOverride<
-          FutureOr<void>,
-          (Equipment, {String? overrideName, bool downloadIfWeb})
-        > {
-  SaveEquipmentFamily._()
-    : super(
-        retry: null,
-        name: r'saveEquipmentProvider',
-        dependencies: null,
-        $allTransitiveDependencies: null,
-        isAutoDispose: true,
-      );
-
-  /// A provider for saving [equipment] to a file in the user file directory.
-  ///
-  /// Override the file name with [overrideName].
-
-  SaveEquipmentProvider call(
-    Equipment equipment, {
-    String? overrideName,
-    bool downloadIfWeb = false,
-  }) => SaveEquipmentProvider._(
-    argument: (
-      equipment,
-      overrideName: overrideName,
-      downloadIfWeb: downloadIfWeb,
-    ),
-    from: this,
-  );
-
-  @override
-  String toString() => r'saveEquipmentProvider';
-}
-
 /// A provider for exporting [equipment] to a file.
 ///
 /// Override the file name with [overrideName].
@@ -1050,7 +940,7 @@ final class SavedEquipmentsProvider
   }
 }
 
-String _$savedEquipmentsHash() => r'4e17b9ddd42c14e3065250ab9db079194f62302f';
+String _$savedEquipmentsHash() => r'841b5cc8afade7fcfb968e8d383e5c4a10244028';
 
 /// A provider for deleting [equipment] from the user file system.
 ///
@@ -1213,7 +1103,7 @@ final class ImportEquipmentProvider
   }
 }
 
-String _$importEquipmentHash() => r'ec1b325e5b97f87135b06846527c4c3a904eacd8';
+String _$importEquipmentHash() => r'cd500b494d0909a96e3f229af13d389d6e74ec4d';
 
 /// A provider for importing a equipment configuration from a file and applying
 /// it to the [ConfiguredEquipment] provider.
@@ -1328,4 +1218,265 @@ final class ExportEquipmentsFamily extends $Family
 
   @override
   String toString() => r'exportEquipmentsProvider';
+}
+
+/// A provider for getting implements from the database.
+
+@ProviderFor(implements)
+final implementsProvider = ImplementsFamily._();
+
+/// A provider for getting implements from the database.
+
+final class ImplementsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Equipment>>,
+          List<Equipment>,
+          FutureOr<List<Equipment>>
+        >
+    with $FutureModifier<List<Equipment>>, $FutureProvider<List<Equipment>> {
+  /// A provider for getting implements from the database.
+  ImplementsProvider._({
+    required ImplementsFamily super.from,
+    required ({int limit, int? offset}) super.argument,
+  }) : super(
+         retry: null,
+         name: r'implementsProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$implementsHash();
+
+  @override
+  String toString() {
+    return r'implementsProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Equipment>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Equipment>> create(Ref ref) {
+    final argument = this.argument as ({int limit, int? offset});
+    return implements(ref, limit: argument.limit, offset: argument.offset);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ImplementsProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$implementsHash() => r'6160adafb06c35d976a9ca752e861554af6c08b3';
+
+/// A provider for getting implements from the database.
+
+final class ImplementsFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<List<Equipment>>,
+          ({int limit, int? offset})
+        > {
+  ImplementsFamily._()
+    : super(
+        retry: null,
+        name: r'implementsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// A provider for getting implements from the database.
+
+  ImplementsProvider call({int limit = 10, int? offset}) =>
+      ImplementsProvider._(
+        argument: (limit: limit, offset: offset),
+        from: this,
+      );
+
+  @override
+  String toString() => r'implementsProvider';
+}
+
+/// A provider for inserting [implement] into the database.
+
+@ProviderFor(insertImplement)
+final insertImplementProvider = InsertImplementFamily._();
+
+/// A provider for inserting [implement] into the database.
+
+final class InsertImplementProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+    with $FutureModifier<void>, $FutureProvider<void> {
+  /// A provider for inserting [implement] into the database.
+  InsertImplementProvider._({
+    required InsertImplementFamily super.from,
+    required (Equipment, {bool setLoaded}) super.argument,
+  }) : super(
+         retry: null,
+         name: r'insertImplementProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$insertImplementHash();
+
+  @override
+  String toString() {
+    return r'insertImplementProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<void> create(Ref ref) {
+    final argument = this.argument as (Equipment, {bool setLoaded});
+    return insertImplement(ref, argument.$1, setLoaded: argument.setLoaded);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is InsertImplementProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$insertImplementHash() => r'febf0870877e5b47dc6c95e6f4efcee08975a060';
+
+/// A provider for inserting [implement] into the database.
+
+final class InsertImplementFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<void>,
+          (Equipment, {bool setLoaded})
+        > {
+  InsertImplementFamily._()
+    : super(
+        retry: null,
+        name: r'insertImplementProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  /// A provider for inserting [implement] into the database.
+
+  InsertImplementProvider call(Equipment implement, {bool setLoaded = false}) =>
+      InsertImplementProvider._(
+        argument: (implement, setLoaded: setLoaded),
+        from: this,
+      );
+
+  @override
+  String toString() => r'insertImplementProvider';
+}
+
+/// A provider for updating [implement] in the database.
+
+@ProviderFor(updateImplement)
+final updateImplementProvider = UpdateImplementFamily._();
+
+/// A provider for updating [implement] in the database.
+
+final class UpdateImplementProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+    with $FutureModifier<void>, $FutureProvider<void> {
+  /// A provider for updating [implement] in the database.
+  UpdateImplementProvider._({
+    required UpdateImplementFamily super.from,
+    required (Equipment, {bool setLoaded}) super.argument,
+  }) : super(
+         retry: null,
+         name: r'updateImplementProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$updateImplementHash();
+
+  @override
+  String toString() {
+    return r'updateImplementProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<void> create(Ref ref) {
+    final argument = this.argument as (Equipment, {bool setLoaded});
+    return updateImplement(ref, argument.$1, setLoaded: argument.setLoaded);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is UpdateImplementProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$updateImplementHash() => r'92c289aa4be14c8b945a3133fb9551a24a619ac3';
+
+/// A provider for updating [implement] in the database.
+
+final class UpdateImplementFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<void>,
+          (Equipment, {bool setLoaded})
+        > {
+  UpdateImplementFamily._()
+    : super(
+        retry: null,
+        name: r'updateImplementProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  /// A provider for updating [implement] in the database.
+
+  UpdateImplementProvider call(Equipment implement, {bool setLoaded = false}) =>
+      UpdateImplementProvider._(
+        argument: (implement, setLoaded: setLoaded),
+        from: this,
+      );
+
+  @override
+  String toString() => r'updateImplementProvider';
 }

@@ -77,7 +77,7 @@ class GuidanceMenu extends ConsumerWidget {
                     // updated vehicle.
                     Timer(const Duration(milliseconds: 250), () {
                       final vehicle = ref.read(mainVehicleProvider);
-                      ref.read(saveVehicleProvider(vehicle));
+                      ref.read(updateVehicleProvider(vehicle));
                       Logger.instance.i(
                         '''Updated vehicle path tracking mode: $oldValue -> ${vehicle.pathTrackingParameters.mode}''',
                       );

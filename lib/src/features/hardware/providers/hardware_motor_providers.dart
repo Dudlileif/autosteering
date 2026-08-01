@@ -300,7 +300,7 @@ FutureOr<void> getSteeringHardwareConfig(Ref ref) async {
       ref.read(simInputProvider.notifier).send(steeringHardwareConfig);
       Timer(const Duration(milliseconds: 100), () {
         final vehicle = ref.read(mainVehicleProvider);
-        ref.read(saveVehicleProvider(vehicle));
+        ref.read(updateVehicleProvider(vehicle));
         Logger.instance.i(
           '''Updated vehicle motor config: ${vehicle.steeringHardwareConfig}''',
         );

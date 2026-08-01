@@ -90,7 +90,7 @@ class ImuConfigurator extends StatelessWidget {
                       // updated vehicle.
                       Timer(const Duration(milliseconds: 100), () {
                         final vehicle = ref.watch(mainVehicleProvider);
-                        ref.read(saveVehicleProvider(vehicle));
+                        ref.read(updateVehicleProvider(vehicle));
                         Logger.instance.i(
                           '''Updated vehicle IMU use yaw: ${!value} -> ${vehicle.imu.config.useYaw}''',
                         );
@@ -128,7 +128,7 @@ class ImuConfigurator extends StatelessWidget {
                       // updated vehicle.
                       Timer(const Duration(milliseconds: 100), () {
                         final vehicle = ref.watch(mainVehicleProvider);
-                        ref.read(saveVehicleProvider(vehicle));
+                        ref.read(updateVehicleProvider(vehicle));
                         Logger.instance.i(
                           '''Updated vehicle IMU use pitch: ${!value} -> ${vehicle.imu.config.usePitch}''',
                         );
@@ -167,7 +167,7 @@ class ImuConfigurator extends StatelessWidget {
                       // updated vehicle.
                       Timer(const Duration(milliseconds: 100), () {
                         final vehicle = ref.watch(mainVehicleProvider);
-                        ref.read(saveVehicleProvider(vehicle));
+                        ref.read(updateVehicleProvider(vehicle));
                         Logger.instance.i(
                           '''Updated vehicle IMU use roll: ${!value} -> ${vehicle.imu.config.useRoll}''',
                         );
@@ -205,7 +205,7 @@ class ImuConfigurator extends StatelessWidget {
                       // updated vehicle.
                       Timer(const Duration(milliseconds: 100), () {
                         final vehicle = ref.watch(mainVehicleProvider);
-                        ref.read(saveVehicleProvider(vehicle));
+                        ref.read(updateVehicleProvider(vehicle));
                         Logger.instance.i(
                           '''Updated vehicle IMU swap pitch and roll: ${!value} -> ${vehicle.imu.config.swapPitchAndRoll}''',
                         );
@@ -243,7 +243,7 @@ class ImuConfigurator extends StatelessWidget {
                       // updated vehicle.
                       Timer(const Duration(milliseconds: 100), () {
                         final vehicle = ref.watch(mainVehicleProvider);
-                        ref.read(saveVehicleProvider(vehicle));
+                        ref.read(updateVehicleProvider(vehicle));
                         Logger.instance.i(
                           '''Updated vehicle IMU invert pitch: ${!value} -> ${vehicle.imu.config.invertPitch}''',
                         );
@@ -281,7 +281,7 @@ class ImuConfigurator extends StatelessWidget {
                       // updated vehicle.
                       Timer(const Duration(milliseconds: 100), () {
                         final vehicle = ref.watch(mainVehicleProvider);
-                        ref.read(saveVehicleProvider(vehicle));
+                        ref.read(updateVehicleProvider(vehicle));
                         Logger.instance.i(
                           '''Updated vehicle IMU invert roll: ${!value} -> ${vehicle.imu.config.invertRoll}''',
                         );
@@ -337,7 +337,7 @@ class ImuConfigurator extends StatelessWidget {
                       // updated vehicle.
                       Timer(const Duration(milliseconds: 100), () {
                         final vehicle = ref.watch(mainVehicleProvider);
-                        ref.read(saveVehicleProvider(vehicle));
+                        ref.read(updateVehicleProvider(vehicle));
                         Logger.instance.i(
                           '''Updated vehicle IMU only use GNSS synced readings: ${!value} -> ${vehicle.imu.config.useOnlyGnssSyncedReadings}''',
                         );
@@ -493,7 +493,7 @@ class ImuConfigurator extends StatelessWidget {
                     // updated vehicle.
                     Timer(const Duration(milliseconds: 1000), () {
                       final vehicle = ref.watch(mainVehicleProvider);
-                      ref.read(saveVehicleProvider(vehicle));
+                      ref.read(updateVehicleProvider(vehicle));
                       Logger.instance.i(
                         '''Updated vehicle IMU zero values: $oldValues -> ${vehicle.imu.config.zeroValues}''',
                       );
@@ -521,7 +521,7 @@ class ImuConfigurator extends StatelessWidget {
                     // updated vehicle.
                     Timer(const Duration(milliseconds: 1000), () {
                       final vehicle = ref.watch(mainVehicleProvider);
-                      ref.read(saveVehicleProvider(vehicle));
+                      ref.read(updateVehicleProvider(vehicle));
                       Logger.instance.i(
                         '''Updated vehicle IMU zero values: $oldValues -> ${vehicle.imu.config.zeroValues}''',
                       );
@@ -675,7 +675,7 @@ class __DelayReadingsDialogState extends ConsumerState<_DelayReadingsDialog> {
                   // hopefully updated vehicle.
                   Timer(const Duration(milliseconds: 100), () {
                     final vehicle = ref.watch(mainVehicleProvider);
-                    ref.read(saveVehicleProvider(vehicle));
+                    ref.read(updateVehicleProvider(vehicle));
                     Logger.instance.i(
                       '''Updated vehicle IMU delay readings: $oldValue ms -> ${vehicle.imu.config.delayReadings} ms''',
                     );
@@ -768,7 +768,7 @@ class __PitchGainDialogState extends ConsumerState<_PitchGainDialog> {
                   // hopefully updated vehicle.
                   Timer(const Duration(milliseconds: 100), () {
                     final vehicle = ref.watch(mainVehicleProvider);
-                    ref.read(saveVehicleProvider(vehicle));
+                    ref.read(updateVehicleProvider(vehicle));
                     Logger.instance.i(
                       '''Updated vehicle IMU pitch gain: $oldValue -> ${vehicle.imu.config.pitchGain}''',
                     );
@@ -916,7 +916,7 @@ class __RollGainDialogState extends ConsumerState<_RollGainDialog> {
                   // hopefully updated vehicle.
                   Timer(const Duration(milliseconds: 100), () {
                     final vehicle = ref.watch(mainVehicleProvider);
-                    ref.read(saveVehicleProvider(vehicle));
+                    ref.read(updateVehicleProvider(vehicle));
                     final newValues = (
                       rollGain: vehicle.imu.config.rollGain,
                       asymmetricRollGainLeft:
@@ -984,7 +984,7 @@ class _ZeroPitchAndRollDialog extends ConsumerWidget {
                           // updated vehicle.
                           Timer(const Duration(milliseconds: 100), () {
                             final vehicle = ref.watch(mainVehicleProvider);
-                            ref.read(saveVehicleProvider(vehicle));
+                            ref.read(updateVehicleProvider(vehicle));
                             Logger.instance.i(
                               '''Updated vehicle IMU zero values: $oldValues -> ${vehicle.imu.config.zeroValues}''',
                             );

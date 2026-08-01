@@ -16,12 +16,13 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/database/models/models.dart';
+import 'package:autosteering/src/features/database/models/tables/table_timestamps_mixin.dart';
 import 'package:autosteering/src/features/database/models/tables/tables.dart';
 import 'package:drift/drift.dart';
 
 /// A table for elements that describes [Partfields] areas or [GuidancePatterns]
 /// or [GuidanceShifts] borders by [LineStrings] of various types.
-class Polygons extends Table {
+class Polygons extends Table with TableTimestamps {
   /// The local database ID of this.
   late final Column<int> id = integer().autoIncrement()();
 
@@ -92,4 +93,32 @@ class PolygonTypeConverter extends TypeConverter<PolygonType, int> {
 
   @override
   int toSql(PolygonType value) => value.value;
+}
+
+/// A [Polygon] extended with all children/refs loaded.
+class PolygonWithRefs extends Polygon {
+  /// A [Polygon] extended with all children/refs loaded.
+  factory PolygonWithRefs({
+    required Polygon polygon,
+    List<LineStringWithRefs>? lineStrings,
+  }) => PolygonWithRefs._(
+    id: polygon.id,
+    createdAt: polygon.createdAt,
+    type: polygon.type,
+    name: polygon.name,
+    lastUpdatedAt: polygon.lastUpdatedAt,
+    lineStrings: lineStrings ?? [],
+  );
+
+  PolygonWithRefs._({
+    required super.id,
+    required super.createdAt,
+    required super.type,
+    super.name,
+    super.lastUpdatedAt,
+    this.lineStrings = const [],
+  });
+
+  /// The loaded line strings.
+  final List<LineStringWithRefs> lineStrings;
 }

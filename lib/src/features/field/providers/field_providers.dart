@@ -19,7 +19,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
-import 'package:autosteering/src/features/database/database.dart' hide Point;
+import 'package:autosteering/src/features/database/database.dart'
+    hide LineString, Point, Polygon;
+import 'package:autosteering/src/features/database/models/tables/tables.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
@@ -408,7 +410,7 @@ FutureOr<List<Field>> savedFields(Ref ref) async => await ref
       final database = ref.watch(databaseProvider);
       final fieldsToAddToDatabase = <Field>[];
       final fieldLinks = await database.managers.links
-          .filter((link) => link.tableRef.equals('partfields'))
+          .filter((link) => link.tableRef.equals(.partfields))
           .get();
       for (final field in fields) {
         if (!fieldLinks.map((field) => field.linkValue).contains(field.uuid)) {
@@ -424,12 +426,11 @@ FutureOr<List<Field>> savedFields(Ref ref) async => await ref
             area: field.areaWithoutHoles,
             createdAt: Value.absentIfNull(field.createdAt),
             lastUpdatedAt: Value.absentIfNull(field.lastUpdatedAt),
-            lastUsedAt: Value.absentIfNull(field.lastUsed),
           ),
         );
         final link = await database.managers.links.createReturning(
           (o) => o(
-            tableRef: 'partfields',
+            tableRef: .partfields,
             refId: createdField.id,
             linkValue: Value.absentIfNull(field.uuid),
             name: Value(field.name),
@@ -641,3 +642,37 @@ FutureOr<void> exportFields(
     dialogTitle: dialogTitle,
   ).future,
 );
+
+// Database related providers
+
+/// A provider for getting fields from the database.
+@riverpod
+Future<List<PartfieldWithRefs>> partfields(Ref ref) async =>
+    ref.watch(databaseProvider).partfieldsDao.list();
+
+/// A provider for getting a partfield from the database.
+@riverpod
+Future<PartfieldWithRefs> partfield(Ref ref, int id) async =>
+    ref.watch(databaseProvider).partfieldsDao.getPartfield(id);
+
+/// A provider for inserting [partfield] into the database.
+@Riverpod(keepAlive: true)
+FutureOr<void> insertPartfield(Ref ref, PartfieldWithRefs partfield) async {
+  final database = ref.watch(databaseProvider);
+
+  await database.partfieldsDao.insertPartfield(partfield);
+  ref.invalidateSelf();
+}
+
+/// A provider for updating [partfield] in the database.
+@Riverpod(keepAlive: true)
+FutureOr<void> updatePartfield(Ref ref, PartfieldWithRefs partfield) async {
+  final database = ref.watch(databaseProvider);
+
+  await database.partfieldsDao.updatePartfield(partfield);
+
+  Logger.instance.i(
+    'Updated partfield ${partfield.id}: ${partfield.name}.',
+  );
+  ref.invalidateSelf();
+}

@@ -568,7 +568,7 @@ final class AlwaysPointNorthProvider
   }
 }
 
-String _$alwaysPointNorthHash() => r'34219ed8614164321d8799ffdd299d8f460ff0ad';
+String _$alwaysPointNorthHash() => r'bf18836c754c91c2301b9b272c15f8976aac48d2';
 
 /// Whether the map always should point to the north and not rotate.
 

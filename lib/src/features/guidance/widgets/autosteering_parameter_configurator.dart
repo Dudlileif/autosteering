@@ -109,7 +109,7 @@ class _PurePursuitConfigurator extends ConsumerWidget {
     // updated vehicle.
     Timer(const Duration(milliseconds: 100), () {
       final vehicle = ref.watch(mainVehicleProvider);
-      ref.read(saveVehicleProvider(vehicle));
+      ref.read(updateVehicleProvider(vehicle));
       Logger.instance.i(
         '''Updated vehicle pure pursuit parameters: ${vehicle.pathTrackingParameters.purePursuit}''',
       );
@@ -242,7 +242,7 @@ class _StanleyParametersConfigurator extends ConsumerWidget {
     // updated vehicle.
     Timer(const Duration(milliseconds: 100), () {
       final vehicle = ref.watch(mainVehicleProvider);
-      ref.read(saveVehicleProvider(vehicle));
+      ref.read(updateVehicleProvider(vehicle));
       Logger.instance.i(
         '''Updated vehicle Stanley parameters: ${vehicle.pathTrackingParameters.stanley}''',
       );

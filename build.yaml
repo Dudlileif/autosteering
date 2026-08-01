@@ -1,8 +1,11 @@
 targets:
-  $default:
+  drift:
+    auto_apply_builders: false
     builders:
-      drift_dev:
-        options:
+      drift_dev:analyzer:
+        enabled: true
+        options: &options
+          has_separate_analyzer: true # Required for not_shared
           schema_dir: drift_schemas/
           store_date_time_values_as_text: true
           databases:
@@ -13,12 +16,22 @@ targets:
               modules:
                 - json1
                 - fts5
-        generate_for:
+        generate_for: &generate_for
           include:
             - lib/**database/**.dart
           exclude:
             - lib/**.g.dart
             - lib/**.freezed.dart
+      drift_dev:not_shared:
+        options: *options
+        generate_for: *generate_for
+
+  $default:
+    dependencies:
+      - ":drift"
+    builders:
+      drift_dev:
+        enabled: false # Disabled since it is handled above.
       freezed:
         enabled: true
         generate_for:

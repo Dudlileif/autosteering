@@ -447,7 +447,7 @@ Future<List<int>> importMissingABTrackingsToDatabase(
   final database = ref.watch(databaseProvider);
 
   final guidanceLinks = await database.managers.links
-      .filter((link) => link.tableRef.equals('guidance_patterns'))
+      .filter((link) => link.tableRef.equals(.guidancePatterns))
       .get();
 
   final trackingsToAdd = <ABTracking>[];
@@ -580,7 +580,7 @@ Future<List<int>> importMissingABTrackingsToDatabase(
     );
     final link = await database.managers.links.createReturning(
       (o) => o(
-        tableRef: 'guidance_patterns',
+        tableRef: .guidancePatterns,
         refId: patternId,
         linkValue: Value(tracking.uuid),
         name: Value.absentIfNull(tracking.name),

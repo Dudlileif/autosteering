@@ -72,12 +72,13 @@ ArticulatedVehicleGeometry _$ArticulatedVehicleGeometryFromJson(
   pivotToRearAxle: (json['pivotToRearAxle'] as num).toDouble(),
   frontAxleToFrontDistance: (json['frontAxleToFrontDistance'] as num)
       .toDouble(),
-  rearAxleToHitchDistance: (json['rearAxleToHitchDistance'] as num).toDouble(),
-  rearAxleToDrawbarDistance: (json['rearAxleToDrawbarDistance'] as num)
-      .toDouble(),
   rearAxleToEndDistance: (json['rearAxleToEndDistance'] as num).toDouble(),
   wheelDiameter: (json['wheelDiameter'] as num).toDouble(),
   wheelWidth: (json['wheelWidth'] as num).toDouble(),
+  rearAxleToHitchDistance: (json['rearAxleToHitchDistance'] as num?)
+      ?.toDouble(),
+  rearAxleToDrawbarDistance: (json['rearAxleToDrawbarDistance'] as num?)
+      ?.toDouble(),
   frontAxleToHitchDistance: (json['frontAxleToHitchDistance'] as num?)
       ?.toDouble(),
   wheelSpacing: (json['wheelSpacing'] as num?)?.toDouble() ?? 0.05,
@@ -96,11 +97,11 @@ Map<String, dynamic> _$ArticulatedVehicleGeometryToJson(
   'pivotToFrontAxle': instance.pivotToFrontAxle,
   'pivotToRearAxle': instance.pivotToRearAxle,
   'frontAxleToFrontDistance': instance.frontAxleToFrontDistance,
-  'rearAxleToHitchDistance': instance.rearAxleToHitchDistance,
-  'rearAxleToDrawbarDistance': instance.rearAxleToDrawbarDistance,
   'rearAxleToEndDistance': instance.rearAxleToEndDistance,
   'wheelDiameter': instance.wheelDiameter,
   'wheelWidth': instance.wheelWidth,
+  'rearAxleToHitchDistance': instance.rearAxleToHitchDistance,
+  'rearAxleToDrawbarDistance': instance.rearAxleToDrawbarDistance,
   'frontAxleToHitchDistance': instance.frontAxleToHitchDistance,
   'wheelSpacing': instance.wheelSpacing,
   'numWheels': instance.numWheels,

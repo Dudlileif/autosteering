@@ -925,7 +925,7 @@ final class ImportMissingPathTrackingsToDatabaseProvider
 }
 
 String _$importMissingPathTrackingsToDatabaseHash() =>
-    r'15ff275789cb1be07c01cf7add71160ffedcd84c';
+    r'7ba8679050b57cefc2300c881debe12354c08822';
 
 /// A provider for importing missing path trackings to the database.
 
@@ -1128,7 +1128,7 @@ final class ImportPathTrackingProvider
 }
 
 String _$importPathTrackingHash() =>
-    r'75371e12f41f04fe902fa7bdbe9464606f2a57b3';
+    r'81c1a0d7b0e3e708804a6684421961186c516cc7';
 
 /// A provider for importing a [PathTracking] from a file and applying it to
 /// the [ConfiguredPathTracking] provider.

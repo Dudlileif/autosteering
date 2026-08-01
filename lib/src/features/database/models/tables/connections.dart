@@ -42,8 +42,48 @@ class Connections extends Table {
   )();
 
   @override
-  Set<Column<Object>>? get primaryKey => {parentConnector, childConnector};
+  Set<Column<Object>>? get primaryKey => {
+    task,
+    parentConnector,
+    childConnector,
+  };
 
   @override
   bool get withoutRowId => true;
+}
+
+/// A [Connection] extended with all children/refs loaded.
+class ConnectionWithRefs extends Connection {
+  /// A [Connection] extended with all children/refs loaded.
+  factory ConnectionWithRefs({
+    required Connection connection,
+    required Task taskObj,
+    required ConnectorWithRefs parentConnectorObj,
+    required ConnectorWithRefs childConnectorObj,
+  }) => ConnectionWithRefs._(
+    task: connection.task,
+    parentConnector: connection.parentConnector,
+    childConnector: connection.childConnector,
+    taskObj: taskObj,
+    parentConnectorObj: parentConnectorObj,
+    childConnectorObj: childConnectorObj,
+  );
+
+  const ConnectionWithRefs._({
+    required super.task,
+    required super.parentConnector,
+    required super.childConnector,
+    required this.taskObj,
+    required this.parentConnectorObj,
+    required this.childConnectorObj,
+  });
+
+  /// The loaded parent task.
+  final Task taskObj;
+
+  /// The loaded parent connector.
+  final ConnectorWithRefs parentConnectorObj;
+
+  /// The loaded child connector.
+  final ConnectorWithRefs childConnectorObj;
 }

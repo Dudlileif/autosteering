@@ -301,7 +301,7 @@ class _MotorPage extends ConsumerWidget {
                   ),
                 );
                 final vehicle = ref.watch(mainVehicleProvider);
-                ref.read(saveVehicleProvider(vehicle));
+                ref.read(updateVehicleProvider(vehicle));
                 Logger.instance.i(
                   '''Updated vehicle motor config reverse output: ${!value} -> ${vehicle.steeringHardwareConfig.reverseDirection}''',
                 );
@@ -376,7 +376,7 @@ class _MotorPage extends ConsumerWidget {
               ),
             );
             final vehicle = ref.watch(mainVehicleProvider);
-            ref.read(saveVehicleProvider(vehicle));
+            ref.read(updateVehicleProvider(vehicle));
             Logger.instance.i(
               '''Updated vehicle motor config max RPM: ${oldConfig.maxRPM} -> ${vehicle.steeringHardwareConfig.maxRPM}''',
             );
@@ -422,7 +422,7 @@ class _MotorPage extends ConsumerWidget {
               ),
             );
             final vehicle = ref.watch(mainVehicleProvider);
-            ref.read(saveVehicleProvider(vehicle));
+            ref.read(updateVehicleProvider(vehicle));
             Logger.instance.i(
               '''Updated vehicle motor config max acceleration RPM/s: $oldValue -> ${vehicle.steeringHardwareConfig.maxAcceleration}''',
             );
@@ -468,7 +468,7 @@ class _MotorPage extends ConsumerWidget {
               ),
             );
             final vehicle = ref.watch(mainVehicleProvider);
-            ref.read(saveVehicleProvider(vehicle));
+            ref.read(updateVehicleProvider(vehicle));
             Logger.instance.i(
               '''Updated vehicle motor config max deceleration RPM/s: $oldValue -> ${vehicle.steeringHardwareConfig.maxDeceleration}''',
             );
@@ -517,7 +517,7 @@ class _MotorPage extends ConsumerWidget {
               ),
             );
             final vehicle = ref.watch(mainVehicleProvider);
-            ref.read(saveVehicleProvider(vehicle));
+            ref.read(updateVehicleProvider(vehicle));
             Logger.instance.i(
               '''Updated vehicle motor config micro steps²: $oldValue -> ${vehicle.steeringHardwareConfig.microSteps}''',
             );
@@ -562,7 +562,7 @@ class _MotorPage extends ConsumerWidget {
               ),
             );
             final vehicle = ref.watch(mainVehicleProvider);
-            ref.read(saveVehicleProvider(vehicle));
+            ref.read(updateVehicleProvider(vehicle));
             Logger.instance.i(
               '''Updated vehicle motor steps per rotation: $oldValue -> ${vehicle.steeringHardwareConfig.stepsPerRotation}''',
             );
@@ -607,7 +607,7 @@ class _MotorPage extends ConsumerWidget {
               ),
             );
             final vehicle = ref.watch(mainVehicleProvider);
-            ref.read(saveVehicleProvider(vehicle));
+            ref.read(updateVehicleProvider(vehicle));
             Logger.instance.i(
               '''Updated vehicle motor config RMS current: $oldValue -> ${vehicle.steeringHardwareConfig.rmsCurrent}''',
             );
@@ -653,7 +653,7 @@ class _MotorPage extends ConsumerWidget {
               ),
             );
             final vehicle = ref.watch(mainVehicleProvider);
-            ref.read(saveVehicleProvider(vehicle));
+            ref.read(updateVehicleProvider(vehicle));
             Logger.instance.i(
               '''Updated vehicle motor config StallGuard threshold: $oldValue -> ${vehicle.steeringHardwareConfig.stallguardThreshold}''',
             );
@@ -703,7 +703,7 @@ class _MotorPage extends ConsumerWidget {
               ),
             );
             final vehicle = ref.watch(mainVehicleProvider);
-            ref.read(saveVehicleProvider(vehicle));
+            ref.read(updateVehicleProvider(vehicle));
             Logger.instance.i(
               '''Updated vehicle motor config StealthChop threshold RPM: $oldValue -> ${vehicle.steeringHardwareConfig.stealthChopThresholdRPM}''',
             );
@@ -757,7 +757,7 @@ class _MotorPage extends ConsumerWidget {
               ),
             );
             final vehicle = ref.watch(mainVehicleProvider);
-            ref.read(saveVehicleProvider(vehicle));
+            ref.read(updateVehicleProvider(vehicle));
             Logger.instance.i(
               '''Updated vehicle motor config high velocity chopper mode change threshold RPM: $oldValue -> ${vehicle.steeringHardwareConfig.highVelocityChopperModeChangeThresholdRPM}''',
             );
@@ -806,7 +806,7 @@ class _MotorPage extends ConsumerWidget {
               ),
             );
             final vehicle = ref.watch(mainVehicleProvider);
-            ref.read(saveVehicleProvider(vehicle));
+            ref.read(updateVehicleProvider(vehicle));
             Logger.instance.i(
               '''Updated vehicle motor config CoolStep threshold RPM: $oldValue -> ${vehicle.steeringHardwareConfig.coolstepThresholdRPM}''',
             );
@@ -855,7 +855,7 @@ class _MotorPage extends ConsumerWidget {
               ),
             );
             final vehicle = ref.watch(mainVehicleProvider);
-            ref.read(saveVehicleProvider(vehicle));
+            ref.read(updateVehicleProvider(vehicle));
             Logger.instance.i(
               '''Updated vehicle motor config CoolStep threshold RPM: $oldValue -> ${vehicle.steeringHardwareConfig.dcStepThresholdRPM}''',
             );
@@ -914,7 +914,7 @@ class _WasPage extends ConsumerWidget {
                 // updated vehicle.
                 Timer(const Duration(milliseconds: 100), () {
                   final vehicle = ref.watch(mainVehicleProvider);
-                  ref.read(saveVehicleProvider(vehicle));
+                  ref.read(updateVehicleProvider(vehicle));
                   Logger.instance.i(
                     '''Updated vehicle WAS config use WAS: ${!value} -> ${vehicle.was.config.useWas}''',
                   );
@@ -954,7 +954,7 @@ class _WasPage extends ConsumerWidget {
                 // updated vehicle.
                 Timer(const Duration(milliseconds: 100), () {
                   final vehicle = ref.watch(mainVehicleProvider);
-                  ref.read(saveVehicleProvider(vehicle));
+                  ref.read(updateVehicleProvider(vehicle));
                   Logger.instance.i(
                     '''Updated vehicle WAS config invert input: ${!value} -> ${vehicle.was.config.invertInput}''',
                   );
@@ -987,7 +987,7 @@ class _WasPage extends ConsumerWidget {
             // updated vehicle.
             Timer(const Duration(milliseconds: 100), () {
               final vehicle = ref.watch(mainVehicleProvider);
-              ref.read(saveVehicleProvider(vehicle));
+              ref.read(updateVehicleProvider(vehicle));
               Logger.instance.i(
                 '''Updated vehicle WAS config bits: $oldValue -> ${vehicle.was.config.bits}''',
               );
@@ -1118,7 +1118,7 @@ class _WasPage extends ConsumerWidget {
                 ),
               );
               final vehicle = ref.watch(mainVehicleProvider);
-              ref.read(saveVehicleProvider(vehicle));
+              ref.read(updateVehicleProvider(vehicle));
               Logger.instance.i(
                 '''Updated vehicle WAS min point: $oldValue -> ${vehicle.steeringHardwareConfig.wasMin}''',
               );
@@ -1165,7 +1165,7 @@ class _WasPage extends ConsumerWidget {
                   ),
                 );
                 final vehicle = ref.watch(mainVehicleProvider);
-                ref.read(saveVehicleProvider(vehicle));
+                ref.read(updateVehicleProvider(vehicle));
                 Logger.instance.i(
                   '''Updated vehicle WAS min point: $oldValue -> ${vehicle.steeringHardwareConfig.wasMin}''',
                 );
@@ -1227,7 +1227,7 @@ class _WasPage extends ConsumerWidget {
                 ),
               );
               final vehicle = ref.watch(mainVehicleProvider);
-              ref.read(saveVehicleProvider(vehicle));
+              ref.read(updateVehicleProvider(vehicle));
               Logger.instance.i(
                 '''Updated vehicle WAS center point: $oldValue -> ${vehicle.steeringHardwareConfig.wasCenter}''',
               );
@@ -1274,7 +1274,7 @@ class _WasPage extends ConsumerWidget {
                   ),
                 );
                 final vehicle = ref.watch(mainVehicleProvider);
-                ref.read(saveVehicleProvider(vehicle));
+                ref.read(updateVehicleProvider(vehicle));
                 Logger.instance.i(
                   '''Updated vehicle WAS center point: $oldValue -> ${vehicle.steeringHardwareConfig.wasCenter}''',
                 );
@@ -1335,7 +1335,7 @@ class _WasPage extends ConsumerWidget {
                 ),
               );
               final vehicle = ref.watch(mainVehicleProvider);
-              ref.read(saveVehicleProvider(vehicle));
+              ref.read(updateVehicleProvider(vehicle));
               Logger.instance.i(
                 '''Updated vehicle WAS center point: $oldValue -> ${vehicle.steeringHardwareConfig.wasMax}''',
               );
@@ -1382,7 +1382,7 @@ class _WasPage extends ConsumerWidget {
                   ),
                 );
                 final vehicle = ref.watch(mainVehicleProvider);
-                ref.read(saveVehicleProvider(vehicle));
+                ref.read(updateVehicleProvider(vehicle));
                 Logger.instance.i(
                   '''Updated vehicle WAS max point: $oldValue -> ${vehicle.steeringHardwareConfig.wasMax}''',
                 );
@@ -1443,7 +1443,7 @@ class _PidPage extends ConsumerWidget {
     // updated vehicle.
     Timer(const Duration(milliseconds: 100), () {
       final vehicle = ref.watch(mainVehicleProvider);
-      ref.read(saveVehicleProvider(vehicle));
+      ref.read(updateVehicleProvider(vehicle));
       Logger.instance.i(
         '''Updated vehicle PID parameters: ${vehicle.pidParameters}''',
       );
@@ -1788,7 +1788,7 @@ class __VehicleThresholdsDialogState
                     // updated vehicle.
                     Timer(const Duration(milliseconds: 100), () {
                       final vehicle = ref.watch(mainVehicleProvider);
-                      ref.read(saveVehicleProvider(vehicle));
+                      ref.read(updateVehicleProvider(vehicle));
                       Logger.instance.i(
                         '''Updated vehicle threshold velocities: $oldValues -> ${vehicle.thresholds}''',
                       );

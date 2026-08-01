@@ -463,7 +463,7 @@ final class ImportSettingsProvider
   }
 }
 
-String _$importSettingsHash() => r'b93513f249c5465c665975de7e221e95e04183ec';
+String _$importSettingsHash() => r'ef80741b11f647eadba4ce092493fb091a659284';
 
 /// A provider for importing [Settings] from a file.
 

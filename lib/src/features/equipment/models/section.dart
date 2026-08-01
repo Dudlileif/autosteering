@@ -54,6 +54,10 @@ class Section {
   ///
   /// [workedPathColor] is an override color to use when painting the worked
   /// paths on the map.
+  ///
+  /// [createdAt] is when this section was created.
+  ///
+  /// [lastUpdatedAt] is when this section was last updated.
   Section({
     required this.longitudinalOffset,
     required this.lateralOffset,
@@ -67,7 +71,9 @@ class Section {
     this.workedPathColor,
     this.id,
     this.implementId,
-  });
+    DateTime? createdAt,
+    this.lastUpdatedAt,
+  }) : createdAt = createdAt ?? DateTime.now();
 
   /// Factory for creating a [Section] from the database.
   factory Section.fromDatabase({
@@ -83,6 +89,8 @@ class Section {
     Color? workedPathColor,
     int? id,
     int? implement,
+    DateTime? createdAt,
+    DateTime? lastUpdatedAt,
   }) => Section(
     longitudinalOffset: longitudinalOffset,
     lateralOffset: lateralOffset,
@@ -96,6 +104,8 @@ class Section {
     workedPathColor: workedPathColor,
     id: id,
     implementId: implement,
+    createdAt: createdAt,
+    lastUpdatedAt: lastUpdatedAt,
   );
 
   /// Creates a [Section] from the [json] object.
@@ -171,6 +181,12 @@ class Section {
 
   /// The override color to use when painting the worked paths on the map.
   Color? workedPathColor;
+
+  /// When this was created.
+  DateTime createdAt;
+
+  /// When this was last updated.
+  DateTime? lastUpdatedAt;
 
   /// Returns a new [Section] based on this one, but with
   /// parameters/variables altered.

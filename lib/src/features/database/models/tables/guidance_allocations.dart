@@ -16,11 +16,12 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/database/database.dart';
+import 'package:autosteering/src/features/database/models/tables/table_timestamps_mixin.dart';
 import 'package:autosteering/src/features/database/models/tables/tables.dart';
 import 'package:drift/drift.dart';
 
 /// A table for allocations of [GuidanceGroups] bindings in [Tasks].
-class GuidanceAllocations extends Table {
+class GuidanceAllocations extends Table with TableTimestamps {
   /// The local database ID of this.
   late final Column<int> id = integer().autoIncrement()();
 
@@ -34,12 +35,38 @@ class GuidanceAllocations extends Table {
     GuidanceGroups,
     #id,
   )();
+}
 
-  /// When this was created.
-  late final Column<DateTime> createdAt = dateTime().clientDefault(
-    DateTime.now,
-  )();
+/// A [GuidanceAllocation] extended with all children/refs loaded.
+class GuidanceAllocationWithRefs extends GuidanceAllocation {
+  /// A [GuidanceAllocation] extended with all children/refs loaded.
+  factory GuidanceAllocationWithRefs({
+    required GuidanceAllocation guidanceAllocation,
+    required GuidanceGroupWithRefs guidanceGroupObj,
+    required Task taskObj,
+  }) => GuidanceAllocationWithRefs._(
+    id: guidanceAllocation.id,
+    task: guidanceAllocation.task,
+    guidanceGroup: guidanceAllocation.guidanceGroup,
+    createdAt: guidanceAllocation.createdAt,
+    lastUpdatedAt: guidanceAllocation.lastUpdatedAt,
+    guidanceGroupObj: guidanceGroupObj,
+    taskObj: taskObj,
+  );
 
-  /// When this was last updated.
-  late final Column<DateTime> lastUpdatedAt = dateTime().nullable()();
+  const GuidanceAllocationWithRefs._({
+    required super.id,
+    required super.task,
+    required super.guidanceGroup,
+    required this.guidanceGroupObj,
+    required this.taskObj,
+    required super.createdAt,
+    super.lastUpdatedAt,
+  });
+
+  /// The loaded guidance group.
+  final GuidanceGroupWithRefs guidanceGroupObj;
+
+  /// The loaded task.
+  final Task taskObj;
 }

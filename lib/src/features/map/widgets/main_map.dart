@@ -74,8 +74,16 @@ class MainMap extends ConsumerWidget {
         initialCenter: ref.watch(offsetVehiclePositionProvider),
         initialRotation: switch (ref.watch(alwaysPointNorthProvider)) {
           true => 0,
-          false => ref.watch(
-            mainVehicleProvider.select((value) => value.bearing),
+          false => -ref.watch(
+            mainVehicleProvider.select(
+              (vehicle) => switch (vehicle) {
+                AxleSteeredVehicle(:final bearing) => bearing,
+                ArticulatedTractor(
+                  :final frontAxleAngle,
+                ) =>
+                  frontAxleAngle,
+              },
+            ),
           ),
         },
         onMapReady: ref.read(mapReadyProvider.notifier).ready,

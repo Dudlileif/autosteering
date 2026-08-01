@@ -15,24 +15,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:autosteering/src/features/database/models/tables/table_timestamps_mixin.dart';
+import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:drift/drift.dart';
 
 /// A table for implements.
-class Implements extends Table {
+@UseRowClass(Equipment, constructor: 'fromDatabase')
+class Implements extends Table with TableTimestamps {
   /// The local database ID of this.
   late final Column<int> id = integer().autoIncrement()();
 
   /// The name of this.
   late final Column<String> name = text().nullable()();
-
-  /// When this was last used.
-  late final Column<DateTime> lastUsedAt = dateTime().nullable()();
-
-  /// When this was created.
-  late final Column<DateTime> createdAt = dateTime().clientDefault(
-    DateTime.now,
-  )();
-
-  /// When this was last updated.
-  late final Column<DateTime> lastUpdatedAt = dateTime().nullable()();
 }

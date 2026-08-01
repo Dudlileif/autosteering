@@ -15,12 +15,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
+import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_connectors_page.dart';
 import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_dimensions_page.dart';
 import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_gnss_page.dart';
-import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_hitches_page.dart';
 import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_steering_page.dart';
 import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_type_selector_page.dart';
 import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_wheels_page.dart';
@@ -59,7 +58,7 @@ class _VehicleConfiguratorState extends ConsumerState<VehicleConfigurator>
     VehicleGnssPage(),
     VehicleWheelsPage(),
     VehicleSteeringPage(),
-    VehicleHitchesPage(),
+    VehicleConnectorsPage(),
   ];
 
   @override
@@ -346,8 +345,10 @@ class _ApplyConfigurationToMainVehicleButton extends ConsumerWidget {
               ref.read(mainVehicleProvider.notifier).update(vehicle);
 
               ref.read(simInputProvider.notifier).send(vehicle);
-              if (Device.isNative) {
-                ref.read(saveVehicleProvider(vehicle));
+              if (vehicle.id == null) {
+                ref.read(insertVehicleProvider(vehicle));
+              } else {
+                ref.read(updateVehicleProvider(vehicle));
               }
               Navigator.of(context).pop();
             }

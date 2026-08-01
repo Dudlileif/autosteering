@@ -85,9 +85,9 @@ final class ArticulatedTractor extends Vehicle {
         frontAxleToHitchDistance:
             hitches['front_axle_to_front_hitch_distance'] as double?,
         rearAxleToHitchDistance:
-            hitches['rear_axle_to_hitch_distance'] as double? ?? 1.9,
+            hitches['rear_axle_to_hitch_distance'] as double?,
         rearAxleToDrawbarDistance:
-            hitches['rear_axle_to_drawbar_distance'] as double? ?? 1.6,
+            hitches['rear_axle_to_drawbar_distance'] as double?,
       ),
     );
   }

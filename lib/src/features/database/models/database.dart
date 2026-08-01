@@ -17,6 +17,7 @@
 
 import 'dart:ui' show Color;
 
+import 'package:autosteering/src/features/database/models/daos/daos.dart';
 import 'package:autosteering/src/features/database/models/tables/tables.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/gnss/gnss.dart';
@@ -32,7 +33,7 @@ import 'package:path/path.dart' as path show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
-part 'database.g.dart';
+part 'database.drift.dart';
 
 // Update schema files with
 // $ dart run drift_dev schema dump lib/src/features/database/models/database.dart drift_schemas/
@@ -60,6 +61,19 @@ part 'database.g.dart';
     Sections,
     Tasks,
     Vehicles,
+  ],
+  daos: [
+    ConnectionsDao,
+    GuidanceAllocationsDao,
+    GuidanceGroupsDao,
+    GuidancePatternsDao,
+    ImplementsDao,
+    LineStringsDao,
+    PartfieldsDao,
+    PointsDao,
+    PolygonsDao,
+    TasksDao,
+    VehiclesDao,
   ],
 )
 /// The local SQLite database that stores all data.

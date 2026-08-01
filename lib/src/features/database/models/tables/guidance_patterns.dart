@@ -16,12 +16,13 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/database/models/models.dart';
+import 'package:autosteering/src/features/database/models/tables/table_timestamps_mixin.dart';
 import 'package:autosteering/src/features/database/models/tables/tables.dart';
 import 'package:drift/drift.dart';
 
 /// A table for elements that describes a pattern from [LineString] and a
 /// boundary [Polygon] to use with nagivation guidance (steering).
-class GuidancePatterns extends Table {
+class GuidancePatterns extends Table with TableTimestamps {
   /// The local database ID of this.
   late final Column<int> id = integer().autoIncrement()();
 
@@ -77,14 +78,6 @@ class GuidancePatterns extends Table {
   /// The number of swaths to the right of the linestring, as seen from the
   /// point A in the direction to the first next point or the [heading].
   late final Column<int> numberOfSwathsRight = integer().nullable()();
-
-  /// When this was created.
-  late final Column<DateTime> createdAt = dateTime().clientDefault(
-    DateTime.now,
-  )();
-
-  /// When this was last updated.
-  late final Column<DateTime> lastUpdatedAt = dateTime().nullable()();
 }
 
 /// An enumeration for the type of [GuidancePattern].
@@ -250,4 +243,55 @@ class GuidancePatternExtensionConverter
 
   @override
   int toSql(GuidancePatternExtension value) => value.value;
+}
+
+/// A [GuidancePattern] extended with all children/refs loaded.
+class GuidancePatternWithRefs extends GuidancePattern {
+  /// A [GuidancePattern] extended with all children/refs loaded.
+  factory GuidancePatternWithRefs({
+    required GuidancePattern guidancePattern,
+    required LineStringWithRefs lineStringObj,
+    PolygonWithRefs? borderPolygonObj,
+  }) => GuidancePatternWithRefs._(
+    id: guidancePattern.id,
+    lineString: guidancePattern.lineString,
+    borderPolygon: guidancePattern.borderPolygon,
+    type: guidancePattern.type,
+    name: guidancePattern.name,
+    heading: guidancePattern.heading,
+    radius: guidancePattern.radius,
+    options: guidancePattern.options,
+    propagationDirection: guidancePattern.propagationDirection,
+    extension: guidancePattern.extension,
+    numberOfSwathsLeft: guidancePattern.numberOfSwathsLeft,
+    numberOfSwathsRight: guidancePattern.numberOfSwathsRight,
+    createdAt: guidancePattern.createdAt,
+    lastUpdatedAt: guidancePattern.lastUpdatedAt,
+    borderPolygonObj: borderPolygonObj,
+    lineStringObj: lineStringObj,
+  );
+  GuidancePatternWithRefs._({
+    required super.id,
+    required super.lineString,
+    required super.type,
+    required super.createdAt,
+    required this.lineStringObj,
+    super.borderPolygon,
+    super.name,
+    super.heading,
+    super.radius,
+    super.options,
+    super.propagationDirection,
+    super.extension,
+    super.numberOfSwathsLeft,
+    super.numberOfSwathsRight,
+    super.lastUpdatedAt,
+    this.borderPolygonObj,
+  });
+
+  /// The loaded optional border polygon.
+  final PolygonWithRefs? borderPolygonObj;
+
+  /// The loaded line string.
+  final LineStringWithRefs lineStringObj;
 }

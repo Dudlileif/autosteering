@@ -44,7 +44,7 @@ final class ActiveWorkSessionProvider
   }
 }
 
-String _$activeWorkSessionHash() => r'd253c9e095a899b2dbb849b536fca44ef35dd2d2';
+String _$activeWorkSessionHash() => r'4d8129747227aeef33376dd0e1fa70d85a91ec99';
 
 /// A provider for holding the active [WorkSession].
 
@@ -565,7 +565,7 @@ final class SavedWorkSessionsProvider
   }
 }
 
-String _$savedWorkSessionsHash() => r'4b136017b3323798fbcc964f26e1be787a04f70e';
+String _$savedWorkSessionsHash() => r'3a8cfafbe6ba1725f6c84fe9f46b8492c0839134';
 
 /// A provider for deleting [workSession] from the user file system.
 ///
@@ -731,7 +731,7 @@ final class ImportWorkSessionProvider
   }
 }
 
-String _$importWorkSessionHash() => r'ce32f1b8879e7bfca1963d1256ed42039f319d07';
+String _$importWorkSessionHash() => r'8b8b97fe627889e7925c241fcab09b0d7886ebe5';
 
 /// A provider for importing a work session from a file and applying it
 /// to the [ActiveWorkSession] provider.

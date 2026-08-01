@@ -19,8 +19,10 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart'
     show Equipment;
 import 'package:autosteering/src/features/hitching/hitching.dart';
-import 'package:autosteering/src/features/vehicle/vehicle.dart' show Vehicle;
+import 'package:autosteering/src/features/vehicle/vehicle.dart'
+    show ArticulatedTractor, Vehicle;
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:geobase/geobase.dart';
 
 part 'connector.freezed.dart';
 part 'connector.g.dart';
@@ -97,6 +99,33 @@ abstract class Connector with _$Connector {
 
   /// The unique identifier of the parent [Hitchable].
   int get parentId => vehicleId ?? implementId!;
+
+  /// The geographic position of this in relation to the [parent].
+  Geographic position(Hitchable parent) {
+    final (position, bearing) = switch (parent) {
+      ArticulatedTractor(
+        :final rearAxlePosition,
+        :final bearing,
+        :final rearAxleAngle,
+      ) =>
+        (
+          rearAxlePosition,
+          bearing + rearAxleAngle,
+        ),
+      Hitchable(:final position, :final bearing) => (position, bearing),
+    };
+
+    return position.rhumb
+        .destinationPoint(
+          distance: longitudinalOffsetFromRef,
+          bearing: bearing,
+        )
+        .rhumb
+        .destinationPoint(
+          distance: lateralOffsetFromRef,
+          bearing: bearing + 90,
+        );
+  }
 }
 
 /// Which type of connector a [Connector] is using to connect to it's parent.

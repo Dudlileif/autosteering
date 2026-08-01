@@ -45,16 +45,7 @@ class Connection {
   final Connector parentConnector;
 
   /// The geographic point of this connection.
-  Geographic get connectionPoint => parent.position.rhumb
-      .destinationPoint(
-        distance: parentConnector.longitudinalOffsetFromRef,
-        bearing: parent.bearing,
-      )
-      .rhumb
-      .destinationPoint(
-        distance: parentConnector.lateralOffsetFromRef,
-        bearing: parent.bearing + 90,
-      );
+  Geographic get connectionPoint => parentConnector.position(parent);
 
   /// The geographic reference point of the [child].
   Geographic get childRefPosition => connectionPoint.rhumb

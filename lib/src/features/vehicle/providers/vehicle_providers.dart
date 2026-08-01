@@ -42,7 +42,7 @@ class MainVehicle extends _$MainVehicle {
       ..position = ref.read(homePositionProvider).geoPosition
       ..lastUsedAt = DateTime.now();
 
-    ref.read(saveVehicleProvider(vehicle));
+    ref.read(updateVehicleProvider(vehicle));
 
     return vehicle;
   }
@@ -96,25 +96,6 @@ class ActiveAutosteeringState extends _$ActiveAutosteeringState {
   void update(AutosteeringState value) => Future(() => state = value);
 }
 
-/// A provider for saving [vehicle] to a file in the user file directory.
-///
-/// Override the file name with [overrideName].
-@Riverpod(keepAlive: true)
-FutureOr<void> saveVehicle(
-  Ref ref,
-  Vehicle vehicle, {
-  String? overrideName,
-  bool downloadIfWeb = false,
-}) async => ref.watch(
-  saveJsonToFileDirectoryProvider(
-    object: vehicle,
-    fileName:
-        overrideName ?? vehicle.name ?? vehicle.uuid ?? 'vehicle_${vehicle.id}',
-    folder: 'vehicles',
-    downloadIfWeb: downloadIfWeb,
-  ).future,
-);
-
 /// A provider for saving [vehicle] to a file.
 ///
 /// Override the file name with [overrideName].
@@ -149,7 +130,7 @@ FutureOr<List<Vehicle>> savedVehicles(Ref ref) async => await ref
       final database = ref.watch(databaseProvider);
       final vehiclesToAddToDatabase = <Vehicle>[];
       final vehicleLinks = await database.managers.links
-          .filter((link) => link.tableRef.equals('vehicles'))
+          .filter((link) => link.tableRef.equals(.vehicles))
           .get();
       for (final vehicle in vehicles) {
         if (!vehicleLinks
@@ -159,50 +140,11 @@ FutureOr<List<Vehicle>> savedVehicles(Ref ref) async => await ref
         }
       }
       for (final vehicle in vehiclesToAddToDatabase) {
-        final createdVehicle = await database.managers.vehicles.createReturning(
-          (o) => o(
-            id: Value.absentIfNull(vehicle.id),
-            type: vehicle.type,
-            name: Value.absentIfNull(vehicle.name),
-            geometry: vehicle.geometry,
-            gnssAntennaConfig: Value.absentIfNull(
-              vehicle.gnssAntennaConfig,
-            ),
-            colorScheme: Value.absentIfNull(vehicle.manufacturerColors),
-            imuConfig: Value.absentIfNull(vehicle.imu.config),
-            wasConfig: Value.absentIfNull(vehicle.was.config),
-            steeringHardwareConfig: Value.absentIfNull(
-              vehicle.steeringHardwareConfig,
-            ),
-            pathTrackingParameters: Value.absentIfNull(
-              vehicle.pathTrackingParameters,
-            ),
-            thresholds: Value.absentIfNull(vehicle.thresholds),
-            createdAt: Value.absentIfNull(vehicle.createdAt),
-            lastUpdatedAt: Value.absentIfNull(vehicle.lastUpdatedAt),
-            lastUsedAt: Value.absentIfNull(vehicle.lastUsedAt),
-          ),
-        );
-        await database.managers.connectors.bulkCreate(
-          (o) => vehicle.connectors.map(
-            (connector) => o(
-              id: Value.absentIfNull(connector.id),
-              vehicle: Value(createdVehicle.id),
-              longitudinalOffsetFromRef: connector.longitudinalOffsetFromRef,
-              lateralOffsetFromRef: connector.lateralOffsetFromRef,
-              verticalOffsetFromRef: Value(
-                connector.verticalOffsetFromRef,
-              ),
-              relation: connector.relation,
-              type: connector.type,
-              angle: connector.angle,
-            ),
-          ),
-        );
+        final vehicleId = await database.vehiclesDao.insertVehicle(vehicle);
         final link = await database.managers.links.createReturning(
           (o) => o(
-            tableRef: 'vehicles',
-            refId: createdVehicle.id!,
+            tableRef: .vehicles,
+            refId: vehicleId,
             linkValue: Value.absentIfNull(vehicle.uuid),
             name: Value.absentIfNull(vehicle.name),
           ),
@@ -268,23 +210,22 @@ FutureOr<Vehicle?> loadVehicleFromFile(Ref ref, String path) async {
 /// The vehicle is found by sorting the saved vehicles by their last used
 /// property.
 @Riverpod(keepAlive: true)
-AsyncValue<Vehicle> lastUsedVehicle(Ref ref) =>
-    ref.watch(savedVehiclesProvider).whenData((data) {
-      if (data.isNotEmpty) {
-        final sorted = data
-          ..sort((a, b) => b.lastUsedAt.compareTo(a.lastUsedAt));
+Future<Vehicle> lastUsedVehicle(Ref ref) async {
+  final vehicle = await ref
+      .watch(databaseProvider)
+      .vehiclesDao
+      .getLastUsedVehicle;
+  if (vehicle != null) {
+    Logger.instance.i(
+      'Last used vehicle found: ${vehicle.id}: ${vehicle.name}',
+    );
 
-        final vehicle = sorted.first;
-        Logger.instance.i(
-          'Last used vehicle found: ${vehicle.name} | uuid: ${vehicle.uuid}.',
-        );
+    return vehicle;
+  }
+  Logger.instance.i('Last used vehicle not found, creating new.');
 
-        return vehicle;
-      }
-      Logger.instance.i('Last used vehicle not found, creating new.');
-
-      return PreconfiguredVehicles.tractor;
-    });
+  return PreconfiguredVehicles.tractor;
+}
 
 /// A provider for the target steering angle when using guidance.
 @Riverpod(keepAlive: true)
@@ -315,6 +256,22 @@ FutureOr<Vehicle?> importVehicle(Ref ref, {required String dialogTitle}) async {
       try {
         final json = jsonDecode(String.fromCharCodes(data));
         vehicle = Vehicle.fromJson(Map<String, dynamic>.from(json as Map));
+        final database = ref.watch(databaseProvider);
+        final vehicleLinks = await database.managers.links
+            .filter((link) => link.tableRef.equals(.vehicles))
+            .get();
+        if (!vehicleLinks.any((link) => link.linkValue == vehicle!.uuid)) {
+          final vehicleId = await database.vehiclesDao.insertVehicle(vehicle);
+          final link = await database.managers.links.createReturning(
+            (o) => o(
+              tableRef: .vehicles,
+              refId: vehicleId,
+              linkValue: Value.absentIfNull(vehicle!.uuid),
+              name: Value.absentIfNull(vehicle.name),
+            ),
+          );
+          vehicleLinks.add(link);
+        }
       } on Exception catch (error, stackTrace) {
         Logger.instance.w(
           'Failed to import vehicle.',
@@ -349,7 +306,7 @@ FutureOr<Vehicle?> importVehicle(Ref ref, {required String dialogTitle}) async {
     ref.read(configuredVehicleProvider.notifier).update(vehicle);
     ref.invalidate(configuredVehicleNameTextControllerProvider);
     ref.read(simInputProvider.notifier).send(vehicle);
-    await ref.watch(saveVehicleProvider(vehicle).future);
+    await ref.watch(updateVehicleProvider(vehicle).future);
   }
 
   return vehicle;
@@ -439,3 +396,36 @@ FutureOr<void> exportVehicles(
     dialogTitle: dialogTitle,
   ).future,
 );
+
+// Database related providers
+
+/// A provider for getting vehicles from the database.
+@riverpod
+FutureOr<List<Vehicle>> vehicles(
+  Ref ref, {
+  int limit = 10,
+  int? offset,
+}) async =>
+    ref.watch(databaseProvider).vehiclesDao.list(limit: limit, offset: offset);
+
+/// A provider for inserting [vehicle] into the database.
+@Riverpod(keepAlive: true)
+FutureOr<void> insertVehicle(Ref ref, Vehicle vehicle) async {
+  final database = ref.watch(databaseProvider);
+  final vehicleId = await database.vehiclesDao.insertVehicle(vehicle);
+  final dbVehicle = await database.vehiclesDao.getVehicle(vehicleId);
+  ref
+      .read(configuredVehicleProvider.notifier)
+      .update(
+        dbVehicle,
+      );
+  ref.invalidateSelf();
+}
+
+/// A provider for updating [vehicle] in the database.
+@Riverpod(keepAlive: true)
+FutureOr<void> updateVehicle(Ref ref, Vehicle vehicle) async {
+  final database = ref.watch(databaseProvider);
+  await database.vehiclesDao.updateVehicle(vehicle);
+  ref.invalidateSelf();
+}

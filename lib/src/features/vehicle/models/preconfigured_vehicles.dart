@@ -16,6 +16,7 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/gnss/gnss.dart';
+import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 
 /// A class with preconfigured vehicles to get some useful starting points
@@ -34,15 +35,28 @@ class PreconfiguredVehicles {
       trackWidth: 1.8,
       minTurningRadius: 4.25,
       steeringAngleMax: 31,
-      solidAxleToFrontHitchDistance: 3.5,
-      solidAxleToRearHitchDistance: 0.9,
-      solidAxleToRearDrawbarDistance: 0.65,
       solidAxleToFrontDistance: 3,
       steeringAxleWheelDiameter: 1.1,
       steeringAxleWheelWidth: 0.48,
       solidAxleWheelDiameter: 1.8,
       solidAxleWheelWidth: 0.6,
     ),
+    connectors: [
+      const Connector(
+        angle: 180,
+        lateralOffsetFromRef: 0,
+        longitudinalOffsetFromRef: -0.9,
+        type: .fixed,
+        relation: .parent,
+      ),
+      const Connector(
+        angle: 180,
+        lateralOffsetFromRef: 0,
+        longitudinalOffsetFromRef: -0.65,
+        type: .drawbar,
+        relation: .parent,
+      ),
+    ],
   );
 
   /// NH T9.700 -ish
@@ -61,11 +75,25 @@ class PreconfiguredVehicles {
       steeringAngleMax: 38,
       wheelDiameter: 2.1,
       wheelWidth: 0.71,
-      rearAxleToHitchDistance: 1.9,
-      rearAxleToDrawbarDistance: 1.6,
       frontAxleToFrontDistance: 1.5,
       rearAxleToEndDistance: 1,
     ),
+    connectors: [
+      const Connector(
+        angle: 180,
+        lateralOffsetFromRef: 0,
+        longitudinalOffsetFromRef: -1.9,
+        type: .fixed,
+        relation: .parent,
+      ),
+      const Connector(
+        angle: 180,
+        lateralOffsetFromRef: 0,
+        longitudinalOffsetFromRef: -1.6,
+        type: .drawbar,
+        relation: .parent,
+      ),
+    ],
   );
 
   /// MF Activa 7345 -ish

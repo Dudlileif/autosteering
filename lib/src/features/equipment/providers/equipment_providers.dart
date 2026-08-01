@@ -21,7 +21,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:autosteering/src/features/common/common.dart';
-import 'package:autosteering/src/features/database/database.dart';
+import 'package:autosteering/src/features/database/database.dart' hide Polygon;
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:autosteering/src/features/map/map.dart';
@@ -643,28 +643,6 @@ FutureOr<Equipment?> loadEquipmentFromFile(Ref ref, String path) async {
   return null;
 }
 
-/// A provider for saving [equipment] to a file in the user file directory.
-///
-/// Override the file name with [overrideName].
-@riverpod
-Future<void> saveEquipment(
-  Ref ref,
-  Equipment equipment, {
-  String? overrideName,
-  bool downloadIfWeb = false,
-}) async => ref.watch(
-  saveJsonToFileDirectoryProvider(
-    object: equipment,
-    fileName:
-        overrideName ??
-        equipment.name ??
-        equipment.uuid ??
-        'equipment_${equipment.id}',
-    folder: 'equipment',
-    downloadIfWeb: downloadIfWeb,
-  ).future,
-);
-
 /// A provider for exporting [equipment] to a file.
 ///
 /// Override the file name with [overrideName].
@@ -706,7 +684,7 @@ FutureOr<List<Equipment>> savedEquipments(Ref ref) async => await ref
       final implementsToAddToDatabase = <Equipment>[];
 
       final implementLinks = await database.managers.links
-          .filter((f) => f.tableRef.equals('implements'))
+          .filter((f) => f.tableRef.equals(.implements))
           .get();
       for (final implement in implements) {
         if (!implementLinks
@@ -716,52 +694,14 @@ FutureOr<List<Equipment>> savedEquipments(Ref ref) async => await ref
         }
       }
       for (final implement in implementsToAddToDatabase) {
-        final createdImplement = await database.managers.implements
-            .createReturning(
-              (o) => o(
-                id: Value.absentIfNull(implement.id),
-                name: Value.absentIfNull(implement.name),
-                createdAt: Value.absentIfNull(implement.createdAt),
-                lastUpdatedAt: Value.absentIfNull(implement.lastUpdatedAt),
-                lastUsedAt: Value.absentIfNull(implement.lastUsedAt),
-              ),
-            );
-        await database.managers.sections.bulkCreate(
-          (o) => implement.sections.map(
-            (section) => o(
-              id: Value.absentIfNull(section.id),
-              implement: createdImplement.id,
-              longitudinalOffset: 0,
-              lateralOffset: section.lateralOffset,
-              width: section.width,
-              workingWidth: section.workingWidth,
-              length: section.length,
-              color: Value.absentIfNull(section.color),
-              workedPathColor: Value.absentIfNull(
-                section.workedPathColor,
-              ),
-            ),
-          ),
+        final implementId = await database.implementsDao.insertImplement(
+          implement,
         );
-        await database.managers.connectors.bulkCreate(
-          (o) => implement.connectors.map(
-            (connector) => o(
-              implement: Value(createdImplement.id),
-              longitudinalOffsetFromRef: connector.longitudinalOffsetFromRef,
-              lateralOffsetFromRef: connector.lateralOffsetFromRef,
-              verticalOffsetFromRef: Value(
-                connector.verticalOffsetFromRef,
-              ),
-              relation: connector.relation,
-              type: connector.type,
-              angle: connector.angle,
-            ),
-          ),
-        );
+
         final link = await database.managers.links.createReturning(
           (o) => o(
-            tableRef: 'implements',
-            refId: createdImplement.id,
+            tableRef: .implements,
+            refId: implementId,
             linkValue: Value.absentIfNull(implement.uuid),
             name: Value.absentIfNull(implement.name),
           ),
@@ -853,7 +793,7 @@ FutureOr<Equipment?> importEquipment(
     );
     equipment.lastUsedAt = DateTime.now();
     ref.read(loadedEquipmentProvider.notifier).update(equipment);
-    await ref.watch(saveEquipmentProvider(equipment).future);
+    await ref.watch(insertImplementProvider(equipment).future);
   }
 
   return equipment;
@@ -871,3 +811,58 @@ FutureOr<void> exportEquipments(
     dialogTitle: dialogTitle,
   ).future,
 );
+
+// Database related providers
+
+/// A provider for getting implements from the database.
+@riverpod
+FutureOr<List<Equipment>> implements(
+  Ref ref, {
+  int limit = 10,
+  int? offset,
+}) async => ref
+    .watch(databaseProvider)
+    .implementsDao
+    .list(limit: limit, offset: offset);
+
+/// A provider for inserting [implement] into the database.
+@Riverpod(keepAlive: true)
+FutureOr<void> insertImplement(
+  Ref ref,
+  Equipment implement, {
+  bool setLoaded = false,
+}) async {
+  final database = ref.watch(databaseProvider);
+  final implementId = await database.implementsDao.insertImplement(implement);
+
+  final dbImplement = await database.implementsDao.getImplement(implementId);
+  ref
+      .read(configuredEquipmentProvider.notifier)
+      .update(
+        dbImplement,
+      );
+
+  if (setLoaded) {
+    ref.read(loadedEquipmentProvider.notifier).update(dbImplement);
+  }
+  ref.invalidateSelf();
+}
+
+/// A provider for updating [implement] in the database.
+@Riverpod(keepAlive: true)
+FutureOr<void> updateImplement(
+  Ref ref,
+  Equipment implement, {
+  bool setLoaded = false,
+}) async {
+  final database = ref.watch(databaseProvider);
+  await database.implementsDao.updateImplement(implement);
+
+  if (setLoaded) {
+    final dbImplement = await database.implementsDao.getImplement(
+      implement.id!,
+    );
+    ref.read(loadedEquipmentProvider.notifier).update(dbImplement);
+  }
+  ref.invalidateSelf();
+}

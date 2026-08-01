@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:autosteering/src/features/database/models/tables/table_timestamps_mixin.dart';
 import 'package:autosteering/src/features/database/models/tables/tables.dart';
 import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';
@@ -26,7 +27,7 @@ import 'package:drift/drift.dart';
 /// A table for representing vehicles. Several [Connectors] can be have bindings
 /// to a vehicle.
 @UseRowClass(Vehicle, constructor: 'fromDatabase')
-class Vehicles extends Table {
+class Vehicles extends Table with TableTimestamps {
   /// The local database ID of this.
   late final Column<int> id = integer().autoIncrement()();
 
@@ -79,17 +80,6 @@ class Vehicles extends Table {
   late final Column<String> colorScheme = text()
       .map(ManufacturerColorsConverter.converter)
       .nullable()();
-
-  /// When this was last used.
-  late final Column<DateTime> lastUsedAt = dateTime().nullable()();
-
-  /// When this was created.
-  late final Column<DateTime> createdAt = dateTime().clientDefault(
-    DateTime.now,
-  )();
-
-  /// When this was last updated.
-  late final Column<DateTime> lastUpdatedAt = dateTime().nullable()();
 }
 
 /// An SQL converter for [GnssAntennaConfig].

@@ -665,7 +665,7 @@ final class GetSteeringHardwareConfigProvider
 }
 
 String _$getSteeringHardwareConfigHash() =>
-    r'6fa4a5d48280ae120133fff6b7ad0130d1ded867';
+    r'6509d034e129015e18aaa302485640d83fa0f5e7';
 
 /// A provider for updating the motor configuration on the hardware with the
 /// parameters corresponding to [keyContainer].

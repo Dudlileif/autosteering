@@ -339,7 +339,15 @@ class AlwaysPointNorth extends _$AlwaysPointNorth {
           ref
               .read(mainMapControllerProvider)
               .rotate(
-                ref.read(mainVehicleProvider.select((value) => -value.bearing)),
+                -ref.read(
+                  mainVehicleProvider.select(
+                    (vehicle) => switch (vehicle) {
+                      AxleSteeredVehicle(:final bearing) => bearing,
+                      ArticulatedTractor(:final frontAxleAngle) =>
+                        frontAxleAngle,
+                    },
+                  ),
+                ),
               );
         }
       }

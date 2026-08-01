@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:autosteering/src/features/database/database.dart' show Link;
+import 'package:autosteering/src/features/database/models/tables/tables.dart';
 import 'package:drift/drift.dart';
 import 'package:uuid/uuid.dart';
 
@@ -22,7 +24,9 @@ import 'package:uuid/uuid.dart';
 /// ids.
 class Links extends Table {
   /// Which table this referes to.
-  late final Column<String> tableRef = text()();
+  late final Column<String> tableRef = text().map(
+    const LinkTableRefConverter(),
+  )();
 
   /// Which row in the reference table this referes to.
   late final Column<int> refId = integer()();
@@ -40,4 +44,42 @@ class Links extends Table {
 
   @override
   bool get withoutRowId => true;
+}
+
+/// Which table a [Link] should refer to.
+enum LinkTableRef {
+  /// [GuidancePatterns]
+  guidancePatterns('guidance_patterns'),
+
+  /// [Implements]
+  implements('implements'),
+
+  /// [Partfields]
+  partfields('partfields'),
+
+  /// [Tasks]
+  tasks('tasks'),
+
+  /// [Vehicles]
+  vehicles('vehicles');
+
+  const LinkTableRef(this.name);
+
+  /// The snake_case name of this.
+  final String name;
+}
+
+/// An SQL enum converter for [LinkTableRef].
+class LinkTableRefConverter extends TypeConverter<LinkTableRef, String> {
+  /// An SQL enum converter for [LinkTableRef].
+  const LinkTableRefConverter();
+
+  @override
+  LinkTableRef fromSql(String fromDb) => LinkTableRef.values.firstWhere(
+    (value) => value.name == fromDb,
+    orElse: () => .vehicles,
+  );
+
+  @override
+  String toSql(LinkTableRef value) => value.name;
 }

@@ -16,12 +16,13 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/database/models/models.dart';
+import 'package:autosteering/src/features/database/models/tables/table_timestamps_mixin.dart';
 import 'package:autosteering/src/features/database/models/tables/tables.dart';
 import 'package:drift/drift.dart';
 
 /// A table for line strings that describe a path that can be used in
 /// [Polygons], [GuidancePatterns] and [Partfields].
-class LineStrings extends Table {
+class LineStrings extends Table with TableTimestamps {
   /// The local database ID of this.
   late final Column<int> id = integer().autoIncrement()();
 
@@ -39,14 +40,6 @@ class LineStrings extends Table {
 
   /// Length of this in millimeters.
   late final Column<int> length = integer().nullable()();
-
-  /// When this was created.
-  late final Column<DateTime> createdAt = dateTime().clientDefault(
-    DateTime.now,
-  )();
-
-  /// When this was last updated.
-  late final Column<DateTime> lastUpdatedAt = dateTime().nullable()();
 }
 
 /// An enumerator for which type a [LineString] is.
@@ -100,4 +93,35 @@ class LineStringTypeConverter extends TypeConverter<LineStringType, int> {
 
   @override
   int toSql(LineStringType value) => value.value;
+}
+
+/// A [LineString] extended with all children/refs loaded.
+class LineStringWithRefs extends LineString {
+  /// A [LineString] extended with all children/refs loaded.
+  factory LineStringWithRefs({
+    required LineString lineString,
+    List<Point>? points,
+  }) => LineStringWithRefs._(
+    id: lineString.id,
+    type: lineString.type,
+    name: lineString.name,
+    width: lineString.width,
+    length: lineString.length,
+    createdAt: lineString.createdAt,
+    lastUpdatedAt: lineString.lastUpdatedAt,
+    points: points ?? [],
+  );
+  LineStringWithRefs._({
+    required super.id,
+    required super.type,
+    required super.createdAt,
+    super.name,
+    super.width,
+    super.length,
+    super.lastUpdatedAt,
+    this.points = const [],
+  });
+
+  /// The loaded points.
+  final List<Point> points;
 }

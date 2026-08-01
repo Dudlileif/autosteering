@@ -38,7 +38,7 @@ class EquipmentWorkedAreaGauge extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final strings = AppLocalizations.of(context);
     final fieldArea = ref.watch(
-      activeFieldProvider.select((value) => value?.areaWithoutHoles),
+      activeFieldProvider.select((value) => value?.area),
     );
 
     final area = ref.watch(
@@ -47,7 +47,7 @@ class EquipmentWorkedAreaGauge extends ConsumerWidget {
       ),
     );
     if (area != null || fieldArea != null) {
-      final numberFormatter = NumberFormat.decimalPercentPattern(
+      final numberFormatter = NumberFormat.decimalPatternDigits(
         decimalDigits: 2,
         locale: strings.localeName,
       );
@@ -63,12 +63,12 @@ class EquipmentWorkedAreaGauge extends ConsumerWidget {
           switch ((area, fieldArea)) {
             (final area?, final fieldArea?) => [
               '${numberFormatter.format(unit.fromUnit(area))} / ${numberFormatter.format(unit.fromUnit(fieldArea))} ${strings.unitAreaDisplay(unit.symbol)}',
-              '''${numberFormatter.format(clampDouble(100 * area / fieldArea, 0, 100))}%''',
+              '''${numberFormatter.format(clampDouble(100 * area / fieldArea, 0, 100))} %''',
             ].join('\n'),
             (final area?, _) =>
-              ''''${numberFormatter.format(unit.fromUnit(area))} ${strings.unitAreaDisplay(unit.symbol)}''',
+              '''${numberFormatter.format(unit.fromUnit(area))} ${strings.unitAreaDisplay(unit.symbol)}''',
             (_, final fieldArea?) =>
-              ''''- / ${numberFormatter.format(unit.fromUnit(fieldArea))} ${strings.unitAreaDisplay(unit.symbol)}''',
+              '''- / ${numberFormatter.format(unit.fromUnit(fieldArea))} ${strings.unitAreaDisplay(unit.symbol)}''',
             _ => '',
           },
           style: GoogleFonts.robotoMono(

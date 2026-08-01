@@ -16,6 +16,26 @@
         "was_declared_in_moor": false,
         "columns": [
           {
+            "name": "created_at",
+            "getter_name": "createdAt",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": "DateTime.now",
+            "dsl_features": []
+          },
+          {
+            "name": "last_updated_at",
+            "getter_name": "lastUpdatedAt",
+            "moor_type": "dateTime",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
             "name": "id",
             "getter_name": "id",
             "moor_type": "int",
@@ -76,17 +96,23 @@
             "default_dart": null,
             "default_client_dart": null,
             "dsl_features": []
-          },
-          {
-            "name": "last_used_at",
-            "getter_name": "lastUsedAt",
-            "moor_type": "dateTime",
-            "nullable": true,
-            "customConstraints": null,
-            "default_dart": null,
-            "default_client_dart": null,
-            "dsl_features": []
-          },
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": []
+      }
+    },
+    {
+      "id": 1,
+      "references": [
+        0
+      ],
+      "type": "table",
+      "data": {
+        "name": "tasks",
+        "was_declared_in_moor": false,
+        "columns": [
           {
             "name": "created_at",
             "getter_name": "createdAt",
@@ -106,23 +132,7 @@
             "default_dart": null,
             "default_client_dart": null,
             "dsl_features": []
-          }
-        ],
-        "is_virtual": false,
-        "without_rowid": false,
-        "constraints": []
-      }
-    },
-    {
-      "id": 1,
-      "references": [
-        0
-      ],
-      "type": "table",
-      "data": {
-        "name": "tasks",
-        "was_declared_in_moor": false,
-        "columns": [
+          },
           {
             "name": "id",
             "getter_name": "id",
@@ -204,7 +214,21 @@
             "default_dart": null,
             "default_client_dart": null,
             "dsl_features": []
-          },
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": []
+      }
+    },
+    {
+      "id": 2,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "vehicles",
+        "was_declared_in_moor": false,
+        "columns": [
           {
             "name": "created_at",
             "getter_name": "createdAt",
@@ -224,21 +248,7 @@
             "default_dart": null,
             "default_client_dart": null,
             "dsl_features": []
-          }
-        ],
-        "is_virtual": false,
-        "without_rowid": false,
-        "constraints": []
-      }
-    },
-    {
-      "id": 2,
-      "references": [],
-      "type": "table",
-      "data": {
-        "name": "vehicles",
-        "was_declared_in_moor": false,
-        "columns": [
+          },
           {
             "name": "id",
             "getter_name": "id",
@@ -390,17 +400,21 @@
               "dart_expr": "ManufacturerColorsConverter.converter",
               "dart_type_name": "ManufacturerColors"
             }
-          },
-          {
-            "name": "last_used_at",
-            "getter_name": "lastUsedAt",
-            "moor_type": "dateTime",
-            "nullable": true,
-            "customConstraints": null,
-            "default_dart": null,
-            "default_client_dart": null,
-            "dsl_features": []
-          },
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": []
+      }
+    },
+    {
+      "id": 3,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "implements",
+        "was_declared_in_moor": false,
+        "columns": [
           {
             "name": "created_at",
             "getter_name": "createdAt",
@@ -420,21 +434,7 @@
             "default_dart": null,
             "default_client_dart": null,
             "dsl_features": []
-          }
-        ],
-        "is_virtual": false,
-        "without_rowid": false,
-        "constraints": []
-      }
-    },
-    {
-      "id": 3,
-      "references": [],
-      "type": "table",
-      "data": {
-        "name": "implements",
-        "was_declared_in_moor": false,
-        "columns": [
+          },
           {
             "name": "id",
             "getter_name": "id",
@@ -460,17 +460,24 @@
             "default_dart": null,
             "default_client_dart": null,
             "dsl_features": []
-          },
-          {
-            "name": "last_used_at",
-            "getter_name": "lastUsedAt",
-            "moor_type": "dateTime",
-            "nullable": true,
-            "customConstraints": null,
-            "default_dart": null,
-            "default_client_dart": null,
-            "dsl_features": []
-          },
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": []
+      }
+    },
+    {
+      "id": 4,
+      "references": [
+        2,
+        3
+      ],
+      "type": "table",
+      "data": {
+        "name": "connectors",
+        "was_declared_in_moor": false,
+        "columns": [
           {
             "name": "created_at",
             "getter_name": "createdAt",
@@ -490,24 +497,7 @@
             "default_dart": null,
             "default_client_dart": null,
             "dsl_features": []
-          }
-        ],
-        "is_virtual": false,
-        "without_rowid": false,
-        "constraints": []
-      }
-    },
-    {
-      "id": 4,
-      "references": [
-        2,
-        3
-      ],
-      "type": "table",
-      "data": {
-        "name": "connectors",
-        "was_declared_in_moor": false,
-        "columns": [
+          },
           {
             "name": "id",
             "getter_name": "id",
@@ -643,31 +633,13 @@
             "default_dart": null,
             "default_client_dart": null,
             "dsl_features": []
-          },
-          {
-            "name": "created_at",
-            "getter_name": "createdAt",
-            "moor_type": "dateTime",
-            "nullable": false,
-            "customConstraints": null,
-            "default_dart": null,
-            "default_client_dart": "DateTime.now",
-            "dsl_features": []
-          },
-          {
-            "name": "last_updated_at",
-            "getter_name": "lastUpdatedAt",
-            "moor_type": "dateTime",
-            "nullable": true,
-            "customConstraints": null,
-            "default_dart": null,
-            "default_client_dart": null,
-            "dsl_features": []
           }
         ],
         "is_virtual": false,
         "without_rowid": false,
-        "constraints": []
+        "constraints": [
+          "CHECK((vehicle IS NOT NULL AND implement IS NULL) OR (vehicle IS NULL AND implement IS NOT NULL))"
+        ]
       }
     },
     {
@@ -764,6 +736,7 @@
         "without_rowid": true,
         "constraints": [],
         "explicit_pk": [
+          "task",
           "parent_connector",
           "child_connector"
         ]
@@ -777,6 +750,26 @@
         "name": "polygons",
         "was_declared_in_moor": false,
         "columns": [
+          {
+            "name": "created_at",
+            "getter_name": "createdAt",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": "DateTime.now",
+            "dsl_features": []
+          },
+          {
+            "name": "last_updated_at",
+            "getter_name": "lastUpdatedAt",
+            "moor_type": "dateTime",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
           {
             "name": "id",
             "getter_name": "id",
@@ -834,6 +827,26 @@
         "was_declared_in_moor": false,
         "columns": [
           {
+            "name": "created_at",
+            "getter_name": "createdAt",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": "DateTime.now",
+            "dsl_features": []
+          },
+          {
+            "name": "last_updated_at",
+            "getter_name": "lastUpdatedAt",
+            "moor_type": "dateTime",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
             "name": "id",
             "getter_name": "id",
             "moor_type": "int",
@@ -848,6 +861,16 @@
             "dsl_features": [
               "auto-increment"
             ]
+          },
+          {
+            "name": "name",
+            "getter_name": "name",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
           },
           {
             "name": "border_polygon",
@@ -892,6 +915,26 @@
         "name": "guidance_allocations",
         "was_declared_in_moor": false,
         "columns": [
+          {
+            "name": "created_at",
+            "getter_name": "createdAt",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": "DateTime.now",
+            "dsl_features": []
+          },
+          {
+            "name": "last_updated_at",
+            "getter_name": "lastUpdatedAt",
+            "moor_type": "dateTime",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
           {
             "name": "id",
             "getter_name": "id",
@@ -959,7 +1002,21 @@
                 }
               }
             ]
-          },
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": []
+      }
+    },
+    {
+      "id": 9,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "line_strings",
+        "was_declared_in_moor": false,
+        "columns": [
           {
             "name": "created_at",
             "getter_name": "createdAt",
@@ -979,21 +1036,7 @@
             "default_dart": null,
             "default_client_dart": null,
             "dsl_features": []
-          }
-        ],
-        "is_virtual": false,
-        "without_rowid": false,
-        "constraints": []
-      }
-    },
-    {
-      "id": 9,
-      "references": [],
-      "type": "table",
-      "data": {
-        "name": "line_strings",
-        "was_declared_in_moor": false,
-        "columns": [
+          },
           {
             "name": "id",
             "getter_name": "id",
@@ -1053,7 +1096,24 @@
             "default_dart": null,
             "default_client_dart": null,
             "dsl_features": []
-          },
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": []
+      }
+    },
+    {
+      "id": 10,
+      "references": [
+        9,
+        6
+      ],
+      "type": "table",
+      "data": {
+        "name": "guidance_patterns",
+        "was_declared_in_moor": false,
+        "columns": [
           {
             "name": "created_at",
             "getter_name": "createdAt",
@@ -1073,24 +1133,7 @@
             "default_dart": null,
             "default_client_dart": null,
             "dsl_features": []
-          }
-        ],
-        "is_virtual": false,
-        "without_rowid": false,
-        "constraints": []
-      }
-    },
-    {
-      "id": 10,
-      "references": [
-        9,
-        6
-      ],
-      "type": "table",
-      "data": {
-        "name": "guidance_patterns",
-        "was_declared_in_moor": false,
-        "columns": [
+          },
           {
             "name": "id",
             "getter_name": "id",
@@ -1264,26 +1307,6 @@
             "default_dart": null,
             "default_client_dart": null,
             "dsl_features": []
-          },
-          {
-            "name": "created_at",
-            "getter_name": "createdAt",
-            "moor_type": "dateTime",
-            "nullable": false,
-            "customConstraints": null,
-            "default_dart": null,
-            "default_client_dart": "DateTime.now",
-            "dsl_features": []
-          },
-          {
-            "name": "last_updated_at",
-            "getter_name": "lastUpdatedAt",
-            "moor_type": "dateTime",
-            "nullable": true,
-            "customConstraints": null,
-            "default_dart": null,
-            "default_client_dart": null,
-            "dsl_features": []
           }
         ],
         "is_virtual": false,
@@ -1373,6 +1396,26 @@
         "was_declared_in_moor": false,
         "columns": [
           {
+            "name": "created_at",
+            "getter_name": "createdAt",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": "DateTime.now",
+            "dsl_features": []
+          },
+          {
+            "name": "last_updated_at",
+            "getter_name": "lastUpdatedAt",
+            "moor_type": "dateTime",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
             "name": "id",
             "getter_name": "id",
             "moor_type": "int",
@@ -1436,26 +1479,6 @@
             "name": "elevation",
             "getter_name": "elevation",
             "moor_type": "double",
-            "nullable": true,
-            "customConstraints": null,
-            "default_dart": null,
-            "default_client_dart": null,
-            "dsl_features": []
-          },
-          {
-            "name": "created_at",
-            "getter_name": "createdAt",
-            "moor_type": "dateTime",
-            "nullable": false,
-            "customConstraints": null,
-            "default_dart": null,
-            "default_client_dart": "DateTime.now",
-            "dsl_features": []
-          },
-          {
-            "name": "last_updated_at",
-            "getter_name": "lastUpdatedAt",
-            "moor_type": "dateTime",
             "nullable": true,
             "customConstraints": null,
             "default_dart": null,
@@ -1557,7 +1580,11 @@
             "customConstraints": null,
             "default_dart": null,
             "default_client_dart": null,
-            "dsl_features": []
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const LinkTableRefConverter()",
+              "dart_type_name": "LinkTableRef"
+            }
           },
           {
             "name": "ref_id",
@@ -1971,6 +1998,26 @@
         "was_declared_in_moor": false,
         "columns": [
           {
+            "name": "created_at",
+            "getter_name": "createdAt",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": "DateTime.now",
+            "dsl_features": []
+          },
+          {
+            "name": "last_updated_at",
+            "getter_name": "lastUpdatedAt",
+            "moor_type": "dateTime",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
             "name": "id",
             "getter_name": "id",
             "moor_type": "int",
@@ -2103,26 +2150,6 @@
               "dart_expr": "const ColorConverter()",
               "dart_type_name": "Color"
             }
-          },
-          {
-            "name": "created_at",
-            "getter_name": "createdAt",
-            "moor_type": "dateTime",
-            "nullable": false,
-            "customConstraints": null,
-            "default_dart": null,
-            "default_client_dart": "DateTime.now",
-            "dsl_features": []
-          },
-          {
-            "name": "last_updated_at",
-            "getter_name": "lastUpdatedAt",
-            "moor_type": "dateTime",
-            "nullable": true,
-            "customConstraints": null,
-            "default_dart": null,
-            "default_client_dart": null,
-            "dsl_features": []
           }
         ],
         "is_virtual": false,
@@ -2137,7 +2164,7 @@
       "sql": [
         {
           "dialect": "sqlite",
-          "sql": "CREATE TABLE IF NOT EXISTS \"partfields\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"parent_field\" INTEGER NULL REFERENCES partfields (id), \"name\" TEXT NULL, \"area\" REAL NOT NULL, \"last_used_at\" TEXT NULL, \"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL);"
+          "sql": "CREATE TABLE IF NOT EXISTS \"partfields\" (\"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL, \"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"parent_field\" INTEGER NULL REFERENCES partfields (id), \"name\" TEXT NULL, \"area\" REAL NOT NULL);"
         }
       ]
     },
@@ -2146,7 +2173,7 @@
       "sql": [
         {
           "dialect": "sqlite",
-          "sql": "CREATE TABLE IF NOT EXISTS \"tasks\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" TEXT NOT NULL, \"note\" TEXT NULL, \"partfield\" INTEGER NULL REFERENCES partfields (id), \"work_started_at\" TEXT NULL, \"work_ended_at\" TEXT NULL, \"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL);"
+          "sql": "CREATE TABLE IF NOT EXISTS \"tasks\" (\"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL, \"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" TEXT NOT NULL, \"note\" TEXT NULL, \"partfield\" INTEGER NULL REFERENCES partfields (id), \"work_started_at\" TEXT NULL, \"work_ended_at\" TEXT NULL);"
         }
       ]
     },
@@ -2155,7 +2182,7 @@
       "sql": [
         {
           "dialect": "sqlite",
-          "sql": "CREATE TABLE IF NOT EXISTS \"vehicles\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"type\" TEXT NOT NULL, \"name\" TEXT NULL, \"geometry\" TEXT NOT NULL, \"gnss_antenna_config\" TEXT NULL, \"imu_config\" TEXT NULL, \"was_config\" TEXT NULL, \"steering_hardware_config\" TEXT NULL, \"thresholds\" TEXT NULL, \"path_tracking_parameters\" TEXT NULL, \"color_scheme\" TEXT NULL, \"last_used_at\" TEXT NULL, \"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL);"
+          "sql": "CREATE TABLE IF NOT EXISTS \"vehicles\" (\"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL, \"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"type\" TEXT NOT NULL, \"name\" TEXT NULL, \"geometry\" TEXT NOT NULL, \"gnss_antenna_config\" TEXT NULL, \"imu_config\" TEXT NULL, \"was_config\" TEXT NULL, \"steering_hardware_config\" TEXT NULL, \"thresholds\" TEXT NULL, \"path_tracking_parameters\" TEXT NULL, \"color_scheme\" TEXT NULL);"
         }
       ]
     },
@@ -2164,7 +2191,7 @@
       "sql": [
         {
           "dialect": "sqlite",
-          "sql": "CREATE TABLE IF NOT EXISTS \"implements\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" TEXT NULL, \"last_used_at\" TEXT NULL, \"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL);"
+          "sql": "CREATE TABLE IF NOT EXISTS \"implements\" (\"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL, \"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" TEXT NULL);"
         }
       ]
     },
@@ -2173,7 +2200,7 @@
       "sql": [
         {
           "dialect": "sqlite",
-          "sql": "CREATE TABLE IF NOT EXISTS \"connectors\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"vehicle\" INTEGER NULL REFERENCES vehicles (id), \"implement\" INTEGER NULL REFERENCES implements (id), \"type\" TEXT NOT NULL, \"relation\" TEXT NOT NULL, \"longitudinal_offset_from_ref\" REAL NOT NULL, \"lateral_offset_from_ref\" REAL NOT NULL, \"vertical_offset_from_ref\" REAL NOT NULL DEFAULT 0.0, \"angle\" REAL NOT NULL, \"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL);"
+          "sql": "CREATE TABLE IF NOT EXISTS \"connectors\" (\"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL, \"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"vehicle\" INTEGER NULL REFERENCES vehicles (id), \"implement\" INTEGER NULL REFERENCES implements (id), \"type\" TEXT NOT NULL, \"relation\" TEXT NOT NULL, \"longitudinal_offset_from_ref\" REAL NOT NULL, \"lateral_offset_from_ref\" REAL NOT NULL, \"vertical_offset_from_ref\" REAL NOT NULL DEFAULT 0.0, \"angle\" REAL NOT NULL, CHECK((vehicle IS NOT NULL AND implement IS NULL) OR (vehicle IS NULL AND implement IS NOT NULL)));"
         }
       ]
     },
@@ -2182,7 +2209,7 @@
       "sql": [
         {
           "dialect": "sqlite",
-          "sql": "CREATE TABLE IF NOT EXISTS \"connections\" (\"task\" INTEGER NOT NULL REFERENCES tasks (id), \"parent_connector\" INTEGER NOT NULL REFERENCES connectors (id), \"child_connector\" INTEGER NOT NULL REFERENCES connectors (id), PRIMARY KEY (\"parent_connector\", \"child_connector\")) WITHOUT ROWID;"
+          "sql": "CREATE TABLE IF NOT EXISTS \"connections\" (\"task\" INTEGER NOT NULL REFERENCES tasks (id), \"parent_connector\" INTEGER NOT NULL REFERENCES connectors (id), \"child_connector\" INTEGER NOT NULL REFERENCES connectors (id), PRIMARY KEY (\"task\", \"parent_connector\", \"child_connector\")) WITHOUT ROWID;"
         }
       ]
     },
@@ -2191,7 +2218,7 @@
       "sql": [
         {
           "dialect": "sqlite",
-          "sql": "CREATE TABLE IF NOT EXISTS \"polygons\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"type\" INTEGER NOT NULL, \"name\" TEXT NULL);"
+          "sql": "CREATE TABLE IF NOT EXISTS \"polygons\" (\"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL, \"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"type\" INTEGER NOT NULL, \"name\" TEXT NULL);"
         }
       ]
     },
@@ -2200,7 +2227,7 @@
       "sql": [
         {
           "dialect": "sqlite",
-          "sql": "CREATE TABLE IF NOT EXISTS \"guidance_groups\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"border_polygon\" INTEGER NULL REFERENCES polygons (id));"
+          "sql": "CREATE TABLE IF NOT EXISTS \"guidance_groups\" (\"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL, \"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" TEXT NULL, \"border_polygon\" INTEGER NULL REFERENCES polygons (id));"
         }
       ]
     },
@@ -2209,7 +2236,7 @@
       "sql": [
         {
           "dialect": "sqlite",
-          "sql": "CREATE TABLE IF NOT EXISTS \"guidance_allocations\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"task\" INTEGER NOT NULL REFERENCES tasks (id), \"guidance_group\" INTEGER NOT NULL REFERENCES guidance_groups (id), \"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL);"
+          "sql": "CREATE TABLE IF NOT EXISTS \"guidance_allocations\" (\"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL, \"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"task\" INTEGER NOT NULL REFERENCES tasks (id), \"guidance_group\" INTEGER NOT NULL REFERENCES guidance_groups (id));"
         }
       ]
     },
@@ -2218,7 +2245,7 @@
       "sql": [
         {
           "dialect": "sqlite",
-          "sql": "CREATE TABLE IF NOT EXISTS \"line_strings\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"type\" INTEGER NOT NULL, \"name\" TEXT NULL, \"width\" INTEGER NULL, \"length\" INTEGER NULL, \"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL);"
+          "sql": "CREATE TABLE IF NOT EXISTS \"line_strings\" (\"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL, \"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"type\" INTEGER NOT NULL, \"name\" TEXT NULL, \"width\" INTEGER NULL, \"length\" INTEGER NULL);"
         }
       ]
     },
@@ -2227,7 +2254,7 @@
       "sql": [
         {
           "dialect": "sqlite",
-          "sql": "CREATE TABLE IF NOT EXISTS \"guidance_patterns\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"line_string\" INTEGER NOT NULL REFERENCES line_strings (id), \"border_polygon\" INTEGER NULL REFERENCES polygons (id), \"type\" INTEGER NOT NULL, \"name\" TEXT NULL, \"heading\" REAL NULL, \"radius\" INTEGER NULL, \"options\" INTEGER NULL, \"propagation_direction\" INTEGER NULL, \"extension\" INTEGER NULL, \"number_of_swaths_left\" INTEGER NULL, \"number_of_swaths_right\" INTEGER NULL, \"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL);"
+          "sql": "CREATE TABLE IF NOT EXISTS \"guidance_patterns\" (\"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL, \"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"line_string\" INTEGER NOT NULL REFERENCES line_strings (id), \"border_polygon\" INTEGER NULL REFERENCES polygons (id), \"type\" INTEGER NOT NULL, \"name\" TEXT NULL, \"heading\" REAL NULL, \"radius\" INTEGER NULL, \"options\" INTEGER NULL, \"propagation_direction\" INTEGER NULL, \"extension\" INTEGER NULL, \"number_of_swaths_left\" INTEGER NULL, \"number_of_swaths_right\" INTEGER NULL);"
         }
       ]
     },
@@ -2245,7 +2272,7 @@
       "sql": [
         {
           "dialect": "sqlite",
-          "sql": "CREATE TABLE IF NOT EXISTS \"points\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"type\" INTEGER NOT NULL, \"name\" TEXT NULL, \"latitude\" REAL NOT NULL, \"longitude\" REAL NOT NULL, \"elevation\" REAL NULL, \"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL);"
+          "sql": "CREATE TABLE IF NOT EXISTS \"points\" (\"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL, \"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"type\" INTEGER NOT NULL, \"name\" TEXT NULL, \"latitude\" REAL NOT NULL, \"longitude\" REAL NOT NULL, \"elevation\" REAL NULL);"
         }
       ]
     },
@@ -2317,7 +2344,7 @@
       "sql": [
         {
           "dialect": "sqlite",
-          "sql": "CREATE TABLE IF NOT EXISTS \"sections\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"implement\" INTEGER NOT NULL REFERENCES implements (id), \"longitudinal_offset\" REAL NOT NULL, \"lateral_offset\" REAL NOT NULL, \"width\" REAL NOT NULL, \"working_width\" REAL NOT NULL, \"length\" REAL NOT NULL, \"automate_activation\" INTEGER NOT NULL DEFAULT 0 CHECK (\"automate_activation\" IN (0, 1)), \"color\" TEXT NULL, \"worked_path_color\" TEXT NULL, \"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL);"
+          "sql": "CREATE TABLE IF NOT EXISTS \"sections\" (\"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL, \"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"implement\" INTEGER NOT NULL REFERENCES implements (id), \"longitudinal_offset\" REAL NOT NULL, \"lateral_offset\" REAL NOT NULL, \"width\" REAL NOT NULL, \"working_width\" REAL NOT NULL, \"length\" REAL NOT NULL, \"automate_activation\" INTEGER NOT NULL DEFAULT 0 CHECK (\"automate_activation\" IN (0, 1)), \"color\" TEXT NULL, \"worked_path_color\" TEXT NULL);"
         }
       ]
     }
