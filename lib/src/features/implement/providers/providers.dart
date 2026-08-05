@@ -1,4 +1,4 @@
-// Copyright (C) 2024 Gaute Hagen
+// Copyright (C) 2026 Gaute Hagen
 //
 // This file is part of Autosteering.
 //
@@ -15,7 +15,5 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
-export '../../implement/widgets/implement_configurator/implement_configurator.dart';
-export 'equipment_menu.dart';
-export 'equipment_section_buttons.dart';
-export 'equipment_worked_area_gauge.dart';
+export 'implement_configurator_providers.dart';
+export 'implement_providers.dart';

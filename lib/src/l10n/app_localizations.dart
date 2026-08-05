@@ -575,7 +575,7 @@ abstract class AppLocalizations {
   /// No description provided for @connectorType.
   ///
   /// In en, this message translates to:
-  /// **'{type, select, other{Connector} fixed{Fixed} drawbar{Drawbar}}'**
+  /// **'{type, select, other{Connector} fixed{Three-point/Fixed} drawbar{Drawbar}}'**
   String connectorType(String type);
 
   /// No description provided for @coolStepMinRpm.
@@ -599,7 +599,7 @@ abstract class AppLocalizations {
   /// No description provided for @copyWorkSessionDescription.
   ///
   /// In en, this message translates to:
-  /// **'Copy field, equipment and guidance from this.'**
+  /// **'Copy field, implement and guidance from this.'**
   String get copyWorkSessionDescription;
 
   /// No description provided for @create.
@@ -721,18 +721,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Debug mode'**
   String get debugMode;
-
-  /// No description provided for @decoration.
-  ///
-  /// In en, this message translates to:
-  /// **'Decoration'**
-  String get decoration;
-
-  /// No description provided for @decorationSidewaysOffset.
-  ///
-  /// In en, this message translates to:
-  /// **'Decoration sideways offset (-left / +right)'**
-  String get decorationSidewaysOffset;
 
   /// No description provided for @defaultOption.
   ///
@@ -908,23 +896,23 @@ abstract class AppLocalizations {
   /// **'Equal widths'**
   String get equalWidths;
 
-  /// No description provided for @equalWorkingWidths.
+  /// No description provided for @implement.
   ///
   /// In en, this message translates to:
-  /// **'Equal working widths'**
-  String get equalWorkingWidths;
+  /// **'Implement'**
+  String get implement;
 
-  /// No description provided for @equipment.
+  /// No description provided for @implementDetermined.
   ///
   /// In en, this message translates to:
-  /// **'Equipment'**
-  String get equipment;
+  /// **'Implement'**
+  String get implementDetermined;
 
-  /// No description provided for @equipmentDrawbarLength.
+  /// No description provided for @implementDrawbarLength.
   ///
   /// In en, this message translates to:
-  /// **'Equipment drawbar length'**
-  String get equipmentDrawbarLength;
+  /// **'Implement drawbar length'**
+  String get implementDrawbarLength;
 
   /// No description provided for @equipmentSetup.
   ///
@@ -1141,12 +1129,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{option, select, other{Hitch} fixed{Fixed} drawbar{Drawbar}}'**
   String hitchOption(String option);
-
-  /// No description provided for @hitchToDecorationStart.
-  ///
-  /// In en, this message translates to:
-  /// **'Hitch to decoration start'**
-  String get hitchToDecorationStart;
 
   /// No description provided for @hitchToFrontFixedHitchDistance.
   ///
@@ -1922,6 +1904,18 @@ abstract class AppLocalizations {
   /// **'Position'**
   String get position;
 
+  /// No description provided for @preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get preview;
+
+  /// No description provided for @primaryColor.
+  ///
+  /// In en, this message translates to:
+  /// **'{option, select, other{Color} red{Red} pink{Pink} purple{Purple} deepPurple{Deep purple} indigo{Indigo} blue{Blue} lightBlue{Light blue} cyan{Cyan} teal{Teal} green{Green} lightGreen{Light green} lime{Lime} yellow{Yellow} amber{Amber} orange{Orange} deepOrange{Deep orange} brown{Brown} blueGrey{Blue grey}}'**
+  String primaryColor(String option);
+
   /// No description provided for @rawBufferPoints.
   ///
   /// In en, this message translates to:
@@ -2021,7 +2015,7 @@ abstract class AppLocalizations {
   /// No description provided for @remoteControlAction.
   ///
   /// In en, this message translates to:
-  /// **'{option, select, other{No action} toggleEquipmentSections{Toggle equipment sections} toggleAutosteering{Toggle autosteering} toggleABSnap{Toggle AB-line snap to closest line} resetNudgeDistance{Reset nudge distance to 0}}'**
+  /// **'{option, select, other{No action} toggleImplementSections{Toggle implement sections} toggleAutosteering{Toggle autosteering} toggleABSnap{Toggle AB-line snap to closest line} resetNudgeDistance{Reset nudge distance to 0}}'**
   String remoteControlAction(String option);
 
   /// No description provided for @remoteControlConfigurator.
@@ -2180,12 +2174,6 @@ abstract class AppLocalizations {
   /// **'Section width'**
   String get sectionWidth;
 
-  /// No description provided for @sectionWorkingWidth.
-  ///
-  /// In en, this message translates to:
-  /// **'Section working width'**
-  String get sectionWorkingWidth;
-
   /// No description provided for @selectExportFolder.
   ///
   /// In en, this message translates to:
@@ -2258,11 +2246,11 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settings;
 
-  /// No description provided for @setToEquipmentWidth.
+  /// No description provided for @setToImplementWidth.
   ///
   /// In en, this message translates to:
-  /// **'Set to equipment width'**
-  String get setToEquipmentWidth;
+  /// **'Set to implement width'**
+  String get setToImplementWidth;
 
   /// No description provided for @setToValueXVehicleTurningRadius.
   ///
@@ -2774,6 +2762,12 @@ abstract class AppLocalizations {
   /// **'Vehicle body width, excluding wheels'**
   String get vehicleBodyWidth;
 
+  /// No description provided for @vehicleDetermined.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle'**
+  String get vehicleDetermined;
+
   /// No description provided for @vehicleImage.
   ///
   /// In en, this message translates to:
@@ -2875,12 +2869,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Working area length'**
   String get workingAreaLength;
-
-  /// No description provided for @workingWidth.
-  ///
-  /// In en, this message translates to:
-  /// **'Working width'**
-  String get workingWidth;
 
   /// No description provided for @workSession.
   ///

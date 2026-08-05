@@ -40,6 +40,7 @@ targets:
           exclude:
             - lib/**.g.dart
             - lib/**.freezed.dart
+            - lib/**.drift.dart
       json_serializable:
         enabled: true
         generate_for:
@@ -48,6 +49,7 @@ targets:
           exclude:
             - lib/**.g.dart
             - lib/**.freezed.dart
+            - lib/**.drift.dart
       riverpod_generator:
         enabled: true
         generate_for:

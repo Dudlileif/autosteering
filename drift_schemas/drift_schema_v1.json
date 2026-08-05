@@ -2090,16 +2090,6 @@
             "dsl_features": []
           },
           {
-            "name": "working_width",
-            "getter_name": "workingWidth",
-            "moor_type": "double",
-            "nullable": false,
-            "customConstraints": null,
-            "default_dart": null,
-            "default_client_dart": null,
-            "dsl_features": []
-          },
-          {
             "name": "length",
             "getter_name": "length",
             "moor_type": "double",
@@ -2344,7 +2334,7 @@
       "sql": [
         {
           "dialect": "sqlite",
-          "sql": "CREATE TABLE IF NOT EXISTS \"sections\" (\"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL, \"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"implement\" INTEGER NOT NULL REFERENCES implements (id), \"longitudinal_offset\" REAL NOT NULL, \"lateral_offset\" REAL NOT NULL, \"width\" REAL NOT NULL, \"working_width\" REAL NOT NULL, \"length\" REAL NOT NULL, \"automate_activation\" INTEGER NOT NULL DEFAULT 0 CHECK (\"automate_activation\" IN (0, 1)), \"color\" TEXT NULL, \"worked_path_color\" TEXT NULL);"
+          "sql": "CREATE TABLE IF NOT EXISTS \"sections\" (\"created_at\" TEXT NOT NULL, \"last_updated_at\" TEXT NULL, \"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"implement\" INTEGER NOT NULL REFERENCES implements (id), \"longitudinal_offset\" REAL NOT NULL, \"lateral_offset\" REAL NOT NULL, \"width\" REAL NOT NULL, \"length\" REAL NOT NULL, \"automate_activation\" INTEGER NOT NULL DEFAULT 0 CHECK (\"automate_activation\" IN (0, 1)), \"color\" TEXT NULL, \"worked_path_color\" TEXT NULL);"
         }
       ]
     }

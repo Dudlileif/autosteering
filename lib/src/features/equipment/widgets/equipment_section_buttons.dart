@@ -38,8 +38,7 @@ class EquipmentSectionButtons extends ConsumerWidget {
     final equipments = ref.watch(
       allEquipmentsProvider.select(
         (entry) => entry.values.where(
-          (equipment) =>
-              equipment.sections.any((element) => element.workingWidth > 0),
+          (equipment) => equipment.sections.any((element) => element.width > 0),
         ),
       ),
     );
@@ -197,7 +196,7 @@ class _SectionButtons extends ConsumerWidget {
       spacing: 8,
       runSpacing: 8,
       children: equipment.sections
-          .where((section) => section.workingWidth > 0)
+          .where((section) => section.width > 0)
           .map(
             (section) => _SectionButton(
               section: section,

@@ -87,7 +87,6 @@ class ImplementsDao extends DatabaseAccessor<Database>
           longitudinalOffset: section.longitudinalOffset,
           lateralOffset: section.lateralOffset,
           width: section.width,
-          workingWidth: section.workingWidth,
           length: section.length,
           color: Value.absentIfNull(section.color),
           workedPathColor: Value.absentIfNull(
@@ -156,6 +155,29 @@ class ImplementsDao extends DatabaseAccessor<Database>
             (c) => c.implement.id.equals(implement.id) & c.id.not.isIn(ids),
           )
           .delete();
+
+      await managers.connectors.bulkReplace(
+        implement.connectors
+            .where((c) => (c.id ?? 0) > 0)
+            .map(
+              (connector) => ConnectorsCompanion(
+                longitudinalOffsetFromRef: Value(
+                  connector.longitudinalOffsetFromRef,
+                ),
+                lateralOffsetFromRef: Value(connector.lateralOffsetFromRef),
+                type: Value(connector.type),
+                relation: Value(connector.relation),
+                implement: Value(implement.id),
+                id: Value(connector.id!),
+                verticalOffsetFromRef: Value.absentIfNull(
+                  connector.verticalOffsetFromRef,
+                ),
+                angle: Value(connector.angle),
+                createdAt: Value.absentIfNull(connector.createdAt),
+                lastUpdatedAt: Value(DateTime.now()),
+              ),
+            ),
+      );
     }
     // Sections
     {
@@ -178,7 +200,6 @@ class ImplementsDao extends DatabaseAccessor<Database>
               longitudinalOffset: section.longitudinalOffset,
               lateralOffset: section.lateralOffset,
               width: section.width,
-              workingWidth: section.workingWidth,
               length: section.length,
               color: Value.absentIfNull(section.color),
               workedPathColor: Value.absentIfNull(
@@ -197,6 +218,27 @@ class ImplementsDao extends DatabaseAccessor<Database>
             (c) => c.implement.id.equals(implement.id) & c.id.not.isIn(ids),
           )
           .delete();
+
+      await managers.sections.bulkReplace(
+        implement.sections
+            .where((s) => (s.id ?? 0) > 0)
+            .map(
+              (section) => SectionsCompanion(
+                id: Value(section.id!),
+                implement: Value(implement.id!),
+                longitudinalOffset: Value(section.longitudinalOffset),
+                lateralOffset: Value(section.lateralOffset),
+                width: Value(section.width),
+                length: Value(section.length),
+                color: Value.absentIfNull(section.color),
+                workedPathColor: Value.absentIfNull(
+                  section.workedPathColor,
+                ),
+                createdAt: Value.absentIfNull(section.createdAt),
+                lastUpdatedAt: Value(DateTime.now()),
+              ),
+            ),
+      );
     }
     Logger.instance.i('Updated implement ${implement.id}: ${implement.name}.');
   }
@@ -214,7 +256,10 @@ class ImplementsDao extends DatabaseAccessor<Database>
       .map(
         (row) => row.$1.copyWith(
           connectors: row.$2.connectorImplement.prefetchedData,
-          sections: row.$2.sectionImplement.prefetchedData,
+          sections: row.$2.sectionImplement.prefetchedData
+              ?.sortedBy((s) => s.lateralOffset)
+              .mapIndexed((i, s) => s.copyWith(index: i))
+              .toList(),
         ),
       )
       .getSingle();
@@ -240,7 +285,10 @@ class ImplementsDao extends DatabaseAccessor<Database>
       .map(
         (row) => row.$1.copyWith(
           connectors: row.$2.connectorImplement.prefetchedData,
-          sections: row.$2.sectionImplement.prefetchedData,
+          sections: row.$2.sectionImplement.prefetchedData
+              ?.sortedBy((s) => s.lateralOffset)
+              .mapIndexed((i, s) => s.copyWith(index: i))
+              .toList(),
         ),
       )
       .get();

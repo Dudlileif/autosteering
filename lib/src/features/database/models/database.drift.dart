@@ -7403,17 +7403,6 @@ class $SectionsTable extends Sections with TableInfo<$SectionsTable, Section> {
     type: DriftSqlType.double,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _workingWidthMeta = const VerificationMeta(
-    'workingWidth',
-  );
-  @override
-  late final GeneratedColumn<double> workingWidth = GeneratedColumn<double>(
-    'working_width',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
   static const VerificationMeta _lengthMeta = const VerificationMeta('length');
   @override
   late final GeneratedColumn<double> length = GeneratedColumn<double>(
@@ -7464,7 +7453,6 @@ class $SectionsTable extends Sections with TableInfo<$SectionsTable, Section> {
     longitudinalOffset,
     lateralOffset,
     width,
-    workingWidth,
     length,
     automateActivation,
     color,
@@ -7538,17 +7526,6 @@ class $SectionsTable extends Sections with TableInfo<$SectionsTable, Section> {
     } else if (isInserting) {
       context.missing(_widthMeta);
     }
-    if (data.containsKey('working_width')) {
-      context.handle(
-        _workingWidthMeta,
-        workingWidth.isAcceptableOrUnknown(
-          data['working_width']!,
-          _workingWidthMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_workingWidthMeta);
-    }
     if (data.containsKey('length')) {
       context.handle(
         _lengthMeta,
@@ -7586,10 +7563,6 @@ class $SectionsTable extends Sections with TableInfo<$SectionsTable, Section> {
       width: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}width'],
-      )!,
-      workingWidth: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}working_width'],
       )!,
       length: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
@@ -7652,7 +7625,6 @@ class SectionsCompanion extends UpdateCompanion<Section> {
   final Value<double> longitudinalOffset;
   final Value<double> lateralOffset;
   final Value<double> width;
-  final Value<double> workingWidth;
   final Value<double> length;
   final Value<bool> automateActivation;
   final Value<Color?> color;
@@ -7665,7 +7637,6 @@ class SectionsCompanion extends UpdateCompanion<Section> {
     this.longitudinalOffset = const Value.absent(),
     this.lateralOffset = const Value.absent(),
     this.width = const Value.absent(),
-    this.workingWidth = const Value.absent(),
     this.length = const Value.absent(),
     this.automateActivation = const Value.absent(),
     this.color = const Value.absent(),
@@ -7679,7 +7650,6 @@ class SectionsCompanion extends UpdateCompanion<Section> {
     required double longitudinalOffset,
     required double lateralOffset,
     required double width,
-    required double workingWidth,
     required double length,
     this.automateActivation = const Value.absent(),
     this.color = const Value.absent(),
@@ -7688,7 +7658,6 @@ class SectionsCompanion extends UpdateCompanion<Section> {
        longitudinalOffset = Value(longitudinalOffset),
        lateralOffset = Value(lateralOffset),
        width = Value(width),
-       workingWidth = Value(workingWidth),
        length = Value(length);
   static Insertable<Section> custom({
     Expression<DateTime>? createdAt,
@@ -7698,7 +7667,6 @@ class SectionsCompanion extends UpdateCompanion<Section> {
     Expression<double>? longitudinalOffset,
     Expression<double>? lateralOffset,
     Expression<double>? width,
-    Expression<double>? workingWidth,
     Expression<double>? length,
     Expression<bool>? automateActivation,
     Expression<String>? color,
@@ -7712,7 +7680,6 @@ class SectionsCompanion extends UpdateCompanion<Section> {
       if (longitudinalOffset != null) 'longitudinal_offset': longitudinalOffset,
       if (lateralOffset != null) 'lateral_offset': lateralOffset,
       if (width != null) 'width': width,
-      if (workingWidth != null) 'working_width': workingWidth,
       if (length != null) 'length': length,
       if (automateActivation != null) 'automate_activation': automateActivation,
       if (color != null) 'color': color,
@@ -7728,7 +7695,6 @@ class SectionsCompanion extends UpdateCompanion<Section> {
     Value<double>? longitudinalOffset,
     Value<double>? lateralOffset,
     Value<double>? width,
-    Value<double>? workingWidth,
     Value<double>? length,
     Value<bool>? automateActivation,
     Value<Color?>? color,
@@ -7742,7 +7708,6 @@ class SectionsCompanion extends UpdateCompanion<Section> {
       longitudinalOffset: longitudinalOffset ?? this.longitudinalOffset,
       lateralOffset: lateralOffset ?? this.lateralOffset,
       width: width ?? this.width,
-      workingWidth: workingWidth ?? this.workingWidth,
       length: length ?? this.length,
       automateActivation: automateActivation ?? this.automateActivation,
       color: color ?? this.color,
@@ -7774,9 +7739,6 @@ class SectionsCompanion extends UpdateCompanion<Section> {
     if (width.present) {
       map['width'] = Variable<double>(width.value);
     }
-    if (workingWidth.present) {
-      map['working_width'] = Variable<double>(workingWidth.value);
-    }
     if (length.present) {
       map['length'] = Variable<double>(length.value);
     }
@@ -7806,7 +7768,6 @@ class SectionsCompanion extends UpdateCompanion<Section> {
           ..write('longitudinalOffset: $longitudinalOffset, ')
           ..write('lateralOffset: $lateralOffset, ')
           ..write('width: $width, ')
-          ..write('workingWidth: $workingWidth, ')
           ..write('length: $length, ')
           ..write('automateActivation: $automateActivation, ')
           ..write('color: $color, ')
@@ -17619,7 +17580,6 @@ typedef $$SectionsTableCreateCompanionBuilder =
       required double longitudinalOffset,
       required double lateralOffset,
       required double width,
-      required double workingWidth,
       required double length,
       Value<bool> automateActivation,
       Value<Color?> color,
@@ -17634,7 +17594,6 @@ typedef $$SectionsTableUpdateCompanionBuilder =
       Value<double> longitudinalOffset,
       Value<double> lateralOffset,
       Value<double> width,
-      Value<double> workingWidth,
       Value<double> length,
       Value<bool> automateActivation,
       Value<Color?> color,
@@ -17701,11 +17660,6 @@ class $$SectionsTableFilterComposer
 
   ColumnFilters<double> get width => $composableBuilder(
     column: $table.width,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<double> get workingWidth => $composableBuilder(
-    column: $table.workingWidth,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -17794,11 +17748,6 @@ class $$SectionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get workingWidth => $composableBuilder(
-    column: $table.workingWidth,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<double> get length => $composableBuilder(
     column: $table.length,
     builder: (column) => ColumnOrderings(column),
@@ -17876,11 +17825,6 @@ class $$SectionsTableAnnotationComposer
   GeneratedColumn<double> get width =>
       $composableBuilder(column: $table.width, builder: (column) => column);
 
-  GeneratedColumn<double> get workingWidth => $composableBuilder(
-    column: $table.workingWidth,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<double> get length =>
       $composableBuilder(column: $table.length, builder: (column) => column);
 
@@ -17957,7 +17901,6 @@ class $$SectionsTableTableManager
                 Value<double> longitudinalOffset = const Value.absent(),
                 Value<double> lateralOffset = const Value.absent(),
                 Value<double> width = const Value.absent(),
-                Value<double> workingWidth = const Value.absent(),
                 Value<double> length = const Value.absent(),
                 Value<bool> automateActivation = const Value.absent(),
                 Value<Color?> color = const Value.absent(),
@@ -17970,7 +17913,6 @@ class $$SectionsTableTableManager
                 longitudinalOffset: longitudinalOffset,
                 lateralOffset: lateralOffset,
                 width: width,
-                workingWidth: workingWidth,
                 length: length,
                 automateActivation: automateActivation,
                 color: color,
@@ -17985,7 +17927,6 @@ class $$SectionsTableTableManager
                 required double longitudinalOffset,
                 required double lateralOffset,
                 required double width,
-                required double workingWidth,
                 required double length,
                 Value<bool> automateActivation = const Value.absent(),
                 Value<Color?> color = const Value.absent(),
@@ -17998,7 +17939,6 @@ class $$SectionsTableTableManager
                 longitudinalOffset: longitudinalOffset,
                 lateralOffset: lateralOffset,
                 width: width,
-                workingWidth: workingWidth,
                 length: length,
                 automateActivation: automateActivation,
                 color: color,

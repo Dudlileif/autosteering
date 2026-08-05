@@ -16,15 +16,16 @@
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:autosteering/src/features/equipment/equipment.dart';
+import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'equipment_configurator_providers.g.dart';
+part 'implement_configurator_providers.g.dart';
 
-/// A provider for the index of the naviagtion rail of the equipment
+/// A provider for the index of the naviagtion rail of the implement
 /// configurator dialog.
 @Riverpod(keepAlive: true)
-class EquipmentConfiguratorIndex extends _$EquipmentConfiguratorIndex {
+class ImplementConfiguratorIndex extends _$ImplementConfiguratorIndex {
   @override
   int build() => 0;
 
@@ -38,39 +39,58 @@ class EquipmentConfiguratorIndex extends _$EquipmentConfiguratorIndex {
   void decrease() => update(state - 1);
 }
 
-/// A provider for the equipment from the configurator.
+/// A provider for the implement from the configurator.
 @Riverpod(keepAlive: true)
-class ConfiguredEquipment extends _$ConfiguredEquipment {
+class ConfiguredImplement extends _$ConfiguredImplement {
   @override
   Equipment build() => ref.watch(loadedEquipmentProvider) ?? Equipment();
 
-  /// Update the [state] to [equipment].
-  void update(Equipment equipment) => Future(() => state = equipment);
+  /// Update the [state] to [implement].
+  void update(Equipment implement) => Future(() => state = implement);
 
-  /// Updates the equipment's name to [name].
+  /// Updates the implement's name to [name].
   void updateName(String? name) =>
       Future(() => state = state.copyWith(name: name));
 
-  /// Updates the equipment's [section].
+  /// Updates the implement's [connector].
+  void updateConnector(Connector connector, {required int index}) => Future(
+    () => state = state.copyWith(
+      connectors: state.connectors..replaceRange(index, index + 1, [connector]),
+    ),
+  );
+
+  /// Removes the connector at [index] in the list.
+  void removeConnector(int index) => Future(
+    () => state = state.copyWith(
+      connectors: state.connectors..replaceRange(index, index + 1, []),
+    ),
+  );
+
+  /// Updates the implement's [section].
   void updateSection(Section section) => Future(
     () => state = state.copyWith(
       sections: state.sections
         ..replaceRange(section.index, section.index + 1, [section]),
     ),
   );
+
+  @override
+  bool updateShouldNotify(Equipment previous, Equipment next) {
+    return true;
+  }
 }
 
 /// A provider for whether the configured equipment sections should have equal
 /// widths.
 @riverpod
-class ConfiguredEquipmentEqualWidths extends _$ConfiguredEquipmentEqualWidths {
+class ConfiguredImplementEqualWidths extends _$ConfiguredImplementEqualWidths {
   @override
   bool build() {
     listenSelf((previous, next) {
       if (previous != null && !previous && next) {
-        final equipment = ref.read(configuredEquipmentProvider);
+        final equipment = ref.read(configuredImplementProvider);
         ref
-            .read(configuredEquipmentProvider.notifier)
+            .read(configuredImplementProvider.notifier)
             .update(
               equipment.copyWith(
                 sections: equipment.sections
@@ -86,7 +106,7 @@ class ConfiguredEquipmentEqualWidths extends _$ConfiguredEquipmentEqualWidths {
     });
 
     return ref.read(
-      configuredEquipmentProvider.select(
+      configuredImplementProvider.select(
         (value) =>
             value.sections.isNotEmpty &&
             value.sections.every(
@@ -100,44 +120,18 @@ class ConfiguredEquipmentEqualWidths extends _$ConfiguredEquipmentEqualWidths {
   void update({required bool value}) => Future(() => state = value);
 }
 
-/// A provider for whether the configured equipment sections should have equal
-/// working widths.
+/// A provider for keepinng track of open sections in the implement
+/// configurator.
 @riverpod
-class ConfiguredEquipmentEqualWorkingWidths
-    extends _$ConfiguredEquipmentEqualWorkingWidths {
+class ConfiguredImplementOpenSections
+    extends _$ConfiguredImplementOpenSections {
   @override
-  bool build() {
-    listenSelf((previous, next) {
-      if (previous != null && !previous && next) {
-        final equipment = ref.read(configuredEquipmentProvider);
-        ref
-            .read(configuredEquipmentProvider.notifier)
-            .update(
-              equipment.copyWith(
-                sections: equipment.sections
-                    .map(
-                      (section) => section.copyWith(
-                        workingWidth: equipment.sections.first.workingWidth,
-                      ),
-                    )
-                    .toList(),
-              ),
-            );
-      }
-    });
+  Set<int> build() => {};
 
-    return ref.read(
-      configuredEquipmentProvider.select(
-        (value) =>
-            value.sections.isNotEmpty &&
-            value.sections.every(
-              (element) =>
-                  element.workingWidth == value.sections.first.workingWidth,
-            ),
-      ),
-    );
-  }
+  /// Adds [value] to [state].
+  void add(int value) => Future(() => state = {...state, value});
 
-  /// Updates [state] to [value].
-  void update({required bool value}) => Future(() => state = value);
+  /// Removes [value] from [state].
+  void remove(int value) =>
+      Future(() => state = state.where((v) => v != value).toSet());
 }

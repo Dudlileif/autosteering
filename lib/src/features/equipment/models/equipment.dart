@@ -32,7 +32,7 @@ import 'package:geobase/geobase.dart';
 class Equipment extends Hitchable {
   /// A class for equipment used for working on the fields.
   ///
-  /// The [bearing] and [_position] parameters generally doesn't need to be
+  /// The [bearing] and [_position] parameters generally don't need to be
   /// set, as the equipment usually doesn't spawn/show initially without a
   /// parent to inherit position and bearing from.
   Equipment({
@@ -42,12 +42,8 @@ class Equipment extends Hitchable {
     super.name,
     super.id,
     super.uuid,
-    super.lastUsedAt,
     this.recordingPositionFraction = 1,
-    this.hitchToDecorationStartLength,
-    this.decorationSidewaysOffset,
-    this.decorationLength,
-    this.decorationWidth,
+
     List<Section>? sections,
     double bearing = 0,
     this._position = const Geographic(lat: 0, lon: 0),
@@ -60,9 +56,6 @@ class Equipment extends Hitchable {
   factory Equipment.fromJson(Map<String, dynamic> json) {
     final info = Map<String, dynamic>.from(json['info'] as Map);
     final dimensions = Map<String, dynamic>.from(json['dimensions'] as Map);
-    final decoration = dimensions['decoration'] != null
-        ? Map<String, dynamic>.from(dimensions['decoration'] as Map)
-        : null;
 
     final sections = switch (json['sections']) {
       final List<dynamic> sections =>
@@ -118,13 +111,6 @@ class Equipment extends Hitchable {
       recordingPositionFraction:
           (dimensions['recording_position_fraction'] as double?) ?? 1,
       sections: sections,
-      hitchToDecorationStartLength:
-          decoration?['hitch_to_decoration_start_length'] as double?,
-      decorationLength: decoration?['decoration_length'] as double?,
-      decorationWidth: decoration?['decoration_width'] as double?,
-      decorationSidewaysOffset:
-          decoration?['decoration_sideways_offset'] as double?,
-      lastUsedAt: DateTime.tryParse(info['last_used'] as String),
     );
 
     return equipment;
@@ -135,7 +121,6 @@ class Equipment extends Hitchable {
     required int id,
     String? name,
     DateTime? createdAt,
-    DateTime? lastUsedAt,
     DateTime? lastUpdatedAt,
   }) {
     return Equipment(
@@ -143,7 +128,6 @@ class Equipment extends Hitchable {
       name: name,
       createdAt: createdAt,
       lastUpdatedAt: lastUpdatedAt,
-      lastUsedAt: lastUsedAt,
     );
   }
 
@@ -173,19 +157,6 @@ class Equipment extends Hitchable {
   ///  0    ---------
   /// ```
   double recordingPositionFraction = 1;
-
-  /// The distance from the hitch [position] to the start of the decoration
-  /// polygon.
-  double? hitchToDecorationStartLength;
-
-  /// The length of the decoration polygon.
-  double? decorationLength;
-
-  /// The width of the decoration polygon.
-  double? decorationWidth;
-
-  /// The sideways offset for the decoration polygon.
-  double? decorationSidewaysOffset;
 
   /// The position of the equipment, used to specifically set the [position].
   Geographic _position = const Geographic(lon: 0, lat: 0);
@@ -366,7 +337,7 @@ class Equipment extends Hitchable {
   /// A list of the current activation status for the [sections].
   Map<int, bool> get sectionActivationStatus => Map.fromEntries(
     sections
-        .where((section) => section.workingWidth > 0)
+        .where((section) => section.width > 0)
         .map((section) => MapEntry(section.index, section.active)),
   );
 
@@ -575,7 +546,7 @@ class Equipment extends Hitchable {
     bool force = false,
     bool forceOwnPositionAndBearing = false,
   }) {
-    if (sections[index].workingWidth == 0 && !force) {
+    if (sections[index].width == 0 && !force) {
       return null;
     }
 
@@ -590,7 +561,7 @@ class Equipment extends Hitchable {
         )
         .rhumb
         .destinationPoint(
-          distance: section.lateralOffset - section.workingWidth / 2,
+          distance: section.lateralOffset - section.width / 2,
           bearing: calculationBearing + 90,
         );
 
@@ -600,7 +571,7 @@ class Equipment extends Hitchable {
     );
 
     final sectionRearRight = sectionRearLeft.rhumb.destinationPoint(
-      distance: section.workingWidth,
+      distance: section.width,
       bearing: calculationBearing + 90,
     );
 
@@ -643,7 +614,7 @@ class Equipment extends Hitchable {
           points[3],
           fraction: fraction ?? recordingPositionFraction,
         ),
-        time: overrideTime ?? lastUsedAt,
+        time: overrideTime,
       );
     }
     return null;
@@ -659,7 +630,7 @@ class Equipment extends Hitchable {
   }) {
     final map = <int, SectionEdgePositions>{};
     for (final element in sections.where(
-      (section) => section.workingWidth > 0,
+      (section) => section.width > 0,
     )) {
       if (element.active || forceIndices.contains(element.index)) {
         map[element.index] = sectionEdgePositions(
@@ -677,7 +648,7 @@ class Equipment extends Hitchable {
   Geographic sectionCenter(int sectionIndex) {
     final points = sectionPoints(sectionIndex);
     return points[0].rhumb
-        .midPointTo(points[3])
+        .midPointTo(points[2])
         .rhumb
         .destinationPoint(
           distance:
@@ -730,7 +701,7 @@ class Equipment extends Hitchable {
 
     return sectionWorkingPolygon(index)?.mapPolygon(
       borderStrokeWidth: 2,
-      borderColor: switch (section.workingWidth > 0) {
+      borderColor: switch (section.width > 0) {
         true => switch (section.active) {
           true => section.color?.brighten(30) ?? Colors.greenAccent,
           false => Colors.grey,
@@ -742,6 +713,27 @@ class Equipment extends Hitchable {
         false => Colors.grey.withValues(alpha: 0.2),
       },
     );
+  }
+
+  /// A map polygon for showing a short worked path behind the section.
+  map.Polygon? implementPreviewWorkingAreaMapPolygon(int index) {
+    if (sectionCornerPoints(index) case [
+      _,
+      final rearLeft,
+      final rearRight,
+      _,
+    ]) {
+      return map.Polygon(
+        points: [
+          rearLeft.latLng,
+          rearLeft.rhumb.destinationPoint(distance: 2, bearing: 180).latLng,
+          rearRight.rhumb.destinationPoint(distance: 2, bearing: 180).latLng,
+          rearRight.latLng,
+        ],
+        color: sections[index].workedPathColor,
+      );
+    }
+    return null;
   }
 
   /// An iterable of all the sections' polygons.
@@ -886,61 +878,11 @@ class Equipment extends Hitchable {
     },
   ];
 
-  /// A polygon drawing the decoration of the equipment.
-  map.Polygon? get decorationPolygon {
-    if (hitchToDecorationStartLength != null &&
-        decorationLength != null &&
-        decorationWidth != null) {
-      final decorationStart = position.rhumb
-          .destinationPoint(
-            distance: hitchToDecorationStartLength!,
-            bearing: bearing - 180,
-          )
-          .rhumb
-          .destinationPoint(
-            distance: decorationSidewaysOffset ?? 0,
-            bearing: bearing + 90,
-          );
-      final decorationEnd = decorationStart.rhumb.destinationPoint(
-        distance: decorationLength!,
-        bearing: bearing - 180,
-      );
-
-      final points = [
-        decorationStart.rhumb.destinationPoint(
-          distance: decorationWidth! / 2,
-          bearing: bearing + 90,
-        ),
-        decorationEnd.rhumb.destinationPoint(
-          distance: decorationWidth! / 2,
-          bearing: bearing + 90,
-        ),
-        decorationEnd.rhumb.destinationPoint(
-          distance: decorationWidth! / 2,
-          bearing: bearing - 90,
-        ),
-        decorationStart.rhumb.destinationPoint(
-          distance: decorationWidth! / 2,
-          bearing: bearing - 90,
-        ),
-      ];
-
-      return map.Polygon(
-        borderStrokeWidth: 3,
-        color: Colors.grey.shade800.withValues(alpha: 0.7),
-        borderColor: Colors.black,
-        points: points.map((e) => e.latLng).toList(),
-      );
-    }
-    return null;
-  }
-
   /// A list of all the polygons for the equipment, i.e. [drawbarMapPolygons]
   /// and all the [sectionWorkingMapPolygon]s.
   List<map.Polygon> get mapPolygons {
     return [
       ...drawbarMapPolygons,
-      ?decorationPolygon,
       ...List.generate(
         sections.length,
         sectionWorkingMapPolygon,
@@ -1081,11 +1023,6 @@ class Equipment extends Hitchable {
     double? recordingPositionFraction,
     double? bearing,
     Geographic? position,
-    double? hitchToDecorationStartLength,
-    double? decorationSidewaysOffset,
-    double? decorationLength,
-    double? decorationWidth,
-    DateTime? lastUsedAt,
     bool clearParentConnection = false,
     int? id,
   }) => Equipment(
@@ -1103,13 +1040,6 @@ class Equipment extends Hitchable {
         recordingPositionFraction ?? this.recordingPositionFraction,
     position: position ?? this.position,
     bearing: bearing ?? this.bearing,
-    hitchToDecorationStartLength:
-        hitchToDecorationStartLength ?? this.hitchToDecorationStartLength,
-    decorationLength: decorationLength ?? this.decorationLength,
-    decorationWidth: decorationWidth ?? this.decorationWidth,
-    decorationSidewaysOffset:
-        decorationSidewaysOffset ?? this.decorationSidewaysOffset,
-    lastUsedAt: lastUsedAt ?? this.lastUsedAt,
   );
 
   /// Converts the object to a json compatible structure.
@@ -1121,27 +1051,12 @@ class Equipment extends Hitchable {
       'name': name,
       'uuid': uuid,
       'hitch_type': childConnectors.first.type.name,
-      'last_used': lastUsedAt.toIso8601String(),
     };
-
-    Map<String, double?>? decoration;
-
-    if (hitchToDecorationStartLength != null &&
-        decorationLength != null &&
-        decorationWidth != null) {
-      decoration = {
-        'hitch_to_decoration_start_length': hitchToDecorationStartLength,
-        'decoration_length': decorationLength,
-        'decoration_width': decorationWidth,
-        'decoration_sideways_offset': decorationSidewaysOffset,
-      };
-    }
 
     map['dimensions'] = {
       'sideways_offset': sidewaysOffset,
       'width': width,
       'recording_position_fraction': recordingPositionFraction,
-      'decoration': decoration,
     };
 
     map['sections'] = sections;

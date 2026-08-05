@@ -277,8 +277,8 @@ class AppLocalizationsNb extends AppLocalizations {
       type,
       {
         'other': 'Relasjon',
-        'child': 'Barn',
-        'parent': 'Forelder',
+        'child': 'Følger',
+        'parent': 'Leder',
       },
     );
     return '$_temp0';
@@ -305,7 +305,7 @@ class AppLocalizationsNb extends AppLocalizations {
       type,
       {
         'other': 'Kobling',
-        'fixed': 'Fast',
+        'fixed': 'Trepunkt/Fast',
         'drawbar': 'Drag',
       },
     );
@@ -444,13 +444,6 @@ class AppLocalizationsNb extends AppLocalizations {
   String get debugMode => 'Feilsøkingsmodus';
 
   @override
-  String get decoration => 'Dekorasjon';
-
-  @override
-  String get decorationSidewaysOffset =>
-      'Dekorasjon sideveis forskyvning (-venstre / +høyre)';
-
-  @override
   String get defaultOption => 'Standard';
 
   @override
@@ -563,13 +556,13 @@ class AppLocalizationsNb extends AppLocalizations {
   String get equalWidths => 'Like bredder';
 
   @override
-  String get equalWorkingWidths => 'Like arbeidsbredder';
+  String get implement => 'Redskap';
 
   @override
-  String get equipment => 'Redskap';
+  String get implementDetermined => 'Redskapet';
 
   @override
-  String get equipmentDrawbarLength => 'Redskapets draglengde';
+  String get implementDrawbarLength => 'Redskapets draglengde';
 
   @override
   String get equipmentSetup => 'Redskapsoppsett';
@@ -709,9 +702,6 @@ class AppLocalizationsNb extends AppLocalizations {
     );
     return '$_temp0';
   }
-
-  @override
-  String get hitchToDecorationStart => 'Avstand fra kobling til dekorasjon';
 
   @override
   String get hitchToFrontFixedHitchDistance =>
@@ -1233,6 +1223,38 @@ class AppLocalizationsNb extends AppLocalizations {
   String get position => 'Posisjon';
 
   @override
+  String get preview => 'Forhåndsvisning';
+
+  @override
+  String primaryColor(String option) {
+    String _temp0 = intl.Intl.selectLogic(
+      option,
+      {
+        'other': 'Farge',
+        'red': 'Rød',
+        'pink': 'Rosa',
+        'purple': 'Lilla',
+        'deepPurple': 'Mørkelilla',
+        'indigo': 'Indigo',
+        'blue': 'Blå',
+        'lightBlue': 'Lyseblå',
+        'cyan': 'Cyan',
+        'teal': 'Blågrønn',
+        'green': 'Grønn',
+        'lightGreen': 'Lysegrønn',
+        'lime': 'Lime',
+        'yellow': 'Gul',
+        'amber': 'Ravgul',
+        'orange': 'Oransje',
+        'deepOrange': 'Mørkeoransje',
+        'brown': 'Brun',
+        'blueGrey': 'Blågrå',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get rawBufferPoints => 'Rå-bufferpunkter';
 
   @override
@@ -1291,7 +1313,7 @@ class AppLocalizationsNb extends AppLocalizations {
       option,
       {
         'other': 'Ingen funksjon',
-        'toggleEquipmentSections': 'Veksle redskapseksjoner',
+        'toggleImplementSections': 'Veksle redskapseksjoner',
         'toggleAutosteering': 'Veksle autostyring',
         'toggleABSnap': 'Veksle AB-linje hopp til nærmeste linje',
         'resetNudgeDistance': 'Nullstill dulteavstand til 0',
@@ -1403,9 +1425,6 @@ class AppLocalizationsNb extends AppLocalizations {
   String get sectionWidth => 'Seksjonsbredde';
 
   @override
-  String get sectionWorkingWidth => 'Seksjon-arbeidsbredde';
-
-  @override
   String get selectExportFolder => 'Velg eksportmappe';
 
   @override
@@ -1446,7 +1465,7 @@ class AppLocalizationsNb extends AppLocalizations {
   String get settings => 'Innstillinger';
 
   @override
-  String get setToEquipmentWidth => 'Sett til redskapsbredde';
+  String get setToImplementWidth => 'Sett til redskapsbredde';
 
   @override
   String setToValueXVehicleTurningRadius(num value) {
@@ -1893,6 +1912,9 @@ class AppLocalizationsNb extends AppLocalizations {
   String get vehicleBodyWidth => 'Bredde, uten hjul';
 
   @override
+  String get vehicleDetermined => 'Kjøretøyet';
+
+  @override
   String get vehicleImage => 'Kjøretøybilde';
 
   @override
@@ -1978,9 +2000,6 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get workingAreaLength => 'Arbeidsområde-lengde';
-
-  @override
-  String get workingWidth => 'Arbeidsbredde';
 
   @override
   String get workSession => 'Arbeidsøkt';

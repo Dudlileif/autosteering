@@ -304,7 +304,7 @@ class AppLocalizationsEn extends AppLocalizations {
       type,
       {
         'other': 'Connector',
-        'fixed': 'Fixed',
+        'fixed': 'Three-point/Fixed',
         'drawbar': 'Drawbar',
       },
     );
@@ -340,7 +340,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get copyWorkSessionDescription =>
-      'Copy field, equipment and guidance from this.';
+      'Copy field, implement and guidance from this.';
 
   @override
   String get create => 'Create';
@@ -441,13 +441,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get debugMode => 'Debug mode';
-
-  @override
-  String get decoration => 'Decoration';
-
-  @override
-  String get decorationSidewaysOffset =>
-      'Decoration sideways offset (-left / +right)';
 
   @override
   String get defaultOption => 'Default';
@@ -562,13 +555,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get equalWidths => 'Equal widths';
 
   @override
-  String get equalWorkingWidths => 'Equal working widths';
+  String get implement => 'Implement';
 
   @override
-  String get equipment => 'Equipment';
+  String get implementDetermined => 'Implement';
 
   @override
-  String get equipmentDrawbarLength => 'Equipment drawbar length';
+  String get implementDrawbarLength => 'Implement drawbar length';
 
   @override
   String get equipmentSetup => 'Equipment setup';
@@ -708,9 +701,6 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
-
-  @override
-  String get hitchToDecorationStart => 'Hitch to decoration start';
 
   @override
   String get hitchToFrontFixedHitchDistance =>
@@ -1229,6 +1219,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String get position => 'Position';
 
   @override
+  String get preview => 'Preview';
+
+  @override
+  String primaryColor(String option) {
+    String _temp0 = intl.Intl.selectLogic(
+      option,
+      {
+        'other': 'Color',
+        'red': 'Red',
+        'pink': 'Pink',
+        'purple': 'Purple',
+        'deepPurple': 'Deep purple',
+        'indigo': 'Indigo',
+        'blue': 'Blue',
+        'lightBlue': 'Light blue',
+        'cyan': 'Cyan',
+        'teal': 'Teal',
+        'green': 'Green',
+        'lightGreen': 'Light green',
+        'lime': 'Lime',
+        'yellow': 'Yellow',
+        'amber': 'Amber',
+        'orange': 'Orange',
+        'deepOrange': 'Deep orange',
+        'brown': 'Brown',
+        'blueGrey': 'Blue grey',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get rawBufferPoints => 'Raw buffer points';
 
   @override
@@ -1287,7 +1309,7 @@ class AppLocalizationsEn extends AppLocalizations {
       option,
       {
         'other': 'No action',
-        'toggleEquipmentSections': 'Toggle equipment sections',
+        'toggleImplementSections': 'Toggle implement sections',
         'toggleAutosteering': 'Toggle autosteering',
         'toggleABSnap': 'Toggle AB-line snap to closest line',
         'resetNudgeDistance': 'Reset nudge distance to 0',
@@ -1398,9 +1420,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sectionWidth => 'Section width';
 
   @override
-  String get sectionWorkingWidth => 'Section working width';
-
-  @override
   String get selectExportFolder => 'Select export folder';
 
   @override
@@ -1441,7 +1460,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings => 'Settings';
 
   @override
-  String get setToEquipmentWidth => 'Set to equipment width';
+  String get setToImplementWidth => 'Set to implement width';
 
   @override
   String setToValueXVehicleTurningRadius(num value) {
@@ -1887,6 +1906,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get vehicleBodyWidth => 'Vehicle body width, excluding wheels';
 
   @override
+  String get vehicleDetermined => 'Vehicle';
+
+  @override
   String get vehicleImage => 'Vehicle image';
 
   @override
@@ -1972,9 +1994,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get workingAreaLength => 'Working area length';
-
-  @override
-  String get workingWidth => 'Working width';
 
   @override
   String get workSession => 'Work session';

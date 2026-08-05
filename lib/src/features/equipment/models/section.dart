@@ -27,8 +27,6 @@ part 'section_edge_position.dart';
 class Section {
   /// A class for representing a physical section of an [Equipment].
   ///
-  /// []
-  ///
   /// [index] is the positional index of this section, where 0 is the leftmost
   /// section.
   ///
@@ -39,8 +37,6 @@ class Section {
   /// [Equipment.position] in meters.
   ///
   /// [width] is the width of the section in meters.
-  ///
-  /// [workingWidth] is the centered working width of the section.
   ///
   /// [length] is the length of the section in meters.
   ///
@@ -63,7 +59,6 @@ class Section {
     required this.lateralOffset,
     this.index = 0,
     this.width = 3,
-    this.workingWidth = 3,
     this.length = 1,
     this.active = false,
     this.automateActivation = false,
@@ -81,7 +76,6 @@ class Section {
     required double lateralOffset,
     int index = 0,
     double width = 3,
-    double workingWidth = 3,
     double length = 1,
     bool active = false,
     bool automateActivation = false,
@@ -96,7 +90,6 @@ class Section {
     lateralOffset: lateralOffset,
     index: index,
     width: width,
-    workingWidth: workingWidth,
     length: length,
     active: active,
     automateActivation: automateActivation,
@@ -112,7 +105,6 @@ class Section {
   factory Section.fromJson(Map<String, dynamic> json) {
     final index = json['index'] as int? ?? 0;
     final width = json['width'] as double? ?? 3;
-    final workingWidth = json['working_width'] as double? ?? 3;
     final active = json['active'] as bool?;
     final automateActivation = json['automate_activation'] as bool?;
     final sectionCount = json['section_count'] as int? ?? 1;
@@ -130,7 +122,6 @@ class Section {
       longitudinalOffset: longitudinalOffset,
       index: index,
       width: width,
-      workingWidth: workingWidth,
       active: active ?? false,
       automateActivation: automateActivation ?? false,
       color: const ColorSerializerNullable().fromJson(
@@ -142,7 +133,7 @@ class Section {
     );
   }
 
-  ///The positional index of this section, where 0 is the leftmost section.
+  /// The positional index of this section, where 0 is the leftmost section.
   final int index;
 
   /// The local id in the database.
@@ -161,10 +152,6 @@ class Section {
 
   /// The width of the section in meters.
   double width;
-
-  /// The centered working width of the section in meters, defaults to
-  /// the whole [width]
-  double workingWidth;
 
   /// The length of the section in meters.
   double length;
@@ -197,7 +184,6 @@ class Section {
     double? longitudinalOffset,
     double? lateralOffset,
     double? width,
-    double? workingWidth,
     double? length,
     bool? active,
     bool? automateActivation,
@@ -210,7 +196,6 @@ class Section {
     longitudinalOffset: longitudinalOffset ?? this.longitudinalOffset,
     lateralOffset: lateralOffset ?? this.lateralOffset,
     width: width ?? this.width,
-    workingWidth: workingWidth ?? this.workingWidth,
     length: length ?? this.length,
     active: active ?? this.active,
     automateActivation: automateActivation ?? this.automateActivation,
@@ -223,7 +208,6 @@ class Section {
     final map = <String, dynamic>{};
     map['index'] = index;
     map['width'] = width;
-    map['working_width'] = workingWidth;
     // map['active'] = active;
     map['automate_activation'] = automateActivation;
     map['color'] = const ColorSerializerNullable().toJson(color);

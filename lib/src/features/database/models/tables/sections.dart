@@ -44,11 +44,8 @@ class Sections extends Table with TableTimestamps {
   /// negative to the left.
   late final Column<double> lateralOffset = real()();
 
-  /// The widt of this, in meters.
+  /// The width of this, in meters.
   late final Column<double> width = real()();
-
-  /// The working width of this, in meters.
-  late final Column<double> workingWidth = real()();
 
   /// The length of this, in meters.
   late final Column<double> length = real()();

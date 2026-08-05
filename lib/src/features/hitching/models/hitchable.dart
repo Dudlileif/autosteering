@@ -38,11 +38,9 @@ abstract class Hitchable {
     this.childConnections = const [],
     this.id,
     @Deprecated('To be removed') String? uuid,
-    DateTime? lastUsedAt,
     DateTime? createdAt,
     DateTime? lastUpdatedAt,
   }) : uuid = uuid ?? const Uuid().v4(),
-       lastUsedAt = lastUsedAt ?? DateTime.now(),
        createdAt = createdAt ?? DateTime.now(),
        lastUpdatedAt = lastUpdatedAt ?? DateTime.now();
 
@@ -56,13 +54,10 @@ abstract class Hitchable {
   /// The name/id of this.
   String? name;
 
-  /// The last time this was used.
-  DateTime lastUsedAt;
-
   /// Creation time of this.
   DateTime createdAt;
 
-  /// Last time parameters of this was changed.
+  /// Last time this was updated.
   DateTime lastUpdatedAt;
 
   /// The connectors on this.
@@ -160,10 +155,6 @@ abstract class Hitchable {
       }
 
       childToAttach = uuidAlreadyAttached.copyWith(
-        decorationLength: childToAttach.decorationLength,
-        decorationSidewaysOffset: childToAttach.decorationSidewaysOffset,
-        decorationWidth: childToAttach.decorationWidth,
-        lastUsedAt: childToAttach.lastUsedAt,
         name: childToAttach.name,
         sections: newSections,
       )..parentConnection = null;
@@ -207,10 +198,6 @@ abstract class Hitchable {
       }
 
       childToAttach = idAlreadyAttached.copyWith(
-        decorationLength: childToAttach.decorationLength,
-        decorationSidewaysOffset: childToAttach.decorationSidewaysOffset,
-        decorationWidth: childToAttach.decorationWidth,
-        lastUsedAt: childToAttach.lastUsedAt,
         name: childToAttach.name,
         sections: newSections,
       );
@@ -325,7 +312,7 @@ abstract class Hitchable {
     childConnections = childConnections.map((c) {
       final connection = c.copyWith(
         parent: this,
-        child: c.child.copyWith(lastUsedAt: lastUsedAt),
+        child: c.child,
       );
       connection.child.updateChildren(period);
       return connection;
@@ -339,7 +326,6 @@ abstract class Hitchable {
     List<Connection>? childConnections,
     String? name,
     String? uuid,
-    DateTime? lastUsedAt,
   });
 
   /// Converts the object to a json compatible structure.

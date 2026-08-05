@@ -76,7 +76,7 @@
         "placeholders": {
             "value": {
                 "type": "String",
-                "example": "equipment"
+                "example": "implement"
             }
         }
     },
@@ -194,7 +194,7 @@
         "placeholders": {
             "value": {
                 "type": "String",
-                "example": "equipment"
+                "example": "implement"
             }
         }
     },
@@ -218,7 +218,7 @@
             }
         }
     },
-    "connectorType": "{type, select, other{Connector} fixed{Fixed} drawbar{Drawbar}}",
+    "connectorType": "{type, select, other{Connector} fixed{Three-point/Fixed} drawbar{Drawbar}}",
     "@connectorType": {
         "placeholders": {
             "type": {
@@ -255,7 +255,7 @@
             }
         }
     },
-    "copyWorkSessionDescription": "Copy field, equipment and guidance from this.",
+    "copyWorkSessionDescription": "Copy field, implement and guidance from this.",
     "@copyWorkSessionDescription": {},
     "create": "Create",
     "@create": {},
@@ -337,10 +337,6 @@
     "@debugging": {},
     "debugMode": "Debug mode",
     "@debugMode": {},
-    "decoration": "Decoration",
-    "@decoration": {},
-    "decorationSidewaysOffset": "Decoration sideways offset (-left / +right)",
-    "@decorationSidewaysOffset": {},
     "defaultOption": "Default",
     "@defaultOption": {},
     "delayValueMs": "Delay: {value} ms",
@@ -396,7 +392,7 @@
         "placeholders": {
             "value": {
                 "type": "String",
-                "example": "equipment"
+                "example": "implement"
             }
         }
     },
@@ -448,12 +444,12 @@
     },
     "equalWidths": "Equal widths",
     "@equalWidths": {},
-    "equalWorkingWidths": "Equal working widths",
-    "@equalWorkingWidths": {},
-    "equipment": "Equipment",
-    "@equipment": {},
-    "equipmentDrawbarLength": "Equipment drawbar length",
-    "@equipmentDrawbarLength": {},
+    "implement": "Implement",
+    "@implement": {},
+    "implementDetermined": "Implement",
+    "@implementDetermined": {},
+    "implementDrawbarLength": "Implement drawbar length",
+    "@implementDrawbarLength": {},
     "equipmentSetup": "Equipment setup",
     "@equipmentSetup": {},
     "error": "Error",
@@ -555,8 +551,6 @@
             }
         }
     },
-    "hitchToDecorationStart": "Hitch to decoration start",
-    "@hitchToDecorationStart": {},
     "hitchToFrontFixedHitchDistance": "Hitch to front fixed hitch distance",
     "@hitchToFrontFixedHitchDistance": {},
     "hitchToRearFixedHitchDistance": "Hitch to rear fixed hitch distance",
@@ -1002,6 +996,17 @@
     "@portNetwork": {},
     "position": "Position",
     "@position": {},
+    "preview": "Preview",
+    "@preview": {},
+    "primaryColor": "{option, select, other{Color} red{Red} pink{Pink} purple{Purple} deepPurple{Deep purple} indigo{Indigo} blue{Blue} lightBlue{Light blue} cyan{Cyan} teal{Teal} green{Green} lightGreen{Light green} lime{Lime} yellow{Yellow} amber{Amber} orange{Orange} deepOrange{Deep orange} brown{Brown} blueGrey{Blue grey}}",
+    "@primaryColor": {
+        "placeholders": {
+            "option": {
+                "type": "String",
+                "example": "Red"
+            }
+        }
+    },
     "rawBufferPoints": "Raw buffer points",
     "@rawBufferPoints": {},
     "rawSensorReading": "Raw {sensor} reading",
@@ -1041,7 +1046,7 @@
     "@recordingTapToPause": {},
     "remoteControl": "Remote control",
     "@remoteControl": {},
-    "remoteControlAction": "{option, select, other{No action} toggleEquipmentSections{Toggle equipment sections} toggleAutosteering{Toggle autosteering} toggleABSnap{Toggle AB-line snap to closest line} resetNudgeDistance{Reset nudge distance to 0}}",
+    "remoteControlAction": "{option, select, other{No action} toggleImplementSections{Toggle implement sections} toggleAutosteering{Toggle autosteering} toggleABSnap{Toggle AB-line snap to closest line} resetNudgeDistance{Reset nudge distance to 0}}",
     "@remoteControlAction": {
         "placeholders": {
             "option": {
@@ -1144,8 +1149,6 @@
     },
     "sectionWidth": "Section width",
     "@sectionWidth": {},
-    "sectionWorkingWidth": "Section working width",
-    "@sectionWorkingWidth": {},
     "selectExportFolder": "Select export folder",
     "@selectExportFolder": {},
     "selectValueFile": "Select {value} file",
@@ -1153,7 +1156,7 @@
         "placeholders": {
             "value": {
                 "type": "String",
-                "example": "equipment"
+                "example": "implement"
             }
         }
     },
@@ -1184,8 +1187,8 @@
     "@setTimeOfDay": {},
     "settings": "Settings",
     "@settings": {},
-    "setToEquipmentWidth": "Set to equipment width",
-    "@setToEquipmentWidth": {},
+    "setToImplementWidth": "Set to implement width",
+    "@setToImplementWidth": {},
     "setToValueXVehicleTurningRadius": "Set to {value}x vehicle turnung radius",
     "@setToValueXVehicleTurningRadius": {
         "placeholders": {
@@ -1607,6 +1610,8 @@
     "@vehicleBodyLength": {},
     "vehicleBodyWidth": "Vehicle body width, excluding wheels",
     "@vehicleBodyWidth": {},
+    "vehicleDetermined": "Vehicle",
+    "@vehicleDetermined": {},
     "vehicleImage": "Vehicle image",
     "@vehicleImage": {},
     "vehicleType": "{option, select, other{Vehicle} Tractor{Tractor} Harvester{Harvester} ArticulatedTractor{Articulated tractor}}",
@@ -1680,8 +1685,6 @@
     "@wifi": {},
     "workingAreaLength": "Working area length",
     "@workingAreaLength": {},
-    "workingWidth": "Working width",
-    "@workingWidth": {},
     "workSession": "Work session",
     "@workSession": {},
     "yaw": "Yaw",

@@ -57,46 +57,78 @@ class AppTheme {
   final FlexSchemeColor? darkColors;
 
   /// The light theme from this configuration.
-  ThemeData get light => FlexThemeData.light(
-    scheme: !useDynamicColors && !useManufacturerColors ? flexScheme : null,
-    colors: useDynamicColors || useManufacturerColors ? lightColors : null,
-    blendLevel: 10,
-    appBarOpacity: 0.90,
-    tooltipsMatchBackground: true,
-    lightIsWhite: lightIsWhite,
-    visualDensity: FlexColorScheme.comfortablePlatformDensity,
-    useMaterial3ErrorColors: true,
-    subThemesData: const FlexSubThemesData(
-      blendOnLevel: 10,
-      navigationBarHeight: 80,
-      unselectedToggleIsColored: true,
-      sliderYear2023: false,
-      progressIndicatorYear2023: false,
-      inputDecoratorBorderType: FlexInputBorderType.outline,
-      inputDecoratorIsFilled: true,
-      useInputDecoratorThemeInDialogs: true,
-    ),
-  );
+  ThemeData get light =>
+      FlexThemeData.light(
+        scheme: !useDynamicColors && !useManufacturerColors ? flexScheme : null,
+        colors: useDynamicColors || useManufacturerColors ? lightColors : null,
+        blendLevel: 10,
+        appBarOpacity: 0.90,
+        tooltipsMatchBackground: true,
+        lightIsWhite: lightIsWhite,
+        visualDensity: FlexColorScheme.comfortablePlatformDensity,
+        useMaterial3ErrorColors: true,
+        subThemesData: const FlexSubThemesData(
+          blendOnLevel: 10,
+          navigationBarHeight: 80,
+          unselectedToggleIsColored: true,
+          sliderYear2023: false,
+          progressIndicatorYear2023: false,
+          inputDecoratorBorderType: FlexInputBorderType.outline,
+          inputDecoratorIsFilled: true,
+          inputDecoratorRadius: 12,
+          useInputDecoratorThemeInDialogs: true,
+        ),
+      ).copyWith(
+        expansionTileTheme: ExpansionTileThemeData(
+          childrenPadding: const .all(8),
+          shape: RoundedRectangleBorder(borderRadius: .circular(12)),
+          collapsedShape: RoundedRectangleBorder(borderRadius: .circular(12)),
+          expansionAnimationStyle: const AnimationStyle(
+            curve: Easing.standard,
+            duration: Durations.medium2,
+          ),
+        ),
+        listTileTheme: ListTileThemeData(
+          shape: RoundedRectangleBorder(borderRadius: .circular(12)),
+        ),
+        appBarTheme: const AppBarTheme(actionsPadding: .only(right: 8)),
+      );
 
   /// The dark theme from this configuration.
-  ThemeData get dark => FlexThemeData.dark(
-    scheme: !useDynamicColors && !useManufacturerColors ? flexScheme : null,
-    colors: useDynamicColors || useManufacturerColors ? darkColors : null,
-    blendLevel: 15,
-    appBarOpacity: 0.90,
-    tooltipsMatchBackground: true,
-    darkIsTrueBlack: darkIsTrueBlack,
-    visualDensity: FlexColorScheme.comfortablePlatformDensity,
-    useMaterial3ErrorColors: true,
-    subThemesData: const FlexSubThemesData(
-      blendOnLevel: 20,
-      navigationBarHeight: 80,
-      unselectedToggleIsColored: true,
-      sliderYear2023: false,
-      progressIndicatorYear2023: false,
-      inputDecoratorBorderType: FlexInputBorderType.outline,
-      inputDecoratorIsFilled: true,
-      useInputDecoratorThemeInDialogs: true,
-    ),
-  );
+  ThemeData get dark =>
+      FlexThemeData.dark(
+        scheme: !useDynamicColors && !useManufacturerColors ? flexScheme : null,
+        colors: useDynamicColors || useManufacturerColors ? darkColors : null,
+        blendLevel: 15,
+        appBarOpacity: 0.90,
+        tooltipsMatchBackground: true,
+        darkIsTrueBlack: darkIsTrueBlack,
+        visualDensity: FlexColorScheme.comfortablePlatformDensity,
+        useMaterial3ErrorColors: true,
+        subThemesData: const FlexSubThemesData(
+          blendOnLevel: 20,
+          navigationBarHeight: 80,
+          unselectedToggleIsColored: true,
+          sliderYear2023: false,
+          progressIndicatorYear2023: false,
+          inputDecoratorBorderType: FlexInputBorderType.outline,
+          inputDecoratorIsFilled: true,
+          inputDecoratorRadius: 12,
+          useInputDecoratorThemeInDialogs: true,
+        ),
+      ).copyWith(
+        expansionTileTheme: ExpansionTileThemeData(
+          childrenPadding: const .all(8),
+          shape: RoundedRectangleBorder(borderRadius: .circular(12)),
+          collapsedShape: RoundedRectangleBorder(borderRadius: .circular(12)),
+          expansionAnimationStyle: const AnimationStyle(
+            curve: Easing.standard,
+            duration: Durations.medium2,
+          ),
+        ),
+        listTileTheme: ListTileThemeData(
+          shape: RoundedRectangleBorder(borderRadius: .circular(12)),
+        ),
+        appBarTheme: const AppBarTheme(actionsPadding: .only(right: 8)),
+      );
 }

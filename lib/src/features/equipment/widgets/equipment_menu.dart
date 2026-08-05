@@ -18,6 +18,7 @@
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
+import 'package:autosteering/src/features/implement/implement.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
@@ -42,7 +43,7 @@ class EquipmentMenu extends ConsumerWidget {
     final dadMode = ref.watch(enableDadModeProvider);
 
     return MenuButtonWithChildren(
-      text: strings.equipment,
+      text: strings.implement,
       icon: Icons.handyman,
       menuChildren: [
         const _LoadEquipmentSetupMenu(),
@@ -57,7 +58,8 @@ class EquipmentMenu extends ConsumerWidget {
           child: Text(strings.configure, style: textStyle),
           onPressed: () => showDialog<void>(
             context: context,
-            builder: (context) => const EquipmentConfigurator(),
+            fullscreenDialog: MediaQuery.sizeOf(context).width < 600,
+            builder: (context) => const ImplementConfigurator(),
           ),
         ),
         const _SaveEquipmentSetup(),
@@ -277,8 +279,6 @@ class _LoadEquipmentMenu extends ConsumerWidget {
               constraints: const BoxConstraints(minWidth: 300),
               child: ListTile(
                 onTap: () {
-                  equipment.lastUsedAt = DateTime.now();
-
                   ref
                     ..read(
                       loadedEquipmentProvider.notifier,
@@ -344,7 +344,7 @@ class _ImportExportMenu extends ConsumerWidget {
               onPressed: () => ref.read(
                 importEquipmentProvider(
                   dialogTitle: strings.selectValueFile(
-                    strings.equipment.toLowerCase(),
+                    strings.implement.toLowerCase(),
                   ),
                 ),
               ),
@@ -522,10 +522,10 @@ class _LoadEquipmentSetupMenu extends ConsumerWidget {
   }
 }
 
-/// A menu for attaching the [Equipment] in [configuredEquipmentProvider] to
+/// A menu for attaching the [Equipment] in [configuredImplementProvider] to
 /// the hierarchy.
 class _AttachEquipmentMenu extends ConsumerWidget {
-  /// A menu for attaching the [Equipment] in [configuredEquipmentProvider] to
+  /// A menu for attaching the [Equipment] in [configuredImplementProvider] to
   /// the hierarchy.
   const _AttachEquipmentMenu();
 
@@ -559,10 +559,10 @@ class _AttachEquipmentMenu extends ConsumerWidget {
 }
 
 /// A recursive menu entry for attaching the [Equipment] in
-/// [configuredEquipmentProvider] the hierarchy.
+/// [configuredImplementProvider] the hierarchy.
 class _RecursiveAttachEquipmentMenu extends ConsumerWidget {
   /// A recursive menu entry for attaching the [Equipment] in
-  /// [configuredEquipmentProvider] the hierarchy.
+  /// [configuredImplementProvider] the hierarchy.
   ///
   /// [parent] is which [Hitchable] the [child] should connect to.
   const _RecursiveAttachEquipmentMenu({
@@ -891,7 +891,7 @@ class _EqiupmentDebugMenu extends StatelessWidget {
       menuChildren: [
         Consumer(
           child: Text(
-            strings.drawValue(strings.equipment.toLowerCase()),
+            strings.drawValue(strings.implement.toLowerCase()),
             style: textStyle,
           ),
           builder: (context, ref, child) => CheckboxListTile(

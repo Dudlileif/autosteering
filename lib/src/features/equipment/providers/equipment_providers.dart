@@ -24,6 +24,7 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/database/database.dart' hide Polygon;
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
+import 'package:autosteering/src/features/implement/implement.dart';
 import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/work_session/work_session.dart';
@@ -171,7 +172,7 @@ class EquipmentPaths extends _$EquipmentPaths {
   /// Updates the travelled path of the [equipment].
   void update(Equipment equipment) => Future(() {
     if (equipment.sections.isNotEmpty &&
-        equipment.sections.any((element) => element.workingWidth > 0)) {
+        equipment.sections.any((element) => element.width > 0)) {
       final recordFraction = ref.read(equipmentRecordPositionFractionProvider);
       final positions = equipment.activeEdgePositions(fraction: recordFraction);
 
@@ -746,7 +747,7 @@ Future<void> deleteEquipment(
 );
 
 /// A provider for importing a equipment configuration from a file and applying
-/// it to the [ConfiguredEquipment] provider.
+/// it to the [ConfiguredImplement] provider.
 @riverpod
 FutureOr<Equipment?> importEquipment(
   Ref ref, {
@@ -791,7 +792,6 @@ FutureOr<Equipment?> importEquipment(
     Logger.instance.i(
       'Imported equipment: ${equipment.name ?? equipment.uuid}.',
     );
-    equipment.lastUsedAt = DateTime.now();
     ref.read(loadedEquipmentProvider.notifier).update(equipment);
     await ref.watch(insertImplementProvider(equipment).future);
   }
@@ -811,58 +811,3 @@ FutureOr<void> exportEquipments(
     dialogTitle: dialogTitle,
   ).future,
 );
-
-// Database related providers
-
-/// A provider for getting implements from the database.
-@riverpod
-FutureOr<List<Equipment>> implements(
-  Ref ref, {
-  int limit = 10,
-  int? offset,
-}) async => ref
-    .watch(databaseProvider)
-    .implementsDao
-    .list(limit: limit, offset: offset);
-
-/// A provider for inserting [implement] into the database.
-@Riverpod(keepAlive: true)
-FutureOr<void> insertImplement(
-  Ref ref,
-  Equipment implement, {
-  bool setLoaded = false,
-}) async {
-  final database = ref.watch(databaseProvider);
-  final implementId = await database.implementsDao.insertImplement(implement);
-
-  final dbImplement = await database.implementsDao.getImplement(implementId);
-  ref
-      .read(configuredEquipmentProvider.notifier)
-      .update(
-        dbImplement,
-      );
-
-  if (setLoaded) {
-    ref.read(loadedEquipmentProvider.notifier).update(dbImplement);
-  }
-  ref.invalidateSelf();
-}
-
-/// A provider for updating [implement] in the database.
-@Riverpod(keepAlive: true)
-FutureOr<void> updateImplement(
-  Ref ref,
-  Equipment implement, {
-  bool setLoaded = false,
-}) async {
-  final database = ref.watch(databaseProvider);
-  await database.implementsDao.updateImplement(implement);
-
-  if (setLoaded) {
-    final dbImplement = await database.implementsDao.getImplement(
-      implement.id!,
-    );
-    ref.read(loadedEquipmentProvider.notifier).update(dbImplement);
-  }
-  ref.invalidateSelf();
-}
