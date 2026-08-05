@@ -20,8 +20,6 @@ import 'dart:convert';
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/database/database.dart';
-import 'package:autosteering/src/features/database/models/tables/tasks.dart'
-    show TaskWithRefs;
 import 'package:autosteering/src/features/equipment/equipment.dart';
 import 'package:autosteering/src/features/field/field.dart';
 import 'package:autosteering/src/features/guidance/guidance.dart';

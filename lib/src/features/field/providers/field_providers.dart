@@ -622,7 +622,7 @@ FutureOr<Field?> importField(Ref ref, {required String dialogTitle}) async {
   }
   if (field != null) {
     Logger.instance.i('Imported field: ${field.name}.');
-    field.lastUsed = DateTime.now();
+
     ref.read(activeFieldProvider.notifier).update(field);
     await ref.watch(saveFieldProvider(field).future);
   }

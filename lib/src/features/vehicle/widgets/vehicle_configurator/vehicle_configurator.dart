@@ -339,8 +339,7 @@ class _ApplyConfigurationToMainVehicleButton extends ConsumerWidget {
 
               final vehicle = ref.watch(configuredVehicleProvider)
                 ..position = position
-                ..bearing = bearing
-                ..lastUsedAt = DateTime.now();
+                ..bearing = bearing;
 
               ref.read(mainVehicleProvider.notifier).update(vehicle);
 

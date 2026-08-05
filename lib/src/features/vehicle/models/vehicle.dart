@@ -59,7 +59,6 @@ sealed class Vehicle extends Hitchable {
     GnssAntennaConfig? gnssAntennaConfig,
     SteeringHardwareConfig? steeringHardwareConfig,
     PathTrackingParameters? pathTrackingParameters,
-    super.lastUsedAt,
     super.createdAt,
     super.lastUpdatedAt,
     this._bearing = 0,
@@ -304,7 +303,6 @@ sealed class Vehicle extends Hitchable {
     WasConfig? wasConfig,
     PathTrackingParameters? pathTrackingParameters,
     ManufacturerColors? colorScheme,
-    DateTime? lastUsedAt,
     DateTime? createdAt,
     DateTime? lastUpdatedAt,
   }) {
@@ -328,7 +326,6 @@ sealed class Vehicle extends Hitchable {
         },
         pathTrackingParameters: pathTrackingParameters,
         manufacturerColors: colorScheme,
-        lastUsedAt: lastUsedAt,
         createdAt: createdAt,
         lastUpdatedAt: lastUpdatedAt,
       ),
@@ -351,7 +348,6 @@ sealed class Vehicle extends Hitchable {
         },
         pathTrackingParameters: pathTrackingParameters,
         manufacturerColors: colorScheme,
-        lastUsedAt: lastUsedAt,
         createdAt: createdAt,
         lastUpdatedAt: lastUpdatedAt,
       ),
@@ -374,7 +370,6 @@ sealed class Vehicle extends Hitchable {
         },
         pathTrackingParameters: pathTrackingParameters,
         manufacturerColors: colorScheme,
-        lastUsedAt: lastUsedAt,
         createdAt: createdAt,
         lastUpdatedAt: lastUpdatedAt,
       ),
@@ -927,7 +922,6 @@ sealed class Vehicle extends Hitchable {
     double? wheelsRolledDistance,
     String? name,
     String? uuid,
-    DateTime? lastUsedAt,
     ManufacturerColors? manufacturerColors,
     bool? manualSimulationMode,
     List<Connector>? connectors,
@@ -942,7 +936,6 @@ sealed class Vehicle extends Hitchable {
     map['info'] = {
       'name': name,
       'uuid': uuid,
-      'last_used': lastUsedAt.toIso8601String(),
     };
     map['gnss_antenna_config'] = gnssAntennaConfig;
 

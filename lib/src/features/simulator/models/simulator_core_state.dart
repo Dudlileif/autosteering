@@ -191,7 +191,6 @@ class SimulatorCoreState {
     final now = DateTime.now();
     period = now.difference(prevUpdateTime).inMicroseconds / 1e6;
     prevUpdateTime = now;
-    vehicle?.lastUsedAt = now;
   }
 
   /// Change state parameters/values according to the incomming [message].

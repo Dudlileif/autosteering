@@ -95,7 +95,7 @@ class FieldMenu extends ConsumerWidget {
                 onPressed: field != null
                     ? () => ref.watch(
                         saveFieldProvider(
-                          field..lastUsed = DateTime.now(),
+                          field,
                           downloadIfWeb: true,
                         ),
                       )
@@ -393,7 +393,7 @@ class _LoadFieldMenu extends ConsumerWidget {
         .watch(savedFieldsProvider)
         .maybeWhen(
           data: (data) =>
-              data.sorted((a, b) => b.lastUsed.compareTo(a.lastUsed)),
+              data.sorted((a, b) => b.lastUpdatedAt.compareTo(a.lastUpdatedAt)),
           orElse: () => <Field>[],
           skipLoadingOnRefresh: false,
         );
@@ -419,8 +419,6 @@ class _LoadFieldMenu extends ConsumerWidget {
             constraints: const BoxConstraints(minWidth: 200),
             child: ListTile(
               onTap: () {
-                field.lastUsed = DateTime.now();
-
                 ref.read(activeFieldProvider.notifier).update(field);
 
                 ref.read(saveFieldProvider(field));

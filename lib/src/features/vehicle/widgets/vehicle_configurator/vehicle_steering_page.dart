@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +65,7 @@ class VehicleSteeringPage extends ConsumerWidget {
           ),
         ),
         onFieldSubmitted: (value) {
-          if (double.tryParse(value.replaceAll(',', '.')) case final radius?) {
+          if (double.tryParse(value.numberInput) case final radius?) {
             ref
                 .read(configuredVehicleProvider.notifier)
                 .update(
@@ -93,8 +94,7 @@ class VehicleSteeringPage extends ConsumerWidget {
           ),
         ),
         onFieldSubmitted: (value) {
-          if (double.tryParse(value.replaceAll(',', '.'))
-              case final steeringAngleMax?) {
+          if (double.tryParse(value.numberInput) case final steeringAngleMax?) {
             ref
                 .read(configuredVehicleProvider.notifier)
                 .update(
@@ -149,8 +149,7 @@ class VehicleSteeringPage extends ConsumerWidget {
           ),
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           onFieldSubmitted: (value) {
-            if (double.tryParse(value.replaceAll(',', '.'))
-                case final percentage?) {
+            if (double.tryParse(value.numberInput) case final percentage?) {
               ref
                   .read(configuredVehicleProvider.notifier)
                   .update(

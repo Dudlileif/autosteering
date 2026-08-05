@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +51,7 @@ class VehicleDimensionsPage extends ConsumerWidget {
           ),
         ),
         onChanged: (value) {
-          if (double.tryParse(value.replaceAll(',', '.')) case final width?) {
+          if (double.tryParse(value.numberInput) case final width?) {
             ref
                 .read(configuredVehicleProvider.notifier)
                 .update(
@@ -74,7 +75,7 @@ class VehicleDimensionsPage extends ConsumerWidget {
           ),
         ),
         onChanged: (value) {
-          if (double.tryParse(value.replaceAll(',', '.')) case final length?) {
+          if (double.tryParse(value.numberInput) case final length?) {
             ref
                 .read(configuredVehicleProvider.notifier)
                 .update(
@@ -102,8 +103,7 @@ class VehicleDimensionsPage extends ConsumerWidget {
           ),
         ),
         onChanged: (value) {
-          if (double.tryParse(value.replaceAll(',', '.'))
-              case final trackWidth?) {
+          if (double.tryParse(value.numberInput) case final trackWidth?) {
             ref
                 .read(configuredVehicleProvider.notifier)
                 .update(
@@ -130,8 +130,7 @@ class VehicleDimensionsPage extends ConsumerWidget {
             ),
           ),
           onChanged: (value) {
-            if (double.tryParse(value.replaceAll(',', '.'))
-                case final distance?) {
+            if (double.tryParse(value.numberInput) case final distance?) {
               {
                 ref
                     .read(configuredVehicleProvider.notifier)
@@ -163,7 +162,7 @@ class VehicleDimensionsPage extends ConsumerWidget {
             ),
           ),
           onChanged: (value) {
-            if (double.tryParse(value.replaceAll(',', '.'))
+            if (double.tryParse(value.numberInput)
                 case final pivotToFrontAxle?) {
               {
                 ref
@@ -195,7 +194,7 @@ class VehicleDimensionsPage extends ConsumerWidget {
             ),
           ),
           onChanged: (value) {
-            if (double.tryParse(value.replaceAll(',', '.'))
+            if (double.tryParse(value.numberInput)
                 case final pivotToRearAxle?) {
               ref
                   .read(configuredVehicleProvider.notifier)

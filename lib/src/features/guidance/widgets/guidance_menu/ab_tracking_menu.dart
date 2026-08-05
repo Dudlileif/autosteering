@@ -32,6 +32,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geobase/geobase.dart';
+import 'package:intl/intl.dart';
 
 /// A menu for configuring and using an [ABTracking] to track after.
 class ABTrackingMenu extends ConsumerWidget {
@@ -625,8 +626,7 @@ class _APlusLineBearingDialogState
                             0)
                         .toStringAsFixed(2),
                 onChanged: (value) {
-                  final updated =
-                      double.tryParse(value.replaceAll(',', '.')) ?? bearing;
+                  final updated = double.tryParse(value.numberInput) ?? bearing;
                   setState(() => bearing = updated);
                 },
               );
@@ -1066,15 +1066,20 @@ class __ABSpacingDialogState extends ConsumerState<_ABSpacingDialog> {
           spacing: 16,
           children: [
             TextFormField(
-              controller: TextEditingController(text: spacing.toString()),
+              controller: TextEditingController(
+                text: NumberFormat.decimalPatternDigits(
+                  locale: strings.localeName,
+                  decimalDigits: 2,
+                ).format(spacing),
+              ),
               decoration: InputDecoration(
                 labelText: strings.spacing,
                 suffixText: 'm',
               ),
               keyboardType: TextInputType.number,
               onFieldSubmitted: (value) {
-                final newSpacing = double.tryParse(value);
-                if (newSpacing != null && newSpacing >= 0) {
+                if (double.tryParse(value.numberInput) case final newSpacing?
+                    when newSpacing >= 0) {
                   setState(() => spacing = newSpacing);
                 }
               },
@@ -1092,7 +1097,7 @@ class __ABSpacingDialogState extends ConsumerState<_ABSpacingDialog> {
                 );
               },
               icon: const Icon(Icons.handyman),
-              label: Text(strings.setToEquipmentWidth),
+              label: Text(strings.setToImplementWidth),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,

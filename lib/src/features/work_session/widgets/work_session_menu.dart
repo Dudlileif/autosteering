@@ -581,7 +581,7 @@ class _CreateWorkSessionDialogState
               orElse: () => <Field>[],
               skipLoadingOnRefresh: false,
             )
-          ..sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
+          ..sort((a, b) => b.lastUpdatedAt.compareTo(a.lastUpdatedAt));
 
     final equipmentSetups =
         ref

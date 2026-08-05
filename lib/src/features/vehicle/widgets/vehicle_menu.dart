@@ -234,8 +234,7 @@ class _LoadVehicleMenu extends ConsumerWidget {
                   );
                   vehicle
                     ..position = position
-                    ..bearing = bearing
-                    ..lastUsedAt = DateTime.now();
+                    ..bearing = bearing;
 
                   ref.read(mainVehicleProvider.notifier).update(vehicle);
 

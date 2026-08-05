@@ -31,15 +31,13 @@ class Field {
     required this.name,
     required this.polygon,
     required this.boundingBox,
-    DateTime? lastUsed,
     DateTime? createdAt,
     DateTime? lastUpdatedAt,
     String? uuid,
     this.id,
     this.parentFieldId,
     FeatureCollection? geometry,
-  }) : lastUsed = lastUsed ?? DateTime.now(),
-       createdAt = createdAt ?? DateTime.now(),
+  }) : createdAt = createdAt ?? DateTime.now(),
        lastUpdatedAt = lastUpdatedAt ?? DateTime.now(),
        uuid = uuid ?? const Uuid().v4(),
        geometry = geometry ?? FeatureCollection([Feature(geometry: polygon)]);
@@ -60,17 +58,16 @@ class Field {
   factory Field.fromJson(Map<String, dynamic> json) {
     final name = json['name'] as String;
     final uuid = json['uuid'] as String?;
-    final lastUsed = DateTime.tryParse(json['last_used'] as String);
     final polygon = Polygon.parse(json['polygon'] as String);
     final boundingBox = polygon.exterior != null
         ? GeoBox.from(polygon.exterior!.toGeographicPositions)
         : null;
+
     return Field(
       name: name,
       uuid: uuid,
       polygon: polygon,
       boundingBox: boundingBox,
-      lastUsed: lastUsed,
     );
   }
 
@@ -80,7 +77,6 @@ class Field {
     required FeatureCollection? geometry,
     int? id,
     int? parentFieldId,
-    DateTime? lastUsedAt,
     DateTime? createdAt,
     DateTime? lastUpdatedAt,
   }) {
@@ -101,7 +97,6 @@ class Field {
         final box? => GeoBox.fromBox(box),
         _ => null,
       },
-      lastUsed: lastUsedAt,
       lastUpdatedAt: lastUpdatedAt,
       createdAt: createdAt,
     );
@@ -129,9 +124,6 @@ class Field {
   /// The box has parameters for the min and max for both longitude and
   /// latitude.
   final GeoBox? boundingBox;
-
-  /// The last time this field was used.
-  DateTime lastUsed;
 
   /// The creation time of this field.
   DateTime createdAt;
@@ -269,14 +261,12 @@ class Field {
     String? name,
     Polygon? polygon,
     GeoBox? boundingBox,
-    DateTime? lastUsed,
     String? uuid,
     int? id,
   }) => Field(
     name: name ?? this.name,
     polygon: polygon ?? this.polygon,
     boundingBox: boundingBox ?? this.boundingBox,
-    lastUsed: lastUsed ?? this.lastUsed,
     uuid: uuid ?? this.uuid,
     id: id ?? this.id,
   );
@@ -286,7 +276,6 @@ class Field {
     final map = <String, dynamic>{};
     map['name'] = name;
     map['uuid'] = uuid;
-    map['last_used'] = lastUsed.toIso8601String();
     map['polygon'] = polygon.toText();
     return map;
   }

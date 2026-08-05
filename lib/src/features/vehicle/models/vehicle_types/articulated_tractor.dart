@@ -45,7 +45,6 @@ final class ArticulatedTractor extends Vehicle {
     super.name,
     super.uuid,
     super.id,
-    super.lastUsedAt,
     super.createdAt,
     super.lastUpdatedAt,
     super.manufacturerColors,
@@ -67,7 +66,6 @@ final class ArticulatedTractor extends Vehicle {
     return ArticulatedTractor(
       name: info['name'] as String?,
       uuid: info['uuid'] as String?,
-      lastUsedAt: DateTime.tryParse(info['last_used'] as String),
       geometry: ArticulatedVehicleGeometry(
         length: dimensions['length'] as double,
         width: dimensions['width'] as double,
@@ -742,7 +740,6 @@ final class ArticulatedTractor extends Vehicle {
     List<Connection>? childConnections,
     String? name,
     String? uuid,
-    DateTime? lastUsedAt,
     ManufacturerColors? manufacturerColors,
     bool? manualSimulationMode,
     int? id,
@@ -772,7 +769,6 @@ final class ArticulatedTractor extends Vehicle {
     childConnections: childConnections ?? this.childConnections,
     name: name ?? this.name,
     uuid: uuid ?? this.uuid,
-    lastUsedAt: lastUsedAt ?? this.lastUsedAt,
     manufacturerColors: manufacturerColors ?? this.manufacturerColors,
     manualSimulationMode: manualSimulationMode ?? this.manualSimulationMode,
   )..wheelsRolledDistance = wheelsRolledDistance ?? 0;

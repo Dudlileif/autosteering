@@ -136,6 +136,29 @@ class VehiclesDao extends DatabaseAccessor<Database> with _$VehiclesDaoMixin {
         .filter((c) => c.vehicle.id.equals(vehicle.id) & c.id.not.isIn(ids))
         .delete();
 
+    await managers.connectors.bulkReplace(
+      vehicle.connectors
+          .where((c) => (c.id ?? 0) > 0)
+          .map(
+            (connector) => ConnectorsCompanion(
+              longitudinalOffsetFromRef: Value(
+                connector.longitudinalOffsetFromRef,
+              ),
+              lateralOffsetFromRef: Value(connector.lateralOffsetFromRef),
+              type: Value(connector.type),
+              relation: Value(connector.relation),
+              vehicle: Value(vehicle.id),
+              id: Value(connector.id!),
+              verticalOffsetFromRef: Value.absentIfNull(
+                connector.verticalOffsetFromRef,
+              ),
+              angle: Value(connector.angle),
+              createdAt: Value.absentIfNull(connector.createdAt),
+              lastUpdatedAt: Value(DateTime.now()),
+            ),
+          ),
+    );
+
     Logger.instance.i(
       '''Updated vehicle ${vehicle.id}: ${vehicle.name}, ${vehicle.type}.''',
     );

@@ -157,7 +157,7 @@ class _EnterHomePositionDialogState
               initialValue: (lat ?? 0).toStringAsFixed(9),
               onChanged: (value) {
                 final updated = clampDouble(
-                  double.tryParse(value.replaceAll(',', '.')) ?? 0,
+                  double.tryParse(value.numberInput) ?? 0,
                   -90,
                   90,
                 );
@@ -187,7 +187,7 @@ class _EnterHomePositionDialogState
                 initialValue: (lon ?? 0).toStringAsFixed(9),
                 onChanged: (value) {
                   final updated = clampDouble(
-                    double.tryParse(value.replaceAll(',', '.')) ?? 0,
+                    double.tryParse(value.numberInput) ?? 0,
                     -180,
                     180,
                   );

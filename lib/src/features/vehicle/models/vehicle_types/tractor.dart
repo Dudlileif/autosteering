@@ -41,7 +41,6 @@ final class Tractor extends AxleSteeredVehicle {
     super.name,
     super.id,
     super.uuid,
-    super.lastUsedAt,
     super.createdAt,
     super.lastUpdatedAt,
     super.manufacturerColors,
@@ -63,7 +62,6 @@ final class Tractor extends AxleSteeredVehicle {
     return Tractor(
       name: info['name'] as String?,
       uuid: info['uuid'] as String?,
-      lastUsedAt: DateTime.tryParse(info['last_used'] as String),
       geometry: AxleSteeredVehicleGeometry(
         length: dimensions['length'] as double,
         width: dimensions['width'] as double,
@@ -145,7 +143,6 @@ final class Tractor extends AxleSteeredVehicle {
     List<Connection>? childConnections,
     String? name,
     String? uuid,
-    DateTime? lastUsedAt,
     ManufacturerColors? manufacturerColors,
     bool? manualSimulationMode,
     int? id,
@@ -175,7 +172,6 @@ final class Tractor extends AxleSteeredVehicle {
     childConnections: childConnections ?? this.childConnections,
     name: name ?? this.name,
     uuid: uuid ?? this.uuid,
-    lastUsedAt: lastUsedAt ?? this.lastUsedAt,
     manufacturerColors: manufacturerColors ?? this.manufacturerColors,
     manualSimulationMode: manualSimulationMode ?? this.manualSimulationMode,
   )..wheelsRolledDistance = wheelsRolledDistance ?? 0;

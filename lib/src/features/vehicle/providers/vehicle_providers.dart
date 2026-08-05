@@ -39,17 +39,14 @@ class MainVehicle extends _$MainVehicle {
   @override
   Vehicle build() {
     final vehicle = ref.read(lastUsedVehicleProvider).requireValue
-      ..position = ref.read(homePositionProvider).geoPosition
-      ..lastUsedAt = DateTime.now();
-
+      ..position = ref.read(homePositionProvider).geoPosition;
     ref.read(updateVehicleProvider(vehicle));
 
     return vehicle;
   }
 
   /// Update the [state] to [vehicle].
-  void update(Vehicle vehicle) =>
-      Future(() => state = vehicle..lastUsedAt = DateTime.now());
+  void update(Vehicle vehicle) => Future(() => state = vehicle);
 
   /// Update the [state] with only the position, velocity, bearing and
   /// steering input angle from [vehicle].
@@ -59,7 +56,7 @@ class MainVehicle extends _$MainVehicle {
       bearing: vehicle.bearing,
       steeringAngleInput: vehicle.steeringAngleInput,
       antennaPosition: vehicle.position,
-    )..lastUsedAt = DateTime.now();
+    );
   });
 
   /// Update the [state] to a new [vehicle] configuration, but keep the
@@ -68,7 +65,7 @@ class MainVehicle extends _$MainVehicle {
     () => state = vehicle.copyWith(
       antennaPosition: state.position,
       bearing: state.bearing,
-    )..lastUsedAt = DateTime.now(),
+    ),
   );
 
   /// Reset the [state] to the initial value by recreating the [state].
@@ -300,8 +297,7 @@ FutureOr<Vehicle?> importVehicle(Ref ref, {required String dialogTitle}) async {
     );
     vehicle
       ..position = position
-      ..bearing = bearing
-      ..lastUsedAt = DateTime.now();
+      ..bearing = bearing;
 
     ref.read(configuredVehicleProvider.notifier).update(vehicle);
     ref.invalidate(configuredVehicleNameTextControllerProvider);

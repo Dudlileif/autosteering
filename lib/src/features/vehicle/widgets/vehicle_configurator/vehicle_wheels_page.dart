@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -65,8 +66,7 @@ class VehicleWheelsPage extends ConsumerWidget {
               ),
             ),
             onChanged: (value) {
-              if (double.tryParse(value.replaceAll(',', '.'))
-                  case final width?) {
+              if (double.tryParse(value.numberInput) case final width?) {
                 ref
                     .read(configuredVehicleProvider.notifier)
                     .update(
@@ -104,8 +104,7 @@ class VehicleWheelsPage extends ConsumerWidget {
               ),
             ),
             onChanged: (value) {
-              if (double.tryParse(value.replaceAll(',', '.'))
-                  case final width?) {
+              if (double.tryParse(value.numberInput) case final width?) {
                 ref
                     .read(configuredVehicleProvider.notifier)
                     .update(
@@ -142,8 +141,7 @@ class VehicleWheelsPage extends ConsumerWidget {
               ),
             ),
             onChanged: (value) {
-              if (double.tryParse(value.replaceAll(',', '.'))
-                  case final diameter?) {
+              if (double.tryParse(value.numberInput) case final diameter?) {
                 ref
                     .read(configuredVehicleProvider.notifier)
                     .update(
@@ -180,8 +178,7 @@ class VehicleWheelsPage extends ConsumerWidget {
               ),
             ),
             onChanged: (value) {
-              if (double.tryParse(value.replaceAll(',', '.'))
-                  case final diameter?) {
+              if (double.tryParse(value.numberInput) case final diameter?) {
                 ref
                     .read(configuredVehicleProvider.notifier)
                     .update(
@@ -213,8 +210,7 @@ class VehicleWheelsPage extends ConsumerWidget {
               ),
             ),
             onChanged: (value) {
-              if (double.tryParse(value.replaceAll(',', '.'))
-                  case final width?) {
+              if (double.tryParse(value.numberInput) case final width?) {
                 ref
                     .read(configuredVehicleProvider.notifier)
                     .update(
@@ -241,8 +237,7 @@ class VehicleWheelsPage extends ConsumerWidget {
               ),
             ),
             onChanged: (value) {
-              if (double.tryParse(value.replaceAll(',', '.'))
-                  case final diameter?) {
+              if (double.tryParse(value.numberInput) case final diameter?) {
                 ref
                     .read(configuredVehicleProvider.notifier)
                     .update(
@@ -302,8 +297,7 @@ class VehicleWheelsPage extends ConsumerWidget {
             ),
           ),
           onChanged: (value) {
-            if (double.tryParse(value.replaceAll(',', '.'))
-                case final wheelSpacing?) {
+            if (double.tryParse(value.numberInput) case final wheelSpacing?) {
               ref
                   .read(configuredVehicleProvider.notifier)
                   .update(

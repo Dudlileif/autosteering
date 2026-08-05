@@ -103,7 +103,7 @@ class VehicleTypeSelectorPage extends StatelessWidget {
                     autovalidateMode: AutovalidateMode.always,
                     validator: (value) => isBlank(value)
                         ? strings.noNameEnteredValue(
-                            strings.vehicle.toLowerCase(),
+                            strings.vehicleDetermined.toLowerCase(),
                           )
                         : null,
                   ),
@@ -120,7 +120,9 @@ class VehicleTypeSelectorPage extends StatelessWidget {
                 false => const SizedBox.shrink(),
               },
               child: Text(
-                'Please enter a name so that the config can be saved!',
+                strings.noNameEnteredValue(
+                  strings.vehicleDetermined.toLowerCase(),
+                ),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.error,
                 ),

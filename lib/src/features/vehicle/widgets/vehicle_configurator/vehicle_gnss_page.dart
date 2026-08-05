@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,7 @@ class VehicleGnssPage extends ConsumerWidget {
           ),
         ),
         onChanged: (value) {
-          final offset = double.tryParse(value.replaceAll(',', '.'));
+          final offset = double.tryParse(value.numberInput);
           if (offset != null) {
             ref
                 .read(configuredVehicleProvider.notifier)
@@ -79,7 +80,7 @@ class VehicleGnssPage extends ConsumerWidget {
           ),
         ),
         onChanged: (value) {
-          final height = double.tryParse(value.replaceAll(',', '.'));
+          final height = double.tryParse(value.numberInput);
           if (height != null) {
             ref
                 .read(configuredVehicleProvider.notifier)
@@ -114,7 +115,7 @@ class VehicleGnssPage extends ConsumerWidget {
             ),
           ),
           onChanged: (value) {
-            final distance = double.tryParse(value.replaceAll(',', '.'));
+            final distance = double.tryParse(value.numberInput);
 
             if (distance != null) {
               ref
@@ -146,7 +147,7 @@ class VehicleGnssPage extends ConsumerWidget {
             ),
           ),
           onChanged: (value) {
-            final distance = double.tryParse(value.replaceAll(',', '.'));
+            final distance = double.tryParse(value.numberInput);
             if (distance != null) {
               ref
                   .read(configuredVehicleProvider.notifier)
@@ -259,7 +260,7 @@ class VehicleGnssPage extends ConsumerWidget {
                             ),
                             onChanged: (value) {
                               final baseline = double.tryParse(
-                                value.replaceAll(',', '.'),
+                                value.numberInput,
                               );
                               if (baseline != null) {
                                 ref
@@ -296,7 +297,7 @@ class VehicleGnssPage extends ConsumerWidget {
                             ),
                             onChanged: (value) {
                               final angle = double.tryParse(
-                                value.replaceAll(',', '.'),
+                                value.numberInput,
                               );
                               if (angle != null) {
                                 ref

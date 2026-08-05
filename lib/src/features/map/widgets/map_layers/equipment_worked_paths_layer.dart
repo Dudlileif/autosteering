@@ -48,7 +48,7 @@ class _EquipmentWorkedPathsLayerState
     extends ConsumerState<EquipmentWorkedPathsLayer> {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final colorScheme = ColorScheme.of(context);
     final camera = MapCamera.of(context);
     final size = Size(camera.size.width, camera.size.height);
 
@@ -75,10 +75,10 @@ class _EquipmentWorkedPathsLayerState
           CustomPaint(
             painter: _EquipentWorkedPathsPainter(
               points: sections,
-              color: theme.primaryColor,
+              color: colorScheme.primary,
               sectionColors: Map<int, Color?>.fromEntries(
                 equipment.sections
-                    .where((section) => section.workingWidth > 0)
+                    .where((section) => section.width > 0)
                     .map((e) => MapEntry(e.index, e.workedPathColor)),
               ),
               offset: camera.pixelOrigin - origin,
@@ -151,10 +151,10 @@ class _EquipmentWorkedPathsLayerState
             CustomPaint(
               painter: _EquipentWorkedPathsPainter(
                 points: activeSections,
-                color: theme.primaryColor,
+                color: colorScheme.primary,
                 sectionColors: Map<int, Color?>.fromEntries(
                   equipment.sections
-                      .where((section) => section.workingWidth > 0)
+                      .where((section) => section.width > 0)
                       .map((e) => MapEntry(e.index, e.workedPathColor)),
                 ),
                 offset: camera.pixelOrigin - origin,
