@@ -41,24 +41,27 @@ class GridLayer extends ConsumerWidget {
 
     final vertical = Grid.verticalLines(origo, camera);
     final horizontal = Grid.horizontalLines(origo, camera);
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     if (ref.watch(showGridSizeIndicatorProvider)) {
       ref.read(mapGridSizeProvider.notifier).update(vertical.size);
     }
+
+    final color = switch (Theme.brightnessOf(context)) {
+      .light => Colors.black,
+      .dark => Colors.white,
+    }.withValues(alpha: 0.5);
+
     return PolylineLayer(
       polylines: [
         ...vertical.lines.map(
           (line) => Polyline(
             points: line,
-            color: isDarkMode ? Colors.white : Colors.black,
-            strokeWidth: 0.3,
+            color: color,
           ),
         ),
         ...horizontal.lines.map(
           (line) => Polyline(
             points: line,
-            color: isDarkMode ? Colors.white : Colors.black,
-            strokeWidth: 0.3,
+            color: color,
           ),
         ),
       ],
