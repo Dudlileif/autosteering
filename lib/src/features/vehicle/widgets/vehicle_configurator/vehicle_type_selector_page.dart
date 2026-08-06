@@ -86,30 +86,6 @@ class VehicleTypeSelectorPage extends StatelessWidget {
                 },
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: SizedBox(
-                width: 300,
-                child: Consumer(
-                  builder: (context, ref, child) => TextFormField(
-                    decoration: InputDecoration(
-                      icon: const Icon(Icons.label_outline),
-                      labelText: strings.name,
-                    ),
-                    controller: ref.watch(
-                      configuredVehicleNameTextControllerProvider,
-                    ),
-                    keyboardType: TextInputType.text,
-                    autovalidateMode: AutovalidateMode.always,
-                    validator: (value) => isBlank(value)
-                        ? strings.noNameEnteredValue(
-                            strings.vehicleDetermined.toLowerCase(),
-                          )
-                        : null,
-                  ),
-                ),
-              ),
-            ),
             Consumer(
               builder: (context, ref, child) => switch (ref.watch(
                 configuredVehicleProvider.select(
@@ -141,7 +117,9 @@ class _VehicleTypeSelector extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
+
     final vehicle = ref.watch(configuredVehicleProvider);
 
     return LayoutBuilder(
@@ -189,9 +167,7 @@ class _VehicleTypeSelector extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    minDimension / 2 > 150
-                        ? 'Tractor\n(or front axle steering)'
-                        : 'Tractor',
+                    strings.vehicleType('Tractor'),
                     textAlign: TextAlign.center,
                   ),
                   SvgPicture(
@@ -213,9 +189,7 @@ class _VehicleTypeSelector extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    minDimension / 2 > 150
-                        ? '''Articulated tractor\n(or articulated steering)'''
-                        : 'Articulated',
+                    strings.vehicleType('ArticulatedTractor'),
                     textAlign: TextAlign.center,
                   ),
                   // TODO(dudlileif): make Articulated Tractor drawing
@@ -229,9 +203,7 @@ class _VehicleTypeSelector extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    minDimension / 2 > 150
-                        ? 'Harvester\n(or rear axle steering)'
-                        : 'Harvester',
+                    strings.vehicleType('Harvester'),
                     textAlign: TextAlign.center,
                   ),
                   // TODO(dudlileif): make Harvester drawing

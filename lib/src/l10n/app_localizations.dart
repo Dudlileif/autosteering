@@ -1016,6 +1016,12 @@ abstract class AppLocalizations {
   /// **'Front axle'**
   String get frontAxle;
 
+  /// No description provided for @frontAxleToAntenna.
+  ///
+  /// In en, this message translates to:
+  /// **'Front axle to antenna'**
+  String get frontAxleToAntenna;
+
   /// No description provided for @frontAxleToFrontHitchDistance.
   ///
   /// In en, this message translates to:
@@ -1940,6 +1946,12 @@ abstract class AppLocalizations {
   /// **'Rear axle'**
   String get rearAxle;
 
+  /// No description provided for @rearAxleToAntenna.
+  ///
+  /// In en, this message translates to:
+  /// **'Rear axle to antenna'**
+  String get rearAxleToAntenna;
+
   /// No description provided for @rearAxleToFrontHitchDistance.
   ///
   /// In en, this message translates to:
@@ -2834,6 +2846,18 @@ abstract class AppLocalizations {
   /// **'Wheel diameter'**
   String get wheelDiameter;
 
+  /// No description provided for @wheelDiameterFront.
+  ///
+  /// In en, this message translates to:
+  /// **'Front wheel diameter'**
+  String get wheelDiameterFront;
+
+  /// No description provided for @wheelDiameterRear.
+  ///
+  /// In en, this message translates to:
+  /// **'Rear wheel diameter'**
+  String get wheelDiameterRear;
+
   /// No description provided for @wheelSpacing.
   ///
   /// In en, this message translates to:
@@ -2845,6 +2869,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Wheel width'**
   String get wheelWidth;
+
+  /// No description provided for @wheelWidthFront.
+  ///
+  /// In en, this message translates to:
+  /// **'Front wheel width'**
+  String get wheelWidthFront;
+
+  /// No description provided for @wheelWidthRear.
+  ///
+  /// In en, this message translates to:
+  /// **'Rear wheel width'**
+  String get wheelWidthRear;
 
   /// No description provided for @wheels.
   ///

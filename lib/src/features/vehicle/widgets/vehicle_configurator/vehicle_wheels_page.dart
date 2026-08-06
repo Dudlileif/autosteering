@@ -20,6 +20,7 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 /// A page for configuring the wheels for the vehicle.
 class VehicleWheelsPage extends ConsumerWidget {
@@ -30,6 +31,12 @@ class VehicleWheelsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
+
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 2,
+    ).format;
+
     final vehicle = ref.watch(configuredVehicleProvider);
 
     final children = [
@@ -47,22 +54,19 @@ class VehicleWheelsPage extends ConsumerWidget {
                 quarterTurns: 1,
                 child: Icon(Icons.expand),
               ),
-              labelText: [
-                switch (vehicle) {
-                  Tractor() => strings.front,
-                  Harvester() => strings.rear,
-                },
-                strings.wheelWidth,
-              ].join(' '),
+              labelText: switch (vehicle) {
+                Tractor() => strings.wheelWidthFront,
+                Harvester() => strings.wheelWidthRear,
+              },
               suffixText: 'm',
             ),
+            textAlign: .right,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
-                (value) => (value as AxleSteeredVehicle)
-                    .geometry
-                    .steeringAxleWheelWidth
-                    .toString(),
+                (value) => numberFormatter(
+                  (value as AxleSteeredVehicle).geometry.steeringAxleWheelWidth,
+                ),
               ),
             ),
             onChanged: (value) {
@@ -85,22 +89,19 @@ class VehicleWheelsPage extends ConsumerWidget {
                 quarterTurns: 1,
                 child: Icon(Icons.expand),
               ),
-              labelText: [
-                switch (vehicle) {
-                  Tractor() => strings.rear,
-                  Harvester() => strings.front,
-                },
-                strings.wheelWidth,
-              ].join(' '),
+              labelText: switch (vehicle) {
+                Tractor() => strings.wheelWidthRear,
+                Harvester() => strings.wheelWidthFront,
+              },
               suffixText: 'm',
             ),
+            textAlign: .right,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
-                (value) => (value as AxleSteeredVehicle)
-                    .geometry
-                    .solidAxleWheelWidth
-                    .toString(),
+                (value) => numberFormatter(
+                  (value as AxleSteeredVehicle).geometry.solidAxleWheelWidth,
+                ),
               ),
             ),
             onChanged: (value) {
@@ -122,22 +123,21 @@ class VehicleWheelsPage extends ConsumerWidget {
               icon: const Stack(
                 children: [Icon(Icons.expand), Icon(Icons.circle_outlined)],
               ),
-              labelText: [
-                switch (vehicle) {
-                  Tractor() => strings.front,
-                  Harvester() => strings.rear,
-                },
-                strings.wheelDiameter,
-              ].join(' '),
+              labelText: switch (vehicle) {
+                Tractor() => strings.wheelDiameterFront,
+                Harvester() => strings.wheelDiameterRear,
+              },
               suffixText: 'm',
             ),
+            textAlign: .right,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
-                (value) => (value as AxleSteeredVehicle)
-                    .geometry
-                    .steeringAxleWheelDiameter
-                    .toString(),
+                (value) => numberFormatter(
+                  (value as AxleSteeredVehicle)
+                      .geometry
+                      .steeringAxleWheelDiameter,
+                ),
               ),
             ),
             onChanged: (value) {
@@ -159,22 +159,19 @@ class VehicleWheelsPage extends ConsumerWidget {
               icon: const Stack(
                 children: [Icon(Icons.expand), Icon(Icons.circle_outlined)],
               ),
-              labelText: [
-                switch (vehicle) {
-                  Tractor() => strings.rear,
-                  Harvester() => strings.front,
-                },
-                strings.wheelDiameter,
-              ].join(' '),
+              labelText: switch (vehicle) {
+                Tractor() => strings.wheelDiameterRear,
+                Harvester() => strings.wheelDiameterFront,
+              },
               suffixText: 'm',
             ),
+            textAlign: .right,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
-                (value) => (value as AxleSteeredVehicle)
-                    .geometry
-                    .solidAxleWheelDiameter
-                    .toString(),
+                (value) => numberFormatter(
+                  (value as AxleSteeredVehicle).geometry.solidAxleWheelDiameter,
+                ),
               ),
             ),
             onChanged: (value) {
@@ -202,11 +199,13 @@ class VehicleWheelsPage extends ConsumerWidget {
               labelText: strings.wheelWidth,
               suffixText: 'm',
             ),
+            textAlign: .right,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
-                (value) => (value as ArticulatedTractor).geometry.wheelWidth
-                    .toString(),
+                (value) => numberFormatter(
+                  (value as ArticulatedTractor).geometry.wheelWidth,
+                ),
               ),
             ),
             onChanged: (value) {
@@ -229,11 +228,14 @@ class VehicleWheelsPage extends ConsumerWidget {
               labelText: strings.wheelDiameter,
               suffixText: 'm',
             ),
+            textAlign: .right,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             initialValue: ref.read(
               configuredVehicleProvider.select(
-                (value) => (value as ArticulatedTractor).geometry.wheelDiameter
-                    .toString(),
+                (value) => numberFormatter(
+                  (value as ArticulatedTractor).geometry.wheelDiameter
+                      .toString(),
+                ),
               ),
             ),
             onChanged: (value) {
@@ -290,10 +292,11 @@ class VehicleWheelsPage extends ConsumerWidget {
             labelText: strings.wheelSpacing,
             suffixText: 'm',
           ),
+          textAlign: .right,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           initialValue: ref.read(
             configuredVehicleProvider.select(
-              (value) => value.geometry.wheelSpacing.toString(),
+              (value) => numberFormatter(value.geometry.wheelSpacing),
             ),
           ),
           onChanged: (value) {

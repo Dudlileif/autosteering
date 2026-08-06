@@ -20,6 +20,7 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 /// A page for configuring the vehicle's steering parameters.
 class VehicleSteeringPage extends ConsumerWidget {
@@ -29,6 +30,17 @@ class VehicleSteeringPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final strings = AppLocalizations.of(context);
+
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 2,
+    ).format;
+
+    final numberFormatterOneDecimal = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 1,
+    ).format;
+
     final vehicle = ref.watch(configuredVehicleProvider);
 
     final children = [
@@ -48,9 +60,10 @@ class VehicleSteeringPage extends ConsumerWidget {
                   builder: (context, ref, child) {
                     final value = ref.watch(
                       configuredVehicleProvider.select(
-                        (value) => (value as AxleSteeredVehicle)
-                            .minTurningRadiusTheoretic
-                            .toStringAsFixed(2),
+                        (value) => numberFormatter(
+                          (value as AxleSteeredVehicle)
+                              .minTurningRadiusTheoretic,
+                        ),
                       ),
                     );
                     return Text('''${strings.theoretical}: $value m''');
@@ -58,10 +71,11 @@ class VehicleSteeringPage extends ConsumerWidget {
                 )
               : null,
         ),
+        textAlign: .right,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
           configuredVehicleProvider.select(
-            (value) => value.geometry.minTurningRadius.toString(),
+            (value) => numberFormatter(value.geometry.minTurningRadius),
           ),
         ),
         onFieldSubmitted: (value) {
@@ -84,13 +98,16 @@ class VehicleSteeringPage extends ConsumerWidget {
           labelText: strings.maxSteeringAngle,
           suffixText: '°',
         ),
+        textAlign: .right,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        initialValue: ref.read(
-          configuredVehicleProvider.select(
-            (value) => switch (value is AxleSteeredVehicle) {
-              true => (value as AxleSteeredVehicle).steeringAngleMaxRaw,
-              false => value.steeringAngleMax,
-            }.toString(),
+        initialValue: numberFormatterOneDecimal(
+          ref.read(
+            configuredVehicleProvider.select(
+              (value) => switch (value is AxleSteeredVehicle) {
+                true => (value as AxleSteeredVehicle).steeringAngleMaxRaw,
+                false => value.steeringAngleMax,
+              },
+            ),
           ),
         ),
         onFieldSubmitted: (value) {
@@ -112,6 +129,7 @@ class VehicleSteeringPage extends ConsumerWidget {
           decoration: InputDecoration(
             icon: const Icon(Icons.tune),
             labelText: strings.ackermannPercentage,
+            suffixText: '%',
             counter: Consumer(
               builder: (context, ref, child) {
                 final vehicle =
@@ -128,10 +146,10 @@ class VehicleSteeringPage extends ConsumerWidget {
                   runSpacing: 8,
                   children: [
                     Text(
-                      '''${strings.inner}: ${vehicle.steeringAngleMaxRaw.toStringAsFixed(1)}°''',
+                      '''${strings.inner}: ${numberFormatterOneDecimal(vehicle.steeringAngleMaxRaw)}°''',
                     ),
                     Text(
-                      '''${strings.outer}: ${ackermann.oppositeAngle.toStringAsFixed(1)}°''',
+                      '''${strings.outer}: ${numberFormatterOneDecimal(ackermann.oppositeAngle)}°''',
                     ),
                   ],
                 );
@@ -140,13 +158,12 @@ class VehicleSteeringPage extends ConsumerWidget {
           ),
           initialValue: ref.read(
             configuredVehicleProvider.select(
-              (value) => (value as AxleSteeredVehicle)
-                  .geometry
-                  .ackermannPercentage
-                  .round()
-                  .toString(),
+              (value) => numberFormatterOneDecimal(
+                (value as AxleSteeredVehicle).geometry.ackermannPercentage,
+              ),
             ),
           ),
+          textAlign: .right,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           onFieldSubmitted: (value) {
             if (double.tryParse(value.numberInput) case final percentage?) {

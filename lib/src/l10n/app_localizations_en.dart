@@ -617,6 +617,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get frontAxle => 'Front axle';
 
   @override
+  String get frontAxleToAntenna => 'Front axle to antenna';
+
+  @override
   String get frontAxleToFrontHitchDistance =>
       'Front axle to front hitch distance';
 
@@ -1263,6 +1266,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rearAxle => 'Rear axle';
+
+  @override
+  String get rearAxleToAntenna => 'Rear axle to antenna';
 
   @override
   String get rearAxleToFrontHitchDistance =>
@@ -1966,10 +1972,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wheelDiameter => 'Wheel diameter';
 
   @override
+  String get wheelDiameterFront => 'Front wheel diameter';
+
+  @override
+  String get wheelDiameterRear => 'Rear wheel diameter';
+
+  @override
   String get wheelSpacing => 'Wheel spacing';
 
   @override
   String get wheelWidth => 'Wheel width';
+
+  @override
+  String get wheelWidthFront => 'Front wheel width';
+
+  @override
+  String get wheelWidthRear => 'Rear wheel width';
 
   @override
   String wheels(int count) {

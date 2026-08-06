@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:autosteering/src/features/hitching/hitching.dart'
+    show Connector;
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -51,6 +53,20 @@ class ConfiguredVehicle extends _$ConfiguredVehicle {
   /// Updates the vehicle's name to [name].
   void updateName(String? name) =>
       Future(() => state = state.copyWith(name: name));
+
+  /// Updates the vehicle's [connector].
+  void updateConnector(Connector connector, {required int index}) => Future(
+    () => state = state.copyWith(
+      connectors: state.connectors..replaceRange(index, index + 1, [connector]),
+    ),
+  );
+
+  /// Removes the connector at [index] in the list.
+  void removeConnector(int index) => Future(
+    () => state = state.copyWith(
+      connectors: state.connectors..replaceRange(index, index + 1, []),
+    ),
+  );
 }
 
 /// A provider for the [TextEditingController] for the name in the

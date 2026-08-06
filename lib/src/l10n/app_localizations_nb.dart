@@ -79,7 +79,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get antennaLateralOffset =>
-      'Antenne sideveis foskyvning (-venstre / +høyre)';
+      'Antenne sideveis forskyvning (-venstre / +høyre)';
 
   @override
   String get antennaPosition => 'Antenneposisjon';
@@ -616,6 +616,9 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get frontAxle => 'Framaksling';
+
+  @override
+  String get frontAxleToAntenna => 'Framaksling til antenne';
 
   @override
   String get frontAxleToFrontHitchDistance =>
@@ -1267,6 +1270,9 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get rearAxle => 'Bakaksling';
+
+  @override
+  String get rearAxleToAntenna => 'Bakaksling til antenne';
 
   @override
   String get rearAxleToFrontHitchDistance =>
@@ -1972,10 +1978,22 @@ class AppLocalizationsNb extends AppLocalizations {
   String get wheelDiameter => 'Hjuldiameter';
 
   @override
+  String get wheelDiameterFront => 'Hjuldiameter foran';
+
+  @override
+  String get wheelDiameterRear => 'Hjuldiameter bak';
+
+  @override
   String get wheelSpacing => 'Hjulavstand';
 
   @override
   String get wheelWidth => 'Hjulbredde';
+
+  @override
+  String get wheelWidthFront => 'Hjulbredde foran';
+
+  @override
+  String get wheelWidthRear => 'Hjulbredde bak';
 
   @override
   String wheels(int count) {

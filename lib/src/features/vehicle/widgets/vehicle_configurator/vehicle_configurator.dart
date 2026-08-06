@@ -15,17 +15,20 @@
 // You should have received a copy of the GNU General Public License
 // along with Autosteering.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/simulator/simulator.dart';
 import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_connectors_page.dart';
 import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_dimensions_page.dart';
 import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_gnss_page.dart';
+import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_name.dart';
 import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_steering_page.dart';
 import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_type_selector_page.dart';
 import 'package:autosteering/src/features/vehicle/widgets/vehicle_configurator/vehicle_wheels_page.dart';
 import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:quiver/strings.dart';
 
 /// A [Dialog] for configuring a vehicle, with ability to apply to the
@@ -61,6 +64,35 @@ class _VehicleConfiguratorState extends ConsumerState<VehicleConfigurator>
     VehicleConnectorsPage(),
   ];
 
+  late final AppLocalizations strings = AppLocalizations.of(context);
+
+  late final destinations = [
+    NavDest(
+      icon: const Icon(Icons.agriculture),
+      label: strings.type,
+    ),
+    NavDest(
+      icon: const Icon(Icons.expand),
+      label: strings.dimensions(0),
+    ),
+    NavDest(
+      icon: const Icon(Icons.settings_input_antenna),
+      label: strings.gnss,
+    ),
+    NavDest(
+      icon: const Icon(Icons.circle_outlined),
+      label: strings.wheels(0),
+    ),
+    NavDest(
+      icon: const Icon(Icons.electric_meter),
+      label: strings.steering,
+    ),
+    NavDest(
+      icon: const Icon(Icons.commit),
+      label: strings.hitches(0),
+    ),
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -79,244 +111,27 @@ class _VehicleConfiguratorState extends ConsumerState<VehicleConfigurator>
 
   @override
   Widget build(BuildContext context) {
-    final strings = AppLocalizations.of(context);
-
-    return Dialog(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Wrap(
-                    alignment: WrapAlignment.spaceBetween,
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      Text(
-                        strings.configureValue(strings.vehicle.toLowerCase()),
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                      const _ApplyConfigurationToMainVehicleButton(),
-                    ],
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(left: 8),
-                  child: CloseButton(),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final disabled = ref.watch(
-                  configuredVehicleProvider.select(
-                    (value) => isBlank(value.name),
-                  ),
-                );
-
-                final orientation = MediaQuery.orientationOf(context);
-                if (orientation == Orientation.portrait ||
-                    (constraints.maxHeight > 250 &&
-                        constraints.maxWidth > 800)) {
-                  final tabs = [
-                    Tab(
-                      icon: const Icon(Icons.agriculture),
-                      text: strings.type,
-                    ),
-                    Tab(
-                      icon: const Icon(Icons.expand),
-                      text: strings.dimensions(0),
-                    ),
-                    Tab(
-                      icon: const Icon(Icons.settings_input_antenna),
-                      text: strings.gnss,
-                    ),
-                    Tab(
-                      icon: const Icon(Icons.circle_outlined),
-                      text: strings.wheels(0),
-                    ),
-                    Tab(
-                      icon: const Icon(Icons.electric_meter),
-                      text: strings.steering,
-                    ),
-                    Tab(
-                      icon: const Icon(Icons.commit),
-                      text: strings.hitches(0),
-                    ),
-                  ];
-
-                  return Column(
-                    children: [
-                      Consumer(
-                        builder: (context, ref, child) {
-                          final tabBar = TabBar(
-                            tabAlignment: constraints.maxWidth < 500
-                                ? TabAlignment.center
-                                : TabAlignment.fill,
-                            isScrollable: constraints.maxWidth < 500,
-                            padding: const EdgeInsets.all(8),
-                            dividerHeight: 1,
-                            dividerColor: Theme.of(context).dividerColor,
-                            controller: tabController,
-                            tabs: tabs,
-                          );
-                          if (ref.watch(
-                            configuredVehicleProvider.select(
-                              (value) => value.name?.isEmpty ?? true,
-                            ),
-                          )) {
-                            return IgnorePointer(child: tabBar);
-                          }
-                          return tabBar;
-                        },
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: TabBarView(
-                            controller: tabController,
-                            physics: disabled
-                                ? const NeverScrollableScrollPhysics()
-                                : null,
-                            children: pages,
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                }
-                final destinations = [
-                  NavigationRailDestination(
-                    icon: const Icon(Icons.agriculture),
-                    label: Text(strings.type),
-                  ),
-                  NavigationRailDestination(
-                    icon: const Icon(Icons.expand),
-                    label: Text(strings.dimensions(0)),
-                    disabled: disabled,
-                  ),
-                  NavigationRailDestination(
-                    icon: const Icon(Icons.settings_input_antenna),
-                    label: Text(strings.antenna),
-                    disabled: disabled,
-                  ),
-                  NavigationRailDestination(
-                    icon: const Icon(Icons.circle_outlined),
-                    label: Text(strings.wheels(0)),
-                    disabled: disabled,
-                  ),
-                  NavigationRailDestination(
-                    icon: const Icon(Icons.electric_meter),
-                    label: Text(strings.steering),
-                    disabled: disabled,
-                  ),
-                  NavigationRailDestination(
-                    icon: const Icon(Icons.commit),
-                    label: Text(strings.hitches(0)),
-                    disabled: disabled,
-                  ),
-                ];
-
-                return Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SingleChildScrollView(
-                      child: IntrinsicHeight(
-                        child: Consumer(
-                          builder: (context, ref, child) => NavigationRail(
-                            backgroundColor: Colors.transparent,
-                            labelType: NavigationRailLabelType.all,
-                            destinations: destinations,
-                            selectedIndex: ref.watch(
-                              vehicleConfiguratorIndexProvider,
-                            ),
-                            onDestinationSelected: tabController.animateTo,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const VerticalDivider(),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ListenableBuilder(
-                            listenable: tabController,
-                            builder: (context, child) => AnimatedOpacity(
-                              opacity: tabController.index > 0 ? 1 : 0,
-                              duration: Durations.medium1,
-                              child: Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: IconButton.filled(
-                                  icon: const Icon(Icons.arrow_left),
-                                  onPressed: tabController.index > 0
-                                      ? () => tabController.animateTo(
-                                          tabController.index - 1,
-                                        )
-                                      : null,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: TabBarView(
-                              controller: tabController,
-                              physics: disabled
-                                  ? const NeverScrollableScrollPhysics()
-                                  : null,
-                              children: pages,
-                            ),
-                          ),
-                          ListenableBuilder(
-                            listenable: tabController,
-                            builder: (context, child) => AnimatedOpacity(
-                              opacity:
-                                  tabController.index < pages.length - 1 &&
-                                      !disabled
-                                  ? 1
-                                  : 0,
-                              duration: Durations.medium1,
-                              child: Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: IconButton.filled(
-                                  onPressed:
-                                      tabController.index < pages.length - 1 &&
-                                          !disabled
-                                      ? () => tabController.animateTo(
-                                          tabController.index + 1,
-                                        )
-                                      : null,
-                                  icon: const Icon(Icons.arrow_right),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-        ],
+    return switch (MediaQuery.sizeOf(context)) {
+      Size(width: < 600) => _PortraitBuilder(
+        tabController: tabController,
+        pages: pages,
+        destinations: destinations,
       ),
-    );
+      _ => _LandscapeBuilder(
+        tabController: tabController,
+        destinations: destinations,
+        pages: pages,
+      ),
+    };
   }
 }
 
 /// A button that applies the vehicle configuration in
 /// [configuredVehicleProvider] to the [mainVehicleProvider].
-class _ApplyConfigurationToMainVehicleButton extends ConsumerWidget {
+class _SaveVehicleButton extends ConsumerWidget {
   /// A button that applies the vehicle configuration in
   /// [configuredVehicleProvider] to the [mainVehicleProvider].
-  const _ApplyConfigurationToMainVehicleButton();
+  const _SaveVehicleButton();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -352,8 +167,184 @@ class _ApplyConfigurationToMainVehicleButton extends ConsumerWidget {
               Navigator.of(context).pop();
             }
           : null,
-      icon: const Icon(Icons.check),
-      label: Text(strings.applyConfiguration),
+      icon: const Icon(Symbols.save_rounded),
+      label: Text(strings.save),
+    );
+  }
+}
+
+class _PortraitBuilder extends StatelessWidget {
+  const _PortraitBuilder({
+    required this.tabController,
+    required this.pages,
+    required this.destinations,
+  });
+
+  final TabController tabController;
+  final List<Widget> pages;
+  final List<NavDest> destinations;
+
+  @override
+  Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
+    final colorScheme = ColorScheme.of(context);
+
+    return Dialog.fullscreen(
+      child: Column(
+        children: [
+          AppBar(
+            title: Text(
+              strings.configureValue(strings.vehicle.toLowerCase()),
+              maxLines: 2,
+            ),
+            automaticallyImplyLeading: false,
+            actions: const [
+              _SaveVehicleButton(),
+              CloseButton(),
+            ],
+          ),
+          Expanded(
+            child: _SliverBuilder(
+              tabController: tabController,
+              destinations: destinations,
+              pages: pages,
+            ),
+          ),
+          ExpansionTile(
+            title: Text(strings.preview),
+            shape: const RoundedRectangleBorder(
+              borderRadius: .vertical(top: .circular(12)),
+            ),
+            collapsedShape: const RoundedRectangleBorder(
+              borderRadius: .vertical(top: .circular(12)),
+            ),
+            collapsedBackgroundColor: colorScheme.surfaceContainerHighest,
+            backgroundColor: colorScheme.surfaceContainerHighest,
+            children: [
+              SizedBox(
+                height: 200,
+                child: Consumer(
+                  builder: (context, ref, child) => VehiclePreview(
+                    vehicle: ref.watch(configuredVehicleProvider),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LandscapeBuilder extends StatelessWidget {
+  const _LandscapeBuilder({
+    required this.tabController,
+    required this.pages,
+    required this.destinations,
+  });
+
+  final TabController tabController;
+  final List<Widget> pages;
+  final List<NavDest> destinations;
+
+  @override
+  Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
+
+    return Dialog(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Wrap(
+                    alignment: WrapAlignment.spaceBetween,
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      Text(
+                        strings.configureValue(strings.vehicle.toLowerCase()),
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      const _SaveVehicleButton(),
+                    ],
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: CloseButton(),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(
+                  child: Consumer(
+                    builder: (context, ref, child) => VehiclePreview(
+                      vehicle: ref.watch(configuredVehicleProvider),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: _SliverBuilder(
+                    tabController: tabController,
+                    destinations: destinations,
+                    pages: pages,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SliverBuilder extends StatelessWidget {
+  const _SliverBuilder({
+    required this.tabController,
+    required this.destinations,
+    required this.pages,
+  });
+
+  final TabController tabController;
+  final List<NavDest> destinations;
+  final List<Widget> pages;
+  @override
+  Widget build(BuildContext context) {
+    final tabs = destinations
+        .map(
+          (d) => Tab(
+            icon: d.icon,
+            text: d.label,
+          ),
+        )
+        .toList();
+
+    return NestedScrollView(
+      headerSliverBuilder: (context, innerBoxIsScrolled) => [
+        SliverAppBar(
+          flexibleSpace: const VehicleName(),
+          backgroundColor: Colors.transparent,
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+          collapsedHeight: 80,
+          bottom: TabBar(
+            controller: tabController,
+            tabs: tabs,
+            isScrollable: true,
+          ),
+        ),
+      ],
+      body: TabBarView(controller: tabController, children: pages),
     );
   }
 }

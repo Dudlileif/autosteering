@@ -20,6 +20,7 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 /// A page for configuring the vehicle's dimensions.
 class VehicleDimensionsPage extends ConsumerWidget {
@@ -30,6 +31,11 @@ class VehicleDimensionsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final strings = AppLocalizations.of(context);
     final vehicle = ref.watch(configuredVehicleProvider);
+
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 2,
+    ).format;
 
     final children = [
       Center(
@@ -44,10 +50,11 @@ class VehicleDimensionsPage extends ConsumerWidget {
           labelText: strings.vehicleBodyWidth,
           suffixText: 'm',
         ),
+        textAlign: .right,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
           configuredVehicleProvider.select(
-            (value) => value.geometry.width.toString(),
+            (value) => numberFormatter(value.geometry.width),
           ),
         ),
         onChanged: (value) {
@@ -68,10 +75,11 @@ class VehicleDimensionsPage extends ConsumerWidget {
           labelText: strings.vehicleBodyLength,
           suffixText: 'm',
         ),
+        textAlign: .right,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
           configuredVehicleProvider.select(
-            (value) => value.geometry.length.toString(),
+            (value) => numberFormatter(value.geometry.length),
           ),
         ),
         onChanged: (value) {
@@ -96,10 +104,11 @@ class VehicleDimensionsPage extends ConsumerWidget {
           }),
           suffixText: 'm',
         ),
+        textAlign: .right,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
           configuredVehicleProvider.select(
-            (value) => value.geometry.trackWidth.toString(),
+            (value) => numberFormatter(value.geometry.trackWidth),
           ),
         ),
         onChanged: (value) {
@@ -123,10 +132,12 @@ class VehicleDimensionsPage extends ConsumerWidget {
             labelText: strings.wheelbase,
             suffixText: 'm',
           ),
+          textAlign: .right,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           initialValue: ref.read(
             configuredVehicleProvider.select(
-              (value) => (value as AxleSteeredVehicle).wheelBase.toString(),
+              (value) =>
+                  numberFormatter((value as AxleSteeredVehicle).wheelBase),
             ),
           ),
           onChanged: (value) {
@@ -154,11 +165,13 @@ class VehicleDimensionsPage extends ConsumerWidget {
             ),
             suffixText: 'm',
           ),
+          textAlign: .right,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           initialValue: ref.read(
             configuredVehicleProvider.select(
-              (value) => (value as ArticulatedTractor).geometry.pivotToFrontAxle
-                  .toString(),
+              (value) => numberFormatter(
+                (value as ArticulatedTractor).geometry.pivotToFrontAxle,
+              ),
             ),
           ),
           onChanged: (value) {
@@ -186,11 +199,13 @@ class VehicleDimensionsPage extends ConsumerWidget {
             ),
             suffixText: 'm',
           ),
+          textAlign: .right,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           initialValue: ref.read(
             configuredVehicleProvider.select(
-              (value) => (value as ArticulatedTractor).geometry.pivotToRearAxle
-                  .toString(),
+              (value) => numberFormatter(
+                (value as ArticulatedTractor).geometry.pivotToRearAxle,
+              ),
             ),
           ),
           onChanged: (value) {

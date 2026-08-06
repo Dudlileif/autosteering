@@ -20,6 +20,7 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 /// A page for configuring the antenna's position on the vehicle.
@@ -31,6 +32,12 @@ class VehicleGnssPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
+
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 2,
+    ).format;
+
     final vehicle = ref.watch(configuredVehicleProvider);
 
     final children = [
@@ -47,9 +54,10 @@ class VehicleGnssPage extends ConsumerWidget {
           decimal: true,
           signed: true,
         ),
+        textAlign: .right,
         initialValue: ref.read(
           configuredVehicleProvider.select(
-            (value) => value.gnssAntennaConfig.lateralOffset.toString(),
+            (value) => numberFormatter(value.gnssAntennaConfig.lateralOffset),
           ),
         ),
         onChanged: (value) {
@@ -73,10 +81,11 @@ class VehicleGnssPage extends ConsumerWidget {
           labelText: strings.antennaHeight,
           suffixText: 'm',
         ),
+        textAlign: .right,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         initialValue: ref.read(
           configuredVehicleProvider.select(
-            (value) => value.gnssAntennaConfig.height.toString(),
+            (value) => numberFormatter(value.gnssAntennaConfig.height),
           ),
         ),
         onChanged: (value) {
@@ -98,20 +107,21 @@ class VehicleGnssPage extends ConsumerWidget {
         AxleSteeredVehicle() => TextFormField(
           decoration: InputDecoration(
             icon: const Icon(Icons.expand),
-            labelText:
-                '${switch (vehicle) {
-                  Tractor() => 'Rear axle',
-                  Harvester() => 'Front axle',
-                }} to antenna',
+            labelText: switch (vehicle) {
+              Tractor() => strings.rearAxleToAntenna,
+              Harvester() => strings.frontAxleToAntenna,
+            },
             suffixText: 'm',
           ),
+          textAlign: .right,
           keyboardType: const TextInputType.numberWithOptions(
             decimal: true,
             signed: true,
           ),
           initialValue: ref.read(
             configuredVehicleProvider.select(
-              (value) => value.gnssAntennaConfig.longitudinalOffset.toString(),
+              (value) =>
+                  numberFormatter(value.gnssAntennaConfig.longitudinalOffset),
             ),
           ),
           onChanged: (value) {
@@ -137,13 +147,15 @@ class VehicleGnssPage extends ConsumerWidget {
             suffixText: 'm',
             helperText: strings.pivotAntennaWarning,
           ),
+          textAlign: .right,
           keyboardType: const TextInputType.numberWithOptions(
             decimal: true,
             signed: true,
           ),
           initialValue: ref.read(
             configuredVehicleProvider.select(
-              (value) => value.gnssAntennaConfig.longitudinalOffset.toString(),
+              (value) =>
+                  numberFormatter(value.gnssAntennaConfig.longitudinalOffset),
             ),
           ),
           onChanged: (value) {
@@ -249,13 +261,15 @@ class VehicleGnssPage extends ConsumerWidget {
                               labelText: strings.dualAntennaBaseline,
                               suffixText: 'm',
                             ),
+                            textAlign: .right,
                             keyboardType: const TextInputType.numberWithOptions(
                               decimal: true,
                             ),
                             initialValue: ref.read(
                               configuredVehicleProvider.select(
-                                (value) => value.gnssAntennaConfig.dualBaseline
-                                    .toString(),
+                                (value) => numberFormatter(
+                                  value.gnssAntennaConfig.dualBaseline,
+                                ),
                               ),
                             ),
                             onChanged: (value) {
@@ -283,23 +297,25 @@ class VehicleGnssPage extends ConsumerWidget {
                               labelText: strings.dualAntennaAngle,
                               suffixText: '°',
                             ),
+                            textAlign: .right,
                             keyboardType: const TextInputType.numberWithOptions(
                               decimal: true,
                               signed: true,
                             ),
                             initialValue: ref.read(
                               configuredVehicleProvider.select(
-                                (value) => value
-                                    .gnssAntennaConfig
-                                    .dualRelativeAngle
-                                    .toString(),
+                                (value) =>
+                                    NumberFormat.decimalPatternDigits(
+                                      locale: strings.localeName,
+                                      decimalDigits: 1,
+                                    ).format(
+                                      value.gnssAntennaConfig.dualRelativeAngle,
+                                    ),
                               ),
                             ),
                             onChanged: (value) {
-                              final angle = double.tryParse(
-                                value.numberInput,
-                              );
-                              if (angle != null) {
+                              if (double.tryParse(value.numberInput)
+                                  case final angle?) {
                                 ref
                                     .read(configuredVehicleProvider.notifier)
                                     .update(
@@ -444,7 +460,7 @@ class VehicleGnssPage extends ConsumerWidget {
 
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.only(top: 8, bottom: 16),
         child: Align(
           alignment: Alignment.topCenter,
           child: Center(
