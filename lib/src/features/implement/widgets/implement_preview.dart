@@ -61,9 +61,7 @@ class _ImplementPreviewState extends ConsumerState<ImplementPreview> {
     final textTheme = TextTheme.of(context);
     final colorScheme = ColorScheme.of(context);
 
-    final implement = widget.implement.copyWith(
-      position: const Geographic(lat: 0, lon: 0),
-    );
+    final implement = widget.implement;
 
     final bounds = implement.mapPolygons.isNotEmpty
         ? LatLngBounds.fromPoints(
@@ -101,18 +99,6 @@ class _ImplementPreviewState extends ConsumerState<ImplementPreview> {
         ),
       ),
       children: [
-        Align(
-          alignment: .topLeft,
-          child: Padding(
-            padding: const .only(left: 8),
-            child: IconButton(
-              onPressed: () => mapController.fitCamera(
-                .bounds(bounds: bounds, padding: const .all(8)),
-              ),
-              icon: const Icon(Icons.fit_screen),
-            ),
-          ),
-        ),
         PolygonLayer(
           polygons: [
             ...widget.activeSections
@@ -155,7 +141,7 @@ class _ImplementPreviewState extends ConsumerState<ImplementPreview> {
               alignment: .center,
               child: Material(
                 type: .circle,
-                elevation: 1,
+                elevation: 2,
                 color: Colors.redAccent.shade700,
                 child: Center(
                   child: Text(
@@ -173,46 +159,58 @@ class _ImplementPreviewState extends ConsumerState<ImplementPreview> {
                 (index, connector) => Marker(
                   point: connector.position(implement).latLng,
                   alignment: .center,
-                  height: 32,
-                  width: 32,
-                  child: switch (connector.type) {
-                    .fixed => DecoratedBox(
-                      decoration: BoxDecoration(
-                        borderRadius: .circular(100),
-                        color: switch (connector.relation) {
-                          .parent => Colors.blueAccent,
-                          .child => Colors.yellowAccent,
-                        },
-                      ),
-                      child: Center(
-                        child: Text(
-                          '${index + 1}',
-                          textAlign: .center,
-                          style: textTheme.bodyMedium?.copyWith(
-                            color: Colors.black,
+                  child: Stack(
+                    alignment: .center,
+                    children: [
+                      Align(
+                        alignment: .topCenter,
+                        child: ClipRect(
+                          child: Align(
+                            alignment: .topCenter,
+                            heightFactor: 0.5,
+                            child: Material(
+                              type: .circle,
+                              elevation: 4,
+                              color: switch (connector.type) {
+                                .fixed => Colors.blueAccent,
+                                .drawbar => Colors.orangeAccent,
+                              },
+                              child: const SizedBox.square(
+                                dimension: 32,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    .drawbar => DecoratedBox(
-                      decoration: BoxDecoration(
-                        borderRadius: .circular(100),
-                        color: switch (connector.relation) {
-                          .parent => Colors.blueAccent,
-                          .child => Colors.yellowAccent,
-                        },
-                      ),
-                      child: Center(
-                        child: Text(
-                          '${index + 1}',
-                          textAlign: .center,
-                          style: textTheme.bodyMedium?.copyWith(
-                            color: Colors.black,
+                      Align(
+                        alignment: .bottomCenter,
+                        child: ClipRect(
+                          child: Align(
+                            alignment: .bottomCenter,
+                            heightFactor: 0.5,
+                            child: Material(
+                              elevation: 4,
+                              type: .circle,
+                              color: switch (connector.relation) {
+                                .parent => Colors.redAccent,
+                                .child => Colors.greenAccent,
+                              },
+                              child: const SizedBox.square(
+                                dimension: 32,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  },
+                      TextWithStroke(
+                        '${index + 1}',
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: Colors.white,
+                        ),
+                        strokeWidth: 3.5,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ...widget.activeSections.map(
@@ -236,6 +234,18 @@ class _ImplementPreviewState extends ConsumerState<ImplementPreview> {
               ),
             ),
           ],
+        ),
+        Align(
+          alignment: .topLeft,
+          child: Padding(
+            padding: const .only(left: 8),
+            child: IconButton(
+              onPressed: () => mapController.fitCamera(
+                .bounds(bounds: bounds, padding: const .all(8)),
+              ),
+              icon: const Icon(Icons.fit_screen),
+            ),
+          ),
         ),
       ],
     );

@@ -21,7 +21,6 @@ import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/hitching/hitching.dart';
 import 'package:autosteering/src/features/implement/implement.dart';
 import 'package:autosteering/src/l10n/app_localizations.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -40,57 +39,63 @@ class ImplementConnectorsPage extends ConsumerWidget {
 
     final implement = ref.watch(configuredImplementProvider);
 
-    final children = [
-      Text(
-        strings.connectors(0),
-        style: textTheme.titleLarge,
-      ),
-      Column(
-        children: ListTile.divideTiles(
-          context: context,
-          tiles: implement.connectors.mapIndexed(
-            (index, connector) => ExpansionTile(
-              backgroundColor: colorScheme.surfaceContainerHighest,
-              title: Text('${strings.connectors(1)} ${index + 1}'),
-              children: [_ConnectorForm(connector: connector, index: index)],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: CustomScrollView(
+        slivers: [
+          SliverPadding(
+            padding: const .all(8),
+            sliver: SliverToBoxAdapter(
+              child: Center(
+                child: Text(
+                  strings.connectors(0),
+                  style: textTheme.titleLarge,
+                ),
+              ),
             ),
           ),
-        ).toList(),
-      ),
-      ElevatedButton.icon(
-        onPressed: () => ref
-            .read(configuredImplementProvider.notifier)
-            .update(
-              implement.copyWith(
-                connectors: [
-                  ...implement.connectors,
-                  Connector(
-                    implementId: implement.id,
-                    lateralOffsetFromRef: 0,
-                    longitudinalOffsetFromRef: 0,
-                    type: .fixed,
-                    relation: .child,
-                  ),
-                ],
+          SliverList.separated(
+            itemCount: implement.connectors.length,
+            separatorBuilder: (context, index) => const Divider(),
+            itemBuilder: (context, index) => ExpansionTile(
+              backgroundColor: colorScheme.surfaceContainerHighest,
+              title: Text('${strings.connectors(1)} ${index + 1}'),
+              children: [
+                _ConnectorForm(
+                  connector: implement.connectors[index],
+                  index: index,
+                ),
+              ],
+            ),
+          ),
+          SliverPadding(
+            padding: const .only(top: 16),
+            sliver: SliverToBoxAdapter(
+              child: Center(
+                child: ElevatedButton.icon(
+                  onPressed: () => ref
+                      .read(configuredImplementProvider.notifier)
+                      .update(
+                        implement.copyWith(
+                          connectors: [
+                            ...implement.connectors,
+                            Connector(
+                              implementId: implement.id,
+                              lateralOffsetFromRef: 0,
+                              longitudinalOffsetFromRef: 0,
+                              type: .fixed,
+                              relation: .parent,
+                            ),
+                          ],
+                        ),
+                      ),
+                  label: Text(strings.addConnector),
+                  icon: const Icon(Symbols.add_rounded),
+                ),
               ),
             ),
-        label: Text(strings.addConnector),
-        icon: const Icon(Symbols.add_rounded),
-      ),
-    ];
-
-    return SingleChildScrollView(
-      padding: const .all(8),
-      child: Column(
-        spacing: 8,
-        children: children
-            .map(
-              (widget) => ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 400),
-                child: widget,
-              ),
-            )
-            .toList(),
+          ),
+        ],
       ),
     );
   }
@@ -104,6 +109,12 @@ class _ConnectorForm extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final strings = AppLocalizations.of(context);
+
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 2,
+    ).format;
+
     return Column(
       spacing: 8,
       children: [
@@ -136,10 +147,7 @@ class _ConnectorForm extends ConsumerWidget {
                 Expanded(
                   child: TextFormField(
                     controller: TextEditingController(
-                      text: NumberFormat.decimalPatternDigits(
-                        locale: strings.localeName,
-                        decimalDigits: 2,
-                      ).format(connector.lateralOffsetFromRef),
+                      text: numberFormatter(connector.lateralOffsetFromRef),
                     ),
                     textAlign: .end,
                     decoration: InputDecoration(
@@ -151,9 +159,8 @@ class _ConnectorForm extends ConsumerWidget {
                       signed: true,
                     ),
                     onFieldSubmitted: (value) {
-                      final lateralOffset = double.tryParse(value.numberInput);
-
-                      if (lateralOffset != null) {
+                      if (double.tryParse(value.numberInput)
+                          case final lateralOffset?) {
                         ref
                             .read(configuredImplementProvider.notifier)
                             .updateConnector(
@@ -169,10 +176,9 @@ class _ConnectorForm extends ConsumerWidget {
                 Expanded(
                   child: TextFormField(
                     controller: TextEditingController(
-                      text: NumberFormat.decimalPatternDigits(
-                        locale: strings.localeName,
-                        decimalDigits: 2,
-                      ).format(connector.longitudinalOffsetFromRef),
+                      text: numberFormatter(
+                        connector.longitudinalOffsetFromRef,
+                      ),
                     ),
                     textAlign: .end,
                     decoration: InputDecoration(
@@ -184,11 +190,8 @@ class _ConnectorForm extends ConsumerWidget {
                       signed: true,
                     ),
                     onFieldSubmitted: (value) {
-                      final longitudinalOffset = double.tryParse(
-                        value.numberInput,
-                      );
-
-                      if (longitudinalOffset != null) {
+                      if (double.tryParse(value.numberInput)
+                          case final longitudinalOffset?) {
                         ref
                             .read(configuredImplementProvider.notifier)
                             .updateConnector(
@@ -253,6 +256,18 @@ class _ConnectorTypeSelector extends StatelessWidget {
               fontWeight: .bold,
             ),
           ),
+          foregroundColor: const WidgetStateProperty.fromMap(
+            <WidgetState, Color>{.selected: Colors.black},
+          ),
+          iconColor: const WidgetStateProperty.fromMap(
+            <WidgetState, Color>{.selected: Colors.black},
+          ),
+          backgroundColor: WidgetStateProperty.fromMap(<WidgetState, Color>{
+            .selected: switch (selected) {
+              .fixed => Colors.blueAccent,
+              .drawbar => Colors.orangeAccent,
+            },
+          }),
         ),
         onSelectionChanged: (values) => onSelected(values.first),
         selected: {selected},
@@ -336,8 +351,8 @@ class _ConnectorRelationSelector extends StatelessWidget {
           ),
           backgroundColor: WidgetStateProperty.fromMap(<WidgetState, Color>{
             .selected: switch (selected) {
-              .parent => Colors.blueAccent,
-              .child => Colors.yellowAccent,
+              .parent => Colors.redAccent,
+              .child => Colors.greenAccent,
             },
           }),
         ),

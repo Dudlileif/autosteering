@@ -319,6 +319,7 @@ class _SliverBuilder extends StatelessWidget {
           ),
         )
         .toList();
+
     return NestedScrollView(
       headerSliverBuilder: (context, innerBoxIsScrolled) => [
         SliverAppBar(

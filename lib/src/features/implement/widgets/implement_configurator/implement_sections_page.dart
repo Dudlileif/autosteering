@@ -35,12 +35,13 @@ class ImplementSectionsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
+
     final implement = ref.watch(configuredImplementProvider);
 
     return CustomScrollView(
       slivers: [
         SliverPadding(
-          padding: const EdgeInsets.all(8),
+          padding: const .all(8),
           sliver: SliverToBoxAdapter(
             child: Text(
               strings.sections(0),
@@ -513,37 +514,35 @@ class _Sections extends ConsumerWidget {
     return SliverList.separated(
       itemCount: sections.length,
       separatorBuilder: (context, index) => const Divider(),
-      itemBuilder: (context, index) {
-        return ExpansionTile(
-          title: Text('${strings.sections(1)} ${index + 1}'),
-          onExpansionChanged: (open) => switch (open) {
-            true =>
-              ref
-                  .read(configuredImplementOpenSectionsProvider.notifier)
-                  .add(index),
-            false =>
-              ref
-                  .read(configuredImplementOpenSectionsProvider.notifier)
-                  .remove(index),
-          },
-          backgroundColor: colorScheme.surfaceContainerHighest,
-          shape: RoundedRectangleBorder(borderRadius: .circular(12)),
-          collapsedShape: RoundedRectangleBorder(borderRadius: .circular(12)),
-          initiallyExpanded: openSections.contains(index),
-          children: [
-            AnimatedSize(
-              duration: Durations.medium2,
-              curve: Easing.standard,
-              alignment: .bottomCenter,
-              child: _SectionConfigurator(
-                index,
-                singleSection: sections.length == 1,
-                equalWidth: equalWidth,
-              ),
+      itemBuilder: (context, index) => ExpansionTile(
+        title: Text('${strings.sections(1)} ${index + 1}'),
+        onExpansionChanged: (open) => switch (open) {
+          true =>
+            ref
+                .read(configuredImplementOpenSectionsProvider.notifier)
+                .add(index),
+          false =>
+            ref
+                .read(configuredImplementOpenSectionsProvider.notifier)
+                .remove(index),
+        },
+        backgroundColor: colorScheme.surfaceContainerHighest,
+        shape: RoundedRectangleBorder(borderRadius: .circular(12)),
+        collapsedShape: RoundedRectangleBorder(borderRadius: .circular(12)),
+        initiallyExpanded: openSections.contains(index),
+        children: [
+          AnimatedSize(
+            duration: Durations.medium2,
+            curve: Easing.standard,
+            alignment: .bottomCenter,
+            child: _SectionConfigurator(
+              index,
+              singleSection: sections.length == 1,
+              equalWidth: equalWidth,
             ),
-          ],
-        );
-      },
+          ),
+        ],
+      ),
     );
   }
 }
