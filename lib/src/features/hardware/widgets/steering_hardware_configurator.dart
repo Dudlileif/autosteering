@@ -27,6 +27,7 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 /// A configurator widget for configuring how to use the WAS with the vehicle.
 class SteeringHardwareConfigurator extends StatelessWidget {
@@ -37,58 +38,58 @@ class SteeringHardwareConfigurator extends StatelessWidget {
   Widget build(BuildContext context) {
     final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final mediaSize = MediaQuery.sizeOf(context);
 
-    return Card(
-      color: Colors.transparent,
-      child: SizedBox(
-        width: 325,
-        child: DefaultTabController(
-          length: 3,
-          child: Scaffold(
-            backgroundColor: theme.scaffoldBackgroundColor.withValues(
-              alpha: 0.7,
-            ),
-            appBar: AppBar(
-              primary: false,
-              scrolledUnderElevation: 0,
-              title: Text(strings.steeringConfigurator),
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Consumer(
-                    builder: (context, ref, child) => CloseButton(
-                      onPressed: () => ref
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        primary: false,
+        backgroundColor: switch (mediaSize) {
+          Size(width: < 600) => null,
+          _ => theme.scaffoldBackgroundColor.withValues(alpha: 0.7),
+        },
+        appBar: AppBar(
+          primary: false,
+          scrolledUnderElevation: 4,
+          title: Text(strings.steeringConfigurator, maxLines: 2),
+          automaticallyImplyLeading: false,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Consumer(
+                builder: (context, ref, child) => CloseButton(
+                  onPressed: switch (mediaSize) {
+                    Size(width: < 600) => Navigator.of(context).pop,
+                    _ =>
+                      () => ref
                           .read(showSteeringHardwareConfigProvider.notifier)
                           .update(value: false),
-                    ),
-                  ),
+                  },
                 ),
-              ],
+              ),
             ),
-            body: Column(
-              children: [
-                TabBar(
-                  labelStyle: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w900,
-                  ),
-                  unselectedLabelStyle: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w300,
-                  ),
-                  tabs: [
-                    Tab(text: strings.motor),
-                    Tab(text: strings.was),
-                    Tab(text: strings.pid),
-                  ],
-                  dividerColor: theme.dividerColor,
-                ),
-                const Expanded(
-                  child: TabBarView(
-                    children: [_MotorPage(), _WasPage(), _PidPage()],
-                  ),
-                ),
-              ],
+          ],
+          bottom: TabBar(
+            labelStyle: theme.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w900,
             ),
+            unselectedLabelStyle: theme.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w300,
+            ),
+            tabs: [
+              Tab(text: strings.motor),
+              Tab(text: strings.was),
+              Tab(text: strings.pid),
+            ],
+            dividerColor: theme.dividerColor,
           ),
+        ),
+        body: const TabBarView(
+          children: [
+            _MotorPage(),
+            _WasPage(),
+            _PidPage(),
+          ],
         ),
       ),
     );
@@ -883,6 +884,11 @@ class _WasPage extends ConsumerWidget {
     final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 3,
+    ).format;
+
     return ListView(
       children: [
         // Use WAS
@@ -1072,7 +1078,7 @@ class _WasPage extends ConsumerWidget {
             return Column(
               children: [
                 Text(
-                  '${strings.normalized}: ${reading.toStringAsFixed(3)}',
+                  '${strings.normalized}: ${numberFormatter(reading)}',
                   style: theme.textTheme.bodyLarge,
                 ),
                 Slider(value: reading, onChanged: null, min: -1),
@@ -1647,6 +1653,11 @@ class __VehicleThresholdsDialogState
     final textTheme = TextTheme.of(context);
     final velocityUnit = ref.watch(uiUnitVelocityProvider);
 
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 1,
+    ).format;
+
     return SimpleDialog(
       title: Text(strings.thresholdVelocities),
       children: [
@@ -1654,7 +1665,7 @@ class __VehicleThresholdsDialogState
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              '${strings.min} ${strings.velocity.toLowerCase()}: ${(vehicleThresholds.minVelocity * 3.6).toStringAsFixed(1)} km/h',
+              '${strings.min} ${strings.velocity.toLowerCase()}: ${numberFormatter(vehicleThresholds.minVelocity * 3.6)} km/h',
               style: textTheme.bodyLarge,
             ),
             Text(
@@ -1682,7 +1693,7 @@ class __VehicleThresholdsDialogState
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              '${strings.max} ${strings.velocity.toLowerCase()}: ${(vehicleThresholds.maxVelocity * 3.6).toStringAsFixed(1)} km/h',
+              '${strings.max} ${strings.velocity.toLowerCase()}: ${numberFormatter(vehicleThresholds.maxVelocity * 3.6)} km/h',
               style: textTheme.bodyLarge,
             ),
             Text(
@@ -1831,6 +1842,12 @@ class DraggableSteeringHardwareConfigurator extends ConsumerWidget {
     onDragEnd: ref
         .read(steeringHardwareConfiguratorUiOffsetProvider.notifier)
         .update,
-    child: const SteeringHardwareConfigurator(),
+    child: const Card(
+      color: Colors.transparent,
+      child: SizedBox(
+        width: 325,
+        child: SteeringHardwareConfigurator(),
+      ),
+    ),
   );
 }

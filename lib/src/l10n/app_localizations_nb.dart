@@ -143,11 +143,11 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get autosteeringDisabledAboveThreshold =>
-      'Autostyring skrus av over grensen';
+      'Autostyring skrus av over grensen.';
 
   @override
   String get autosteeringDisabledBelowThreshold =>
-      'Autostyring skrus av under grensen';
+      'Autostyring skrus av under grensen.';
 
   @override
   String get autosteeringParameters => 'Autostyringparametre';
@@ -305,7 +305,7 @@ class AppLocalizationsNb extends AppLocalizations {
       type,
       {
         'other': 'Kobling',
-        'fixed': 'Trepunkt/Fast',
+        'fixed': 'Trepunkt',
         'drawbar': 'Drag',
       },
     );
@@ -926,6 +926,20 @@ class AppLocalizationsNb extends AppLocalizations {
   String get loop => 'Gjenta';
 
   @override
+  String loopMode(String mode) {
+    String _temp0 = intl.Intl.selectLogic(
+      mode,
+      {
+        'other': 'Loopmodus',
+        'none': 'Ingen',
+        'straight': 'Rett',
+        'dubins': 'Dubins',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get lowerThreshold => 'Nedre grense';
 
   @override
@@ -1490,7 +1504,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get setToZeroToDisableInReverse =>
-      'Sett til 0 for å skru helt av i revers';
+      'Sett til 0 for å skru helt av i revers.';
 
   @override
   String get setup => 'Oppsett';

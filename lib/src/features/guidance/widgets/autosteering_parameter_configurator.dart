@@ -36,64 +36,61 @@ class AutosteeringParameterConfigurator extends StatelessWidget {
   Widget build(BuildContext context) {
     final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final mediaSize = MediaQuery.sizeOf(context);
 
-    return Card(
-      color: Colors.transparent,
-      child: SizedBox(
-        width: 300,
-        child: DefaultTabController(
-          length: 2,
-          child: Scaffold(
-            backgroundColor: theme.scaffoldBackgroundColor.withValues(
-              alpha: 0.7,
-            ),
-            appBar: AppBar(
-              primary: false,
-              title: Text(strings.autosteeringParameters),
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Consumer(
-                    builder: (context, ref, child) {
-                      return CloseButton(
-                        onPressed: () => ref
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        primary: false,
+        backgroundColor: switch (mediaSize) {
+          Size(width: < 600) => null,
+          _ => theme.scaffoldBackgroundColor.withValues(alpha: 0.7),
+        },
+        appBar: AppBar(
+          primary: false,
+          scrolledUnderElevation: 4,
+          title: Text(strings.autosteeringParameters, maxLines: 2),
+          automaticallyImplyLeading: false,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Consumer(
+                builder: (context, ref, child) {
+                  return CloseButton(
+                    onPressed: switch (mediaSize) {
+                      Size(width: < 600) => Navigator.of(context).pop,
+                      _ =>
+                        () => ref
                             .read(
                               showAutosteeringParameterConfigProvider.notifier,
                             )
                             .update(value: false),
-                      );
                     },
-                  ),
-                ),
-              ],
+                  );
+                },
+              ),
             ),
-            body: Column(
-              children: [
-                TabBar(
-                  labelStyle: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w900,
-                  ),
-                  unselectedLabelStyle: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w300,
-                  ),
-                  tabs: [
-                    Tab(text: strings.trackingModePurePursuit),
-                    Tab(text: strings.trackingModeStanley),
-                  ],
-                ),
-                const Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 8),
-                    child: TabBarView(
-                      children: [
-                        _PurePursuitConfigurator(),
-                        _StanleyParametersConfigurator(),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+          ],
+          bottom: TabBar(
+            labelStyle: theme.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w900,
             ),
+            unselectedLabelStyle: theme.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w300,
+            ),
+            tabs: [
+              Tab(text: strings.trackingModePurePursuit),
+              Tab(text: strings.trackingModeStanley),
+            ],
+          ),
+        ),
+        body: const Padding(
+          padding: EdgeInsets.only(top: 8),
+          child: TabBarView(
+            children: [
+              _PurePursuitConfigurator(),
+              _StanleyParametersConfigurator(),
+            ],
           ),
         ),
       ),
@@ -443,6 +440,12 @@ class DraggableAutosteeringParameterConfigurator extends ConsumerWidget {
     onDragEnd: ref
         .read(autosteeringConfiguratorUiOffsetProvider.notifier)
         .update,
-    child: const AutosteeringParameterConfigurator(),
+    child: const Card(
+      color: Colors.transparent,
+      child: SizedBox(
+        width: 300,
+        child: AutosteeringParameterConfigurator(),
+      ),
+    ),
   );
 }

@@ -341,13 +341,13 @@ abstract class AppLocalizations {
   /// No description provided for @autosteeringDisabledAboveThreshold.
   ///
   /// In en, this message translates to:
-  /// **'Autosteering disabled above threshold'**
+  /// **'Autosteering disabled above threshold.'**
   String get autosteeringDisabledAboveThreshold;
 
   /// No description provided for @autosteeringDisabledBelowThreshold.
   ///
   /// In en, this message translates to:
-  /// **'Autosteering disabled below threshold'**
+  /// **'Autosteering disabled below threshold.'**
   String get autosteeringDisabledBelowThreshold;
 
   /// No description provided for @autosteeringParameters.
@@ -575,7 +575,7 @@ abstract class AppLocalizations {
   /// No description provided for @connectorType.
   ///
   /// In en, this message translates to:
-  /// **'{type, select, other{Connector} fixed{Three-point/Fixed} drawbar{Drawbar}}'**
+  /// **'{type, select, other{Connector} fixed{Three-point} drawbar{Drawbar}}'**
   String connectorType(String type);
 
   /// No description provided for @coolStepMinRpm.
@@ -1447,6 +1447,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Loop'**
   String get loop;
+
+  /// loopMode
+  ///
+  /// In en, this message translates to:
+  /// **'{mode, select, other{Loop mode} none{None} straight{Straight} dubins{Dubins}}'**
+  String loopMode(String mode);
 
   /// No description provided for @lowerThreshold.
   ///

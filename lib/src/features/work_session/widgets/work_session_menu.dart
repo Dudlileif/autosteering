@@ -1031,7 +1031,7 @@ class _ABTrackingMenu extends ConsumerWidget {
                   builder: (context) {
                     var text = '${tracking.type.name} - ';
                     if (tracking.type != ABTrackingType.abCurve) {
-                      text += '${tracking.initialBearing.toStringAsFixed(0)}° ';
+                      text += '${tracking.initialBearing.round()}° ';
                     }
                     text += '| ${tracking.width} m |';
                     text +=
@@ -1127,6 +1127,12 @@ class _PathTrackingMenu extends ConsumerWidget {
     final theme = Theme.of(context);
 
     final trackings = ref.watch(activeWorkSessionProvider)?.pathTracking;
+
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 1,
+    ).format;
+
     if (trackings != null && trackings.isNotEmpty) {
       return MenuButtonWithChildren(
         text: strings.pathTracking,
@@ -1181,7 +1187,7 @@ class _PathTrackingMenu extends ConsumerWidget {
                 subtitle: Builder(
                   builder: (context) {
                     final length = tracking.cumulativePathSegmentLengths.last;
-                    return Text('${length.toStringAsFixed(1)} m');
+                    return Text('${numberFormatter(length)} m');
                   },
                 ),
               ),

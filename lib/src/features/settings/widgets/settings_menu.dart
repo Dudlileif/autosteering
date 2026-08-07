@@ -25,6 +25,7 @@ import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -400,6 +401,14 @@ class _UnitMenu extends ConsumerWidget {
     final strings = AppLocalizations.of(context);
     final dadMode = ref.watch(enableDadModeProvider);
 
+    final numberFormatterOneDecimal = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 1,
+    ).format;
+    final numberFormatterThreeDecimals = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 3,
+    ).format;
     return MenuButtonWithChildren(
       text: strings.units,
       icon: Icons.speed,
@@ -417,7 +426,7 @@ class _UnitMenu extends ConsumerWidget {
                         title: Text(strings.unitAreaName(unit.symbol)),
                         leading: Text(strings.unitAreaDisplay(unit.symbol)),
                         subtitle: Text(
-                          '''${unit.inSquareMeters.toStringAsFixed(1)} ${strings.unitAreaDisplay(UnitArea.squareMeter.symbol)}''',
+                          '''${numberFormatterOneDecimal(unit.inSquareMeters)} ${strings.unitAreaDisplay(UnitArea.squareMeter.symbol)}''',
                         ),
                         onTap: () =>
                             ref.read(uiUnitAreaProvider.notifier).update(unit),
@@ -468,7 +477,7 @@ class _UnitMenu extends ConsumerWidget {
                         title: Text(strings.unitVelocityName(unit.symbol)),
                         leading: Text(strings.unitVelocityDisplay(unit.symbol)),
                         subtitle: Text(
-                          '''${unit.inMetersPerSecond.toStringAsFixed(3)} ${strings.unitVelocityDisplay(UnitVelocity.metersPerSecond.symbol)}''',
+                          '''${numberFormatterThreeDecimals(unit.inMetersPerSecond)} ${strings.unitVelocityDisplay(UnitVelocity.metersPerSecond.symbol)}''',
                         ),
                         onTap: () => ref
                             .read(uiUnitVelocityProvider.notifier)

@@ -24,6 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 /// A menu for configuring the NTRIP Client settings.
 class NtripMenu extends ConsumerWidget {
@@ -268,6 +269,12 @@ class _NtripSourcetableDialogState extends State<_NtripSourcetableDialog> {
     final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final textStyle = theme.menuButtonWithChildrenText;
+
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 1,
+    ).format;
+
     return SimpleDialog(
       title: Text(
         strings.ntripCasterSourcetable,
@@ -315,7 +322,7 @@ class _NtripSourcetableDialogState extends State<_NtripSourcetableDialog> {
                             label.add(country);
                           }
                           final distance = station.value != null
-                              ? '''${(station.value! / 1000).toStringAsFixed(1)} km'''
+                              ? '''${numberFormatter(station.value! / 1000)} km'''
                               : null;
                           if (distance != null) {
                             label.add(distance);

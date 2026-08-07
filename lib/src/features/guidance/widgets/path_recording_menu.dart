@@ -27,6 +27,7 @@ import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geobase/geobase.dart';
+import 'package:intl/intl.dart';
 import 'package:quiver/strings.dart';
 
 /// An enumerator for what mode the recording should use.
@@ -60,10 +61,14 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
     final settings = ref.watch(activePathRecordingSettingsProvider);
-
     final target = ref.watch(activePathRecordingTargetProvider);
 
     final theme = Theme.of(context);
+
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 1,
+    ).format;
 
     return Card(
       color: Colors.transparent,
@@ -354,7 +359,7 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        '''${strings.lateralOffset}: ${distance.toStringAsFixed(1)} m''',
+                        '''${strings.lateralOffset}: ${numberFormatter(distance)} m''',
                         style: textStyle,
                       ),
                       Slider.adaptive(
@@ -377,7 +382,7 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        '''${strings.longitudinalOffset}: ${distance.toStringAsFixed(1)} m''',
+                        '''${strings.longitudinalOffset}: ${numberFormatter(distance)} m''',
                         style: textStyle,
                       ),
                       Slider.adaptive(
@@ -403,7 +408,7 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          '''${strings.maxDistance}: ${distance.toStringAsFixed(1)} m''',
+                          '''${strings.maxDistance}: ${numberFormatter(distance)} m''',
                           style: textStyle,
                         ),
                         Slider.adaptive(
@@ -428,7 +433,7 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          '''${strings.minDistance}: ${distance.toStringAsFixed(1)} m''',
+                          '''${strings.minDistance}: ${numberFormatter(distance)} m''',
                           style: textStyle,
                         ),
                         Slider.adaptive(
@@ -453,7 +458,7 @@ class _PathRecordingMenuState extends ConsumerState<PathRecordingMenu> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          '''${strings.turnTriggerAngle}: ${angle.toStringAsFixed(1)}°''',
+                          '''${strings.turnTriggerAngle}: ${numberFormatter(angle)}°''',
                           style: textStyle,
                         ),
                         Slider.adaptive(

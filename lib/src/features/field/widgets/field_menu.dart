@@ -801,6 +801,11 @@ class _BufferDistancesDialog extends ConsumerWidget {
     final distanceType = ref.watch(activeFieldBufferDistanceTypeProvider);
     final field = ref.watch(activeFieldProvider);
 
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 2,
+    ).format;
+
     return SimpleDialog(
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -847,9 +852,10 @@ class _BufferDistancesDialog extends ConsumerWidget {
                 text:
                     equipmentWidth != null &&
                         distanceType == FieldBufferDistanceType.equipmentWidths
-                    ? (ref.read(fieldExteriorBufferDistanceProvider) /
-                              equipmentWidth)
-                          .toStringAsFixed(2)
+                    ? numberFormatter(
+                        ref.read(fieldExteriorBufferDistanceProvider) /
+                            equipmentWidth,
+                      )
                     : ref.read(fieldExteriorBufferDistanceProvider).toString(),
               );
               final startProcess = RestartableTimer(
@@ -887,7 +893,7 @@ class _BufferDistancesDialog extends ConsumerWidget {
                       equipmentWidth != null &&
                               distanceType ==
                                   FieldBufferDistanceType.equipmentWidths
-                          ? '''x $equipmentWidth m = ${((double.tryParse(controller.text) ?? 0) * equipmentWidth).toStringAsFixed(2)} m'''
+                          ? '''x $equipmentWidth m = ${numberFormatter((double.tryParse(controller.text) ?? 0) * equipmentWidth)} m'''
                           : 'm',
                     ),
                   ),
@@ -918,9 +924,10 @@ class _BufferDistancesDialog extends ConsumerWidget {
                       equipmentWidth != null &&
                           distanceType ==
                               FieldBufferDistanceType.equipmentWidths
-                      ? (ref.read(fieldInteriorBufferDistanceProvider) /
-                                equipmentWidth)
-                            .toStringAsFixed(2)
+                      ? numberFormatter(
+                          ref.read(fieldInteriorBufferDistanceProvider) /
+                              equipmentWidth,
+                        )
                       : ref
                             .read(fieldInteriorBufferDistanceProvider)
                             .toString(),
@@ -961,7 +968,7 @@ class _BufferDistancesDialog extends ConsumerWidget {
                         equipmentWidth != null &&
                                 distanceType ==
                                     FieldBufferDistanceType.equipmentWidths
-                            ? '''x $equipmentWidth m = ${((double.tryParse(controller.text) ?? 0) * equipmentWidth).toStringAsFixed(2)} m'''
+                            ? '''x $equipmentWidth m = ${numberFormatter((double.tryParse(controller.text) ?? 0) * equipmentWidth)} m'''
                             : 'm',
                       ),
                     ),

@@ -62,6 +62,15 @@ class ABTrackingMenu extends ConsumerWidget {
       ),
     };
 
+    final numberFormatterTwoDecimals = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 2,
+    ).format;
+    final numberFormatterOneDecimal = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 1,
+    ).format;
+
     return MenuButtonWithChildren(
       iconOverrideWidget: SizedBox.square(
         dimension: 24,
@@ -288,7 +297,7 @@ class ABTrackingMenu extends ConsumerWidget {
                   onPressed: () => ref.invalidate(aPlusLineBearingProvider),
                 ),
                 child: Text(
-                  '''${strings.bearing}: ${bearing != null ? '${bearing.toStringAsFixed(2)}°' : ''}''',
+                  '''${strings.bearing}: ${bearing != null ? '${numberFormatterTwoDecimals(bearing)}°' : ''}''',
                   style: theme.menuButtonWithChildrenText,
                 ),
               );
@@ -298,7 +307,7 @@ class ABTrackingMenu extends ConsumerWidget {
           Consumer(
             builder: (context, ref, child) => ListTile(
               title: Text(
-                '''${strings.bearing}: ${abTracking != null ? '${abTracking.initialBearing.toStringAsFixed(1)}°' : ''}''',
+                '''${strings.bearing}: ${abTracking != null ? '${numberFormatterOneDecimal(abTracking.initialBearing)}°' : ''}''',
                 style: theme.menuButtonWithChildrenText,
               ),
             ),
@@ -591,6 +600,10 @@ class _APlusLineBearingDialogState
   @override
   Widget build(BuildContext context) {
     final strings = AppLocalizations.of(context);
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 2,
+    ).format;
 
     return SimpleDialog(
       title: Text([strings.aPlusLine, strings.bearing].join(' ')),
@@ -615,16 +628,16 @@ class _APlusLineBearingDialogState
                 keyboardType: const TextInputType.numberWithOptions(
                   decimal: true,
                 ),
-                initialValue:
-                    (aPlusLine.value?.initialBearing ??
-                            ref.read(aBPointAProvider)?.bearing ??
-                            ref.read(
-                              mainVehicleProvider.select(
-                                (value) => value.bearing,
-                              ),
-                            ) ??
-                            0)
-                        .toStringAsFixed(2),
+                initialValue: numberFormatter(
+                  aPlusLine.value?.initialBearing ??
+                      ref.read(aBPointAProvider)?.bearing ??
+                      ref.read(
+                        mainVehicleProvider.select(
+                          (value) => value.bearing,
+                        ),
+                      ) ??
+                      0,
+                ),
                 onChanged: (value) {
                   final updated = double.tryParse(value.numberInput) ?? bearing;
                   setState(() => bearing = updated);
@@ -658,7 +671,7 @@ class _APlusLineBearingDialogState
                         : null,
                     icon: const Icon(Icons.check),
                     label: Text(
-                      strings.useValue('${bearing?.toStringAsFixed(2)}°'),
+                      strings.useValue('${numberFormatter(bearing)}°'),
                     ),
                   ),
                 ),
@@ -691,6 +704,11 @@ class _ABCommonMenu extends ConsumerWidget {
         (value) => value != ABLimitMode.unlimited,
       ),
     );
+
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 1,
+    ).format;
 
     return Column(
       children: [
@@ -781,7 +799,7 @@ class _ABCommonMenu extends ConsumerWidget {
               child: RotatedBox(quarterTurns: 1, child: Icon(Icons.expand)),
             ),
             child: Text(
-              '''${strings.spacing}: ${ref.watch(aBWidthProvider).toStringAsFixed(1)} m''',
+              '''${strings.spacing}: ${numberFormatter(ref.watch(aBWidthProvider))} m''',
               style: textStyle,
             ),
           ),
@@ -917,7 +935,7 @@ class _ABCommonMenu extends ConsumerWidget {
                 child: Icon(Icons.looks),
               ),
               child: Text(
-                '''${strings.turningRadius}: ${ref.watch(aBTurningRadiusProvider).toStringAsFixed(1)} m''',
+                '''${strings.turningRadius}: ${numberFormatter(ref.watch(aBTurningRadiusProvider))} m''',
                 style: textStyle,
               ),
             ),
@@ -968,7 +986,7 @@ class _ABCommonMenu extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      '${strings.stepSize}: ${stepSize.toStringAsFixed(1)} m',
+                      '${strings.stepSize}: ${numberFormatter(stepSize)} m',
                       style: textStyle,
                     ),
                     Slider.adaptive(

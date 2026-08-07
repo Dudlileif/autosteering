@@ -30,6 +30,7 @@ import 'package:autosteering/src/features/vehicle/vehicle.dart';
 import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:quiver/strings.dart';
 
 /// A menu with attached submenu for working with the guidance features.
@@ -205,6 +206,11 @@ class _LoadPathTrackingMenu extends ConsumerWidget {
     final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 1,
+    ).format;
+
     return MenuButtonWithChildren(
       text: strings.loadValue(
         strings.pathTracking.toLowerCase(),
@@ -266,7 +272,7 @@ class _LoadPathTrackingMenu extends ConsumerWidget {
                   builder: (context) {
                     final length =
                         pathTracking.cumulativePathSegmentLengths.last;
-                    return Text('${length.toStringAsFixed(1)} m');
+                    return Text('${numberFormatter(length)} m');
                   },
                 ),
               ),

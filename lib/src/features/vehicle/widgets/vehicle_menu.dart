@@ -36,6 +36,8 @@ class VehicleMenu extends ConsumerWidget {
     final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
 
+    final mediaSize = MediaQuery.sizeOf(context);
+
     final dadMode = ref.watch(enableDadModeProvider);
 
     return MenuButtonWithChildren(
@@ -87,15 +89,27 @@ class VehicleMenu extends ConsumerWidget {
                 ],
               ),
             ),
-            builder: (context, ref, child) => CheckboxListTile(
-              value: ref.watch(showIMUConfigProvider),
-              onChanged: (value) => value != null
-                  ? ref
-                        .read(showIMUConfigProvider.notifier)
-                        .update(value: value)
-                  : null,
-              secondary: child,
-            ),
+            builder: (context, ref, child) => switch (mediaSize) {
+              Size(width: < 600) => ListTile(
+                title: child,
+                onTap: () => showModalBottomSheet<void>(
+                  context: context,
+                  builder: (context) => const ClipRRect(
+                    borderRadius: .vertical(top: .circular(28)),
+                    child: ImuConfigurator(),
+                  ),
+                ),
+              ),
+              _ => CheckboxListTile(
+                value: ref.watch(showIMUConfigProvider),
+                onChanged: (value) => value != null
+                    ? ref
+                          .read(showIMUConfigProvider.notifier)
+                          .update(value: value)
+                    : null,
+                title: child,
+              ),
+            },
           ),
         if (!dadMode)
           Consumer(
@@ -112,17 +126,29 @@ class VehicleMenu extends ConsumerWidget {
                 ],
               ),
             ),
-            builder: (context, ref, child) => CheckboxListTile(
-              value: ref.watch(showSteeringHardwareConfigProvider),
-              onChanged: (value) => value != null
-                  ? ref
-                        .read(
-                          showSteeringHardwareConfigProvider.notifier,
-                        )
-                        .update(value: value)
-                  : null,
-              secondary: child,
-            ),
+            builder: (context, ref, child) => switch (mediaSize) {
+              Size(width: < 600) => ListTile(
+                title: child,
+                onTap: () => showModalBottomSheet<void>(
+                  context: context,
+                  builder: (context) => const ClipRRect(
+                    borderRadius: .vertical(top: .circular(28)),
+                    child: SteeringHardwareConfigurator(),
+                  ),
+                ),
+              ),
+              _ => CheckboxListTile(
+                value: ref.watch(showSteeringHardwareConfigProvider),
+                onChanged: (value) => value != null
+                    ? ref
+                          .read(
+                            showSteeringHardwareConfigProvider.notifier,
+                          )
+                          .update(value: value)
+                    : null,
+                title: child,
+              ),
+            },
           ),
         if (!dadMode)
           Consumer(
@@ -142,17 +168,29 @@ class VehicleMenu extends ConsumerWidget {
                 ],
               ),
             ),
-            builder: (context, ref, child) => CheckboxListTile(
-              value: ref.watch(showAutosteeringParameterConfigProvider),
-              onChanged: (value) => value != null
-                  ? ref
-                        .read(
-                          showAutosteeringParameterConfigProvider.notifier,
-                        )
-                        .update(value: value)
-                  : null,
-              secondary: child,
-            ),
+            builder: (context, ref, child) => switch (mediaSize) {
+              Size(width: < 600) => ListTile(
+                title: child,
+                onTap: () => showModalBottomSheet<void>(
+                  context: context,
+                  builder: (context) => const ClipRRect(
+                    borderRadius: .vertical(top: .circular(28)),
+                    child: AutosteeringParameterConfigurator(),
+                  ),
+                ),
+              ),
+              _ => CheckboxListTile(
+                value: ref.watch(showAutosteeringParameterConfigProvider),
+                onChanged: (value) => value != null
+                    ? ref
+                          .read(
+                            showAutosteeringParameterConfigProvider.notifier,
+                          )
+                          .update(value: value)
+                    : null,
+                secondary: child,
+              ),
+            },
           ),
         Consumer(
           builder: (context, ref, child) => CheckboxListTile(

@@ -17,11 +17,13 @@
 
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/graph/graph.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 /// A graphing widget for showing the change of different [GraphParameter]s
 /// at the same time.
@@ -44,9 +46,15 @@ class Graph extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final strings = AppLocalizations.of(context);
     final retainSeconds = ref.watch(graphRetainTimeSecondsProvider);
     final count = retainSeconds / 33e-3;
     final data = ref.watch(graphValuesProvider);
+
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 2,
+    ).format;
 
     return LayoutBuilder(
       builder: (context, constraints) => Flex(
@@ -143,8 +151,7 @@ class Graph extends ConsumerWidget {
                         .round();
                 var value = '';
                 if (entry.value.last?.raw is double) {
-                  value =
-                      entry.value.last?.raw.toStringAsFixed(2).padLeft(6) ?? '';
+                  value = numberFormatter(entry.value.last!.raw).padLeft(6);
                 } else if (entry.value.last?.raw is int) {
                   value = '${entry.value.last?.raw}'.padLeft(6);
                 }

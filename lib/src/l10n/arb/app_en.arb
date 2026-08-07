@@ -98,9 +98,9 @@
     "@autoSlowDown": {},
     "autosteeringAngularVelocityDescription": "Autosteering limits steering to stay below this.",
     "@autosteeringAngularVelocityDescription": {},
-    "autosteeringDisabledAboveThreshold": "Autosteering disabled above threshold",
+    "autosteeringDisabledAboveThreshold": "Autosteering disabled above threshold.",
     "@autosteeringDisabledAboveThreshold": {},
-    "autosteeringDisabledBelowThreshold": "Autosteering disabled below threshold",
+    "autosteeringDisabledBelowThreshold": "Autosteering disabled below threshold.",
     "@autosteeringDisabledBelowThreshold": {},
     "autosteeringParameters": "Autosteering parameters",
     "@autosteeringParameters": {},
@@ -218,7 +218,7 @@
             }
         }
     },
-    "connectorType": "{type, select, other{Connector} fixed{Three-point/Fixed} drawbar{Drawbar}}",
+    "connectorType": "{type, select, other{Connector} fixed{Three-point} drawbar{Drawbar}}",
     "@connectorType": {
         "placeholders": {
             "type": {
@@ -743,6 +743,16 @@
     },
     "loop": "Loop",
     "@loop": {},
+    "loopMode": "{mode, select, other{Loop mode} none{None} straight{Straight} dubins{Dubins}}",
+    "@loopMode": {
+        "description": "loopMode",
+        "placeholders": {
+            "mode": {
+                "type": "String",
+                "example": "straight"
+            }
+        }
+    },
     "lowerThreshold": "Lower threshold",
     "@lowerThreshold": {},
     "manual": "Manual",

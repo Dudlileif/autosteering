@@ -21,6 +21,7 @@ import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 /// A menu button and attached submenu for selecting custom country layers.
 class CountryLayerSelector extends ConsumerWidget {
@@ -91,6 +92,11 @@ class _CountryLayerMenuItemButton extends StatelessWidget {
     final strings = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 2,
+    ).format;
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -129,7 +135,7 @@ class _CountryLayerMenuItemButton extends StatelessWidget {
                         return Slider(
                           value: opacity,
                           label:
-                              '''${strings.opacity}: ${opacity.toStringAsFixed(2)}''',
+                              '''${strings.opacity}: ${numberFormatter(opacity)}''',
                           onChanged: enabled
                               ? (value) => ref
                                     .read(

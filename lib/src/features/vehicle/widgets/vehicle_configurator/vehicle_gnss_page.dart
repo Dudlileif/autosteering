@@ -38,6 +38,11 @@ class VehicleGnssPage extends ConsumerWidget {
       decimalDigits: 2,
     ).format;
 
+    final numberFormatterOneDecimal = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 1,
+    ).format;
+
     final vehicle = ref.watch(configuredVehicleProvider);
 
     final children = [
@@ -304,13 +309,9 @@ class VehicleGnssPage extends ConsumerWidget {
                             ),
                             initialValue: ref.read(
                               configuredVehicleProvider.select(
-                                (value) =>
-                                    NumberFormat.decimalPatternDigits(
-                                      locale: strings.localeName,
-                                      decimalDigits: 1,
-                                    ).format(
-                                      value.gnssAntennaConfig.dualRelativeAngle,
-                                    ),
+                                (value) => numberFormatterOneDecimal(
+                                  value.gnssAntennaConfig.dualRelativeAngle,
+                                ),
                               ),
                             ),
                             onChanged: (value) {
@@ -368,7 +369,7 @@ class VehicleGnssPage extends ConsumerWidget {
                                             Icons.show_chart_rounded,
                                           ),
                                           title: Text(
-                                            '''${strings.roll} ${strings.gain.toLowerCase()}: ${gain.toStringAsFixed(2)}''',
+                                            '''${strings.roll} ${strings.gain.toLowerCase()}: ${numberFormatterOneDecimal(gain)}''',
                                             style: theme.textTheme.bodyLarge,
                                           ),
                                           trailing: IconButton(

@@ -142,11 +142,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get autosteeringDisabledAboveThreshold =>
-      'Autosteering disabled above threshold';
+      'Autosteering disabled above threshold.';
 
   @override
   String get autosteeringDisabledBelowThreshold =>
-      'Autosteering disabled below threshold';
+      'Autosteering disabled below threshold.';
 
   @override
   String get autosteeringParameters => 'Autosteering parameters';
@@ -304,7 +304,7 @@ class AppLocalizationsEn extends AppLocalizations {
       type,
       {
         'other': 'Connector',
-        'fixed': 'Three-point/Fixed',
+        'fixed': 'Three-point',
         'drawbar': 'Drawbar',
       },
     );
@@ -922,6 +922,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loop => 'Loop';
+
+  @override
+  String loopMode(String mode) {
+    String _temp0 = intl.Intl.selectLogic(
+      mode,
+      {
+        'other': 'Loop mode',
+        'none': 'None',
+        'straight': 'Straight',
+        'dubins': 'Dubins',
+      },
+    );
+    return '$_temp0';
+  }
 
   @override
   String get lowerThreshold => 'Lower threshold';

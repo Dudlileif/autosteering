@@ -23,6 +23,7 @@ import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 /// A menu button with attached menu for configuring the virtual LED bar.
 class VirtualLedBarMenu extends ConsumerWidget {
@@ -36,6 +37,11 @@ class VirtualLedBarMenu extends ConsumerWidget {
     final textStyle = theme.menuButtonWithChildrenText;
 
     final config = ref.watch(virtualLedBarConfigurationProvider);
+
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 21,
+    ).format;
 
     return MenuButtonWithChildren(
       text: strings.virtualLedBar,
@@ -227,7 +233,7 @@ class VirtualLedBarMenu extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '${strings.testDistance}: ${distance.toStringAsFixed(2)} m',
+                    '${strings.testDistance}: ${numberFormatter(distance)} m',
                     style: textStyle,
                   ),
                   Slider.adaptive(

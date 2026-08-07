@@ -88,9 +88,7 @@ class AppTheme {
             duration: Durations.medium2,
           ),
         ),
-        listTileTheme: ListTileThemeData(
-          shape: RoundedRectangleBorder(borderRadius: .circular(12)),
-        ),
+
         appBarTheme: const AppBarTheme(actionsPadding: .only(right: 8)),
       );
 

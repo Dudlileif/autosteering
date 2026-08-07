@@ -133,6 +133,12 @@ class _EnterHomePositionDialogState
   @override
   Widget build(BuildContext context) {
     final strings = AppLocalizations.of(context);
+
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 9,
+    ).format;
+
     return SimpleDialog(
       title: Text(strings.homeEnterPosition),
       contentPadding: const EdgeInsets.only(
@@ -154,7 +160,7 @@ class _EnterHomePositionDialogState
                 decimal: true,
                 signed: true,
               ),
-              initialValue: (lat ?? 0).toStringAsFixed(9),
+              initialValue: numberFormatter(lat ?? 0),
               onChanged: (value) {
                 final updated = clampDouble(
                   double.tryParse(value.numberInput) ?? 0,
@@ -184,7 +190,7 @@ class _EnterHomePositionDialogState
                   decimal: true,
                   signed: true,
                 ),
-                initialValue: (lon ?? 0).toStringAsFixed(9),
+                initialValue: numberFormatter(lon ?? 0),
                 onChanged: (value) {
                   final updated = clampDouble(
                     double.tryParse(value.numberInput) ?? 0,

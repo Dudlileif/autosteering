@@ -20,9 +20,11 @@ import 'dart:async';
 import 'package:autosteering/src/features/common/common.dart';
 import 'package:autosteering/src/features/guidance/providers/virtual_led_bar_providers.dart';
 import 'package:autosteering/src/features/guidance/widgets/virtual_led_bar/virtual_led.dart';
+import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 /// A virtual LED bar for showing the user how far off track they are.
 ///
@@ -188,6 +190,12 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
       growable: false,
     );
 
+    final strings = AppLocalizations.of(context);
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 1,
+    ).format;
+
     return ConstrainedBox(
       constraints: BoxConstraints(
         maxWidth: config.barWidth,
@@ -224,11 +232,10 @@ class _VirtualLedBarState extends ConsumerState<VirtualLedBar> {
                       .clamp(-99, 99)
                       .toString();
                   if (distance.abs() >= 1) {
-                    number = distance.abs().clamp(0, 99).toStringAsFixed(1);
+                    number = numberFormatter(distance.abs().clamp(0, 99));
                   }
                   if (distance.abs() >= 10) {
-                    number =
-                        '''${distance.abs().clamp(0, 99).toStringAsFixed(0)}.''';
+                    number = '''${distance.abs().clamp(0, 99).round()}.''';
                   }
                   final color = config.colorFromDistance(
                     perpendicularDistance ?? 0,

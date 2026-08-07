@@ -19,6 +19,7 @@ import 'package:autosteering/src/features/gnss/gnss.dart';
 import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 /// An icon with extendable menu for showing the status of the GNSS fix quality.
 ///
@@ -84,13 +85,26 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
         textLines.add('M: $quality, S: $secondaryQuality');
     }
 
+    final numberFormatterNineDecimals = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 9,
+    ).format;
+    final numberFormatterThreeDecimals = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 3,
+    ).format;
+    final numberFormatterOneDecimal = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 1,
+    ).format;
+
     final latitude = nmea?.latitude;
     if (latitude != null) {
-      textLines.add('Lat: ${latitude.toStringAsFixed(9)}');
+      textLines.add('Lat: ${numberFormatterNineDecimals(latitude)}');
     }
     final longitude = nmea?.longitude;
     if (longitude != null) {
-      textLines.add('Lon: ${longitude.toStringAsFixed(9)}');
+      textLines.add('Lon: ${numberFormatterNineDecimals(longitude)}');
     }
     final hdop = nmea?.hdop;
     if (hdop != null) {
@@ -112,30 +126,36 @@ class _GnssQualityStatusIconState extends ConsumerState<GnssQualityStatusIcon> {
           (precisionError!.latitudeError! + precisionError.longitudeError!) / 2;
     }
     if (horizontalAccuracy != null) {
-      textLines.add('Pos. Acc: ${horizontalAccuracy.toStringAsPrecision(3)} m');
+      textLines.add(
+        'Pos. Acc: ${numberFormatterThreeDecimals(horizontalAccuracy)} m',
+      );
     }
     final verticalAccuracy =
         nmea?.verticalAccuracy ?? precisionError?.altitudeError;
     if (verticalAccuracy != null) {
-      textLines.add('Alt. Acc: ${verticalAccuracy.toStringAsPrecision(3)} m');
+      textLines.add(
+        'Alt. Acc: ${numberFormatterThreeDecimals(verticalAccuracy)} m',
+      );
     }
     final altitude = nmea?.altitudeMSL;
     if (altitude != null) {
-      textLines.add('Altitude MSL: ${altitude.toStringAsFixed(1)} m');
+      textLines.add('Altitude MSL: ${numberFormatterOneDecimal(altitude)} m');
     }
     final altitudeRef = nmea?.altitudeRef;
     if (altitudeRef != null &&
         nmea?.latitude != null &&
         nmea?.longitude != null) {
-      textLines.add('Altitude HAE: ${altitudeRef.toStringAsFixed(1)} m');
+      textLines.add(
+        'Altitude HAE: ${numberFormatterOneDecimal(altitudeRef)} m',
+      );
     }
 
     final age = nmea?.ageOfDifferentialData;
     if (age != null) {
-      textLines.add('Diff age: ${age.toStringAsFixed(1)} s');
+      textLines.add('Diff age: ${numberFormatterOneDecimal(age)} s');
     }
     textLines.add(
-      '${ref.watch(gnssCurrentFrequencyProvider)?.toStringAsFixed(1)} Hz',
+      '''${numberFormatterOneDecimal(ref.watch(gnssCurrentFrequencyProvider))} Hz''',
     );
 
     final update = ref.watch(gnssLastUpdateTimeProvider);

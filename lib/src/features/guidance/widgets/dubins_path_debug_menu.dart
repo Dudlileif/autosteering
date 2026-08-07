@@ -23,6 +23,7 @@ import 'package:autosteering/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geobase/geobase.dart';
+import 'package:intl/intl.dart';
 
 /// A menu button with attached submenu or buttons used for debugging
 /// a Dubins path between two points.
@@ -35,6 +36,11 @@ class DubinsPathDebugMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final strings = AppLocalizations.of(context);
     final textStyle = Theme.of(context).menuButtonWithChildrenText;
+
+    final numberFormatter = NumberFormat.decimalPatternDigits(
+      locale: strings.localeName,
+      decimalDigits: 1,
+    ).format;
 
     return MenuButtonWithChildren(
       icon: Icons.route,
@@ -163,7 +169,7 @@ class DubinsPathDebugMenu extends StatelessWidget {
             Consumer(
               builder: (context, ref, child) {
                 return Text(
-                  '''${strings.stepSize}: ${ref.watch(dubinsPathDebugStepSizeProvider).toStringAsFixed(1)} m''',
+                  '''${strings.stepSize}: ${numberFormatter(ref.watch(dubinsPathDebugStepSizeProvider))} m''',
                   style: textStyle,
                 );
               },

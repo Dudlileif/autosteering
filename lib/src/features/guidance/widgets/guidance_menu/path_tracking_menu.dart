@@ -23,7 +23,6 @@ import 'package:autosteering/src/features/map/map.dart';
 import 'package:autosteering/src/features/settings/settings.dart';
 import 'package:autosteering/src/features/theme/theme.dart';
 import 'package:autosteering/src/l10n/app_localizations.dart';
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -188,7 +187,7 @@ class PathTrackingMenu extends ConsumerWidget {
                     .map(
                       (mode) => ButtonSegment(
                         value: mode,
-                        label: Text(mode.name.capitalize),
+                        label: Text(strings.loopMode(mode.name)),
                       ),
                     )
                     .toList(),
