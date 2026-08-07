@@ -8,7 +8,7 @@ version: 0.2.0+1
 
 environment:
     sdk: ">=3.12.0 <4.0.0"
-    flutter: 3.44.8
+    flutter: 3.44.9
 
 dependencies:
     archive: ^4.0.9
